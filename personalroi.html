@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Personal ROI Mandate: An Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F4F8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 60vh;
+            }
+        }
+        .brand-blue { color: #0052CC; }
+        .brand-teal { color: #00A3BF; }
+        .brand-green { color: #00875A; }
+        .brand-purple { color: #6554C0; }
+        .brand-red { color: #DE350B; }
+        .bg-brand-blue { background-color: #0052CC; }
+        .bg-brand-teal { background-color: #00A3BF; }
+        .bg-brand-green { background-color: #00875A; }
+        .bg-brand-purple { background-color: #6554C0; }
+        .bg-brand-red { background-color: #DE350B; }
+        .border-brand-blue { border-color: #0052CC; }
+        .border-brand-teal { border-color: #00A3BF; }
+        .border-brand-green { border-color: #00875A; }
+        .border-brand-purple { border-color: #6554C0; }
+        .border-brand-red { border-color: #DE350B; }
+        .gradient-text {
+            background: linear-gradient(to right, #0052CC, #00A3BF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center my-12 md:my-16">
+            <h1 class="text-4xl md:text-6xl font-black tracking-tight gradient-text">The Personal ROI Mandate</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A framework for moving beyond "Can I afford this?" to "Is this the best allocation of my capital for the life I want to build?"</p>
+        </header>
+
+        <section id="framework" class="my-16">
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+                <h2 class="text-3xl font-bold text-center mb-8 brand-blue">Deconstructing Value: The Four Capitals</h2>
+                <p class="text-center max-w-3xl mx-auto mb-12">Every purchase is an investment. The most "worth it" expenditures generate compounding returns across the four key accounts that constitute your total net worth.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <div class="border-t-4 border-brand-blue p-6 rounded-lg bg-blue-50">
+                        <div class="text-5xl mb-3">💰</div>
+                        <h3 class="text-xl font-bold brand-blue">Financial Capital</h3>
+                        <p class="mt-2 text-sm text-gray-600">Direct monetary assets. Returns increase your wealth or reduce future expenses.</p>
+                    </div>
+                    <div class="border-t-4 border-brand-green p-6 rounded-lg bg-green-50">
+                        <div class="text-5xl mb-3">🧠</div>
+                        <h3 class="text-xl font-bold brand-green">Human Capital</h3>
+                        <p class="mt-2 text-sm text-gray-600">Your skills, knowledge, and earning potential. The primary engine of wealth creation.</p>
+                    </div>
+                    <div class="border-t-4 border-brand-teal p-6 rounded-lg bg-teal-50">
+                        <div class="text-5xl mb-3">❤️</div>
+                        <h3 class="text-xl font-bold brand-teal">Well-being Capital</h3>
+                        <p class="mt-2 text-sm text-gray-600">Physical and mental health. The foundation upon which all other capitals are built.</p>
+                    </div>
+                    <div class="border-t-4 border-brand-purple p-6 rounded-lg bg-purple-50">
+                        <div class="text-5xl mb-3">🌍</div>
+                        <h3 class="text-xl font-bold brand-purple">Experiential Capital</h3>
+                        <p class="mt-2 text-sm text-gray-600">Your life experiences, memories, and relationships. An asset that appreciates over time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="rankings" class="my-16">
+            <h2 class="text-3xl font-bold text-center mb-4">The Ultimate PROI Scorecard</h2>
+            <p class="text-center max-w-3xl mx-auto mb-12">We analyzed various expenditures to determine their typical Personal Return on Investment (PROI). This ranking compares items based on their quantitative (financial) and qualitative (life improvement) returns against their cost.</p>
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+                <div class="chart-container">
+                    <canvas id="proiChart"></canvas>
+                </div>
+                <div class="mt-8 text-center text-sm text-gray-500">
+                    <p>This chart visualizes the composite PROI score for various common expenditures. Higher scores indicate a better overall return on investment, balancing financial gains with improvements to health, time, skills, and life experience.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="deep-dive" class="my-16">
+            <h2 class="text-3xl font-bold text-center mb-12">A Tale of Two Returns: Quantitative vs. Qualitative</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h3 class="text-2xl font-bold text-center mb-6 brand-green">Human Capital: The Ultimate Multiplier</h3>
+                    <div class="chart-container" style="height: 300px; max-height: 40vh;">
+                        <canvas id="humanCapitalChart"></canvas>
+                    </div>
+                    <p class="mt-6 text-sm text-gray-600">Investments in skills, like a PMP certification, offer a massive quantitative (financial) return through salary increases. While the qualitative boost is significant, the financial gain is the primary driver of its high PROI.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                    <h3 class="text-2xl font-bold text-center mb-6 brand-purple">Experience: Investing in Your Memory Portfolio</h3>
+                    <div class="chart-container" style="height: 300px; max-height: 40vh;">
+                        <canvas id="experienceChart"></canvas>
+                    </div>
+                    <p class="mt-6 text-sm text-gray-600">In contrast, transformative travel offers almost no direct financial return. Its immense value is entirely qualitative, derived from memory creation, personal growth, and life satisfaction, which appreciate over time.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tiers" class="my-16">
+            <h2 class="text-3xl font-bold text-center mb-12">The PROI Investment Tiers</h2>
+            <div class="space-y-10">
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border-l-8 border-brand-blue">
+                    <h3 class="text-2xl font-bold mb-4"><span class="bg-brand-blue text-white rounded-full px-3 py-1 mr-3">1</span>Foundational Investments</h3>
+                    <p class="mb-6 text-gray-600">The bedrock of a well-optimized life. These have the highest, most broadly applicable PROI, creating compounding benefits across all four capitals.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="text-4xl">🛏️</div>
+                            <p class="font-bold mt-2 text-sm">High-Quality Mattress</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="text-4xl">🎓</div>
+                            <p class="font-bold mt-2 text-sm">Education & Skills</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="text-4xl">💸</div>
+                            <p class="font-bold mt-2 text-sm">Eliminate High-Interest Debt</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <div class="text-4xl">🏋️</div>
+                            <p class="font-bold mt-2 text-sm">Fitness Routine</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border-l-8 border-brand-teal">
+                    <h3 class="text-2xl font-bold mb-4"><span class="bg-brand-teal text-white rounded-full px-3 py-1 mr-3">2</span>Accelerator Investments</h3>
+                    <p class="mb-6 text-gray-600">Provide a significant, targeted boost. They solve a major point of friction or dramatically accelerate progress toward a key goal.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-4xl">🚲</div>
+                            <p class="font-bold mt-2 text-sm">Commuter Bicycle</p>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-4xl">👁️</div>
+                            <p class="font-bold mt-2 text-sm">LASIK Surgery</p>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-4xl">🗣️</div>
+                            <p class="font-bold mt-2 text-sm">Therapy / Coaching</p>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-4xl">🎧</div>
+                            <p class="font-bold mt-2 text-sm">Noise-Cancelling Headphones</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border-l-8 border-brand-purple">
+                    <h3 class="text-2xl font-bold mb-4"><span class="bg-brand-purple text-white rounded-full px-3 py-1 mr-3">3</span>Optimization & Fulfillment Investments</h3>
+                    <p class="mb-6 text-gray-600">Focused on refining quality of life and offering deep personal satisfaction. Their PROI is highly subjective and passion-driven.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <div class="text-4xl">🔪</div>
+                            <p class="font-bold mt-2 text-sm">"Buy It For Life" Tools</p>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <div class="text-4xl">✈️</div>
+                            <p class="font-bold mt-2 text-sm">Transformative Travel</p>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <div class="text-4xl">🎸</div>
+                            <p class="font-bold mt-2 text-sm">High-End Hobby Gear</p>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-lg">
+                            <div class="text-4xl">⌚</div>
+                            <p class="font-bold mt-2 text-sm">Tangible Assets</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        const proiData = [
+            { item: 'High-Quality Mattress', score: 98, tier: 1 },
+            { item: 'Professional Certification', score: 95, tier: 1 },
+            { item: 'Commuter Bicycle', score: 92, tier: 2 },
+            { item: 'Home Gym (Basic)', score: 88, tier: 1 },
+            { item: 'Noise-Cancelling Headphones', score: 85, tier: 2 },
+            { item: 'LASIK Eye Surgery', score: 82, tier: 2 },
+            { item: 'Coding Bootcamp', score: 80, tier: 2 },
+            { item: 'Therapy/Counseling (1 year)', score: 78, tier: 2 },
+            { item: 'Robot Vacuum (Mid-range)', score: 75, tier: 3 },
+            { item: 'Learning a New Language', score: 72, tier: 3 },
+            { item: 'BIFL Chef\'s Knife', score: 65, tier: 3 },
+            { item: 'Transformative Travel', score: 60, tier: 3 },
+            { item: 'Learning a Musical Instrument', score: 58, tier: 3 },
+            { item: 'High-End Hobby Camera', score: 55, tier: 3 },
+            { item: 'Luxury Watch (Investment Grade)', score: 50, tier: 3 }
+        ];
+
+        const colors = {
+            blue: '#0052CC',
+            teal: '#00A3BF',
+            purple: '#6554C0',
+            green: '#00875A',
+            red: '#DE350B',
+            lightBlue: 'rgba(0, 82, 204, 0.2)',
+            lightTeal: 'rgba(0, 163, 191, 0.2)',
+            lightPurple: 'rgba(101, 84, 192, 0.2)',
+        };
+
+        function wrapLabel(str, maxWidth) {
+            if (str.length <= maxWidth) {
+                return str;
+            }
+            const words = str.split(' ');
+            let lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + ' ' + words[i]).length > maxWidth) {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                } else {
+                    currentLine += ' ' + words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        const tooltipConfig = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        };
+
+        const proiChartCtx = document.getElementById('proiChart').getContext('2d');
+        new Chart(proiChartCtx, {
+            type: 'bar',
+            data: {
+                labels: proiData.map(d => wrapLabel(d.item, 16)),
+                datasets: [{
+                    label: 'PROI Score',
+                    data: proiData.map(d => d.score),
+                    backgroundColor: proiData.map(d => {
+                        if (d.tier === 1) return colors.blue;
+                        if (d.tier === 2) return colors.teal;
+                        return colors.purple;
+                    }),
+                    borderColor: proiData.map(d => {
+                        if (d.tier === 1) return colors.blue;
+                        if (d.tier === 2) return colors.teal;
+                        return colors.purple;
+                    }),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...tooltipConfig,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'PROI Score (Higher is Better)',
+                            font: { size: 14 }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+        
+        const humanCapitalChartCtx = document.getElementById('humanCapitalChart').getContext('2d');
+        new Chart(humanCapitalChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['PMP Certification'],
+                datasets: [
+                    {
+                        label: 'Quantitative Return (QR)',
+                        data: [10],
+                        backgroundColor: colors.green,
+                    },
+                    {
+                        label: 'Qualitative Return (QLR)',
+                        data: [7],
+                        backgroundColor: colors.lightTeal,
+                    }
+                ]
+            },
+            options: {
+                ...tooltipConfig,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: { display: true, text: 'Relative Return Score' }
+                    },
+                    y: {
+                        stacked: true,
+                    }
+                },
+                plugins: { ...tooltipConfig.plugins, legend: { display: true, position: 'bottom' } }
+            }
+        });
+
+        const experienceChartCtx = document.getElementById('experienceChart').getContext('2d');
+        new Chart(experienceChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Transformative Travel'],
+                datasets: [
+                    {
+                        label: 'Quantitative Return (QR)',
+                        data: [1],
+                        backgroundColor: colors.green,
+                    },
+                    {
+                        label: 'Qualitative Return (QLR)',
+                        data: [10],
+                        backgroundColor: colors.lightTeal,
+                    }
+                ]
+            },
+            options: {
+                ...tooltipConfig,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: { display: true, text: 'Relative Return Score' }
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                plugins: { ...tooltipConfig.plugins, legend: { display: true, position: 'bottom' } }
+            }
+        });
+
+    </script>
+</body>
+</html>
