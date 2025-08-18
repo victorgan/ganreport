@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Enduring Love: An Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flowchart-node {
+            border: 2px solid #118AB2;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .flowchart-arrow {
+            font-size: 2rem;
+            color: #118AB2;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body class="text-[#073B4C]">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-black text-[#073B4C] mb-4">The Architecture of Enduring Love</h1>
+            <p class="text-lg md:text-xl text-[#118AB2] max-w-3xl mx-auto">An evidence-based guide to building a relationship that lasts, based on decades of scientific research.</p>
+        </header>
+
+        <main>
+
+            <section id="blueprint" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-[#FF6B6B] pb-2 inline-block">Part I: The Blueprint of a Thriving Relationship</h2>
+                <p class="text-center max-w-3xl mx-auto mb-12 text-lg">Successful relationships aren't found; they're built. The foundation is a strong friendship, effective conflict management, and a deep sense of shared meaning. Here are the critical metrics that separate relational "Masters" from "Disasters."</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center justify-center text-center md:col-span-1 lg:col-span-1">
+                        <h3 class="text-2xl font-bold text-[#118AB2] mb-2">The Magic Ratio</h3>
+                        <p class="text-8xl font-black text-[#06D6A0]">5:1</p>
+                        <p class="mt-4 text-base">For every one negative interaction during conflict, stable and happy couples have at least **five positive interactions**. This emotional surplus, built in everyday moments, is the best predictor of long-term success.</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 md:col-span-1 lg:col-span-2">
+                        <h3 class="text-2xl font-bold text-center text-[#118AB2] mb-4">Responding to Bids for Connection</h3>
+                        <p class="text-center mb-4">A "bid" is any attempt to connect. How partners respond is critical. Research shows a stark difference in the rate of "turning towards" these bids.</p>
+                        <div class="chart-container h-64 md:h-80">
+                            <canvas id="bidsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow-lg p-6 md:col-span-2 lg:col-span-3">
+                        <h3 class="text-2xl font-bold text-center text-[#118AB2] mb-6">The Four Horsemen & Their Antidotes</h3>
+                        <p class="text-center max-w-3xl mx-auto mb-8">Dr. John Gottman identified four communication styles that predict the end of a relationship. Learning their antidotes is a core relational skill.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="text-center p-4 rounded-lg bg-red-50 border-2 border-red-200">
+                                <h4 class="font-bold text-lg text-[#FF6B6B]">1. Criticism</h4>
+                                <p class="text-sm mb-2">Attacking your partner's character.</p>
+                                <hr class="my-3 border-t-2 border-gray-200">
+                                <h5 class="font-bold text-lg text-[#06D6A0]">Antidote: Gentle Start-Up</h5>
+                                <p class="text-sm">Use "I" statements. Complain without blame.</p>
+                            </div>
+                            <div class="text-center p-4 rounded-lg bg-red-50 border-2 border-red-200">
+                                <h4 class="font-bold text-lg text-[#FF6B6B]">2. Contempt</h4>
+                                <p class="text-sm mb-2">Sarcasm, mockery, and superiority.</p>
+                                <hr class="my-3 border-t-2 border-gray-200">
+                                <h5 class="font-bold text-lg text-[#06D6A0]">Antidote: Build Appreciation</h5>
+                                <p class="text-sm">Express respect and gratitude regularly.</p>
+                            </div>
+                            <div class="text-center p-4 rounded-lg bg-red-50 border-2 border-red-200">
+                                <h4 class="font-bold text-lg text-[#FF6B6B]">3. Defensiveness</h4>
+                                <p class="text-sm mb-2">Playing the victim or making excuses.</p>
+                                <hr class="my-3 border-t-2 border-gray-200">
+                                <h5 class="font-bold text-lg text-[#06D6A0]">Antidote: Take Responsibility</h5>
+                                <p class="text-sm">Accept your partner's perspective.</p>
+                            </div>
+                            <div class="text-center p-4 rounded-lg bg-red-50 border-2 border-red-200">
+                                <h4 class="font-bold text-lg text-[#FF6B6B]">4. Stonewalling</h4>
+                                <p class="text-sm mb-2">Withdrawing and shutting down.</p>
+                                <hr class="my-3 border-t-2 border-gray-200">
+                                <h5 class="font-bold text-lg text-[#06D6A0]">Antidote: Self-Soothing</h5>
+                                <p class="text-sm">Take a break and calm down before re-engaging.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="partner" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-[#FFD166] pb-2 inline-block">Part II: Identifying Your Co-Architect</h2>
+                <p class="text-center max-w-3xl mx-auto mb-12 text-lg">Choosing a partner is the most important decision you'll make. It's crucial to move beyond chemistry and assess for the core traits of a healthy, secure individual. Learn to spot the green flags that signal stability and the red flags that warn of future turmoil.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-center text-[#06D6A0] mb-6">✅ Behavioral Green Flags</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start"><span class="text-2xl mr-3">👂</span><div><strong class="block">Emotional Safety:</strong> They listen without judgment and validate your feelings.</div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-3">🛡️</span><div><strong class="block">Respects Boundaries:</strong> They accept "no" graciously and honor your need for space and autonomy.</div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-3">🤝</span><div><strong class="block">Shows Accountability:</strong> They follow through on promises and can talk about past relationships with self-awareness.</div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-3">🌱</span><div><strong class="block">Growth Mindset:</strong> They are open to feedback, admit when they're wrong, and support your personal growth.</div></li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-2xl font-bold text-center text-[#FF6B6B] mb-6">❌ Critical Red Flags</h3>
+                         <ul class="space-y-4">
+                            <li class="flex items-start"><span class="text-2xl mr-3">😠</span><div><strong class="block">Early Contempt:</strong> They are critical or dismissive of others, especially service staff.</div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-3">⛓️</span><div><strong class="block">Controlling Behavior:</strong> Unhealthy jealousy, excessive check-ins, or attempts to isolate you.</div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-3">💣</span><div><strong class="block">Love Bombing:</strong> Over-the-top affection and commitment declarations very early on.</div></li>
+                            <li class="flex items-start"><span class="text-2xl mr-3">🎭</span><div><strong class="block">Lack of Accountability:</strong> They blame others for their problems and have a history of "crazy exes."</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="self-development" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 border-b-4 border-[#118AB2] pb-2 inline-block">Part III: Becoming the Partner You Seek</h2>
+                <p class="text-center max-w-3xl mx-auto mb-12 text-lg">The most effective way to attract a secure and healthy partner is to become one yourself. This means doing the inner work of self-awareness and building a life that is fulfilling on its own, independent of a relationship.</p>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 mb-12">
+                    <h3 class="text-2xl font-bold text-center text-[#118AB2] mb-6">The Paradox of Attraction: Wholeness Attracts</h3>
+                     <p class="text-center max-w-3xl mx-auto mb-8">Neediness repels, while self-sufficiency attracts. By building a fulfilling single life, you shift from "needing" a partner to "wanting" one to share your already great life. This is the most attractive state to a secure individual.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                        <div class="p-4">
+                            <div class="text-5xl mb-3">🎯</div>
+                            <h4 class="font-bold text-lg">Cultivate Purpose</h4>
+                            <p class="text-sm">Invest in your career, hobbies, and passions that give you meaning.</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="text-5xl mb-3">🧑‍🤝‍🧑</div>
+                            <h4 class="font-bold text-lg">Nurture Your Network</h4>
+                            <p class="text-sm">Build strong friendships and family bonds for support and connection.</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="text-5xl mb-3">🧘</div>
+                            <h4 class="font-bold text-lg">Master Self-Reliance</h4>
+                            <p class="text-sm">Learn to enjoy your own company and dismantle the fear of being alone.</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="text-5xl mb-3">❤️‍🩹</div>
+                            <h4 class="font-bold text-lg">Prioritize Self-Care</h4>
+                            <p class="text-sm">Commit to your mental, emotional, and physical well-being.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                    <h3 class="text-2xl font-bold text-center text-[#118AB2] mb-8">Engineering Serendipity: How to Meet a Compatible Partner</h3>
+                    <p class="text-center max-w-3xl mx-auto mb-10">Increase the probability of meeting the right person by intentionally placing yourself in environments that align with your values and interests. The goal is to enjoy the activity, with meeting someone as a welcome byproduct.</p>
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                        <div class="flowchart-node w-full md:w-1/4">
+                            <h4 class="font-bold">START HERE</h4>
+                            <p>What are your core values & interests?</p>
+                        </div>
+                        <div class="flowchart-arrow transform md:rotate-0 rotate-90">→</div>
+                        <div class="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="flowchart-node"><strong>Values:</strong> Volunteer, join community groups.</div>
+                            <div class="flowchart-node"><strong>Interests:</strong> Take a class, join a club or sports league.</div>
+                            <div class="flowchart-node"><strong>Growth:</strong> Attend workshops, lectures, conferences.</div>
+                            <div class="flowchart-node"><strong>Culture:</strong> Go to museums, concerts, festivals.</div>
+                        </div>
+                        <div class="flowchart-arrow transform md:rotate-0 rotate-90">→</div>
+                        <div class="flowchart-node w-full md:w-1/4 bg-[#06D6A0] border-[#06D6A0] text-white">
+                            <h4 class="font-bold">OUTCOME</h4>
+                            <p>Authentic connections with like-minded people.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-16 pt-8 border-t-2 border-gray-300">
+            <p class="text-gray-600">This infographic synthesizes findings from decades of relationship research, primarily from the work of The Gottman Institute and Attachment Theory. An enduring partnership is not a matter of luck, but of skill, self-awareness, and intentional effort.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        function wrapText(text, maxLength) {
+            if (text.length <= maxLength) {
+                return text;
+            }
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            }
+            lines.push(currentLine.trim());
+            return lines;
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            } else {
+                return label;
+            }
+        };
+
+        const bidsChartCtx = document.getElementById('bidsChart').getContext('2d');
+        new Chart(bidsChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Relational Masters (Turn Towards)', 'Relational Disasters (Turn Towards)'],
+                datasets: [{
+                    label: 'Response Rate to Bids',
+                    data: [86, 33],
+                    backgroundColor: ['#06D6A0', '#FF6B6B'],
+                    borderColor: ['#ffffff', '#ffffff'],
+                    borderWidth: 4,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 14
+                            },
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: tooltipTitleCallback,
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        },
+                        padding: 12,
+                        titleFont: { size: 16 },
+                        bodyFont: { size: 14 },
+                        boxPadding: 4
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
