@@ -6,6 +6,7 @@
     <title>Which K-Pop Demon Hunter Are You?</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -82,13 +83,18 @@
 
         <!-- Quiz Results -->
         <div id="result-container" class="hidden text-center result-card">
-            <h2 class="text-3xl font-semibold text-gray-200 mb-2">Your Personality Profile</h2>
-            <div class="w-full max-w-sm mx-auto my-6">
-                <canvas id="result-chart"></canvas>
+             <div id="capture-area" class="bg-gray-800/50 p-6 rounded-lg">
+                <h2 class="text-3xl font-semibold text-gray-200 mb-2">Your Personality Profile</h2>
+                <div class="w-full max-w-sm mx-auto my-6">
+                    <canvas id="result-chart"></canvas>
+                </div>
+                <h1 id="result-name" class="text-4xl font-bold text-purple-400 mb-4"></h1>
+                <p id="result-description" class="text-lg text-gray-300 mb-8 max-w-xl mx-auto"></p>
             </div>
-            <h1 id="result-name" class="text-4xl font-bold text-purple-400 mb-4"></h1>
-            <p id="result-description" class="text-lg text-gray-300 mb-8 max-w-xl mx-auto"></p>
-            <button id="restart-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">Analyze Again</button>
+            <div class="mt-8 flex justify-center gap-4">
+                <button id="restart-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">Analyze Again</button>
+                <button id="share-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">Share Result</button>
+            </div>
         </div>
     </div>
 
@@ -101,6 +107,7 @@
         const answerButtons = document.getElementById('answer-buttons');
         const imageContainer = document.getElementById('image-container');
         const restartBtn = document.getElementById('restart-btn');
+        const shareBtn = document.getElementById('share-btn');
         const progressBar = document.getElementById('progress-bar');
         const resultChartCanvas = document.getElementById('result-chart');
         let resultChart;
@@ -110,48 +117,48 @@
 
         const questions = [
             {
-                question: "You find an ancient, sealed relic. What is your immediate thought?",
-                image: "https://images.pexels.com/photos/733767/pexels-photo-733767.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                question: "A storm is coming. Where do you find shelter?",
+                image: "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
-                    { text: "Secure it. It could be dangerous if it falls into the wrong hands.", points: { rumi: 10, mira: 4, zoey: 1 } },
-                    { text: "Try to open it. What's the point of a secret if you don't uncover it?", points: { zoey: 10, mira: 5, rumi: 1 } },
-                    { text: "Catalog its markings and research its origin before doing anything.", points: { mira: 10, rumi: 5, zoey: 1 } }
+                    { text: "In a lighthouse, guiding others to safety.", points: { rumi: 10, mira: 4, zoey: 1 } },
+                    { text: "On a high cliff, feeling the wind and the raw power of the waves.", points: { zoey: 10, mira: 1, rumi: 2 } },
+                    { text: "In an ancient library, studying maps of past storms.", points: { mira: 10, rumi: 5, zoey: 0 } }
                 ]
             },
             {
-                question: "Which landscape brings you the most peace?",
-                image: "https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                question: "You are given a key. What does it unlock?",
+                image: "https://images.pexels.com/photos/134064/pexels-photo-134064.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
-                    { text: "A quiet, misty forest where every sound has meaning.", points: { mira: 10, rumi: 4, zoey: 2 } },
-                    { text: "A roaring bonfire with close friends under a starry sky.", points: { rumi: 10, zoey: 5, mira: 1 } },
-                    { text: "The heart of a vibrant, chaotic city that never sleeps.", points: { zoey: 10, mira: 2, rumi: 3 } }
+                    { text: "A hidden garden, a sanctuary for my loved ones.", points: { rumi: 10, zoey: 3, mira: 3 } },
+                    { text: "A treasure chest, filled with untold power and adventure.", points: { zoey: 10, mira: 2, rumi: 3 } },
+                    { text: "A forbidden archive, holding the secrets of the universe.", points: { mira: 10, rumi: 2, zoey: 4 } }
                 ]
             },
             {
-                question: "A teammate makes a critical error in battle. How do you react afterward?",
-                image: "https://images.pexels.com/photos/1427107/pexels-photo-1427107.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                question: "You stand before a crossroads. Which path do you choose?",
+                image: "https://images.pexels.com/photos/397237/pexels-photo-397237.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
-                    { text: "Privately help them train to ensure it doesn't happen again.", points: { rumi: 10, mira: 5, zoey: 0 } },
-                    { text: "Shrug it off. Everyone makes mistakes in the heat of the moment.", points: { zoey: 10, rumi: 4, mira: 1 } },
-                    { text: "Walk through the fight step-by-step to identify the strategic flaw.", points: { mira: 10, rumi: 4, zoey: 2 } }
+                    { text: "The well-trodden path, where I can protect other travelers.", points: { rumi: 10, mira: 3, zoey: 1 } },
+                    { text: "The overgrown, unmarked path that promises the unknown.", points: { zoey: 10, mira: 4, rumi: 2 } },
+                    { text: "I'll climb a tree to see where all the paths lead first.", points: { mira: 10, rumi: 3, zoey: 3 } }
                 ]
             },
             {
-                question: "What kind of music fuels your spirit?",
-                image: "https://images.pexels.com/photos/164829/pexels-photo-164829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                question: "What is your weapon of choice in a debate?",
+                image: "https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
-                    { text: "An intense, high-energy track with a powerful beat.", points: { zoey: 10, mira: 1, rumi: 2 } },
-                    { text: "A complex, layered symphony with intricate harmonies.", points: { mira: 10, rumi: 3, zoey: 2 } },
-                    { text: "An inspiring anthem about unity and overcoming adversity.", points: { rumi: 10, zoey: 4, mira: 2 } }
+                    { text: "Unshakable conviction and passion.", points: { zoey: 10, rumi: 4, mira: 1 } },
+                    { text: "Inescapable logic and well-researched facts.", points: { mira: 10, rumi: 3, zoey: 1 } },
+                    { text: "Empathy and the ability to find common ground.", points: { rumi: 10, mira: 4, zoey: 2 } }
                 ]
             },
             {
-                question: "You are granted a single glimpse of the future. What do you ask to see?",
-                image: "https://images.pexels.com/photos/1578750/pexels-photo-1578750.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+                question: "A single candle flickers in a dark room. What does it represent?",
+                image: "https://images.pexels.com/photos/1570807/pexels-photo-1570807.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
-                    { text: "The outcome of our most critical, upcoming battle.", points: { mira: 10, rumi: 5, zoey: 3 } },
-                    { text: "A moment of peace and happiness for the people I care about.", points: { rumi: 10, zoey: 5, mira: 3 } },
-                    { text: "My own greatest, most exciting future accomplishment.", points: { zoey: 10, mira: 2, rumi: 2 } }
+                    { text: "A mystery to be solved before the light goes out.", points: { mira: 10, zoey: 4, rumi: 2 } },
+                    { text: "A hope that must be protected at all costs.", points: { rumi: 10, mira: 3, zoey: 3 } },
+                    { text: "A challenge to the darkness; a spark ready to become a wildfire.", points: { zoey: 10, rumi: 3, mira: 1 } }
                 ]
             }
         ];
@@ -173,6 +180,20 @@
 
         startBtn.addEventListener('click', startQuiz);
         restartBtn.addEventListener('click', startQuiz);
+        shareBtn.addEventListener('click', shareResult);
+
+        function shareResult() {
+            const captureArea = document.getElementById('capture-area');
+            html2canvas(captureArea, { 
+                backgroundColor: '#1a202c', // Match the dark background
+                useCORS: true 
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'demon-hunter-profile.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
 
         function startQuiz() {
             startScreen.classList.add('hidden');
@@ -196,7 +217,6 @@
                 img.alt = "Quiz thematic image";
                 img.className = "question-image w-full h-full object-cover";
                 img.onerror = function() {
-                    // In case a new image link breaks, this provides a fallback.
                     this.onerror=null;
                     this.src='https://placehold.co/600x400/1a202c/a78bfa?text=Image+Not+Found';
                 };
