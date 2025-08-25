@@ -5,147 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Which K-Pop Demon Hunter Are You?</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle, #1a202c, #111827);
         }
         .quiz-container {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 255, 255, 0.1) inset;
+            background-color: rgba(26, 32, 44, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(147, 51, 234, 0.2) inset;
         }
         .answer-btn {
             transition: all 0.3s ease;
+            transform-style: preserve-3d;
         }
         .answer-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 8px 20px rgba(147, 51, 234, 0.3);
+            background-color: #581c87;
         }
-        .result-card {
-            animation: fadeIn 1s ease-in-out;
+        .question-card, .result-card, #start-screen {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        .progress-bar-glow {
+            box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7;
+        }
+        #start-btn {
+             box-shadow: 0 0 20px #9333ea;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <div id="quiz-container" class="quiz-container w-full max-w-2xl bg-gray-800 rounded-2xl p-6 md:p-10 border border-purple-500/30">
+    <div id="quiz-container" class="quiz-container w-full max-w-2xl rounded-2xl p-6 md:p-10">
         <!-- Quiz Start Screen -->
         <div id="start-screen">
-            <h1 class="text-3xl md:text-4xl font-bold text-center text-purple-400 mb-4">Which K-Pop Demon Hunter Are You?</h1>
-            <p class="text-center text-gray-300 mb-8">Your team is counting on you, but your style is all your own. Answer these questions to find out your demon-hunting persona!</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-center text-purple-400 mb-4 tracking-wider">Demon Hunter Profile</h1>
+            <p class="text-center text-gray-300 mb-8 text-lg">Your spirit resonates with a unique power. Uncover the balance of forces within you.</p>
             <div class="flex justify-center">
-                <button id="start-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-transform transform hover:scale-105">Start Quiz</button>
+                <button id="start-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-10 rounded-full text-xl shadow-lg transition-transform transform hover:scale-105">Begin Analysis</button>
             </div>
         </div>
 
         <!-- Quiz Questions -->
-        <div id="question-container" class="hidden">
-            <div id="progress-bar-container" class="w-full bg-gray-700 rounded-full h-2.5 mb-6">
-                <div id="progress-bar" class="bg-purple-500 h-2.5 rounded-full" style="width: 0%"></div>
+        <div id="question-container" class="hidden question-card">
+            <div class="w-full bg-gray-700 rounded-full h-3 mb-6">
+                <div id="progress-bar" class="bg-purple-500 h-3 rounded-full progress-bar-glow transition-all duration-500 ease-out"></div>
             </div>
-            <h2 id="question-text" class="text-2xl font-semibold mb-6 text-center">Question goes here...</h2>
-            <div id="answer-buttons" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h2 id="question-text" class="text-2xl font-semibold mb-8 text-center text-gray-100"></h2>
+            <div id="answer-buttons" class="grid grid-cols-1 gap-4">
                 <!-- Answer buttons will be generated here -->
             </div>
         </div>
 
         <!-- Quiz Results -->
         <div id="result-container" class="hidden text-center result-card">
-            <h2 class="text-2xl font-semibold text-gray-300 mb-2">You are...</h2>
-            <h1 id="result-name" class="text-5xl font-bold text-purple-400 mb-4"></h1>
-            <img id="result-image" src="" alt="Character Image" class="w-48 h-48 rounded-full mx-auto mb-6 border-4 border-purple-500 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/192x192/1a202c/9f7aea?text=Hunter';">
+            <h2 class="text-2xl font-semibold text-gray-300 mb-2">Your Personality Profile</h2>
+            <div class="w-full max-w-sm mx-auto my-6">
+                <canvas id="result-chart"></canvas>
+            </div>
+            <h1 id="result-name" class="text-4xl font-bold text-purple-400 mb-4"></h1>
             <p id="result-description" class="text-lg text-gray-300 mb-8"></p>
-            <button id="restart-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">Try Again</button>
+            <button id="restart-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">Analyze Again</button>
         </div>
     </div>
 
     <script>
         const startBtn = document.getElementById('start-btn');
         const startScreen = document.getElementById('start-screen');
-        const quizContainer = document.getElementById('quiz-container');
         const questionContainer = document.getElementById('question-container');
+        const resultContainer = document.getElementById('result-container');
         const questionText = document.getElementById('question-text');
         const answerButtons = document.getElementById('answer-buttons');
-        const resultContainer = document.getElementById('result-container');
         const restartBtn = document.getElementById('restart-btn');
         const progressBar = document.getElementById('progress-bar');
+        const resultChartCanvas = document.getElementById('result-chart');
+        let resultChart;
 
         let currentQuestionIndex = 0;
-        let scores = {
-            rumi: 0,
-            zoey: 0,
-            mira: 0
-        };
+        let scores = { rumi: 0, zoey: 0, mira: 0 };
+        const totalPoints = { rumi: 0, zoey: 0, mira: 0 };
 
         const questions = [
             {
-                question: "A new, powerful demon appears. What's your first move?",
+                question: "When facing an impossible choice, where do you place your trust?",
                 answers: [
-                    { text: "Analyze its movements and look for a weakness.", character: 'mira' },
-                    { text: "Charge in! The best defense is a good offense.", character: 'zoey' },
-                    { text: "Get my team to safety and form a strategy.", character: 'rumi' }
+                    { text: "In the bonds I share with my team. We rise or fall together.", points: { rumi: 10, zoey: 3, mira: 1 } },
+                    { text: "In my gut feeling. Hesitation is the enemy.", points: { zoey: 10, rumi: 3, mira: 1 } },
+                    { text: "In the facts and patterns I've observed. Logic reveals the path.", points: { mira: 10, rumi: 3, zoey: 1 } }
                 ]
             },
             {
-                question: "How do you unwind after a tough battle?",
+                question: "A mission fails, and your team is demoralized. How do you lift their spirits?",
                 answers: [
-                    { text: "Practice new techniques or study ancient texts.", character: 'mira' },
-                    { text: "Go out with friends and forget about everything for a while.", character: 'zoey' },
-                    { text: "Check on everyone and make sure they're okay.", character: 'rumi' }
+                    { text: "Shoulder the blame and promise to be better. My strength gives them hope.", points: { rumi: 10, zoey: 4, mira: 0 } },
+                    { text: "Remind them of the thrill of the fight and rally them for the next one.", points: { zoey: 10, rumi: 4, mira: 0 } },
+                    { text: "Provide a detailed analysis of what went wrong so we don't repeat it.", points: { mira: 10, rumi: 4, zoey: 0 } }
                 ]
             },
             {
-                question: "What's your most important asset in a fight?",
+                question: "What is the source of your inner strength?",
                 answers: [
-                    { text: "My leadership and ability to inspire others.", character: 'rumi' },
-                    { text: "My unstoppable energy and raw power.", character: 'zoey' },
-                    { text: "My intellect and resourcefulness.", character: 'mira' }
+                    { text: "A deep-seated sense of duty to protect the innocent.", points: { rumi: 10, mira: 2, zoey: 2 } },
+                    { text: "An unquenchable passion for life and the freedom to live it.", points: { zoey: 10, rumi: 2, mira: 2 } },
+                    { text: "An insatiable curiosity to understand the world's mysteries.", points: { mira: 10, rumi: 2, zoey: 2 } }
                 ]
             },
             {
-                question: "Your team is arguing about the next plan of action. What do you do?",
+                question: "How do you perceive the line between order and chaos?",
                 answers: [
-                    { text: "Listen to all sides and find a logical compromise.", character: 'rumi' },
-                    { text: "Point out the flaws in their plans to find the best one.", character: 'mira' },
-                    { text: "Suggest we stop talking and start doing something.", character: 'zoey' }
+                    { text: "Order is a fragile shield we must constantly maintain.", points: { rumi: 10, mira: 5, zoey: 1 } },
+                    { text: "Chaos is where true potential is found; order is just a suggestion.", points: { zoey: 10, mira: 1, rumi: 1 } },
+                    { text: "They are two sides of the same coin; understanding one requires mastering the other.", points: { mira: 10, rumi: 5, zoey: 3 } }
                 ]
             },
             {
-                question: "You're given a new, untested weapon. Your reaction?",
+                question: "If you had to sacrifice something for the greater good, what would be the hardest to let go of?",
                 answers: [
-                    { text: "Can't wait to try it out in the next fight!", character: 'zoey' },
-                    { text: "I'll take it apart to see how it works first.", character: 'mira' },
-                    { text: "I'll test it in a controlled environment before using it.", character: 'rumi' }
-                ]
-            },
-            {
-                question: "Which role do you naturally play in a group?",
-                answers: [
-                    { text: "The Protector", character: 'rumi' },
-                    { text: "The Strategist", character: 'mira' },
-                    { text: "The Vanguard", character: 'zoey' }
+                    { text: "The trust of my comrades.", points: { rumi: 10, zoey: 5, mira: 3 } },
+                    { text: "My personal freedom and autonomy.", points: { zoey: 10, mira: 2, rumi: 3 } },
+                    { text: "A piece of crucial, hard-won knowledge.", points: { mira: 10, rumi: 5, zoey: 1 } }
                 ]
             }
         ];
         
+        // Calculate total possible points for each character for percentage calculation
+        questions.forEach(q => {
+            q.answers.forEach(a => {
+                totalPoints.rumi += a.points.rumi;
+                totalPoints.zoey += a.points.zoey;
+                totalPoints.mira += a.points.mira;
+            });
+        });
+        // This isn't quite right for percentages. A better way is to assume a max of 10 per question.
+        const maxPointsPerQuestion = 10;
+        const totalMaxScore = questions.length * maxPointsPerQuestion;
+
+
         const results = {
             rumi: {
-                name: "Rumi, The Leader",
-                description: "You are calm, responsible, and fiercely protective of your friends. Like a true leader, you think strategically and always put the team's safety first. You carry the weight of responsibility with grace and courage.",
-                image: "https://placehold.co/192x192/6b21a8/ffffff?text=Rumi"
+                name: "The Steadfast Guardian",
+                description: "Your core is defined by responsibility and empathy. You are the anchor in the storm, finding strength not in personal glory, but in the unity and safety of your team. You lead with a quiet confidence that inspires loyalty."
             },
             zoey: {
-                name: "Zoey, The Wildcard",
-                description: "You are energetic, impulsive, and incredibly brave. You trust your instincts and are always the first to jump into action. Your fierce loyalty and boundless energy make you a formidable ally and the heart of the team.",
-                image: "https://placehold.co/192x192/be185d/ffffff?text=Zoey"
+                name: "The Unbound Force",
+                description: "You are a whirlwind of passion and instinct. You live in the moment, trusting your heart and your power to carve a path through any obstacle. Your energy is infectious, making you the undeniable, beating heart of any group."
             },
             mira: {
-                name: "Mira, The Brains",
-                description: "You are intelligent, observant, and highly resourceful. You prefer to have a well-thought-out plan and rely on your knowledge to outsmart your foes. Your sharp mind and keen eye for detail make you an indispensable strategist.",
-                image: "https://placehold.co/192x192/1d4ed8/ffffff?text=Mira"
+                name: "The Arcane Scholar",
+                description: "Your mind is your greatest weapon. You see the world as a complex puzzle and thrive on deciphering its secrets. You find power in knowledge and strategy, always staying three steps ahead of your adversaries."
             }
         };
 
@@ -172,8 +187,8 @@
                 question.answers.forEach(answer => {
                     const button = document.createElement('button');
                     button.innerText = answer.text;
-                    button.classList.add('answer-btn', 'bg-gray-700', 'p-4', 'rounded-lg', 'text-left', 'w-full', 'hover:bg-purple-800');
-                    button.dataset.character = answer.character;
+                    button.classList.add('answer-btn', 'bg-gray-800', 'p-4', 'rounded-lg', 'text-left', 'w-full', 'hover:bg-purple-900', 'border', 'border-purple-500/30');
+                    button.dataset.points = JSON.stringify(answer.points);
                     button.addEventListener('click', selectAnswer);
                     answerButtons.appendChild(button);
                 });
@@ -189,8 +204,11 @@
         }
 
         function selectAnswer(e) {
-            const selectedCharacter = e.target.dataset.character;
-            scores[selectedCharacter]++;
+            const points = JSON.parse(e.currentTarget.dataset.points);
+            scores.rumi += points.rumi;
+            scores.zoey += points.zoey;
+            scores.mira += points.mira;
+            
             currentQuestionIndex++;
             updateProgressBar();
             showNextQuestion();
@@ -205,30 +223,81 @@
             questionContainer.classList.add('hidden');
             resultContainer.classList.remove('hidden');
 
-            // Determine the winner
-            let maxScore = -1;
-            let resultCharacter = '';
-            for (const character in scores) {
-                if (scores[character] > maxScore) {
-                    maxScore = scores[character];
-                    resultCharacter = character;
-                }
-            }
+            const totalScore = scores.rumi + scores.zoey + scores.mira;
+            const percentages = {
+                rumi: Math.round((scores.rumi / totalScore) * 100),
+                zoey: Math.round((scores.zoey / totalScore) * 100),
+                mira: Math.round((scores.mira / totalScore) * 100)
+            };
             
-            // Handle ties by picking one - can be randomized or prioritized
-            if (Object.values(scores).filter(score => score === maxScore).length > 1) {
-                // In case of a tie, we can have a default or random pick.
-                // For simplicity, we'll just stick with the first one found.
-                 const tiedChars = Object.keys(scores).filter(char => scores[char] === maxScore);
-                 resultCharacter = tiedChars[0]; // Default to first tied character
-            }
+            let primaryCharacter = Object.keys(percentages).reduce((a, b) => percentages[a] > percentages[b] ? a : b);
 
-            const resultData = results[resultCharacter];
-            document.getElementById('result-name').innerText = resultData.name;
+            const resultData = results[primaryCharacter];
+            document.getElementById('result-name').innerText = `Primary Archetype: ${resultData.name}`;
             document.getElementById('result-description').innerText = resultData.description;
-            document.getElementById('result-image').src = resultData.image;
+
+            renderPieChart(percentages);
+        }
+
+        function renderPieChart(percentages) {
+            if(resultChart) {
+                resultChart.destroy();
+            }
+            resultChart = new Chart(resultChartCanvas, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        `Rumi (${percentages.rumi}%)`, 
+                        `Zoey (${percentages.zoey}%)`, 
+                        `Mira (${percentages.mira}%)`
+                    ],
+                    datasets: [{
+                        data: [percentages.rumi, percentages.zoey, percentages.mira],
+                        backgroundColor: [
+                            'rgba(168, 85, 247, 0.7)', // Rumi - Purple
+                            'rgba(219, 39, 119, 0.7)', // Zoey - Pink
+                            'rgba(59, 130, 246, 0.7)'  // Mira - Blue
+                        ],
+                        borderColor: [
+                            '#a855f7',
+                            '#db2777',
+                            '#3b82f6'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: '#D1D5DB',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
     </script>
 </body>
 </html>
+
