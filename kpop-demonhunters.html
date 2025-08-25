@@ -111,7 +111,7 @@
         const questions = [
             {
                 question: "You find an ancient, sealed relic. What is your immediate thought?",
-                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Ancient+Relic",
+                image: "https://images.pexels.com/photos/733767/pexels-photo-733767.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
                     { text: "Secure it. It could be dangerous if it falls into the wrong hands.", points: { rumi: 10, mira: 4, zoey: 1 } },
                     { text: "Try to open it. What's the point of a secret if you don't uncover it?", points: { zoey: 10, mira: 5, rumi: 1 } },
@@ -120,7 +120,7 @@
             },
             {
                 question: "Which landscape brings you the most peace?",
-                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Serene+Landscape",
+                image: "https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
                     { text: "A quiet, misty forest where every sound has meaning.", points: { mira: 10, rumi: 4, zoey: 2 } },
                     { text: "A roaring bonfire with close friends under a starry sky.", points: { rumi: 10, zoey: 5, mira: 1 } },
@@ -129,7 +129,7 @@
             },
             {
                 question: "A teammate makes a critical error in battle. How do you react afterward?",
-                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Aftermath",
+                image: "https://images.pexels.com/photos/1427107/pexels-photo-1427107.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
                     { text: "Privately help them train to ensure it doesn't happen again.", points: { rumi: 10, mira: 5, zoey: 0 } },
                     { text: "Shrug it off. Everyone makes mistakes in the heat of the moment.", points: { zoey: 10, rumi: 4, mira: 1 } },
@@ -138,7 +138,7 @@
             },
             {
                 question: "What kind of music fuels your spirit?",
-                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Music",
+                image: "https://images.pexels.com/photos/164829/pexels-photo-164829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
                     { text: "An intense, high-energy track with a powerful beat.", points: { zoey: 10, mira: 1, rumi: 2 } },
                     { text: "A complex, layered symphony with intricate harmonies.", points: { mira: 10, rumi: 3, zoey: 2 } },
@@ -147,7 +147,7 @@
             },
             {
                 question: "You are granted a single glimpse of the future. What do you ask to see?",
-                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Future+Glimpse",
+                image: "https://images.pexels.com/photos/1578750/pexels-photo-1578750.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
                 answers: [
                     { text: "The outcome of our most critical, upcoming battle.", points: { mira: 10, rumi: 5, zoey: 3 } },
                     { text: "A moment of peace and happiness for the people I care about.", points: { rumi: 10, zoey: 5, mira: 3 } },
@@ -195,6 +195,11 @@
                 img.src = question.image;
                 img.alt = "Quiz thematic image";
                 img.className = "question-image w-full h-full object-cover";
+                img.onerror = function() {
+                    // In case a new image link breaks, this provides a fallback.
+                    this.onerror=null;
+                    this.src='https://placehold.co/600x400/1a202c/a78bfa?text=Image+Not+Found';
+                };
                 imageContainer.appendChild(img);
 
                 questionText.innerText = question.question;
@@ -242,9 +247,8 @@
 
             const totalScore = scores.rumi + scores.zoey + scores.mira;
             
-            // Handle case where totalScore is 0 to avoid division by zero
             if (totalScore === 0) {
-                 scores = { rumi: 1, zoey: 1, mira: 1 }; // Assign a default distribution
+                 scores = { rumi: 1, zoey: 1, mira: 1 }; 
             }
 
             const percentages = {
