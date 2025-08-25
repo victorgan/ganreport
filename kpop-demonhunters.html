@@ -10,17 +10,19 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle, #1a202c, #111827);
+            background: radial-gradient(circle, #2c1a2b, #111827);
         }
         .quiz-container {
-            background-color: rgba(26, 32, 44, 0.8);
-            backdrop-filter: blur(10px);
+            background-color: rgba(26, 32, 44, 0.85);
+            backdrop-filter: blur(12px);
             border: 1px solid rgba(147, 51, 234, 0.3);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(147, 51, 234, 0.2) inset;
         }
         .answer-btn {
             transition: all 0.3s ease;
             transform-style: preserve-3d;
+            font-size: 1.1rem;
+            padding: 1rem;
         }
         .answer-btn:hover {
             transform: translateY(-5px) scale(1.03);
@@ -30,21 +32,31 @@
         .question-card, .result-card, #start-screen {
             animation: fadeIn 0.8s ease-in-out;
         }
+        h1, h2 {
+             text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+        }
         .progress-bar-glow {
             box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7;
         }
         #start-btn {
              box-shadow: 0 0 20px #9333ea;
         }
+        .question-image {
+            animation: imageFadeIn 1s ease-in-out;
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes imageFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4 text-gray-200">
 
-    <div id="quiz-container" class="quiz-container w-full max-w-2xl rounded-2xl p-6 md:p-10">
+    <div id="quiz-container" class="quiz-container w-full max-w-3xl rounded-2xl p-6 md:p-10">
         <!-- Quiz Start Screen -->
         <div id="start-screen">
             <h1 class="text-4xl md:text-5xl font-bold text-center text-purple-400 mb-4 tracking-wider">Demon Hunter Profile</h1>
@@ -56,10 +68,13 @@
 
         <!-- Quiz Questions -->
         <div id="question-container" class="hidden question-card">
-            <div class="w-full bg-gray-700 rounded-full h-3 mb-6">
+            <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
                 <div id="progress-bar" class="bg-purple-500 h-3 rounded-full progress-bar-glow transition-all duration-500 ease-out"></div>
             </div>
-            <h2 id="question-text" class="text-2xl font-semibold mb-8 text-center text-gray-100"></h2>
+            <div id="image-container" class="mb-6 w-full h-48 rounded-lg overflow-hidden">
+                 <!-- Image will be inserted here -->
+            </div>
+            <h2 id="question-text" class="text-2xl font-semibold mb-6 text-center text-gray-100"></h2>
             <div id="answer-buttons" class="grid grid-cols-1 gap-4">
                 <!-- Answer buttons will be generated here -->
             </div>
@@ -67,12 +82,12 @@
 
         <!-- Quiz Results -->
         <div id="result-container" class="hidden text-center result-card">
-            <h2 class="text-2xl font-semibold text-gray-300 mb-2">Your Personality Profile</h2>
+            <h2 class="text-3xl font-semibold text-gray-200 mb-2">Your Personality Profile</h2>
             <div class="w-full max-w-sm mx-auto my-6">
                 <canvas id="result-chart"></canvas>
             </div>
             <h1 id="result-name" class="text-4xl font-bold text-purple-400 mb-4"></h1>
-            <p id="result-description" class="text-lg text-gray-300 mb-8"></p>
+            <p id="result-description" class="text-lg text-gray-300 mb-8 max-w-xl mx-auto"></p>
             <button id="restart-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">Analyze Again</button>
         </div>
     </div>
@@ -84,6 +99,7 @@
         const resultContainer = document.getElementById('result-container');
         const questionText = document.getElementById('question-text');
         const answerButtons = document.getElementById('answer-buttons');
+        const imageContainer = document.getElementById('image-container');
         const restartBtn = document.getElementById('restart-btn');
         const progressBar = document.getElementById('progress-bar');
         const resultChartCanvas = document.getElementById('result-chart');
@@ -91,64 +107,55 @@
 
         let currentQuestionIndex = 0;
         let scores = { rumi: 0, zoey: 0, mira: 0 };
-        const totalPoints = { rumi: 0, zoey: 0, mira: 0 };
 
         const questions = [
             {
-                question: "When facing an impossible choice, where do you place your trust?",
+                question: "You find an ancient, sealed relic. What is your immediate thought?",
+                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Ancient+Relic",
                 answers: [
-                    { text: "In the bonds I share with my team. We rise or fall together.", points: { rumi: 10, zoey: 3, mira: 1 } },
-                    { text: "In my gut feeling. Hesitation is the enemy.", points: { zoey: 10, rumi: 3, mira: 1 } },
-                    { text: "In the facts and patterns I've observed. Logic reveals the path.", points: { mira: 10, rumi: 3, zoey: 1 } }
+                    { text: "Secure it. It could be dangerous if it falls into the wrong hands.", points: { rumi: 10, mira: 4, zoey: 1 } },
+                    { text: "Try to open it. What's the point of a secret if you don't uncover it?", points: { zoey: 10, mira: 5, rumi: 1 } },
+                    { text: "Catalog its markings and research its origin before doing anything.", points: { mira: 10, rumi: 5, zoey: 1 } }
                 ]
             },
             {
-                question: "A mission fails, and your team is demoralized. How do you lift their spirits?",
+                question: "Which landscape brings you the most peace?",
+                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Serene+Landscape",
                 answers: [
-                    { text: "Shoulder the blame and promise to be better. My strength gives them hope.", points: { rumi: 10, zoey: 4, mira: 0 } },
-                    { text: "Remind them of the thrill of the fight and rally them for the next one.", points: { zoey: 10, rumi: 4, mira: 0 } },
-                    { text: "Provide a detailed analysis of what went wrong so we don't repeat it.", points: { mira: 10, rumi: 4, zoey: 0 } }
+                    { text: "A quiet, misty forest where every sound has meaning.", points: { mira: 10, rumi: 4, zoey: 2 } },
+                    { text: "A roaring bonfire with close friends under a starry sky.", points: { rumi: 10, zoey: 5, mira: 1 } },
+                    { text: "The heart of a vibrant, chaotic city that never sleeps.", points: { zoey: 10, mira: 2, rumi: 3 } }
                 ]
             },
             {
-                question: "What is the source of your inner strength?",
+                question: "A teammate makes a critical error in battle. How do you react afterward?",
+                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Aftermath",
                 answers: [
-                    { text: "A deep-seated sense of duty to protect the innocent.", points: { rumi: 10, mira: 2, zoey: 2 } },
-                    { text: "An unquenchable passion for life and the freedom to live it.", points: { zoey: 10, rumi: 2, mira: 2 } },
-                    { text: "An insatiable curiosity to understand the world's mysteries.", points: { mira: 10, rumi: 2, zoey: 2 } }
+                    { text: "Privately help them train to ensure it doesn't happen again.", points: { rumi: 10, mira: 5, zoey: 0 } },
+                    { text: "Shrug it off. Everyone makes mistakes in the heat of the moment.", points: { zoey: 10, rumi: 4, mira: 1 } },
+                    { text: "Walk through the fight step-by-step to identify the strategic flaw.", points: { mira: 10, rumi: 4, zoey: 2 } }
                 ]
             },
             {
-                question: "How do you perceive the line between order and chaos?",
+                question: "What kind of music fuels your spirit?",
+                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Music",
                 answers: [
-                    { text: "Order is a fragile shield we must constantly maintain.", points: { rumi: 10, mira: 5, zoey: 1 } },
-                    { text: "Chaos is where true potential is found; order is just a suggestion.", points: { zoey: 10, mira: 1, rumi: 1 } },
-                    { text: "They are two sides of the same coin; understanding one requires mastering the other.", points: { mira: 10, rumi: 5, zoey: 3 } }
+                    { text: "An intense, high-energy track with a powerful beat.", points: { zoey: 10, mira: 1, rumi: 2 } },
+                    { text: "A complex, layered symphony with intricate harmonies.", points: { mira: 10, rumi: 3, zoey: 2 } },
+                    { text: "An inspiring anthem about unity and overcoming adversity.", points: { rumi: 10, zoey: 4, mira: 2 } }
                 ]
             },
             {
-                question: "If you had to sacrifice something for the greater good, what would be the hardest to let go of?",
+                question: "You are granted a single glimpse of the future. What do you ask to see?",
+                image: "https://placehold.co/600x400/1a202c/a78bfa?text=Future+Glimpse",
                 answers: [
-                    { text: "The trust of my comrades.", points: { rumi: 10, zoey: 5, mira: 3 } },
-                    { text: "My personal freedom and autonomy.", points: { zoey: 10, mira: 2, rumi: 3 } },
-                    { text: "A piece of crucial, hard-won knowledge.", points: { mira: 10, rumi: 5, zoey: 1 } }
+                    { text: "The outcome of our most critical, upcoming battle.", points: { mira: 10, rumi: 5, zoey: 3 } },
+                    { text: "A moment of peace and happiness for the people I care about.", points: { rumi: 10, zoey: 5, mira: 3 } },
+                    { text: "My own greatest, most exciting future accomplishment.", points: { zoey: 10, mira: 2, rumi: 2 } }
                 ]
             }
         ];
         
-        // Calculate total possible points for each character for percentage calculation
-        questions.forEach(q => {
-            q.answers.forEach(a => {
-                totalPoints.rumi += a.points.rumi;
-                totalPoints.zoey += a.points.zoey;
-                totalPoints.mira += a.points.mira;
-            });
-        });
-        // This isn't quite right for percentages. A better way is to assume a max of 10 per question.
-        const maxPointsPerQuestion = 10;
-        const totalMaxScore = questions.length * maxPointsPerQuestion;
-
-
         const results = {
             rumi: {
                 name: "The Steadfast Guardian",
@@ -183,6 +190,13 @@
             resetState();
             if (currentQuestionIndex < questions.length) {
                 const question = questions[currentQuestionIndex];
+                
+                const img = document.createElement('img');
+                img.src = question.image;
+                img.alt = "Quiz thematic image";
+                img.className = "question-image w-full h-full object-cover";
+                imageContainer.appendChild(img);
+
                 questionText.innerText = question.question;
                 question.answers.forEach(answer => {
                     const button = document.createElement('button');
@@ -200,6 +214,9 @@
         function resetState() {
             while (answerButtons.firstChild) {
                 answerButtons.removeChild(answerButtons.firstChild);
+            }
+            while (imageContainer.firstChild) {
+                imageContainer.removeChild(imageContainer.firstChild);
             }
         }
 
@@ -224,10 +241,16 @@
             resultContainer.classList.remove('hidden');
 
             const totalScore = scores.rumi + scores.zoey + scores.mira;
+            
+            // Handle case where totalScore is 0 to avoid division by zero
+            if (totalScore === 0) {
+                 scores = { rumi: 1, zoey: 1, mira: 1 }; // Assign a default distribution
+            }
+
             const percentages = {
-                rumi: Math.round((scores.rumi / totalScore) * 100),
-                zoey: Math.round((scores.zoey / totalScore) * 100),
-                mira: Math.round((scores.mira / totalScore) * 100)
+                rumi: Math.round((scores.rumi / (totalScore || 1)) * 100),
+                zoey: Math.round((scores.zoey / (totalScore || 1)) * 100),
+                mira: Math.round((scores.mira / (totalScore || 1)) * 100)
             };
             
             let primaryCharacter = Object.keys(percentages).reduce((a, b) => percentages[a] > percentages[b] ? a : b);
@@ -300,4 +323,3 @@
     </script>
 </body>
 </html>
-
