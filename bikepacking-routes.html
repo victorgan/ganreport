@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Épique - Gold Standard Route Finder</title>
+    <title>Épique - 100 Gold Standard Routes</title>
     
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -28,217 +28,463 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .animate-in { animation: fadeIn 0.2s ease-out forwards; }
+        .animate-in { animation: fadeIn 0.4s ease-out forwards; }
+        
+        /* Image Loading State */
+        .image-loading { filter: blur(20px); transform: scale(1.1); }
+        .image-loaded { filter: blur(0); transform: scale(1); transition: filter 0.7s ease-in-out, transform 0.7s ease-in-out; }
     </style>
 </head>
 <body class="bg-black text-white min-h-screen">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo } = React;
+        const { useState, useMemo, useEffect } = React;
 
-        // --- Icons (Implemented as Components) ---
+        // --- Icons ---
         const IconBase = ({ size = 24, className = "", children }) => (
-            <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width={size} 
-                height={size} 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                className={className}
-            >
-                {children}
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
         );
+        const Mountain = (props) => <IconBase {...props}><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></IconBase>;
+        const MapIcon = (props) => <IconBase {...props}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></IconBase>;
+        const Globe = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></IconBase>;
+        const Navigation = (props) => <IconBase {...props}><polygon points="3 11 22 2 13 21 11 13 3 11"/></IconBase>;
+        const Trophy = (props) => <IconBase {...props}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></IconBase>;
+        const Clock = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
+        const Layers = (props) => <IconBase {...props}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></IconBase>;
+        const XIcon = (props) => <IconBase {...props}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></IconBase>;
+        const Bike = (props) => <IconBase {...props}><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></IconBase>;
+        const Plane = (props) => <IconBase {...props}><path d="M2 12h20"/><path d="M13 5v7"/><path d="M16 19l4-7-4-7"/></IconBase>;
 
-        const Mountain = (props) => (
-            <IconBase {...props}><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></IconBase>
-        );
-        const MapIcon = (props) => (
-            <IconBase {...props}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></IconBase>
-        );
-        const Globe = (props) => (
-            <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></IconBase>
-        );
-        const Navigation = (props) => (
-            <IconBase {...props}><polygon points="3 11 22 2 13 21 11 13 3 11"/></IconBase>
-        );
-        const Trophy = (props) => (
-            <IconBase {...props}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></IconBase>
-        );
-        const Clock = (props) => (
-            <IconBase {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>
-        );
-        const Layers = (props) => (
-            <IconBase {...props}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></IconBase>
-        );
-        const XIcon = (props) => (
-            <IconBase {...props}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></IconBase>
-        );
-        const Bike = (props) => (
-            <IconBase {...props}><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></IconBase>
-        );
+        // --- Compact Data Loader ---
+        const RAW_DATA = [
+            // --- 50 TARMAC (ROAD) ROUTES ---
+            [1, "Route des Grandes Alpes", "Europe", "France", 720, 17000, "Road", 7, "Jun-Sep", "Hard", 
+             "The holy grail of alpine climbing. From Lake Geneva to the Mediterranean, you will trace the backbone of the French Alps. The route crosses 17 major mountain passes, including the towering Col de l'Iseran (2,770m) and the legendary Galibier. Expect lush green valleys in the north transitioning to arid, sun-baked gorges as you approach Nice. Every descent is hard-earned.", 
+             "Start: Thonon-les-Bains (Train from Geneva). End: Nice (TGV/Airport). Planning: July and August are busy; book hotels 3-4 months in advance. Many passes are closed Oct-May. Carry arm warmers even in summer; descents are freezing.", 
+             ["Climbing", "Legendary"], 98],
+            [2, "North Coast 500", "Europe", "Scotland", 830, 10000, "Road", 6, "May-Sep", "Hard", 
+             "Scotland's answer to Route 66. A brutal and beautiful loop from Inverness. You will face the Bealach na Bà—a pass with 20% gradients reminiscent of the Alps—and ride along windswept coastlines that look like Norway. The weather changes hourly, adding to the epic nature of the ride.", 
+             "Start/End: Inverness (Rail/Air). Planning: Midges are fierce in summer—bring a head net and Smidge. Accommodation is very scarce in the northwest; book B&Bs 6 months out or bring camping gear. Prevailing winds usually favor clockwise riding.", 
+             ["Coastal", "Punchy"], 88],
+            [3, "Taiwan Cycle Route 1", "Asia", "Taiwan", 968, 9000, "Road", 9, "Oct-Mar", "Medium", 
+             "A perfectly signed circumnavigation of the island. You'll experience the bustling tech hubs of the west coast and the dramatic, cliff-hanging roads of the east coast near Taroko Gorge. The cycling culture is immense, with police stations acting as water stops. It is a journey of culinary delight as much as cycling.", 
+             "Start/End: Taipei (Songshan KM0). Planning: 7-Elevens every 5km act as resupply stations (they have bathrooms and wifi). November is ideal—dry and cool. The route is marked with blue lines on the tarmac.", 
+             ["Culture", "Food"], 85],
+            [4, "Trans-Pyrenees (Raid Pyreneen)", "Europe", "France/Spain", 720, 11000, "Road", 6, "Jun-Sep", "Hard", 
+             "The Raid Pyrénéen is a timed challenge from the Atlantic (Hendaye) to the Mediterranean (Cerbère). You will climb the giants of the Tour de France: Tourmalet, Aubisque, and Aspin. It is a rhythmic, relentless journey of up and down, with very little flat terrain.", 
+             "Start: Hendaye. End: Cerbère. Planning: To be an official 'Raid' finisher, you must complete it in 100 hours, but touring pace is 7-8 days. Train access is good at both ends. Accommodations in ski villages are plentiful.", 
+             ["Climbing", "Epic"], 94],
+            [5, "Blue Ridge Parkway", "North America", "USA", 755, 14000, "Road", 6, "May-Oct", "Medium", 
+             "America's favorite drive. A continuous ribbon of tarmac along the spine of the Appalachians connecting Shenandoah to the Smokies. There are zero stop signs or traffic lights for 469 miles. The climbing is gentle but relentless, and the early morning mist in the valleys is ethereal.", 
+             "Start: Waynesboro, VA. End: Cherokee, NC. Planning: Water and food are scarce directly on the parkway; you often must descend into towns to resupply. Tunnels can be dark—bring good lights. Camping is frequent.", 
+             ["Scenic", "Flow"], 82],
+            [6, "Haute Route Alps", "Europe", "France", 800, 21000, "Road", 7, "Jul-Aug", "Extreme", 
+             "The hardest way from Geneva to Nice. Unlike the Route des Grandes Alpes, this route seeks out the steepest, most difficult climbs available, often using obscure side roads. It is often ridden as a 7-day stage race. Expect 3,000m+ of climbing every single day.", 
+             "Start: Geneva. End: Nice. Planning: This is pro-level difficulty. A support vehicle or luggage transfer service is highly recommended. Gearing: 34-32 or 34-34 is essential.", 
+             ["Pro", "Steep"], 97],
+            [7, "Shimanami Kaido", "Asia", "Japan", 70, 1000, "Road", 1, "All Year", "Easy", 
+             "A stunning architectural marvel connecting Japan's main island of Honshu to Shikoku via six small islands and massive suspension bridges. The entire route has dedicated cycling lanes, often suspended high above the whirlpools of the Seto Inland Sea.", 
+             "Start: Onomichi. End: Imabari. Planning: Can be done in one day easily. Bike rentals are available at one end and can be dropped at the other. Ferries allow you to skip sections if tired.", 
+             ["Bridges", "Ocean"], 75],
+            [8, "LEJOG (Lands End to John o' Groats)", "Europe", "UK", 1400, 15000, "Road", 10, "May-Sep", "Hard", 
+             "The classic End-to-End. You will traverse the entire length of Great Britain, witnessing the landscape shift from the granite cliffs of Cornwall to the rolling Cotswolds, the industrial North, and finally the desolate beauty of the Scottish Highlands.", 
+             "Start: Penzance/Lands End. End: Wick/John o' Groats. Planning: Always ride South to North to utilize prevailing tailwinds. Book bike spaces on trains months in advance—they are very limited in the UK.", 
+             ["Classic", "Long"], 89],
+            [9, "Ring of Kerry", "Europe", "Ireland", 179, 2000, "Road", 2, "May-Sep", "Medium", 
+             "The Iveragh Peninsula offers quintessential Irish scenery: emerald green fields, stone walls, dramatic Atlantic cliffs, and charming pubs. The coastal road winds precariously above the crashing waves.", 
+             "Start/End: Killarney. Planning: Ride clockwise (South to North) to go against the flow of tour buses, which are required to go counter-clockwise. Rain gear is mandatory regardless of the forecast.", 
+             ["Green", "Wet"], 78],
+            [10, "Mallorca 312 Loop", "Europe", "Spain", 312, 5050, "Road", 2, "Apr-Oct", "Hard", 
+             "A loop of the cycling world's favorite island. You tackle the Serra de Tramuntana range first, including the Puig Major, before hitting the rolling interior. The road surfaces are silky smooth and the drivers are incredibly respectful of cyclists.", 
+             "Start/End: Alcúdia. Planning: Spring is best for training camps. Summer is very hot. The route passes through many towns, so water/coffee stops are easy.", 
+             ["Island", "Fast"], 86],
+            [11, "Pacific Coast Highway", "North America", "USA", 800, 9000, "Road", 8, "Sep-Oct", "Medium", 
+             "San Francisco to LA. The section through Big Sur is world-famous, with the road clinging to cliffs hundreds of feet above the Pacific. You'll see redwood forests, elephant seals, and the Golden Gate Bridge.", 
+             "Start: San Francisco. End: Los Angeles. Planning: Strictly Southbound ride to be on the ocean side of the road and have tailwinds. Use 'Hiker-Biker' sites at State Parks for cheap ($5-10), no-reservation camping.", 
+             ["Coastal", "Classic"], 85],
+            [12, "Corsica GT20", "Europe", "France", 600, 10000, "Road", 6, "May-Jun", "Hard", 
+             "The bicycle version of the famous GR20 hiking trail. It traverses the 'Mountain in the Sea' from North to South. The interior is wild, jagged, and smells of the 'maquis' shrubland. The coastal sections offer stunning Mediterranean views.", 
+             "Start: Bastia. End: Bonifacio. Planning: Corsican drivers can be aggressive. Watch out for semi-wild pigs and cows sleeping on warm tarmac. Cash is king in mountain villages.", 
+             ["Island", "Climb"], 92],
+            [13, "N2 Portugal", "Europe", "Portugal", 739, 10000, "Road", 7, "Apr-Jun", "Hard", 
+             "Europe's Route 66. It cuts down the center of Portugal from Chaves in the north to Faro in the south. You start in lush, green vineyards and end in the arid, whitewashed Algarve, crossing the Douro and Tagus rivers along the way.", 
+             "Start: Chaves. End: Faro. Planning: Get the N2 Passport ($1) and collect stamps in 35 municipalities along the way. Avoid July/August as interior temperatures reach 40°C (104°F).", 
+             ["Crossing", "Hot"], 88],
+            [14, "Mae Hong Son Loop", "Asia", "Thailand", 600, 12000, "Road", 5, "Nov-Feb", "Hard", 
+             "Famous for its 1,864 curves. This loop through Northern Thailand climbs through lush jungle and mist-shrouded limestone peaks. The gradients are incredibly steep, often exceeding 15%, but the descents are thrilling.", 
+             "Start/End: Chiang Mai. Planning: November to February is the cool season (perfect for riding). Burning season begins in March (avoid—bad air quality). 7-Elevens and street stalls provide excellent fuel.", 
+             ["Jungle", "Steep"], 87],
+            [15, "Ha Giang Loop", "Asia", "Vietnam", 350, 7000, "Road", 4, "Oct-Apr", "Medium", 
+             "Vietnam's final frontier. You ride through the Dong Van Karst Plateau Geopark, a UNESCO site of alien-looking limestone peaks. The road is cut into cliff faces with vertigo-inducing drops. The local Hmong culture is vibrant and visible.", 
+             "Start/End: Ha Giang City. Planning: Foreigners need a permit ($10, easy to get in Ha Giang). Fog can be dense in winter. Roads are narrow and shared with motorbikes.", 
+             ["Scenic", "Exotic"], 90],
+            [16, "Four Rivers Path", "Asia", "Korea", 633, 4000, "Road", 5, "Apr-Oct", "Easy", 
+             "A dedicated cycling superhighway from Seoul to Busan. It follows four major river systems, meaning it is largely flat and free of cars. You ride through tunnels, over bridges, and through peaceful rice paddies.", 
+             "Start: Seoul. End: Busan. Planning: Buy the 'K-Water' passport and collect stamps at red phone booths. Completion gets you a medal. Motels are bike-friendly and cheap.", 
+             ["River", "Safe"], 76],
+            [17, "Garden Route", "Africa", "South Africa", 300, 3500, "Road", 3, "Sep-Apr", "Medium", 
+             "A lush coastal corridor between the mountains and the Indian Ocean. You pass through ancient forests (Knysna), crossing lagoon bridges and rolling hills. It is the greenest part of South Africa.", 
+             "Start: Mossel Bay. End: Storms River. Planning: The N2 highway has a shoulder, but using the parallel R102 'Old Road' is much quieter and scenic. Safety is generally good in this region.", 
+             ["Coastal", "Scenic"], 79],
+            [18, "Lofoten Islands", "Europe", "Norway", 200, 2000, "Road", 3, "Jun-Aug", "Medium", 
+             "Cycling inside a postcard. Jagged peaks rise directly from the sea, dotted with red fisherman's cabins (rorbuer). The E10 road connects the islands via bridges and tunnels. In summer, the sun never sets.", 
+             "Start: Svolvær. End: Å. Planning: Some tunnels are banned for bikes; look for the 'cyklist' detour buttons or ferries. Wild camping is legal (Allemannsretten) but flat ground is rare.", 
+             ["Arctic", "Scenic"], 91],
+            [19, "Golden Circle & South Coast", "Europe", "Iceland", 300, 2000, "Road", 3, "Jul-Aug", "Medium", 
+             "A showcase of geological violence. You pass erupting geysers, massive waterfalls like Skógafoss, and black sand beaches. The scenery is stark, treeless, and overwhelmingly grand.", 
+             "Start: Reykjavik. Planning: The Ring Road has no shoulder and fast tourists—wear high-vis. The wind is the real challenge; check Vedur.is constantly. expensive food.", 
+             ["Volcanic", "Wind"], 84],
+            [20, "Grossglockner High Alpine Road", "Europe", "Austria", 48, 2500, "Road", 1, "May-Oct", "Hard", 
+             "The most famous alpine road in Austria. It winds up into the heart of the Hohe Tauern National Park, facing the Pasterze Glacier and the Grossglockner peak. The cobblestones at the summit (Edelweissspitze) offer a 360-degree panorama.", 
+             "Start: Bruck. End: Heiligenblut. Planning: It's a toll road, but often free or discounted for cyclists if you start early (before 9am) to beat the motorbikes.", 
+             ["Alpine", "Steep"], 93],
+            [21, "Stelvio Loop", "Europe", "Italy", 120, 3500, "Road", 1, "Jun-Sep", "Extreme", 
+             "The Cima Coppi. Climbing the 48 hairpin turns from Prato is a rite of passage. The wall of switchbacks is visible for miles. You descend via the Umbrail Pass into Switzerland for a stunning loop.", 
+             "Start: Bormio. Planning: Traffic is terrible on weekends. Try to ride mid-week or on 'Stelvio Bike Day' (closed to cars). Carry a jacket; the summit is at 2757m.", 
+             ["Iconic", "Switchbacks"], 95],
+            [22, "Trans-Dolomites", "Europe", "Italy", 600, 18000, "Road", 6, "Jun-Sep", "Hard", 
+             "Riding among the pale limestone spires of the Dolomites is a visual overload. You tackle legends like the Sella Ronda, Passo Giau, and Passo Fedaia. The roads are engineered masterpieces.", 
+             "Start: Bolzano. End: Cortina. Planning: The food is a mix of Italian and Austrian (Knödel and Pasta). Gradients are steep but usually steady.", 
+             ["Mountains", "Scenic"], 96],
+            [23, "Romantic Road", "Europe", "Germany", 460, 2000, "Road", 4, "Apr-Oct", "Easy", 
+             "A journey through medieval Bavaria. You pass walled towns like Rothenburg ob der Tauber and end at the Disney-like Neuschwanstein Castle. The route uses quiet farm roads and dedicated paths.", 
+             "Start: Würzburg. End: Füssen. Planning: Very touristy but the bike route (D9) keeps you away from the main bus traffic. excellent beer gardens at every stop.", 
+             ["Castle", "Chill"], 72],
+            [24, "Douro Valley", "Europe", "Portugal", 200, 3000, "Road", 3, "Mar-Jun", "Medium", 
+             "The N222 follows the Douro River and was voted the world's best road. Terraced vineyards rise steeply from the river banks. It is hot, dry, and smells of port wine.", 
+             "Start: Porto. End: Pocinho. Planning: You can put your bike on the train to return to Porto. Late summer harvest time is beautiful but accommodations fill up.", 
+             ["Wine", "River"], 80],
+            [25, "Andalusia White Villages", "Europe", "Spain", 300, 5000, "Road", 4, "Sep-May", "Medium", 
+             "Ronda, Grazalema, Zahara. You ride through the Sierra de Grazalema natural park, connecting the famous 'Pueblos Blancos' perched precariously on cliff edges. The light here has inspired artists for centuries.", 
+             "Start: Malaga/Ronda. Planning: Siesta is strictly observed; shops close 2-5pm. Dinner is late (9pm+). Tapas fuel the ride.", 
+             ["Culture", "Hot"], 83],
+            [26, "Cabot Trail", "North America", "Canada", 300, 4000, "Road", 3, "Jun-Sep", "Hard", 
+             "Cape Breton's masterpiece. The road hugs the coastline of the Highlands National Park, climbing French Mountain and North Mountain. You might see moose, whales, and bald eagles.", 
+             "Start/End: Baddeck. Planning: Ride counter-clockwise to have the ocean in your lane. Prepare for steep grades (12-15%).", 
+             ["Coastal", "Hills"], 86],
+            [27, "Sardinia East Coast", "Europe", "Italy", 400, 6000, "Road", 4, "Apr-Oct", "Medium", 
+             "The SS125 Orientale Sarda is a motorcycle favorite that cyclists love too. It winds high above the turquoise Mediterranean, cutting through wild limestone mountains. The asphalt is grippy and views are endless.", 
+             "Start: Olbia. End: Cagliari. Planning: Sardinia is very hot in July/August. May and September are perfect. Carry extra water.", 
+             ["Coastal", "Hot"], 85],
+            [28, "Jeju Fantasy Path", "Asia", "Korea", 234, 1000, "Road", 2, "Apr-Nov", "Easy", 
+             "A whimsical loop around a volcanic island. You ride past tangerine groves, black rock cliffs, and Haenyeo (female divers) entering the sea. The route is marked by a blue line on the ground.", 
+             "Start: Jeju City. Planning: Very bike friendly. Cafes and convenience stores are everywhere. You can rent high-end road bikes easily.", 
+             ["Island", "Relaxed"], 74],
+            [29, "Chapman's Peak", "Africa", "South Africa", 109, 1200, "Road", 1, "All Year", "Medium", 
+             "Part of the Cape Town Cycle Tour. Chapman's Peak Drive is carved out of the vertical cliff face dropping into the Atlantic. It is one of the world's most dramatic marine drives.", 
+             "Start: Cape Town. Planning: The Cape Doctor (wind) can be fierce. Ride early morning. The road is sometimes closed due to rockfalls.", 
+             ["Ocean", "Day"], 88],
+            [30, "Alto de Letras", "South America", "Colombia", 80, 3800, "Road", 1, "All Year", "Extreme", 
+             "The longest road climb in the world? You start in tropical heat at Mariquita (468m) and finish in the freezing Páramo at 3,663m. It is 80km of continuous uphill.", 
+             "Start: Mariquita. End: Manizales. Planning: A support vehicle is highly recommended for clothes changes (heat to cold). Altitude sickness is a real risk.", 
+             ["Climbing", "Altitude"], 99],
+            [31, "Carretera Austral (Paved)", "South America", "Chile", 400, 5000, "Road", 4, "Dec-Mar", "Medium", 
+             "The northern section of Patagonia's main artery. You ride past temperate rainforests, hanging glaciers, and fjords. The air is the cleanest you will ever breathe.", 
+             "Start: Puerto Montt. End: Chaitén. Planning: Ferries connect the road sections and must be booked in advance. Rain is inevitable.", 
+             ["Patagonia", "Rain"], 87],
+            [32, "Shikoku 88 Temples", "Asia", "Japan", 1200, 15000, "Road", 12, "Mar-Nov", "Hard", 
+             "A 1,200 year old pilgrimage route visiting 88 Buddhist temples. While traditionally walked, the road network allows for a spiritual cycling journey through rural Japan.", 
+             "Start: Tokushima (Temple 1). Planning: Wear the white Henro vest to receive 'osettai' (gifts) from locals. Stay in Shukubo (temple lodgings).", 
+             ["Cultural", "Pilgrim"], 89],
+            [33, "Trollstigen", "Europe", "Norway", 100, 1200, "Road", 1, "Jun-Aug", "Medium", 
+             "The Trolls' Path. It spirals up the mountainside with 11 hairpin bends, crossing the Stigfossen waterfall. The view from the top viewing platform is iconic.", 
+             "Start: Åndalsnes. Planning: Very narrow road with tourist buses. Early morning or late evening (remember the midnight sun) is best.", 
+             ["Fjord", "Drama"], 88],
+            [34, "Seven Districts", "Asia", "Afghanistan", 150, 2000, "Road", 2, "May-Oct", "Medium", 
+             "A legendary ribbon of tarmac winding through the Panjshir Valley, surrounded by the Hindu Kush. Known as the valley of the five lions, the canyon walls are immense.", 
+             "Logistics: Currently inaccessible for tourism. Included here as a 'Gold Standard' reference to legendary terrain.", 
+             ["Remote", "Valley"], 92],
+            [35, "Vätternrundan", "Europe", "Sweden", 315, 1500, "Road", 1, "Jun", "Medium", 
+             "The world's largest recreational bike ride. You circumnavigate Lake Vättern in a single push. The midnight sun means you can ride through the night with twilight visibility.", 
+             "Start: Motala. Planning: Register early for the event. Riding through the night requires lights but is a magical experience.", 
+             ["Lake", "Endurance"], 81],
+            [36, "Flanders Classics", "Europe", "Belgium", 250, 2000, "Road", 2, "Apr-Sep", "Hard", 
+             "A pilgrimage to the cobbles. You ride the Oude Kwaremont, Paterberg, and Koppenberg. These short, brutal, cobbled climbs are the battlegrounds of cycling history.", 
+             "Start: Oudenaarde (Centrum Ronde van Vlaanderen). Planning: 28mm+ tires and lower tire pressure recommended. The cobbles are slippery when wet.", 
+             ["Cobbles", "History"], 90],
+            [37, "Paris-Brest-Paris", "Europe", "France", 1200, 12000, "Road", 4, "Aug (4 years)", "Hard", 
+             "The oldest cycling event in existence. A 1200km brevet from Paris to the Atlantic and back. You ride day and night, fueled by baguettes and willpower.", 
+             "Start: Paris. Planning: Occurs every 4 years. Requires qualifying brevets (200, 300, 400, 600km). Sleep management is the key challenge.", 
+             ["Ultra", "History"], 94],
+            [38, "Trans-Am (Rockies)", "North America", "USA", 1000, 12000, "Road", 10, "Jun-Sep", "Hard", 
+             "The highest and most scenic section of the Trans-America Trail. You cross the Continental Divide multiple times, riding through the vast, open grandeur of Colorado.", 
+             "Start: Pueblo, CO. End: Missoula, MT. Planning: Services can be 50-80 miles apart. Altitude affects performance significantly.", 
+             ["Mountains", "Classic"], 86],
+            [39, "Going-to-the-Sun Road", "North America", "USA", 80, 1500, "Road", 1, "Jun-Sep", "Medium", 
+             "The crown jewel of Glacier National Park. The road is carved into the precipitous rock face, passing weeping walls and glaciers. It is an engineering marvel.", 
+             "Start: West Glacier. Planning: Bikes are restricted during peak traffic hours (11am-4pm). Ride at sunrise for the best light and no cars.", 
+             ["National Park", "Climb"], 93],
+            [40, "Mount Teide", "Africa", "Spain (Tenerife)", 50, 2300, "Road", 1, "All Year", "Hard", 
+             "The longest continuous climb in Europe. You go from the beach to the lunar landscape of the volcano crater at 2,300m. It is the preferred training ground for pro teams.", 
+             "Logistics: Many approach roads; the road from La Orotava is scenic but steep. Descent can be cold.", 
+             ["Volcano", "Climb"], 92],
+            [41, "Col de la Loze", "Europe", "France", 30, 1000, "Road", 1, "Jun-Sep", "Extreme", 
+             "A bike-only path paved at 2,304m altitude. It features erratic gradients of up to 24%, changing rhythm constantly. It offers the solitude of a gravel path with the speed of tarmac.", 
+             "Start: Meribel or Courchevel. Planning: No cars allowed! The summit views of Mont Blanc are unparalleled.", 
+             ["Steep", "Pro"], 95],
+            [42, "Sa Calobra", "Europe", "Spain", 20, 800, "Road", 1, "All Year", "Hard", 
+             "The most famous 10km in cycling? You must descend it first to climb it. The road loops over itself (the Tie Knot) and winds down a limestone canyon to the sea.", 
+             "Start: Top of the pass. Planning: Go before 10am to avoid buses. The climb is a standardized FTP test for many.", 
+             ["Iconic", "Switchbacks"], 91],
+            [43, "Bealach na Bà", "Europe", "Scotland", 20, 600, "Road", 1, "May-Sep", "Hard", 
+             "The closest thing to an Alpine pass in the UK. It rises from sea level to 626m in 9km, with switchbacks and 20% ramps near the top. The view to Skye is breathtaking.", 
+             "Start: Applecross. Planning: The road is single track with passing places. Weather at the top can be severe even in summer.", 
+             ["Steep", "Wild"], 90],
+            [44, "Ventoux Night Ride", "Europe", "France", 40, 1600, "Road", 1, "Jun-Sep", "Hard", 
+             "Climbing the Giant of Provence under the stars. Avoiding the blistering heat of the day, you reach the lunar, bald summit at sunrise.", 
+             "Start: Bedoin. Planning: Bring lights and warm clothes for the descent. The observatory at the top is iconic.", 
+             ["Legend", "Wind"], 94],
+            [45, "Mortirolo & Gavia", "Europe", "Italy", 100, 3000, "Road", 1, "Jun-Sep", "Extreme", 
+             "The hardest double in the Giro d'Italia. The Mortirolo is steep and suffocatingly wooded; the Gavia is high, open, and majestic with broken tarmac.", 
+             "Start: Bormio. Planning: Gavia is often snowy until June. Mortirolo requires compact gearing (34-32).", 
+             ["Pro", "Climb"], 97],
+            [46, "Angliru", "Europe", "Spain", 12, 1200, "Road", 1, "May-Oct", "Extreme", 
+             "The Beast of Asturias. With sections at 24%, it is more of a wall than a road. It is often shrouded in mist, adding to the intimidation.", 
+             "Start: La Vega. Planning: You might need MTB gearing. It's a dead end at the top.", 
+             ["Steep", "Pain"], 98],
+            [47, "Zoncolan", "Europe", "Italy", 10, 1200, "Road", 1, "May-Oct", "Extreme", 
+             "The Gate of Hell. 10km at an average of 12%, with the middle 6km averaging 15%. Inside the stadium section, the crowd support in the Giro is deafening.", 
+             "Start: Ovaro. Planning: Unrelenting steepness. There is no rest. Mental fortitude required.", 
+             ["Steep", "Legend"], 98],
+            [48, "Mauna Kea", "Oceania", "USA (Hawaii)", 70, 4200, "Road", 1, "All Year", "Extreme", 
+             "The hardest climb on earth? You ride from sea level to 4,200m (13,800ft) in one go. The last section is gravel, but most do it on road bikes with thick tires. Oxygen is 60% of sea level at the top.", 
+             "Start: Hilo. Planning: Support vehicle mandatory for safety. Altitude sickness is a major risk. Descent is freezing.", 
+             ["Volcano", "Altitude"], 100],
+            [49, "Col du Tourmalet", "Europe", "France", 19, 1400, "Road", 1, "Jun-Oct", "Hard", 
+             "The most used climb in Tour de France history. It is a highway of suffering. The summit features the 'Giant of the Tourmalet' statue.", 
+             "Start: Luz-St-Sauveur or Campan. Planning: Photo at the summit is mandatory. Descent is fast and open.", 
+             ["Tour", "History"], 94],
+            [50, "Alpe d'Huez", "Europe", "France", 14, 1100, "Road", 1, "Jun-Oct", "Hard", 
+             "The Hollywood climb. 21 hairpin bends, each named after a stage winner. It's not the hardest, but the history and the atmosphere make it essential.", 
+             "Start: Bourg d'Oisans. Planning: 'Dutch Corner' on Turn 7 is famous. It's a dead-end ski resort at the top.", 
+             ["Switchbacks", "Party"], 93],
 
-        // --- Data: Gold Standard Routes ---
-        const ROUTES = [
-            {
-                id: 1,
-                name: "Route des Grandes Alpes",
-                region: "Europe",
-                country: "France",
-                distanceKm: 720,
-                elevationM: 17000,
-                surface: "Road",
-                daysStrong: 7,
-                daysTouring: 10,
-                season: "Jun - Sep",
-                difficulty: "Hard",
-                description: "The holy grail of climbing. From Lake Geneva to the Mediterranean Sea, crossing 17 of the highest mountain passes in the Alps, including the Iseran, Galibier, and Bonette. This is pure tarmac glory.",
-                tags: ["Climbing", "Scenic", "Legendary"],
-                imageGradient: "from-blue-900 to-slate-900",
-                sufferScore: 92
-            },
-            {
-                id: 2,
-                name: "Iceland Ring Road (Route 1)",
-                region: "Europe",
-                country: "Iceland",
-                distanceKm: 1332,
-                elevationM: 8500,
-                surface: "Mixed",
-                daysStrong: 10,
-                daysTouring: 14,
-                season: "Jul - Aug",
-                difficulty: "Medium",
-                description: "Circumnavigate the land of fire and ice. While mostly paved, the wind and weather make this a battle. Waterfalls, glaciers, and black sand beaches are your daily backdrop. 24 hours of daylight in summer.",
-                tags: ["Volcanic", "Windy", "Endurance"],
-                imageGradient: "from-slate-800 to-gray-900",
-                sufferScore: 75
-            },
-            {
-                id: 3,
-                name: "Pamir Highway (M41)",
-                region: "Asia",
-                country: "Tajikistan/Kyrgyzstan",
-                distanceKm: 1250,
-                elevationM: 21000,
-                surface: "Gravel",
-                daysStrong: 14,
-                daysTouring: 20,
-                season: "Jul - Sep",
-                difficulty: "Extreme",
-                description: "The second highest international highway in the world. You will ride consistently above 4,000m altitude. Oxygen is scarce, the gravel is washboard, and the views of the Hindu Kush are life-changing.",
-                tags: ["High Altitude", "Remote", "Adventure"],
-                imageGradient: "from-amber-900 to-stone-900",
-                sufferScore: 98
-            },
-            {
-                id: 4,
-                name: "Taiwan Cycle Route No. 1",
-                region: "Asia",
-                country: "Taiwan",
-                distanceKm: 968,
-                elevationM: 9000,
-                surface: "Road",
-                daysStrong: 9,
-                daysTouring: 12,
-                season: "Oct - Mar",
-                difficulty: "Medium",
-                description: "A perfectly signed loop around the entire island. Incredible food at every 7-Eleven, smooth tarmac, and a mix of bustling cities and serene Pacific coastline. The climb to Wuling Pass is an optional brutal add-on.",
-                tags: ["Culture", "Food", "Coastal"],
-                imageGradient: "from-emerald-900 to-teal-900",
-                sufferScore: 65
-            },
-            {
-                id: 5,
-                name: "North Coast 500",
-                region: "Europe",
-                country: "Scotland",
-                distanceKm: 830,
-                elevationM: 10000,
-                surface: "Road",
-                daysStrong: 6,
-                daysTouring: 8,
-                season: "May - Sep",
-                difficulty: "Hard",
-                description: "Scotland's answer to Route 66. Rugged coastlines, single-track roads, and steep punchy climbs like the Bealach na Bà. Weather can turn in an instant. A test of mental fortitude against the elements.",
-                tags: ["Coastal", "Punchy", "Wet"],
-                imageGradient: "from-green-900 to-slate-900",
-                sufferScore: 82
-            },
-            {
-                id: 6,
-                name: "Trans-Pyrenees",
-                region: "Europe",
-                country: "Spain/France",
-                distanceKm: 950,
-                elevationM: 24000,
-                surface: "Road",
-                daysStrong: 10,
-                daysTouring: 14,
-                season: "Jun - Sep",
-                difficulty: "Extreme",
-                description: "Coast to coast, Atlantic to Mediterranean. This route hunts elevation. It is a relentless sequence of cols. Recommended only for those who truly love to suffer on the ups.",
-                tags: ["Climbing", "Mountains", "Epic"],
-                imageGradient: "from-red-900 to-orange-950",
-                sufferScore: 96
-            },
-            {
-                id: 7,
-                name: "Mawson Trail",
-                region: "Oceania",
-                country: "Australia",
-                distanceKm: 900,
-                elevationM: 6500,
-                surface: "Gravel",
-                daysStrong: 9,
-                daysTouring: 14,
-                season: "Apr - Oct",
-                difficulty: "Hard",
-                description: "The Australian Outback experience without being totally isolated. Red dirt, gum forests, and the Flinders Ranges. Requires wide tires and careful water planning.",
-                tags: ["Outback", "Gravel", "Remote"],
-                imageGradient: "from-orange-900 to-red-950",
-                sufferScore: 85
-            },
-            {
-                id: 8,
-                name: "Baja Divide (Cape Loop)",
-                region: "North America",
-                country: "Mexico",
-                distanceKm: 480,
-                elevationM: 5500,
-                surface: "Gravel/Sand",
-                daysStrong: 5,
-                daysTouring: 7,
-                season: "Nov - Mar",
-                difficulty: "Hard",
-                description: "A shortened loop of the famous Baja Divide. Cactus forests, sandy tracks, and fish tacos. Technical riding skills required for deep sand sections. A perfect winter escape.",
-                tags: ["Desert", "Technical", "Sand"],
-                imageGradient: "from-yellow-900 to-amber-950",
-                sufferScore: 88
-            },
-            {
-                id: 9,
-                name: "Cross Cape Route",
-                region: "Africa",
-                country: "South Africa",
-                distanceKm: 742,
-                elevationM: 11000,
-                surface: "Mixed",
-                daysStrong: 8,
-                daysTouring: 11,
-                season: "Sep - Apr",
-                difficulty: "Hard",
-                description: "From Plettenberg Bay to Stellenbosch. A journey through the Western Cape's diverse biomes, from semi-desert Karoo to lush winelands. Gravel heavy.",
-                tags: ["Safari", "Wine", "Gravel"],
-                imageGradient: "from-stone-800 to-stone-950",
-                sufferScore: 80
-            }
+            // --- 50 GRAVEL / MIXED ROUTES ---
+            [51, "Silk Road Mountain Race", "Asia", "Kyrgyzstan", 1800, 30000, "Gravel", 15, "Aug", "Extreme", 
+             "The hardest bikepacking race in the world. You traverse the Tian Shan mountains, crossing old Soviet military roads and horse tracks. Passes exceed 4,000m. The isolation is total, and the beauty is stark.", 
+             "Start: Bishkek. Planning: Requires extreme self-sufficiency. Water filtration, -10C sleeping bag, and satellite tracker are mandatory. Resupply is days apart.", 
+             ["Remote", "Suffer"], 100],
+            [52, "Tour Divide (USA)", "North America", "USA", 4400, 60000, "Gravel", 30, "Jun-Sep", "Hard", 
+             "The granddaddy of them all. Following the Continental Divide from Canada to Mexico. You ride through the vastness of Montana, the Great Basin of Wyoming, and the high peaks of Colorado.", 
+             "Start: Banff, AB. End: Antelope Wells, NM. Planning: Grizzly bear awareness is critical in the north. The route is physically demanding but technically mostly fire roads.", 
+             ["Wild", "Divide"], 99],
+            [53, "Atlas Mountain Race", "Africa", "Morocco", 1200, 25000, "Gravel", 10, "Oct-Apr", "Extreme", 
+             "A fixed-route race through the Anti-Atlas and High Atlas mountains. You ride through dry riverbeds, rocky colonial tracks, and crumbling kasbahs. The terrain is brutal on tires.", 
+             "Start: Marrakech. End: Agadir/Essaouira. Planning: Tubeless tires with heavy casing are essential (sharp rocks). Omelettes and bread are the staple diet in villages.", 
+             ["Desert", "Rock"], 96],
+            [54, "Baja Divide", "North America", "Mexico", 2700, 30000, "Sand", 40, "Nov-Mar", "Hard", 
+             "A rugged route down the Baja California peninsula. You ride through cactus forests, along remote beaches, and through deep sand. The route connects the Pacific and the Sea of Cortez.", 
+             "Start: San Diego. End: San Jose del Cabo. Planning: 3.0-inch 'plus' tires are highly recommended for the sand. Water capacity of 8-10 liters is needed for dry sections.", 
+             ["Sand", "Tacos"], 95],
+            [55, "Westfjords Way", "Europe", "Iceland", 950, 16000, "Mixed", 8, "Jul", "Hard", 
+             "Iceland's most remote region. The route weaves in and out of deep fjords, connecting them via steep gravel mountain passes. You are never far from the ocean or a hot spring.", 
+             "Start/End: Ísafjörður. Planning: The weather is volatile. Use the 'Hot Pot' map to find natural hot springs for recovery. 24h daylight in summer.", 
+             ["Arctic", "Wind"], 92],
+            [56, "Torino-Nice Rally", "Europe", "Italy/France", 700, 20000, "Gravel", 7, "Jul-Sep", "Extreme", 
+             "A modern classic connecting two vibrant cities via the high Alps. You ride the Via del Sale (Salt Road), a high-altitude military gravel road straddling the border.", 
+             "Start: Turin. End: Nice. Planning: Some mountain refugios require booking. 40mm+ tires recommended. The descent into Nice is legendary.", 
+             ["Alpine", "Military"], 97],
+            [57, "Oregon Timber Trail", "North America", "USA", 1073, 23000, "Singletrack", 12, "Jul-Sep", "Extreme", 
+             "A world-class route composed of 60% singletrack. You traverse the volcanic landscapes of the Cascades, old growth forests, and high deserts.", 
+             "Start: CA Border. End: Hood River. Planning: This is mountain biking, not gravel grinding. Technical skills required. Water can be scarce in the south.", 
+             ["MTB", "Forest"], 98],
+            [58, "Mawson Trail", "Oceania", "Australia", 900, 6500, "Gravel", 9, "Apr-Oct", "Hard", 
+             "A journey into the Australian Outback without being totally remote. You ride through the Adelaide Hills, the Barossa Valley vineyards, and end in the rugged Flinders Ranges.", 
+             "Start: Adelaide. End: Blinman. Planning: Avoid summer (Dec-Feb) as temps exceed 40°C. Red mud turns to cement when wet—avoid rain.", 
+             ["Outback", "Red"], 88],
+            [59, "GB Duro", "Europe", "UK", 2000, 25000, "Mixed", 14, "Aug", "Extreme", 
+             "Lands End to John o' Groats, the hard way. A mix of road, gravel, singletrack, and bog. It tries to avoid tarmac wherever possible.", 
+             "Start: Lands End. End: John o' Groats. Planning: A versatile bike is needed (Gravel with big tires or XC MTB). Be prepared for wet feet for 14 days.", 
+             ["Epic", "Mud"], 94],
+            [60, "Badlands", "Europe", "Spain", 750, 15000, "Gravel", 6, "Sep-Oct", "Hard", 
+             "Europe's only desert. You ride through the Gorafe Desert's canyons and the Tabernas Desert. The landscapes look like Mars. The heat is intense and the gradients are steep.", 
+             "Start: Granada. Planning: Water capacity is critical. There are long stretches with no resupply. The heat reflects off the white clay.", 
+             ["Desert", "Heat"], 93],
+            [61, "Tuscany Trail", "Europe", "Italy", 470, 8000, "Gravel", 5, "May-Jun", "Medium", 
+             "The original European bikepacking event. You ride the famous Strade Bianche (white gravel roads) through vineyards, olive groves, and Renaissance towns like Siena and Florence.", 
+             "Start: Massa. End: Capalbio. Planning: The 'dolce vita' of bikepacking. Stop for gelato, espresso, and chianti. Easy to find accommodation.", 
+             ["Wine", "Rolling"], 85],
+            [62, "Traka 360", "Europe", "Spain", 360, 5000, "Gravel", 2, "May", "Hard", 
+             "Girona is the capital of European gravel. This loop hits the best tracks in the region, from the Costa Brava coast to the pyrenean foothills.", 
+             "Start/End: Girona. Planning: Fast gravel requires fast tires. Girona is packed with pro cyclists and bike cafes.", 
+             ["Race", "Fast"], 89],
+            [63, "Kenya Migration", "Africa", "Kenya", 650, 8000, "Gravel", 4, "Jun", "Hard", 
+             "Riding through the Maasai Mara ecosystem. You are literally riding among zebras, giraffes, and elephants. It is singletrack and rough gravel.", 
+             "Start: Nairobi. Planning: Guided tours are highly recommended for safety around apex predators. Nights are spent in camps.", 
+             ["Safari", "Wild"], 91],
+            [64, "Vermont Super 8", "North America", "USA", 1030, 18000, "Gravel", 8, "Sep-Oct", "Hard", 
+             "A figure-8 loop of the Green Mountain State. It connects Class IV unmaintained roads, smooth gravel, and some pavement. It is quintessential New England.", 
+             "Start: Montpelier. Planning: Late September for peak fall foliage. Class IV roads can be rocky and muddy—bring durable equipment.", 
+             ["Fall", "Mud"], 87],
+            [65, "Arkansas High Country", "North America", "USA", 1600, 24000, "Mixed", 12, "Oct-May", "Hard", 
+             "A brutal loop of the Ozarks. The climbs aren't high, but they are incredibly steep and relentless. You are constantly going up or down.", 
+             "Start: Little Rock/Bentonville. Planning: Dogs can be an issue on rural roads. Water is plentiful in creeks (filter it).", 
+             ["Steep", "Hills"], 90],
+            [66, "Hunt 1000", "Oceania", "Australia", 1000, 20000, "Gravel", 8, "Nov", "Extreme", 
+             "A traverse of the Australian Alps from Canberra to Melbourne. It crosses the roof of Australia. Remote, rugged, and featuring significant hike-a-bike.", 
+             "Start: Canberra. End: Melbourne. Planning: Weather in the Alps can turn to snow even in summer. Carry a SPOT tracker.", 
+             ["Alpine", "Remote"], 95],
+            [67, "Tour Aotearoa", "Oceania", "New Zealand", 3000, 30000, "Mixed", 25, "Feb-Mar", "Medium", 
+             "The length of New Zealand. From Cape Reinga in the north to Bluff in the south. It uses beaches, cycle trails, gravel roads, and ferries.", 
+             "Start: Cape Reinga. End: Bluff. Planning: You must book the Interislander ferry and the Whanganui River jet boat in advance.", 
+             ["Long", "Scenic"], 92],
+            [68, "Old Ghost Road", "Oceania", "New Zealand", 85, 2000, "Singletrack", 2, "All Year", "Hard", 
+             "New Zealand's premier backcountry ride. A revived gold miners' road cut into the side of mountains. Suspension bridges, native bush, and alpine ridges.", 
+             "Logistics: You MUST book the huts on the trail (Ghost Lake Hut is best). Full suspension bike recommended.", 
+             ["Technical", "History"], 91],
+            [69, "Hope 1000", "Europe", "Switzerland", 1000, 30000, "Mixed", 10, "Jul-Aug", "Extreme", 
+             "Across Switzerland from Lake Constance to Montreux. It avoids valleys, staying high on the ridges. 30,000m of climbing makes it one of the hilliest routes per km.", 
+             "Start: Romanshorn. End: Montreux. Planning: Wild camping is restricted; use official campsites or barns (sleep on straw). Expensive country.", 
+             ["Climb", "Cowbells"], 99],
+            [70, "Bohemian Border Bash", "Europe", "Czechia", 1300, 22000, "Gravel", 9, "Sep", "Hard", 
+             "Tracing the old Iron Curtain borders between Czechia, Germany, and Poland. You ride through deep, dark forests and past abandoned military watchtowers.", 
+             "Start: Bohemian Switzerland NP. Planning: The terrain is rough sandstone and rooty trails. Food is cheap and hearty.", 
+             ["History", "Forest"], 86],
+            [71, "Peru Divide", "South America", "Peru", 1300, 28000, "Gravel", 14, "May-Sep", "Extreme", 
+             "Staying above 4,000m for nearly the entire route. You ride the spine of the Andes. The air is thin, the landscapes are vast, and the llamas are plentiful.", 
+             "Start: Lima (Bus to mountains). Planning: Acclimatization is non-negotiable. 2.2\"+ tires needed. Nights are freezing.", 
+             ["Altitude", "Epic"], 100],
+            [72, "Trans-Ecuador", "South America", "Ecuador", 600, 15000, "Mixed", 6, "Jun-Sep", "Hard", 
+             "The Avenue of Volcanoes. You ride singletrack and dirt roads under the shadow of Cotopaxi and Chimborazo. The páramo landscape is spongy and wet.", 
+             "Start: Quito. Planning: Rain gear is essential. Altitude is high (3000m+). Stay in haciendas for a unique experience.", 
+             ["Volcano", "Mud"], 90],
+            [73, "Ruta de los Seismiles", "South America", "Argentina", 500, 8000, "Gravel", 5, "Nov-Mar", "Hard", 
+             "A high desert route passing the 'Seismiles'—peaks over 6000m. It is barren, windy, and utterly spectacular. The Puna de Atacama is unlike anywhere else.", 
+             "Start: Fiambalá. Planning: Very remote. Carry all food and fuel. Water sources are far apart.", 
+             ["Desert", "High"], 89],
+            [74, "Lagunas Route", "South America", "Bolivia", 450, 4000, "Sand", 6, "May-Oct", "Extreme", 
+             "From the Salar de Uyuni salt flats to the Atacama. You pass colored lakes (red, green) filled with flamingos. The washboard and sand are morale-breaking.", 
+             "Start: Uyuni. End: San Pedro de Atacama. Planning: Water is the biggest issue—carry 10L+. Nights drop to -15°C.", 
+             ["Sand", "Surreal"], 98],
+            [75, "Trans-Cambrian Way", "Europe", "Wales", 175, 4000, "MTB", 3, "May-Sep", "Hard", 
+             "A double crossing of the Welsh mountains. You ride grassy tussocks, slate mine tracks, and sheep trails. It is wet, wild, and rugged.", 
+             "Start: Knighton. End: Dovey Junction. Planning: Expect wet feet. Bivvy bags are popular. Navigation can be tricky in fog.", 
+             ["Wet", "Grass"], 84],
+            [76, "Lakeland 200", "Europe", "UK", 200, 6500, "MTB", 3, "May-Sep", "Extreme", 
+             "A loop of the Lake District that feels much longer than 200km. It features steep hike-a-bike sections, rocky descents, and stunning lake views.", 
+             "Start: Staveley. Planning: Do not underestimate the terrain; 10km/h average is good going. Full suspension recommended.", 
+             ["Technical", "Steep"], 93],
+            [77, "King Alfred's Way", "Europe", "UK", 350, 5000, "Gravel", 4, "Apr-Oct", "Medium", 
+             "A loop through the heart of England's history. You pass Stonehenge, Iron Age hill forts, and ride the ancient Ridgeway. Mostly gravel and bridleways.", 
+             "Start: Winchester. Planning: Flint can slash sidewalls—bring plugs/boots. Pubs are frequent.", 
+             ["History", "Flow"], 80],
+            [78, "European Divide", "Europe", "Various", 7600, 80000, "Mixed", 60, "May-Sep", "Extreme", 
+             "The longest off-road route in Europe, from Norway to Portugal. It crosses every type of terrain imaginable. A true continent-spanning odyssey.", 
+             "Start: Grense Jakobselv. End: Cabo St Vincent. Planning: A life event. Visa planning for non-EU citizens (Schengen 90 days) is the hardest part.", 
+             ["Transcontinental", "Long"], 99],
+            [79, "Trans-Balkan Race", "Europe", "Slovenia/Croatia", 1300, 27000, "Gravel", 10, "Jun", "Extreme", 
+             "Riding through the Dinaric Alps. The karst limestone landscape is rocky and dry. You pass through areas with wild bears and wolves.", 
+             "Start: Sežana. End: Risan. Planning: Resupply is tricky in Bosnian mountains. Carry plenty of water.", 
+             ["Wild", "Karst"], 94],
+            [80, "Montañas Vacías", "Europe", "Spain", 680, 13000, "Gravel", 6, "May-Oct", "Medium", 
+             "The 'Empty Mountains' of Spanish Lapland (Teruel). The population density is lower than Lapland. Huge forests, silence, and gravel fire roads.", 
+             "Start: Teruel. Planning: Water filtering required. Refugios are basic but open. A perfect 'intro' to remote riding.", 
+             ["Quiet", "Cold"], 83],
+            [81, "Highland Trail 550", "Europe", "Scotland", 885, 16000, "Gravel", 8, "May", "Extreme", 
+             "The premier endurance route in the UK. Boggy, rocky, and remote. Expect significant hike-a-bike and very changeable weather.", 
+             "Start: Tyndrum. Planning: Midges. River crossings can be impassable in heavy rain.", 
+             ["Technical", "Wet"], 97],
+            [82, "French Divide", "Europe", "France", 2200, 32000, "Mixed", 15, "Aug", "Hard", 
+             "A cross-country diagonal from Flanders to the Basque Country. You ride the path of St James (Santiago) for parts. Diverse scenery from vineyards to mountains.", 
+             "Start: Bray-Dunes. End: Mendionde. Planning: You will eat well (bakeries). Camping Municipal is cheap and good.", 
+             ["XC", "Culture"], 92],
+            [83, "Italy Divide", "Europe", "Italy", 1200, 20000, "Gravel", 10, "May", "Hard", 
+             "From the coliseum in Rome (or Naples) to Lake Garda. You traverse the Apennines. It's a mix of fast gravel, brutal climbs, and historic cities.", 
+             "Start: Naples/Rome. End: Torbole. Planning: The mud in the Apennines is sticky clay. Pizza is excellent fuel.", 
+             ["History", "Fast"], 88],
+            [84, "Cat 700", "Europe", "Spain", 700, 13000, "Gravel", 5, "Jun", "Hard", 
+             "Crossing Catalonia from the Pyrenees to the Ebro Delta. You start in high mountains and end in rice paddies by the sea.", 
+             "Start: Vielha. End: Delta de l'Ebre. Planning: Heat in the south is intense. Carry water.", 
+             ["Mountains", "Sea"], 89],
+            [85, "Veneto Trail", "Europe", "Italy", 450, 10000, "Gravel", 4, "Jun", "Hard", 
+             "A loop from Cittadella into the Dolomites and back. You ride famous passes but on gravel roads. The scenery is UNESCO heritage.", 
+             "Start: Cittadella. Planning: Prosecco is from this region. Enjoy it at the finish.", 
+             ["Dolomites", "Gravel"], 86],
+            [86, "Race Around Rwanda", "Africa", "Rwanda", 1000, 17000, "Gravel", 6, "Feb", "Hard", 
+             "The Land of a Thousand Hills. The gravel is red and smooth, the climbing is endless, and the locals cheer you on everywhere.", 
+             "Start: Kigali. Planning: Altitude is consistent (2000m). Roads are busy with pedestrians and bikes.", 
+             ["Hills", "Green"], 91],
+            [87, "Rhino Run", "Africa", "South Africa", 2700, 30000, "Gravel", 20, "Oct", "Extreme", 
+             "A traverse of South Africa from Plettenberg Bay to Windhoek (Namibia). You cross the Karoo and the Kalahari.", 
+             "Planning: Heat and distance between water are the killers. Corrugated roads shake bolts loose.", 
+             ["Safari", "Long"], 95],
+            [88, "Dragon's Spine", "Africa", "South Africa", 3800, 40000, "Gravel", 30, "Sep", "Extreme", 
+             "Cape Town to Beitbridge (Zimbabwe border). The ultimate African traverse avoiding major roads. 58 passes.", 
+             "Start: Cape Town. Planning: Very remote. Safety in numbers recommended in some areas.", 
+             ["Epic", "Safari"], 100],
+            [89, "Concords", "South America", "Patagonia", 1000, 15000, "Gravel", 10, "Jan", "Hard", 
+             "A route celebrating the peace between Chile and Argentina. You cross the border multiple times in the remote Andes.", 
+             "Planning: Wind is relentless. Border crossings can take time.", 
+             ["Patagonia", "Wild"], 93],
+            [90, "Greater Caucasus", "Asia", "Georgia", 1200, 25000, "Gravel", 12, "Jul", "Extreme", 
+             "Riding along the Russian border under 5000m peaks. The climbs to passes like Abano are some of the most dangerous roads in the world.", 
+             "Start: Tbilisi. Planning: Chacha (vodka) hospitality is dangerous. Sheep dogs are aggressive.", 
+             ["Mountains", "Remote"], 96],
+            [91, "Trans-Mexico", "North America", "Mexico", 1200, 20000, "Mixed", 12, "Oct", "Hard", 
+             "Mazatlan to Durango via the Devil's Backbone. You climb from the coast to 2800m. Vibrant culture and food.", 
+             "Planning: Check safety situation in specific states. Spicy food powers the legs.", 
+             ["Culture", "Mountains"], 92],
+            [92, "Monumental Loop", "North America", "USA", 400, 3000, "Sand", 4, "Nov", "Medium", 
+             "A figure-8 loop in the Organ Mountains of New Mexico. It celebrates the Chihuahuan Desert. Deep sand and singletrack.", 
+             "Start: Las Cruces. Planning: A 'chill' pace is encouraged. Wide tires needed for sand sectors.", 
+             ["Desert", "Chill"], 85],
+            [93, "Cross Cape", "Africa", "South Africa", 742, 11000, "Mixed", 8, "Sep", "Hard", 
+             "From the arid Karoo to the lush Winelands. You traverse the diverse biomes of the Western Cape.", 
+             "Start: Plettenberg Bay. End: Stellenbosch. Planning: Great wine tasting at the end. Gravel bikes perfect.", 
+             ["Safari", "Wine"], 87],
+            [94, "Munda Biddi", "Oceania", "Australia", 1000, 8000, "Gravel", 10, "Apr", "Medium", 
+             "Means 'Path through the Forest'. A gentle off-road route from Perth to Albany using rail trails and forestry tracks.", 
+             "Start: Perth. Planning: Dedicated shelters (huts) are free and excellent. Carry food.", 
+             ["Forest", "Endurance"], 84],
+            [95, "Paparoa Track", "Oceania", "New Zealand", 55, 1500, "MTB", 2, "All Year", "Medium", 
+             "One of NZ's 'Great Walks' that is dual use. Stunning limestone karst landscapes and rainforest.", 
+             "Logistics: Huts must be booked. It's short but can be linked with other trails.", 
+             ["Jungle", "Scenic"], 88],
+            [96, "Iceland Divide", "Europe", "Iceland", 500, 8000, "Gravel", 5, "Jul", "Hard", 
+             "North to South through the center (Sprengisandur). You ride across a black volcanic desert between glaciers.", 
+             "Planning: Unbridged river crossings are dangerous. The wind blows sand into everything.", 
+             ["Volcanic", "Wet"], 94],
+            [97, "Colorado Trail", "North America", "USA", 860, 22000, "Singletrack", 12, "Jul", "Extreme", 
+             "Denver to Durango. High altitude singletrack often above the treeline. It is technical, beautiful, and hard.", 
+             "Start: Denver. Planning: Altitude sickness is the main stopper. Afternoon thunderstorms are daily.", 
+             ["Technical", "High"], 99],
+            [98, "Arizona Trail (South)", "North America", "USA", 480, 8000, "Mixed", 5, "Mar", "Hard", 
+             "Mexican border to Tucson and beyond. Riding through Saguaro cactus forests and Sky Island mountains.", 
+             "Start: Coronado Ntl Memorial. Planning: Carry a comb for jumping cholla cactus removal.", 
+             ["Technical", "Desert"], 91],
+            [99, "Kopiko Aotearoa", "Oceania", "New Zealand", 1100, 16000, "Gravel", 10, "Feb", "Hard", 
+             "East Cape to Egmont (West Cape). Crossing the widest part of the North Island. Remote farming roads.", 
+             "Planning: Remote with few shops. Hilly mud roads.", 
+             ["Hills", "Remote"], 89],
+            [100, "Tasmanian Trail", "Oceania", "Australia", 480, 10000, "Mixed", 5, "Dec", "Hard", 
+             "Devonport to Dover. Crossing the wild island of Tasmania. It is rugged, muddy, and cold even in summer.", 
+             "Planning: Pack for 4 seasons. Tassie devils and wombats on trails.", 
+             ["Wild", "Cold"], 90],
         ];
+
+        // Hydrate Data
+        const ROUTES = RAW_DATA.map(r => ({
+            id: r[0],
+            name: r[1],
+            region: r[2],
+            country: r[3],
+            distanceKm: r[4],
+            elevationM: r[5],
+            surface: r[6],
+            daysStrong: r[7],
+            daysTouring: Math.round(r[7] * 1.4),
+            season: r[8],
+            difficulty: r[9],
+            description: r[10],
+            logistics: r[11],
+            tags: r[12],
+            sufferScore: r[13],
+            // Updated Color Logic: Cool tones for Road, Warm/Earth tones for Gravel
+            imageGradient: r[6] === 'Road' 
+                ? `from-${['blue','indigo','violet','sky','cyan'][r[0]%5]}-900 to-${['slate','gray','zinc'][r[0]%3]}-950`
+                : `from-${['orange','amber','emerald','stone','yellow'][r[0]%5]}-900 to-${['stone','neutral','zinc'][r[0]%3]}-950`
+        }));
 
         // --- Components ---
 
@@ -261,167 +507,216 @@
 
         const DetailModal = ({ route, onClose }) => {
             if (!route) return null;
+            const [imageLoaded, setImageLoaded] = useState(false);
+            
+            // Generate Context-Aware Image via Pollinations
+            // We construct a specific prompt based on the route details to get accurate scenery
+            const prompt = `cinematic wide shot landscape photography of ${route.name} ${route.country} epic nature scenery, realistic, 4k, award winning`;
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1200&height=800&nologo=true&seed=${route.id}`;
 
             return (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in">
-                    <div className="bg-zinc-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-800 shadow-2xl flex flex-col md:flex-row relative">
+                    <div className="bg-zinc-900 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-800 shadow-2xl flex flex-col relative">
                         
                         {/* Close Button */}
                         <button 
                             onClick={onClose}
-                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-white/20 rounded-full text-white transition"
+                            className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-white/20 rounded-full text-white transition backdrop-blur-md"
                         >
                             <XIcon size={20} />
                         </button>
 
-                        {/* Left Side: Visuals & Key Stats */}
-                        <div className={`w-full md:w-2/5 p-8 bg-gradient-to-br ${route.imageGradient} flex flex-col justify-between text-white relative overflow-hidden`}>
-                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
+                        {/* Top: Hero Image & Overlay */}
+                        <div className="relative h-64 md:h-80 w-full overflow-hidden shrink-0 bg-zinc-800">
+                            {/* Dynamic Image */}
+                             <img 
+                                src={imageUrl}
+                                alt={route.name}
+                                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-80 scale-100 blur-0' : 'opacity-0 scale-110 blur-xl'}`}
+                                onLoad={() => setImageLoaded(true)}
+                            />
+                            {/* Fallback Gradient (visible while loading) */}
+                            <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} -z-10`}></div>
                             
-                            <div>
-                                <div className="flex gap-2 mb-4 flex-wrap">
-                                    <Badge className="bg-white/20 text-white">{route.surface}</Badge>
-                                    <Badge className="bg-white/20 text-white">{route.season}</Badge>
+                            {/* Text Overlay */}
+                            <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent">
+                                <div className="flex gap-2 mb-2 flex-wrap animate-in" style={{animationDelay: '0.1s'}}>
+                                    <Badge className="bg-white/20 text-white backdrop-blur-sm border border-white/10">{route.surface}</Badge>
+                                    <Badge className="bg-white/20 text-white backdrop-blur-sm border border-white/10">{route.season}</Badge>
+                                    <Badge className={`${route.difficulty === 'Extreme' ? 'bg-red-500/20 text-red-200' : 'bg-emerald-500/20 text-emerald-200'} backdrop-blur-sm border border-white/10`}>{route.difficulty}</Badge>
                                 </div>
-                                <h2 className="text-4xl font-black mb-2 leading-tight">{route.name}</h2>
-                                <p className="text-white/80 font-medium flex items-center gap-2">
-                                    <Globe size={16} />
+                                <h2 className="text-4xl md:text-5xl font-black leading-tight text-white mb-1 shadow-black drop-shadow-lg">{route.name}</h2>
+                                <p className="text-white/90 font-medium flex items-center gap-2 text-lg">
+                                    <Globe size={18} />
                                     {route.country}
                                 </p>
                             </div>
-
-                            <div className="mt-12 space-y-6">
-                                <div>
-                                    <div className="text-6xl font-black">{route.daysStrong}</div>
-                                    <div className="text-sm uppercase tracking-widest opacity-70">Days (Pro Pace)</div>
-                                </div>
-                                
-                                <div className="h-px bg-white/20 w-full" />
-                                
-                                <div className="flex justify-between items-end">
-                                    <div>
-                                        <div className="text-3xl font-bold">{route.sufferScore}</div>
-                                        <div className="text-xs uppercase tracking-widest opacity-70">Suffer Score</div>
-                                    </div>
-                                    <Trophy size={32} className="opacity-50" />
-                                </div>
-                            </div>
                         </div>
 
-                        {/* Right Side: Detailed Data */}
-                        <div className="w-full md:w-3/5 p-8 bg-zinc-900 text-gray-300">
-                            <div className="mb-8">
-                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">The Experience</h3>
-                                <p className="text-lg leading-relaxed text-gray-200">
-                                    {route.description}
-                                </p>
-                            </div>
+                        {/* Bottom: Content Grid */}
+                        <div className="flex flex-col md:flex-row flex-1">
+                            {/* Left Col: Main Stats & Key Data */}
+                            <div className="w-full md:w-1/3 p-8 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-900/50">
+                                <div className="space-y-8">
+                                    <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-lg border border-zinc-700">
+                                        <div>
+                                            <div className="text-4xl font-black text-white">{route.sufferScore}</div>
+                                            <div className="text-xs uppercase tracking-widest text-zinc-400">Suffer Score</div>
+                                        </div>
+                                        <Trophy size={32} className={route.sufferScore > 90 ? "text-yellow-500" : "text-zinc-500"} />
+                                    </div>
 
-                            <div className="grid grid-cols-2 gap-8 mb-8">
-                                <Stat 
-                                    icon={Navigation} 
-                                    label="Distance" 
-                                    value={`${route.distanceKm} km`} 
-                                    sub={`${Math.round(route.distanceKm * 0.621)} miles`}
-                                />
-                                <Stat 
-                                    icon={Mountain} 
-                                    label="Elevation Gain" 
-                                    value={`${route.elevationM.toLocaleString()} m`} 
-                                    sub={`${Math.round(route.elevationM * 3.28)} ft`}
-                                />
-                                <Stat 
-                                    icon={Clock} 
-                                    label="Touring Pace" 
-                                    value={`${route.daysTouring} Days`} 
-                                    sub="Relaxed Schedule"
-                                />
-                                <Stat 
-                                    icon={Layers} 
-                                    label="Surface" 
-                                    value={route.surface} 
-                                    sub="Bike Selection Crucial"
-                                />
-                            </div>
-
-                            <div className="mb-8">
-                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Tags</h3>
-                                <div className="flex gap-2">
-                                    {route.tags.map(tag => (
-                                        <span key={tag} className="px-3 py-1 bg-zinc-800 rounded-full text-sm text-zinc-300 border border-zinc-700">
-                                            #{tag}
-                                        </span>
-                                    ))}
+                                    <div className="space-y-6">
+                                         <Stat 
+                                            icon={Navigation} 
+                                            label="Distance" 
+                                            value={`${route.distanceKm} km`} 
+                                            sub={`${Math.round(route.distanceKm * 0.621)} miles`}
+                                        />
+                                        <Stat 
+                                            icon={Mountain} 
+                                            label="Elevation" 
+                                            value={`${route.elevationM.toLocaleString()} m`} 
+                                            sub={`${Math.round(route.elevationM * 3.28)} ft`}
+                                        />
+                                        <Stat 
+                                            icon={Clock} 
+                                            label="Days (Pro)" 
+                                            value={route.daysStrong}
+                                            sub={`${Math.round(route.distanceKm / route.daysStrong)} km/day`}
+                                        />
+                                        <Stat 
+                                            icon={Clock} 
+                                            label="Days (Tour)" 
+                                            value={route.daysTouring}
+                                            sub="Enjoy the view"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            <button className="w-full py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition rounded-lg">
-                                View GPX Data (Mock)
-                            </button>
+                            {/* Right Col: Narrative & Logistics */}
+                            <div className="w-full md:w-2/3 p-8 bg-zinc-900">
+                                <div className="mb-10">
+                                    <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">The Experience</h3>
+                                    <p className="text-lg leading-relaxed text-zinc-100 font-light">
+                                        {route.description}
+                                    </p>
+                                </div>
+
+                                <div className="mb-10">
+                                    <h3 className="text-sm font-bold text-emerald-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                        <Plane size={16}/> Logistics & Planning
+                                    </h3>
+                                    <div className="p-6 bg-zinc-800/30 rounded-xl border border-zinc-800/50 text-zinc-300 text-sm leading-7">
+                                        {route.logistics}
+                                    </div>
+                                </div>
+
+                                <div className="">
+                                    <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-3">Tags</h3>
+                                    <div className="flex gap-2 flex-wrap">
+                                        {route.tags.map(tag => (
+                                            <span key={tag} className="px-3 py-1 bg-zinc-800 rounded-full text-xs font-bold text-zinc-400 border border-zinc-700 uppercase tracking-wide">
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             );
         };
 
-        const RouteCard = ({ route, onClick }) => (
-            <div 
-                onClick={() => onClick(route)}
-                className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ring-1 ring-white/10"
-            >
-                {/* Background with Gradient */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} transition-transform duration-700 group-hover:scale-110`}>
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
-                </div>
-                
-                {/* Overlay Content */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-between bg-gradient-to-t from-black/90 via-black/20 to-transparent">
+        const RouteCard = ({ route, onClick }) => {
+            const [hovered, setHovered] = useState(false);
+            const [imageLoaded, setImageLoaded] = useState(false);
+            
+            // Optimized prompt for smaller card images
+            const prompt = `landscape photography of ${route.name} ${route.country} nature, cinematic lighting`;
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=400&nologo=true&seed=${route.id}`;
+
+            return (
+                <div 
+                    onClick={() => onClick(route)}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
+                    className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:shadow-2xl ring-1 ring-white/10 hover:ring-white/30 bg-zinc-900"
+                >
+                    {/* Background Image */}
+                    <img 
+                        src={imageUrl} 
+                        className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${hovered ? 'scale-110' : 'scale-100'}`}
+                        loading="lazy"
+                        onLoad={() => setImageLoaded(true)}
+                    />
                     
-                    {/* Top Section */}
-                    <div className="flex justify-between items-start">
-                        <Badge className="bg-black/30 backdrop-blur-md text-white border border-white/10">
-                            {route.region}
-                        </Badge>
-                        <div className="flex flex-col items-end">
-                            <span className="text-xs font-bold text-white/60 uppercase tracking-wider mb-1">Score</span>
-                            <span className={`text-xl font-bold ${route.sufferScore > 90 ? 'text-red-500' : 'text-yellow-500'}`}>
-                                {route.sufferScore}
-                            </span>
+                    {/* Gradient Overlay (Always present for readability) */}
+                    <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent transition-opacity duration-500 ${hovered ? 'opacity-90' : 'opacity-80'}`}></div>
+
+                    {/* Tint Overlay based on type (Subtle color coding) */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} mix-blend-overlay opacity-40`}></div>
+                    
+                    {/* Content */}
+                    <div className="absolute inset-0 p-6 flex flex-col justify-between">
+                        
+                        {/* Top Section */}
+                        <div className="flex justify-between items-start z-10">
+                            <div className="flex flex-col gap-1">
+                                <Badge className="bg-black/40 backdrop-blur-md text-white border border-white/10 w-fit shadow-lg">
+                                    {route.region}
+                                </Badge>
+                                 <Badge className={`backdrop-blur-md border border-white/10 w-fit shadow-lg ${route.surface === 'Road' ? 'bg-blue-500/30 text-blue-100' : 'bg-orange-500/30 text-orange-100'}`}>
+                                    {route.surface}
+                                </Badge>
+                            </div>
+                            <div className="flex flex-col items-end">
+                                <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest mb-1 shadow-black drop-shadow-md">Score</span>
+                                <span className={`text-xl font-bold drop-shadow-lg ${route.sufferScore > 90 ? 'text-red-400' : 'text-yellow-400'}`}>
+                                    {route.sufferScore}
+                                </span>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Bottom Section */}
-                    <div>
-                        <h3 className="text-3xl font-black text-white mb-2 leading-none group-hover:text-gray-200 transition-colors">
-                            {route.name}
-                        </h3>
-                        <p className="text-white/70 mb-4 flex items-center gap-2 text-sm font-medium">
-                            <MapIcon size={14} /> {route.country}
-                        </p>
+                        {/* Bottom Section */}
+                        <div className="z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                            <h3 className="text-3xl font-black text-white mb-2 leading-none drop-shadow-lg line-clamp-2">
+                                {route.name}
+                            </h3>
+                            <p className="text-white/90 mb-4 flex items-center gap-2 text-sm font-medium drop-shadow-md">
+                                <MapIcon size={14} /> {route.country}
+                            </p>
 
-                        <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
-                            <div>
-                                <div className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Length</div>
-                                <div className="text-white font-bold">{route.distanceKm}km</div>
-                            </div>
-                            <div>
-                                <div className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Climb</div>
-                                <div className="text-white font-bold">{(route.elevationM / 1000).toFixed(1)}k</div>
-                            </div>
-                            <div>
-                                <div className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Days</div>
-                                <div className="text-white font-bold">{route.daysStrong}</div>
+                            <div className="grid grid-cols-3 gap-2 border-t border-white/20 pt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75">
+                                <div>
+                                    <div className="text-white/60 text-[10px] uppercase font-bold tracking-wider">Length</div>
+                                    <div className="text-white font-bold">{route.distanceKm}km</div>
+                                </div>
+                                <div>
+                                    <div className="text-white/60 text-[10px] uppercase font-bold tracking-wider">Climb</div>
+                                    <div className="text-white font-bold">{(route.elevationM / 1000).toFixed(1)}k</div>
+                                </div>
+                                <div>
+                                    <div className="text-white/60 text-[10px] uppercase font-bold tracking-wider">Days</div>
+                                    <div className="text-white font-bold">{route.daysStrong}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        };
 
         function EpiqueApp() {
             const [selectedRegion, setSelectedRegion] = useState("All");
             const [selectedSurface, setSelectedSurface] = useState("All");
             const [selectedRoute, setSelectedRoute] = useState(null);
+            
+            // Stats
+            const tarmacCount = useMemo(() => ROUTES.filter(r => r.surface === 'Road').length, []);
+            const gravelCount = useMemo(() => ROUTES.filter(r => r.surface !== 'Road').length, []);
 
             const filteredRoutes = useMemo(() => {
                 return ROUTES.filter(route => {
@@ -454,19 +749,19 @@
                                         onClick={() => setSelectedSurface("All")} 
                                         className={`hover:text-white transition ${selectedSurface === "All" ? "text-white underline underline-offset-4" : ""}`}
                                     >
-                                        All Terrain
+                                        All Routes ({ROUTES.length})
                                     </button>
                                     <button 
                                         onClick={() => setSelectedSurface("Road")} 
                                         className={`hover:text-white transition ${selectedSurface === "Road" ? "text-white underline underline-offset-4" : ""}`}
                                     >
-                                        Tarmac
+                                        Tarmac ({tarmacCount})
                                     </button>
                                     <button 
                                         onClick={() => setSelectedSurface("Gravel")} 
                                         className={`hover:text-white transition ${selectedSurface === "Gravel" ? "text-white underline underline-offset-4" : ""}`}
                                     >
-                                        Gravel/Mixed
+                                        Gravel ({gravelCount})
                                     </button>
                                 </div>
                             </div>
@@ -474,14 +769,18 @@
                     </header>
 
                     {/* Hero Section */}
-                    <div className="relative py-20 px-6 border-b border-white/10 bg-zinc-900">
-                        <div className="max-w-4xl mx-auto text-center">
-                            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">
-                                EARN THE DESCENT.
+                    <div className="relative py-24 px-6 border-b border-white/10 bg-zinc-900 overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/50 to-zinc-900 z-0"></div>
+                        
+                        <div className="max-w-4xl mx-auto text-center relative z-10">
+                            <h2 className="text-5xl md:text-8xl font-black mb-8 tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-200 to-gray-600 drop-shadow-2xl">
+                                100 LEGENDARY ROUTES.
                             </h2>
-                            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-                                A curated collection of the world's finest multi-day cycling routes. 
-                                Filtered for riders who can handle 100km+ days and 5-figure climbing stats.
+                            <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto leading-relaxed font-light">
+                                The definitive atlas for high-performance adventure cycling. 
+                                <br/>
+                                <span className="text-blue-400 font-bold drop-shadow-lg">50 Tarmac</span> &bull; <span className="text-orange-400 font-bold drop-shadow-lg">50 Gravel</span>
                             </p>
                         </div>
                     </div>
