@@ -29,10 +29,6 @@
             to { opacity: 1; }
         }
         .animate-in { animation: fadeIn 0.4s ease-out forwards; }
-        
-        /* Image Loading State */
-        .image-loading { filter: blur(20px); transform: scale(1.1); }
-        .image-loaded { filter: blur(0); transform: scale(1); transition: filter 0.7s ease-in-out, transform 0.7s ease-in-out; }
     </style>
 </head>
 <body class="bg-black text-white min-h-screen">
@@ -464,27 +460,34 @@
         ];
 
         // Hydrate Data
-        const ROUTES = RAW_DATA.map(r => ({
-            id: r[0],
-            name: r[1],
-            region: r[2],
-            country: r[3],
-            distanceKm: r[4],
-            elevationM: r[5],
-            surface: r[6],
-            daysStrong: r[7],
-            daysTouring: Math.round(r[7] * 1.4),
-            season: r[8],
-            difficulty: r[9],
-            description: r[10],
-            logistics: r[11],
-            tags: r[12],
-            sufferScore: r[13],
-            // Updated Color Logic: Cool tones for Road, Warm/Earth tones for Gravel
-            imageGradient: r[6] === 'Road' 
-                ? `from-${['blue','indigo','violet','sky','cyan'][r[0]%5]}-900 to-${['slate','gray','zinc'][r[0]%3]}-950`
-                : `from-${['orange','amber','emerald','stone','yellow'][r[0]%5]}-900 to-${['stone','neutral','zinc'][r[0]%3]}-950`
-        }));
+        // Hydrate Data
+        const ROUTES = RAW_DATA.map(r => {
+            const colors = [
+                'red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal',
+                'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'
+            ];
+            const primary = colors[r[0] % colors.length];
+            const secondary = colors[(r[0] + 5) % colors.length]; // Deterministic distinct pair
+            
+            return {
+                id: r[0],
+                name: r[1],
+                region: r[2],
+                country: r[3],
+                distanceKm: r[4],
+                elevationM: r[5],
+                surface: r[6],
+                daysStrong: r[7],
+                daysTouring: Math.round(r[7] * 1.4),
+                season: r[8],
+                difficulty: r[9],
+                description: r[10],
+                logistics: r[11],
+                tags: r[12],
+                sufferScore: r[13],
+                imageGradient: `from-${primary}-800 to-${secondary}-950`
+            };
+        });
 
         // --- Components ---
 
@@ -507,12 +510,6 @@
 
         const DetailModal = ({ route, onClose }) => {
             if (!route) return null;
-            const [imageLoaded, setImageLoaded] = useState(false);
-            
-            // Generate Context-Aware Image via Pollinations
-            // We construct a specific prompt based on the route details to get accurate scenery
-            const prompt = `cinematic wide shot landscape photography of ${route.name} ${route.country} epic nature scenery, realistic, 4k, award winning`;
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1200&height=800&nologo=true&seed=${route.id}`;
 
             return (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in">
@@ -521,31 +518,24 @@
                         {/* Close Button */}
                         <button 
                             onClick={onClose}
-                            className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-white/20 rounded-full text-white transition backdrop-blur-md"
+                            className="absolute top-4 right-4 z-20 p-2 bg-black/20 hover:bg-white/20 rounded-full text-white transition backdrop-blur-md"
                         >
                             <XIcon size={20} />
                         </button>
 
-                        {/* Top: Hero Image & Overlay */}
-                        <div className="relative h-64 md:h-80 w-full overflow-hidden shrink-0 bg-zinc-800">
-                            {/* Dynamic Image */}
-                             <img 
-                                src={imageUrl}
-                                alt={route.name}
-                                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-80 scale-100 blur-0' : 'opacity-0 scale-110 blur-xl'}`}
-                                onLoad={() => setImageLoaded(true)}
-                            />
-                            {/* Fallback Gradient (visible while loading) */}
-                            <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} -z-10`}></div>
+                        {/* Top: Hero Gradient & Overlay */}
+                        <div className={`relative h-64 md:h-80 w-full overflow-hidden shrink-0 bg-gradient-to-br ${route.imageGradient}`}>
+                            {/* Texture Overlay */}
+                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
                             
                             {/* Text Overlay */}
-                            <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent">
-                                <div className="flex gap-2 mb-2 flex-wrap animate-in" style={{animationDelay: '0.1s'}}>
+                            <div className="absolute inset-0 p-8 flex flex-col justify-end bg-gradient-to-t from-zinc-900/90 via-transparent to-transparent">
+                                <div className="flex gap-2 mb-4 flex-wrap animate-in" style={{animationDelay: '0.1s'}}>
                                     <Badge className="bg-white/20 text-white backdrop-blur-sm border border-white/10">{route.surface}</Badge>
                                     <Badge className="bg-white/20 text-white backdrop-blur-sm border border-white/10">{route.season}</Badge>
                                     <Badge className={`${route.difficulty === 'Extreme' ? 'bg-red-500/20 text-red-200' : 'bg-emerald-500/20 text-emerald-200'} backdrop-blur-sm border border-white/10`}>{route.difficulty}</Badge>
                                 </div>
-                                <h2 className="text-4xl md:text-5xl font-black leading-tight text-white mb-1 shadow-black drop-shadow-lg">{route.name}</h2>
+                                <h2 className="text-4xl md:text-6xl font-black leading-tight text-white mb-2 shadow-black drop-shadow-lg tracking-tight">{route.name}</h2>
                                 <p className="text-white/90 font-medium flex items-center gap-2 text-lg">
                                     <Globe size={18} />
                                     {route.country}
@@ -632,11 +622,6 @@
 
         const RouteCard = ({ route, onClick }) => {
             const [hovered, setHovered] = useState(false);
-            const [imageLoaded, setImageLoaded] = useState(false);
-            
-            // Optimized prompt for smaller card images
-            const prompt = `landscape photography of ${route.name} ${route.country} nature, cinematic lighting`;
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=400&nologo=true&seed=${route.id}`;
 
             return (
                 <div 
@@ -645,19 +630,14 @@
                     onMouseLeave={() => setHovered(false)}
                     className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-all duration-500 hover:shadow-2xl ring-1 ring-white/10 hover:ring-white/30 bg-zinc-900"
                 >
-                    {/* Background Image */}
-                    <img 
-                        src={imageUrl} 
-                        className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${imageLoaded ? 'opacity-100' : 'opacity-0'} ${hovered ? 'scale-110' : 'scale-100'}`}
-                        loading="lazy"
-                        onLoad={() => setImageLoaded(true)}
-                    />
+                    {/* Background Gradient */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} transition-transform duration-700 ${hovered ? 'scale-110' : 'scale-100'}`}></div>
                     
-                    {/* Gradient Overlay (Always present for readability) */}
-                    <div className={`absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent transition-opacity duration-500 ${hovered ? 'opacity-90' : 'opacity-80'}`}></div>
-
-                    {/* Tint Overlay based on type (Subtle color coding) */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} mix-blend-overlay opacity-40`}></div>
+                    {/* Texture Overlay */}
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 mix-blend-overlay"></div>
+                    
+                    {/* Gradient Overlay for Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-60"></div>
                     
                     {/* Content */}
                     <div className="absolute inset-0 p-6 flex flex-col justify-between">
@@ -665,16 +645,16 @@
                         {/* Top Section */}
                         <div className="flex justify-between items-start z-10">
                             <div className="flex flex-col gap-1">
-                                <Badge className="bg-black/40 backdrop-blur-md text-white border border-white/10 w-fit shadow-lg">
+                                <Badge className="bg-black/20 backdrop-blur-md text-white border border-white/10 w-fit shadow-lg">
                                     {route.region}
                                 </Badge>
-                                 <Badge className={`backdrop-blur-md border border-white/10 w-fit shadow-lg ${route.surface === 'Road' ? 'bg-blue-500/30 text-blue-100' : 'bg-orange-500/30 text-orange-100'}`}>
+                                 <Badge className={`backdrop-blur-md border border-white/10 w-fit shadow-lg ${route.surface === 'Road' ? 'bg-blue-500/20 text-blue-100' : 'bg-orange-500/20 text-orange-100'}`}>
                                     {route.surface}
                                 </Badge>
                             </div>
                             <div className="flex flex-col items-end">
                                 <span className="text-[10px] font-bold text-white/80 uppercase tracking-widest mb-1 shadow-black drop-shadow-md">Score</span>
-                                <span className={`text-xl font-bold drop-shadow-lg ${route.sufferScore > 90 ? 'text-red-400' : 'text-yellow-400'}`}>
+                                <span className={`text-xl font-bold drop-shadow-lg ${route.sufferScore > 90 ? 'text-white' : 'text-white/90'}`}>
                                     {route.sufferScore}
                                 </span>
                             </div>
@@ -682,7 +662,7 @@
 
                         {/* Bottom Section */}
                         <div className="z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                            <h3 className="text-3xl font-black text-white mb-2 leading-none drop-shadow-lg line-clamp-2">
+                            <h3 className="text-3xl font-black text-white mb-2 leading-none drop-shadow-lg line-clamp-2 tracking-tight">
                                 {route.name}
                             </h3>
                             <p className="text-white/90 mb-4 flex items-center gap-2 text-sm font-medium drop-shadow-md">
