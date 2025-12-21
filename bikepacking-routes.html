@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Épique - Gold Standard Route Finder</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Animation Utilities */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-in { animation: fadeIn 0.2s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-black text-white min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // --- Icons (Implemented as Components) ---
+        const IconBase = ({ size = 24, className = "", children }) => (
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width={size} 
+                height={size} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className={className}
+            >
+                {children}
+            </svg>
+        );
+
+        const Mountain = (props) => (
+            <IconBase {...props}><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></IconBase>
+        );
+        const MapIcon = (props) => (
+            <IconBase {...props}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></IconBase>
+        );
+        const Globe = (props) => (
+            <IconBase {...props}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></IconBase>
+        );
+        const Navigation = (props) => (
+            <IconBase {...props}><polygon points="3 11 22 2 13 21 11 13 3 11"/></IconBase>
+        );
+        const Trophy = (props) => (
+            <IconBase {...props}><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></IconBase>
+        );
+        const Clock = (props) => (
+            <IconBase {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>
+        );
+        const Layers = (props) => (
+            <IconBase {...props}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></IconBase>
+        );
+        const XIcon = (props) => (
+            <IconBase {...props}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></IconBase>
+        );
+        const Bike = (props) => (
+            <IconBase {...props}><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></IconBase>
+        );
+
+        // --- Data: Gold Standard Routes ---
+        const ROUTES = [
+            {
+                id: 1,
+                name: "Route des Grandes Alpes",
+                region: "Europe",
+                country: "France",
+                distanceKm: 720,
+                elevationM: 17000,
+                surface: "Road",
+                daysStrong: 7,
+                daysTouring: 10,
+                season: "Jun - Sep",
+                difficulty: "Hard",
+                description: "The holy grail of climbing. From Lake Geneva to the Mediterranean Sea, crossing 17 of the highest mountain passes in the Alps, including the Iseran, Galibier, and Bonette. This is pure tarmac glory.",
+                tags: ["Climbing", "Scenic", "Legendary"],
+                imageGradient: "from-blue-900 to-slate-900",
+                sufferScore: 92
+            },
+            {
+                id: 2,
+                name: "Iceland Ring Road (Route 1)",
+                region: "Europe",
+                country: "Iceland",
+                distanceKm: 1332,
+                elevationM: 8500,
+                surface: "Mixed",
+                daysStrong: 10,
+                daysTouring: 14,
+                season: "Jul - Aug",
+                difficulty: "Medium",
+                description: "Circumnavigate the land of fire and ice. While mostly paved, the wind and weather make this a battle. Waterfalls, glaciers, and black sand beaches are your daily backdrop. 24 hours of daylight in summer.",
+                tags: ["Volcanic", "Windy", "Endurance"],
+                imageGradient: "from-slate-800 to-gray-900",
+                sufferScore: 75
+            },
+            {
+                id: 3,
+                name: "Pamir Highway (M41)",
+                region: "Asia",
+                country: "Tajikistan/Kyrgyzstan",
+                distanceKm: 1250,
+                elevationM: 21000,
+                surface: "Gravel",
+                daysStrong: 14,
+                daysTouring: 20,
+                season: "Jul - Sep",
+                difficulty: "Extreme",
+                description: "The second highest international highway in the world. You will ride consistently above 4,000m altitude. Oxygen is scarce, the gravel is washboard, and the views of the Hindu Kush are life-changing.",
+                tags: ["High Altitude", "Remote", "Adventure"],
+                imageGradient: "from-amber-900 to-stone-900",
+                sufferScore: 98
+            },
+            {
+                id: 4,
+                name: "Taiwan Cycle Route No. 1",
+                region: "Asia",
+                country: "Taiwan",
+                distanceKm: 968,
+                elevationM: 9000,
+                surface: "Road",
+                daysStrong: 9,
+                daysTouring: 12,
+                season: "Oct - Mar",
+                difficulty: "Medium",
+                description: "A perfectly signed loop around the entire island. Incredible food at every 7-Eleven, smooth tarmac, and a mix of bustling cities and serene Pacific coastline. The climb to Wuling Pass is an optional brutal add-on.",
+                tags: ["Culture", "Food", "Coastal"],
+                imageGradient: "from-emerald-900 to-teal-900",
+                sufferScore: 65
+            },
+            {
+                id: 5,
+                name: "North Coast 500",
+                region: "Europe",
+                country: "Scotland",
+                distanceKm: 830,
+                elevationM: 10000,
+                surface: "Road",
+                daysStrong: 6,
+                daysTouring: 8,
+                season: "May - Sep",
+                difficulty: "Hard",
+                description: "Scotland's answer to Route 66. Rugged coastlines, single-track roads, and steep punchy climbs like the Bealach na Bà. Weather can turn in an instant. A test of mental fortitude against the elements.",
+                tags: ["Coastal", "Punchy", "Wet"],
+                imageGradient: "from-green-900 to-slate-900",
+                sufferScore: 82
+            },
+            {
+                id: 6,
+                name: "Trans-Pyrenees",
+                region: "Europe",
+                country: "Spain/France",
+                distanceKm: 950,
+                elevationM: 24000,
+                surface: "Road",
+                daysStrong: 10,
+                daysTouring: 14,
+                season: "Jun - Sep",
+                difficulty: "Extreme",
+                description: "Coast to coast, Atlantic to Mediterranean. This route hunts elevation. It is a relentless sequence of cols. Recommended only for those who truly love to suffer on the ups.",
+                tags: ["Climbing", "Mountains", "Epic"],
+                imageGradient: "from-red-900 to-orange-950",
+                sufferScore: 96
+            },
+            {
+                id: 7,
+                name: "Mawson Trail",
+                region: "Oceania",
+                country: "Australia",
+                distanceKm: 900,
+                elevationM: 6500,
+                surface: "Gravel",
+                daysStrong: 9,
+                daysTouring: 14,
+                season: "Apr - Oct",
+                difficulty: "Hard",
+                description: "The Australian Outback experience without being totally isolated. Red dirt, gum forests, and the Flinders Ranges. Requires wide tires and careful water planning.",
+                tags: ["Outback", "Gravel", "Remote"],
+                imageGradient: "from-orange-900 to-red-950",
+                sufferScore: 85
+            },
+            {
+                id: 8,
+                name: "Baja Divide (Cape Loop)",
+                region: "North America",
+                country: "Mexico",
+                distanceKm: 480,
+                elevationM: 5500,
+                surface: "Gravel/Sand",
+                daysStrong: 5,
+                daysTouring: 7,
+                season: "Nov - Mar",
+                difficulty: "Hard",
+                description: "A shortened loop of the famous Baja Divide. Cactus forests, sandy tracks, and fish tacos. Technical riding skills required for deep sand sections. A perfect winter escape.",
+                tags: ["Desert", "Technical", "Sand"],
+                imageGradient: "from-yellow-900 to-amber-950",
+                sufferScore: 88
+            },
+            {
+                id: 9,
+                name: "Cross Cape Route",
+                region: "Africa",
+                country: "South Africa",
+                distanceKm: 742,
+                elevationM: 11000,
+                surface: "Mixed",
+                daysStrong: 8,
+                daysTouring: 11,
+                season: "Sep - Apr",
+                difficulty: "Hard",
+                description: "From Plettenberg Bay to Stellenbosch. A journey through the Western Cape's diverse biomes, from semi-desert Karoo to lush winelands. Gravel heavy.",
+                tags: ["Safari", "Wine", "Gravel"],
+                imageGradient: "from-stone-800 to-stone-950",
+                sufferScore: 80
+            }
+        ];
+
+        // --- Components ---
+
+        const Badge = ({ children, className = "" }) => (
+            <span className={`px-2 py-1 rounded-md text-xs font-medium uppercase tracking-wider ${className}`}>
+                {children}
+            </span>
+        );
+
+        const Stat = ({ icon: Icon, label, value, sub }) => (
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center text-gray-400 text-xs uppercase tracking-widest gap-2">
+                    <Icon size={12} />
+                    {label}
+                </div>
+                <div className="text-xl font-bold text-gray-100">{value}</div>
+                {sub && <div className="text-xs text-gray-500">{sub}</div>}
+            </div>
+        );
+
+        const DetailModal = ({ route, onClose }) => {
+            if (!route) return null;
+
+            return (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in">
+                    <div className="bg-zinc-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-800 shadow-2xl flex flex-col md:flex-row relative">
+                        
+                        {/* Close Button */}
+                        <button 
+                            onClick={onClose}
+                            className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-white/20 rounded-full text-white transition"
+                        >
+                            <XIcon size={20} />
+                        </button>
+
+                        {/* Left Side: Visuals & Key Stats */}
+                        <div className={`w-full md:w-2/5 p-8 bg-gradient-to-br ${route.imageGradient} flex flex-col justify-between text-white relative overflow-hidden`}>
+                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
+                            
+                            <div>
+                                <div className="flex gap-2 mb-4 flex-wrap">
+                                    <Badge className="bg-white/20 text-white">{route.surface}</Badge>
+                                    <Badge className="bg-white/20 text-white">{route.season}</Badge>
+                                </div>
+                                <h2 className="text-4xl font-black mb-2 leading-tight">{route.name}</h2>
+                                <p className="text-white/80 font-medium flex items-center gap-2">
+                                    <Globe size={16} />
+                                    {route.country}
+                                </p>
+                            </div>
+
+                            <div className="mt-12 space-y-6">
+                                <div>
+                                    <div className="text-6xl font-black">{route.daysStrong}</div>
+                                    <div className="text-sm uppercase tracking-widest opacity-70">Days (Pro Pace)</div>
+                                </div>
+                                
+                                <div className="h-px bg-white/20 w-full" />
+                                
+                                <div className="flex justify-between items-end">
+                                    <div>
+                                        <div className="text-3xl font-bold">{route.sufferScore}</div>
+                                        <div className="text-xs uppercase tracking-widest opacity-70">Suffer Score</div>
+                                    </div>
+                                    <Trophy size={32} className="opacity-50" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Right Side: Detailed Data */}
+                        <div className="w-full md:w-3/5 p-8 bg-zinc-900 text-gray-300">
+                            <div className="mb-8">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">The Experience</h3>
+                                <p className="text-lg leading-relaxed text-gray-200">
+                                    {route.description}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-8 mb-8">
+                                <Stat 
+                                    icon={Navigation} 
+                                    label="Distance" 
+                                    value={`${route.distanceKm} km`} 
+                                    sub={`${Math.round(route.distanceKm * 0.621)} miles`}
+                                />
+                                <Stat 
+                                    icon={Mountain} 
+                                    label="Elevation Gain" 
+                                    value={`${route.elevationM.toLocaleString()} m`} 
+                                    sub={`${Math.round(route.elevationM * 3.28)} ft`}
+                                />
+                                <Stat 
+                                    icon={Clock} 
+                                    label="Touring Pace" 
+                                    value={`${route.daysTouring} Days`} 
+                                    sub="Relaxed Schedule"
+                                />
+                                <Stat 
+                                    icon={Layers} 
+                                    label="Surface" 
+                                    value={route.surface} 
+                                    sub="Bike Selection Crucial"
+                                />
+                            </div>
+
+                            <div className="mb-8">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3">Tags</h3>
+                                <div className="flex gap-2">
+                                    {route.tags.map(tag => (
+                                        <span key={tag} className="px-3 py-1 bg-zinc-800 rounded-full text-sm text-zinc-300 border border-zinc-700">
+                                            #{tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <button className="w-full py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition rounded-lg">
+                                View GPX Data (Mock)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const RouteCard = ({ route, onClick }) => (
+            <div 
+                onClick={() => onClick(route)}
+                className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl ring-1 ring-white/10"
+            >
+                {/* Background with Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${route.imageGradient} transition-transform duration-700 group-hover:scale-110`}>
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+                </div>
+                
+                {/* Overlay Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-between bg-gradient-to-t from-black/90 via-black/20 to-transparent">
+                    
+                    {/* Top Section */}
+                    <div className="flex justify-between items-start">
+                        <Badge className="bg-black/30 backdrop-blur-md text-white border border-white/10">
+                            {route.region}
+                        </Badge>
+                        <div className="flex flex-col items-end">
+                            <span className="text-xs font-bold text-white/60 uppercase tracking-wider mb-1">Score</span>
+                            <span className={`text-xl font-bold ${route.sufferScore > 90 ? 'text-red-500' : 'text-yellow-500'}`}>
+                                {route.sufferScore}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Section */}
+                    <div>
+                        <h3 className="text-3xl font-black text-white mb-2 leading-none group-hover:text-gray-200 transition-colors">
+                            {route.name}
+                        </h3>
+                        <p className="text-white/70 mb-4 flex items-center gap-2 text-sm font-medium">
+                            <MapIcon size={14} /> {route.country}
+                        </p>
+
+                        <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-4">
+                            <div>
+                                <div className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Length</div>
+                                <div className="text-white font-bold">{route.distanceKm}km</div>
+                            </div>
+                            <div>
+                                <div className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Climb</div>
+                                <div className="text-white font-bold">{(route.elevationM / 1000).toFixed(1)}k</div>
+                            </div>
+                            <div>
+                                <div className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Days</div>
+                                <div className="text-white font-bold">{route.daysStrong}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        function EpiqueApp() {
+            const [selectedRegion, setSelectedRegion] = useState("All");
+            const [selectedSurface, setSelectedSurface] = useState("All");
+            const [selectedRoute, setSelectedRoute] = useState(null);
+
+            const filteredRoutes = useMemo(() => {
+                return ROUTES.filter(route => {
+                    const regionMatch = selectedRegion === "All" || route.region === selectedRegion;
+                    const surfaceMatch = selectedSurface === "All" || 
+                                         (selectedSurface === "Road" && route.surface === "Road") ||
+                                         (selectedSurface === "Gravel" && route.surface !== "Road");
+                    return regionMatch && surfaceMatch;
+                });
+            }, [selectedRegion, selectedSurface]);
+
+            const regions = ["All", ...new Set(ROUTES.map(r => r.region))];
+
+            return (
+                <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
+                    
+                    {/* Header */}
+                    <header className="sticky top-0 z-40 bg-black/80 backdrop-blur-lg border-b border-white/10">
+                        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-white text-black p-1 rounded">
+                                    <Mountain size={24} />
+                                </div>
+                                <h1 className="text-2xl font-black tracking-tighter">ÉPIQUE</h1>
+                            </div>
+                            
+                            <div className="flex items-center gap-6 text-sm font-medium text-gray-400">
+                                <div className="hidden md:flex gap-4">
+                                    <button 
+                                        onClick={() => setSelectedSurface("All")} 
+                                        className={`hover:text-white transition ${selectedSurface === "All" ? "text-white underline underline-offset-4" : ""}`}
+                                    >
+                                        All Terrain
+                                    </button>
+                                    <button 
+                                        onClick={() => setSelectedSurface("Road")} 
+                                        className={`hover:text-white transition ${selectedSurface === "Road" ? "text-white underline underline-offset-4" : ""}`}
+                                    >
+                                        Tarmac
+                                    </button>
+                                    <button 
+                                        onClick={() => setSelectedSurface("Gravel")} 
+                                        className={`hover:text-white transition ${selectedSurface === "Gravel" ? "text-white underline underline-offset-4" : ""}`}
+                                    >
+                                        Gravel/Mixed
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Hero Section */}
+                    <div className="relative py-20 px-6 border-b border-white/10 bg-zinc-900">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">
+                                EARN THE DESCENT.
+                            </h2>
+                            <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                                A curated collection of the world's finest multi-day cycling routes. 
+                                Filtered for riders who can handle 100km+ days and 5-figure climbing stats.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Filters (Mobile/Secondary) */}
+                    <div className="max-w-7xl mx-auto px-6 py-8">
+                        <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar">
+                            {regions.map(region => (
+                                <button
+                                    key={region}
+                                    onClick={() => setSelectedRegion(region)}
+                                    className={`px-6 py-2 rounded-full border text-sm font-bold whitespace-nowrap transition-all ${
+                                        selectedRegion === region 
+                                            ? "bg-white text-black border-white" 
+                                            : "bg-transparent text-gray-400 border-gray-800 hover:border-gray-500 hover:text-white"
+                                    }`}
+                                >
+                                    {region}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Grid */}
+                    <main className="max-w-7xl mx-auto px-6 pb-24">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredRoutes.map(route => (
+                                <RouteCard key={route.id} route={route} onClick={setSelectedRoute} />
+                            ))}
+                        </div>
+                        
+                        {filteredRoutes.length === 0 && (
+                            <div className="text-center py-24 text-gray-500">
+                                <Bike size={48} className="mx-auto mb-4 opacity-50" />
+                                <p>No routes found matching your strict criteria.</p>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="border-t border-white/10 py-12 bg-zinc-950">
+                        <div className="max-w-7xl mx-auto px-6 text-center text-gray-600 text-sm">
+                            <p className="mb-2">DESIGNED FOR THE OBSESSED.</p>
+                            <p>&copy; 2025 Épique. Ride safe.</p>
+                        </div>
+                    </footer>
+
+                    {/* Modal */}
+                    {selectedRoute && (
+                        <DetailModal route={selectedRoute} onClose={() => setSelectedRoute(null)} />
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<EpiqueApp />);
+    </script>
+</body>
+</html>
