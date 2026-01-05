@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Integrated Home System (2026)</title>
+    <meta name="description" content="Report: The Integrated Home System (2026 Edition) - Canadian Building Standards & Climate">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        tier: {
+                            sota: '#f59e0b', // Amber
+                            value: '#3b82f6', // Blue
+                            rental: '#10b981', // Emerald
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Smooth transitions for filtering */
+        .tier-col {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .hidden-tier {
+            display: none;
+        }
+        
+        /* Grid expansion when filtered */
+        .expanded-col {
+            grid-column: span 3;
+        }
+        
+        @media (max-width: 1024px) {
+            .expanded-col {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- Header / Hero -->
+    <header class="bg-slate-900 text-white pt-16 pb-24 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#64748b 1px, transparent 1px); background-size: 32px 32px;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="inline-block px-3 py-1 mb-4 text-xs font-mono font-semibold tracking-wider text-emerald-400 bg-slate-800 rounded-full border border-slate-700">
+                CANADIAN BUILDING STANDARDS & CLIMATE
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+                The Integrated <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Home System</span>
+            </h1>
+            <p class="text-xl text-slate-400 max-w-2xl mb-2 font-light">
+                2026 Edition Report. Deconstructing the residential home into critical systems using Building Science principles.
+            </p>
+            <p class="text-sm text-slate-500 font-mono">Date: January 5, 2026</p>
+        </div>
+    </header>
+
+    <!-- Sticky Navigation & Filter Bar -->
+    <div class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4">
+                
+                <!-- Section Nav -->
+                <nav class="hidden md:flex space-x-6 text-sm font-medium text-slate-600 overflow-x-auto">
+                    <a href="#site" class="hover:text-blue-600 transition-colors whitespace-nowrap">1. Site & Ground</a>
+                    <a href="#structure" class="hover:text-blue-600 transition-colors whitespace-nowrap">2. Structure</a>
+                    <a href="#envelope" class="hover:text-blue-600 transition-colors whitespace-nowrap">3. Envelope</a>
+                    <a href="#mep" class="hover:text-blue-600 transition-colors whitespace-nowrap">4. MEP</a>
+                    <a href="#finishes" class="hover:text-blue-600 transition-colors whitespace-nowrap">5. Finishes</a>
+                    <a href="#stressors" class="hover:text-blue-600 transition-colors whitespace-nowrap">6. Health</a>
+                </nav>
+
+                <!-- Filters -->
+                <div class="flex items-center space-x-2 bg-slate-100 p-1 rounded-lg self-start md:self-auto">
+                    <button onclick="setFilter('all')" id="btn-all" class="filter-btn px-3 py-1.5 text-xs font-bold rounded-md shadow-sm bg-white text-slate-900 transition-all">
+                        VIEW ALL
+                    </button>
+                    <button onclick="setFilter('sota')" id="btn-sota" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-md text-slate-500 hover:text-amber-600 transition-all">
+                        SOTA
+                    </button>
+                    <button onclick="setFilter('value')" id="btn-value" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-md text-slate-500 hover:text-blue-600 transition-all">
+                        VALUE
+                    </button>
+                    <button onclick="setFilter('rental')" id="btn-rental" class="filter-btn px-3 py-1.5 text-xs font-medium rounded-md text-slate-500 hover:text-emerald-600 transition-all">
+                        RENTAL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-12 space-y-20">
+
+        <!-- LEGEND (Mobile only mainly) -->
+        <div class="md:hidden grid grid-cols-1 gap-4 mb-8">
+             <div class="bg-amber-50 border-l-4 border-amber-500 p-3 text-xs text-amber-900">
+                <strong>SOTA (Forever Home):</strong> Max performance, zero compromise.
+             </div>
+             <div class="bg-blue-50 border-l-4 border-blue-500 p-3 text-xs text-blue-900">
+                <strong>Bang-for-Buck:</strong> Smart budget choice.
+             </div>
+             <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 text-xs text-emerald-900">
+                <strong>Rental/Retrofit:</strong> Non-permanent hacks.
+             </div>
+        </div>
+
+        <!-- SECTION 1: SITE & GROUND -->
+        <section id="site" class="scroll-mt-32">
+            <div class="flex items-baseline space-x-4 border-b border-slate-200 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">1. Site & Ground Systems</h2>
+                <p class="text-slate-500 italic">Managing water and soil gases before they touch the structure.</p>
+            </div>
+
+            <!-- 1.A Grading -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="waves" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">A. Grading & Water Management</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Hydrostatic pressure forces water through concrete; poor grading floods basements.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <!-- SOTA -->
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 hover:border-amber-300 transition-colors relative">
+                        <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2 flex items-center gap-2"><i data-lucide="shield-check" class="w-4 h-4"></i> Exterior Weeping Tile + Dimple Mat</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">Full plastic dimple membrane wraps the foundation wall, creating an air gap so water falls instantly to the drain pipe. Swales divert surface water 10ft+ away.</p>
+                    </div>
+                    <!-- Value -->
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 hover:border-blue-300 transition-colors relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2 flex items-center gap-2"><i data-lucide="trending-up" class="w-4 h-4"></i> Positive Grading + Damp Proofing</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">Ensure soil slopes away from house (5% grade) and spray a bitumen coating on concrete walls.</p>
+                    </div>
+                    <!-- Rental -->
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 hover:border-emerald-300 transition-colors relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2 flex items-center gap-2"><i data-lucide="wrench" class="w-4 h-4"></i> Gutter Extensions</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed">Buy flexible plastic tubes to attach to downspouts, pushing roof water 6ft away from the wall.</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800 text-slate-200 text-sm px-6 py-3 flex items-center gap-3">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-400"></i>
+                    <span><strong>Critical Detail:</strong> Do not use mulch against the foundation (it holds water). Use 12 inches of gravel (a "sterile zone").</span>
+                </div>
+            </div>
+
+            <!-- 1.B Radon -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="wind" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">B. Radon Mitigation</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Radioactive soil gas (lung cancer risk) enters airtight homes.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <!-- SOTA -->
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 hover:border-amber-300 transition-colors relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Active Sub-Slab Depressurization</h4>
+                        <p class="text-sm text-slate-700">Fan constantly sucks air from gravel layer under basement slab and vents above roof.</p>
+                    </div>
+                    <!-- Value -->
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 hover:border-blue-300 transition-colors relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Passive Rough-In</h4>
+                        <p class="text-sm text-slate-700">Install pipe through slab/roof but cap it. Add fan ($300) only if test shows high levels.</p>
+                    </div>
+                    <!-- Rental -->
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 hover:border-emerald-300 transition-colors relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Airtight Seal + Dilution</h4>
+                        <p class="text-sm text-slate-700">Seal basement cracks with caulk. If levels high, crack a window to dilute gas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: STRUCTURE -->
+        <section id="structure" class="scroll-mt-32">
+            <div class="flex items-baseline space-x-4 border-b border-slate-200 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">2. Structure & Sheathing</h2>
+                <p class="text-slate-500 italic">The Shell: Resistance to Loads, Wind, and Thermal Bridging.</p>
+            </div>
+
+            <!-- 2.A Foundation -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="box" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">A. Foundation</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Load transfer and thermal loss into the earth.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                        <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">ICF (Insulated Concrete Forms)</h4>
+                        <p class="text-sm text-slate-700">Foam blocks stacked and filled with concrete. R-22+ performance insulated inside and out.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                        <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Poured Concrete + Interior Blanket</h4>
+                        <p class="text-sm text-slate-700">Standard poured walls with interior framed wall insulated with batt.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-slate-100 rounded-lg p-5 border border-slate-200 relative opacity-70">
+                        <div class="absolute top-0 right-0 bg-slate-400 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">N/A</div>
+                        <h4 class="text-slate-600 font-bold mb-2">No Option</h4>
+                        <p class="text-sm text-slate-500">Check for musty smells which indicate foundation leaks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2.B Framing -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="hammer" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">B. Framing & Sheathing</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Structural rigidity and air/water sealing.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Engineered Lumber + ZIP R-Sheathing</h4>
+                        <p class="text-sm text-slate-700">Straight engineered studs (LSL/LVL). ZIP R-Sheathing has integrated foam and air barrier, eliminating house wrap.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">2x6 Stick Framing + OSB + Tyvek</h4>
+                        <p class="text-sm text-slate-700">The standard code. 2x6 allows more insulation than old 2x4 walls.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-slate-100 rounded-lg p-5 border border-slate-200 relative opacity-70">
+                         <div class="absolute top-0 right-0 bg-slate-400 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">N/A</div>
+                        <h4 class="text-slate-600 font-bold mb-2">Selection</h4>
+                        <p class="text-sm text-slate-500">Select concrete buildings for sound isolation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ENVELOPE -->
+        <section id="envelope" class="scroll-mt-32">
+             <div class="flex items-baseline space-x-4 border-b border-slate-200 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">3. Building Envelope</h2>
+                <p class="text-slate-500 italic">The Control Layers: Heat, Air, and Moisture.</p>
+            </div>
+
+            <!-- 3.A Insulation -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="thermometer" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">A. Insulation</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Heat flow (cost) and condensation.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Exterior Continuous + Spray Foam</h4>
+                        <p class="text-sm text-slate-700">Wrapping <em>outside</em> keeps studs warm. Spray foam seals all gaps.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Flash-and-Batt</h4>
+                        <p class="text-sm text-slate-700">1 inch spray foam for air sealing, followed by fiberglass or mineral wool.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Window Film</h4>
+                        <p class="text-sm text-slate-700">"Shrink wrap" plastic kits create trapped air pocket for glass insulation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.B Windows -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="maximize" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">B. Windows</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> The "hole" in the wall. Thermal loss and drafts.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Triple-Pane Tilt-and-Turn</h4>
+                        <p class="text-sm text-slate-700">R-7 value (European style). Multi-point locking mechanism seals like a bank vault.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Double-Pane Low-E</h4>
+                        <p class="text-sm text-slate-700">Argon filled with "Warm Edge" rubber spacers (not metal).</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Thermal Curtains + Bubble Wrap</h4>
+                        <p class="text-sm text-slate-700">Heavy velvet curtains stop drafts. Reflective bubble foil for heatwaves.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3.C Flashing -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="droplet" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">C. Flashing (Waterproofing)</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Leaks at joints/seams.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Liquid Applied Flashing</h4>
+                        <p class="text-sm text-slate-700">Thick rubbery paste painted on sills. Forms a seamless, monolithic boot.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Acrylic Flashing Tape</h4>
+                        <p class="text-sm text-slate-700">ZIP Tape or 3M. Superior to asphalt; sticks to wet surfaces and doesn't dry out.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-slate-100 rounded-lg p-5 border border-slate-200 relative opacity-70">
+                         <div class="absolute top-0 right-0 bg-slate-400 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">N/A</div>
+                        <h4 class="text-slate-600 font-bold mb-2">Visual Inspection</h4>
+                        <p class="text-sm text-slate-500">Look for water stains at top corners of windows.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: MEP -->
+        <section id="mep" class="scroll-mt-32">
+             <div class="flex items-baseline space-x-4 border-b border-slate-200 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">4. MEP Systems</h2>
+                <p class="text-slate-500 italic">Life Support: Air, Water, and Power.</p>
+            </div>
+
+            <!-- 4.A HVAC -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="fan" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">A. HVAC (Heating & Cooling)</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Comfort and efficiency.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Cold Climate Heat Pump</h4>
+                        <p class="text-sm text-slate-700">Air-to-Air (Mitsubishi/Fujitsu). Works down to -30°C. Individual zoning. No gas required.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Central Heat Pump + Electric Backup</h4>
+                        <p class="text-sm text-slate-700">Ducted system. Electric resistance strips kick in for the coldest 5 days of the year.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Portable Dual-Hose AC + Vornado</h4>
+                        <p class="text-sm text-slate-700">Dual-hose prevents negative pressure. Vornado fan mixes air to break hot/cold spots.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.B Ventilation -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="wind-arrow-down" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">B. Ventilation (IAQ)</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Stale air, CO2, and chemicals in airtight spaces.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">ERV - Dedicated Ducting</h4>
+                        <p class="text-sm text-slate-700">Extracts from wet rooms, supplies bedrooms. Recovers 80% heat & moisture.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">HRV (Heat Recovery Ventilator)</h4>
+                        <p class="text-sm text-slate-700">Transfers heat only (not moisture). May need humidifier in winter.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">CO2 Monitor + HEPA</h4>
+                        <p class="text-sm text-slate-700">Watch Aranet4 monitor; if >1000ppm, crack window. Run HEPA for dust.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4.C Water Heating -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="flame" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">C. Water Heating</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> High energy use (2nd highest).</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Hybrid Heat Pump Heater</h4>
+                        <p class="text-sm text-slate-700">Steals heat from basement air. Dehumidifies as side effect. 300% efficiency.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Standard Electric Tank + Timer</h4>
+                        <p class="text-sm text-slate-700">Simple, durable. Timer restricts heating to off-peak rate hours.</p>
+                    </div>
+                     <div class="tier-col tier-rental bg-slate-100 rounded-lg p-5 border border-slate-200 relative opacity-70">
+                         <div class="absolute top-0 right-0 bg-slate-400 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">N/A</div>
+                        <h4 class="text-slate-600 font-bold mb-2">Recirc Test</h4>
+                        <p class="text-sm text-slate-500">Run tap. If hot water takes >30s, recirc line is missing.</p>
+                    </div>
+                </div>
+            </div>
+
+             <!-- 4.D Electrical -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="zap" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">D. Electrical & Data</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Powering the digital/electric future.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">400 Amp + Solar Ready + Cat6a</h4>
+                        <p class="text-sm text-slate-700">Conduit to roof. PoE Ethernet to every room and camera location.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">200 Amp + Smurf Tube</h4>
+                        <p class="text-sm text-slate-700">Blue flexible conduit from panel to attic for future wire pulling without cutting walls.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">UPS (Battery Backup)</h4>
+                        <p class="text-sm text-slate-700">Battery backup for router/PC to maintain internet during micro-outages.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: FINISHES -->
+        <section id="finishes" class="scroll-mt-32">
+             <div class="flex items-baseline space-x-4 border-b border-slate-200 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">5. Finishes (Skin)</h2>
+                <p class="text-slate-500 italic">Durability and Maintenance.</p>
+            </div>
+
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="layers" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Flooring & Siding</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Wear, tear, moisture, and curb appeal.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Engineered Hardwood + Yakisugi</h4>
+                        <p class="text-sm text-slate-700">Thick wear layer wood (stable). Charred Cedar siding (rot-proof, no painting for 50yrs).</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">LVP + Fiber Cement</h4>
+                        <p class="text-sm text-slate-700">Stone Polymer Composite flooring (waterproof). Hardie Board siding (fire resistant, paint every 15yrs).</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Area Rugs + Thick Underpad</h4>
+                        <p class="text-sm text-slate-700">Covers ugly floors and provides critical acoustic dampening.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="square" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Drywall & Interior</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Fire safety and sound transmission.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">5/8" Type X Drywall</h4>
+                        <p class="text-sm text-slate-700">Used everywhere. Thicker, better soundproofing, straighter walls, higher fire rating.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">1/2" Light Drywall + Solid Doors</h4>
+                        <p class="text-sm text-slate-700">Save on walls, splurge on solid core doors to block noise.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Acoustic Panels/Art</h4>
+                        <p class="text-sm text-slate-700">Canvas art with foam backing to reduce echo.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: STRESSORS -->
+        <section id="stressors" class="scroll-mt-32">
+             <div class="flex items-baseline space-x-4 border-b border-slate-200 pb-4 mb-8">
+                <h2 class="text-3xl font-bold text-slate-900">6. Micro-Stressor Management</h2>
+                <p class="text-slate-500 italic">Physiological Health Hacking.</p>
+            </div>
+
+            <!-- Water Quality -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="glass-water" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">A. Water Quality</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Chlorine, heavy metals, hardness.</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Whole Home Carbon + UV + Softener</h4>
+                        <p class="text-sm text-slate-700">Bottled quality from every tap. UV kills bacteria.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Under-Sink RO</h4>
+                        <p class="text-sm text-slate-700">Reverse Osmosis for perfect drinking water at kitchen tap only.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Shower Filter + Countertop RO</h4>
+                        <p class="text-sm text-slate-700">Reduces skin irritation and microplastics (e.g. AquaTru + Sprite).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lighting -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden mb-8">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="sun" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">B. Lighting</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Circadian disruption (blue light at night).</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Lutron Ketra</h4>
+                        <p class="text-sm text-slate-700">Automatically matches color temp of sun throughout day (Human Centric).</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Dim-to-Warm LEDs</h4>
+                        <p class="text-sm text-slate-700">Bulbs get warmer (orange) as dimmed, mimicking sunset.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Smart Bulbs (Hue)</h4>
+                        <p class="text-sm text-slate-700">Program to turn red/orange automatically at 8:00 PM.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acoustics -->
+            <div class="bg-white rounded-xl card-shadow border border-slate-100 overflow-hidden">
+                 <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-start gap-3">
+                    <i data-lucide="volume-2" class="w-6 h-6 text-slate-400 mt-1"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">C. Acoustics</h3>
+                        <p class="text-sm text-red-500 mt-1 font-medium"><span class="font-bold">The Problem:</span> Noise pollution (Cortisol spike).</p>
+                    </div>
+                </div>
+                <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 solution-grid">
+                    <div class="tier-col tier-sota bg-amber-50/30 rounded-lg p-5 border border-amber-100 relative">
+                         <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">SOTA</div>
+                        <h4 class="text-amber-700 font-bold mb-2">Resilient Channel + QuietRock</h4>
+                        <p class="text-sm text-slate-700">Drywall decoupled from studs via metal clips to absorb vibration.</p>
+                    </div>
+                    <div class="tier-col tier-value bg-blue-50/30 rounded-lg p-5 border border-blue-100 relative">
+                         <div class="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">VALUE</div>
+                        <h4 class="text-blue-700 font-bold mb-2">Safe-n-Sound Insulation</h4>
+                        <p class="text-sm text-slate-700">Stuff interior walls with mineral wool batts instead of leaving hollow.</p>
+                    </div>
+                    <div class="tier-col tier-rental bg-emerald-50/30 rounded-lg p-5 border border-emerald-100 relative">
+                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">RENTAL</div>
+                        <h4 class="text-emerald-700 font-bold mb-2">Mechanical White Noise</h4>
+                        <p class="text-sm text-slate-700">Physical fan (Dohm) creates sound blanket masking elevator/hallway noise.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-500 py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-4 font-mono text-sm">THE INTEGRATED HOME SYSTEM REPORT 2026</p>
+            <p class="text-xs">&copy; 2026 Building Science & Integrated Systems. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Filter Logic
+        function setFilter(filterType) {
+            const sota = document.querySelectorAll('.tier-sota');
+            const value = document.querySelectorAll('.tier-value');
+            const rental = document.querySelectorAll('.tier-rental');
+            const btns = document.querySelectorAll('.filter-btn');
+
+            // Reset Buttons
+            btns.forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white', 'bg-amber-100', 'text-amber-800', 'bg-blue-100', 'text-blue-800', 'bg-emerald-100', 'text-emerald-800');
+                btn.classList.add('bg-white', 'text-slate-500');
+            });
+
+            // Active Button Style
+            const activeBtn = document.getElementById(`btn-${filterType}`);
+            activeBtn.classList.remove('bg-white', 'text-slate-500');
+            
+            if(filterType === 'all') activeBtn.classList.add('bg-slate-800', 'text-white');
+            if(filterType === 'sota') activeBtn.classList.add('bg-amber-100', 'text-amber-800');
+            if(filterType === 'value') activeBtn.classList.add('bg-blue-100', 'text-blue-800');
+            if(filterType === 'rental') activeBtn.classList.add('bg-emerald-100', 'text-emerald-800');
+
+            // Visibility Logic
+            if (filterType === 'all') {
+                sota.forEach(el => { el.classList.remove('hidden-tier'); el.classList.remove('expanded-col'); });
+                value.forEach(el => { el.classList.remove('hidden-tier'); el.classList.remove('expanded-col'); });
+                rental.forEach(el => { el.classList.remove('hidden-tier'); el.classList.remove('expanded-col'); });
+            } else {
+                // Hide all first
+                sota.forEach(el => el.classList.add('hidden-tier'));
+                value.forEach(el => el.classList.add('hidden-tier'));
+                rental.forEach(el => el.classList.add('hidden-tier'));
+
+                // Show selected and expand
+                if (filterType === 'sota') {
+                    sota.forEach(el => { el.classList.remove('hidden-tier'); el.classList.add('expanded-col'); });
+                }
+                if (filterType === 'value') {
+                    value.forEach(el => { el.classList.remove('hidden-tier'); el.classList.add('expanded-col'); });
+                }
+                if (filterType === 'rental') {
+                    rental.forEach(el => { el.classList.remove('hidden-tier'); el.classList.add('expanded-col'); });
+                }
+            }
+        }
+
+        // Set default
+        setFilter('all');
+    </script>
+</body>
+</html>
