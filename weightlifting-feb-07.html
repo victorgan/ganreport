@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIMITLESS // RESET Routine Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617; /* bg-slate-950 */
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                    <i data-lucide="activity" class="text-slate-950 w-5 h-5" stroke-width="3"></i>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase">
+                    LIMITLESS <span class="text-emerald-500">//</span> RESET
+                </h1>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-500 tracking-widest uppercase">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                <span>6-Week Foundation</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Day Selector -->
+        <div id="day-selector" class="flex flex-wrap gap-2 mb-8 bg-slate-900/50 p-2 rounded-2xl border border-slate-800 overflow-x-auto no-scrollbar whitespace-nowrap">
+            <!-- Buttons injected by JS -->
+        </div>
+
+        <!-- Workout Intro Section -->
+        <div id="workout-content" class="mb-10 animate-fade-in">
+            <!-- Content injected by JS -->
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 pt-10 border-t border-slate-900">
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="space-y-3">
+                    <h4 class="text-slate-100 font-bold flex items-center gap-2">
+                        <i data-lucide="heart" class="text-emerald-500 w-4 h-4"></i>
+                        Recovery Protocol
+                    </h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        Prioritize 7-9 hours of sleep. On reset days, keep heart rate in Zone 2 to maximize capillary density and flush metabolic waste.
+                    </p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="text-slate-100 font-bold flex items-center gap-2">
+                        <i data-lucide="dumbbell" class="text-emerald-500 w-4 h-4"></i>
+                        Progressive Overload
+                    </h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">
+                        Focus on movement quality first. Once the "Why" of the movement is felt in the target tissue, increase load by 2.5-5% weekly.
+                    </p>
+                </div>
+            </div>
+            <div class="text-center text-slate-600 text-xs py-10">
+                <p class="mb-2 uppercase">Not medical advice. Based on Coach Kelly's Limitless Methodology.</p>
+                <p>© 2024 LIMITLESS PERFORMANCE LABS</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const workoutData = {
+            Monday: {
+                focus: "Lower Body Strength",
+                theme: "Anterior Chain & Max Force",
+                exercises: [
+                    {
+                        name: "Barbell Back Squat",
+                        reps: "3 sets x 6-8 reps",
+                        selection: "The 'King of Lifts' for overall leg development and core stability.",
+                        ordering: "Placed first when the Central Nervous System (CNS) is freshest to handle the heaviest structural load safely."
+                    },
+                    {
+                        name: "Reverse Lunges",
+                        reps: "3 sets x 8-10 reps/leg",
+                        selection: "Addresses imbalances between left and right legs; improves hip stability.",
+                        ordering: "Follows the bilateral main lift to fatigue the legs further without requiring the same spinal loading as a heavy squat."
+                    },
+                    {
+                        name: "Leg Extensions",
+                        reps: "3 sets x 12-15 reps",
+                        selection: "Isolates the quadriceps without systemic fatigue.",
+                        ordering: "Finisher movement to drive metabolic stress (the 'pump') into the muscle safely at the end of the session."
+                    }
+                ]
+            },
+            Tuesday: {
+                focus: "Upper Body Strength",
+                theme: "Push / Pull Balance",
+                exercises: [
+                    {
+                        name: "DB Chest Press",
+                        reps: "3 sets x 8-10 reps",
+                        selection: "Compound pushing movement for pectorals and anterior delts; DBs allow for greater range of motion than barbell.",
+                        ordering: "Compound push movements require the most shoulder stability, so they are performed first."
+                    },
+                    {
+                        name: "Single-Arm DB Row",
+                        reps: "3 sets x 8-10 reps",
+                        selection: "Horizontal pulling to build lats and rhomboids; counteracts desk-posture.",
+                        ordering: "Antagonist pairing to the press; allows chest to rest while back works."
+                    },
+                    {
+                        name: "Lateral Raises",
+                        reps: "3 sets x 12-15 reps",
+                        selection: "Targets the medial deltoid to create the 'capped' shoulder look.",
+                        ordering: "Isolation movement performed last as it involves smaller muscle groups that fatigue quickly."
+                    }
+                ]
+            },
+            Wednesday: {
+                focus: "Lower Body Hinge",
+                theme: "Posterior Chain",
+                exercises: [
+                    {
+                        name: "Romanian Deadlift (RDL)",
+                        reps: "3 sets x 8-10 reps",
+                        selection: "The primary builder for the posterior chain; teaches the hip-hinge pattern.",
+                        ordering: "Highly technical lift requiring strict form to protect the lower back—must be done first."
+                    },
+                    {
+                        name: "Hip Thrusts",
+                        reps: "3 sets x 10-12 reps",
+                        selection: "Maximizes glute contraction at the top of the movement (shortened position).",
+                        ordering: "Complements the RDL (lengthened position) by working the opposite range of the strength curve."
+                    }
+                ]
+            },
+            Thursday: {
+                focus: "Upper Body Hypertrophy",
+                theme: "Volume & Aesthetics",
+                exercises: [
+                    {
+                        name: "Weighted Push-Ups",
+                        reps: "3 sets to failure",
+                        selection: "Closed-chain kinetic movement that improves scapular health.",
+                        ordering: "Used as a heavy compound starter to pre-exhaust the chest and triceps."
+                    },
+                    {
+                        name: "Super Set: Arnold Press + Lat Pulldown",
+                        reps: "3 sets x 10-12 reps",
+                        selection: "Increases workout density; hits vertical push and vertical pull patterns.",
+                        ordering: "Super setting antagonist muscle groups increases heart rate and efficiency."
+                    }
+                ]
+            },
+            Friday: {
+                focus: "Conditioning",
+                theme: "Work Capacity (MetCon)",
+                exercises: [
+                    {
+                        name: "MetCon Circuit",
+                        reps: "3 Rounds (Swings, Jumps, Bike)",
+                        selection: "High-intensity interval training to improve VO2 max.",
+                        ordering: "Strategic placement at the end of the lifting week to prevent interference with strength recovery."
+                    }
+                ]
+            },
+            Saturday: {
+                focus: "Athletic Performance",
+                theme: "Power & Flow",
+                exercises: [
+                    {
+                        name: "Power Cleans / Landmine Rotations",
+                        reps: "5 sets x 3 reps",
+                        selection: "Moves the body in transverse planes; focuses on speed of movement.",
+                        ordering: "Independent day dedicated to power ensures movement quality isn't compromised by fatigue."
+                    }
+                ]
+            },
+            Sunday: {
+                focus: "Rest & Reset",
+                theme: "Parasympathetic Recovery",
+                exercises: [
+                    {
+                        name: "Zone 2 Walking & Mobility",
+                        reps: "30-45 Minutes",
+                        selection: "Active recovery flushes metabolic waste without tearing down muscle tissue.",
+                        ordering: "Resets the CNS for the upcoming Monday heavy squat session."
+                    }
+                ]
+            }
+        };
+
+        let currentDay = "Monday";
+
+        function renderDaySelector() {
+            const container = document.getElementById('day-selector');
+            container.innerHTML = Object.keys(workoutData).map(day => `
+                <button
+                    onclick="setDay('${day}')"
+                    class="flex-1 min-w-[80px] py-3 px-4 rounded-xl font-bold text-sm transition-all duration-200 uppercase tracking-tighter
+                    ${currentDay === day 
+                        ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 scale-105' 
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+                    }"
+                >
+                    ${day.substring(0, 3)}
+                </button>
+            `).join('');
+        }
+
+        function toggleExercise(index) {
+            const content = document.getElementById(`exercise-content-${index}`);
+            const icon = document.getElementById(`exercise-icon-${index}`);
+            const isHidden = content.classList.contains('hidden');
+            
+            if (isHidden) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-90', 'text-emerald-500');
+                icon.classList.remove('text-slate-400');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-90', 'text-emerald-500');
+                icon.classList.add('text-slate-400');
+            }
+        }
+
+        function setDay(day) {
+            currentDay = day;
+            renderDaySelector();
+            renderWorkout();
+        }
+
+        function renderWorkout() {
+            const workout = workoutData[currentDay];
+            const container = document.getElementById('workout-content');
+            
+            // Re-trigger animation
+            container.style.animation = 'none';
+            container.offsetHeight; /* trigger reflow */
+            container.style.animation = null;
+
+            let html = `
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+                    <div>
+                        <p class="text-emerald-500 font-bold uppercase tracking-[0.2em] text-sm mb-1">
+                            ${workout.focus}
+                        </p>
+                        <h2 class="text-4xl md:text-5xl font-black tracking-tight text-white uppercase">
+                            ${currentDay}
+                        </h2>
+                    </div>
+                    <div class="flex items-center gap-2 px-4 py-2 bg-slate-900 rounded-lg border border-slate-800 w-fit">
+                        <i data-lucide="info" class="text-emerald-500 w-4 h-4"></i>
+                        <span class="text-sm font-medium text-slate-300">${workout.theme}</span>
+                    </div>
+                </div>
+                
+                <div class="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl mb-8 flex items-start gap-3">
+                    <i data-lucide="brain" class="text-emerald-500 shrink-0 w-5 h-5"></i>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        <span class="font-bold text-emerald-500 uppercase tracking-tighter mr-1">Philosophy:</span>
+                        This block establishes movement baselines and CNS preparation. High specificity on 
+                        ${currentDay === 'Monday' || currentDay === 'Wednesday' ? ' structural stability' : ' metabolic density'}.
+                    </p>
+                </div>
+
+                <div class="space-y-4">
+                    ${workout.exercises.map((ex, idx) => `
+                        <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden transition-all hover:border-emerald-500/50 group">
+                            <div class="p-5 flex justify-between items-start gap-4 cursor-pointer" onclick="toggleExercise(${idx})">
+                                <div>
+                                    <h3 class="text-xl font-bold text-slate-100 group-hover:text-emerald-400 transition-colors">
+                                        ${ex.name}
+                                    </h3>
+                                    <span class="inline-block mt-2 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-sm font-medium border border-emerald-500/20">
+                                        ${ex.reps}
+                                    </span>
+                                </div>
+                                <button class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-all text-slate-400" id="exercise-icon-${idx}">
+                                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+                            <div id="exercise-content-${idx}" class="px-5 pb-5 hidden">
+                                <div class="p-4 bg-slate-950/50 rounded-lg border border-slate-800 space-y-4">
+                                    <div class="flex gap-3">
+                                        <div class="mt-1 text-emerald-500">
+                                            <i data-lucide="target" class="w-4.5 h-4.5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Selection Logic</p>
+                                            <p class="text-slate-300 text-sm leading-relaxed">${ex.selection}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="mt-1 text-emerald-500">
+                                            <i data-lucide="zap" class="w-4.5 h-4.5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Sequence Logic</p>
+                                            <p class="text-slate-300 text-sm leading-relaxed">${ex.ordering}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        // Initialize
+        window.onload = () => {
+            renderDaySelector();
+            renderWorkout();
+        };
+    </script>
+</body>
+</html>
