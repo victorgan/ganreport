@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muscle & Movement Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            scroll-behavior: smooth;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-table th {
+            background-color: #0f172a;
+            color: #10b981;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #1e293b;
+        }
+
+        .custom-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #1e293b;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .badge-primary {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .highlight-pulse {
+            animation: pulse-border 2s infinite;
+            border-color: #10b981 !important;
+            background-color: rgba(16, 185, 129, 0.05) !important;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .muscle-group-header {
+            border-left: 4px solid #10b981;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body class="text-slate-100">
+
+    <header class="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="location.reload()">
+                <div class="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+                    <i data-lucide="database" class="text-slate-950 w-5 h-5" stroke-width="3"></i>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter uppercase">
+                    MUSCLE <span class="text-emerald-500">//</span> MOVEMENT
+                </h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <nav class="flex space-x-1 bg-slate-900/50 p-1.5 rounded-xl border border-slate-800 mb-8 max-w-2xl">
+            <button onclick="switchTab('tables')" id="btn-tables" class="tab-btn flex-1 py-2.5 px-4 rounded-lg font-bold text-sm transition-all duration-200 uppercase tracking-tighter">Tables</button>
+            <button onclick="switchTab('exercises')" id="btn-exercises" class="tab-btn flex-1 py-2.5 px-4 rounded-lg font-bold text-sm transition-all duration-200 uppercase tracking-tighter">Directory</button>
+            <button onclick="switchTab('muscles')" id="btn-muscles" class="tab-btn flex-1 py-2.5 px-4 rounded-lg font-bold text-sm transition-all duration-200 uppercase tracking-tighter">Anatomy Index</button>
+        </nav>
+
+        <section id="tab-tables" class="tab-content hidden animate-fade-in space-y-12"></section>
+        <section id="tab-exercises" class="tab-content hidden animate-fade-in pb-20">
+            <div id="exercise-sections" class="space-y-12"></div>
+        </section>
+        <section id="tab-muscles" class="tab-content hidden animate-fade-in pb-20"></section>
+    </main>
+
+    <script>
+        const rawData = [
+            {
+                complex: "The Push Complex",
+                goal: "Anterior Pushing Muscles",
+                rows: [
+                    { bodyPart: "Chest Muscles", primary: "Flat Barbell Bench Press", assistance: "Incline Dumbbell Press", isolation: "Cable Crossovers" },
+                    { bodyPart: "Shoulder Muscles", primary: "Military Press", assistance: "Seated Dumbbell Overhead Press", isolation: "Cable Lateral Raises" },
+                    { bodyPart: "Triceps Brachii", primary: "Close-Grip Bench Press", assistance: "Skullcrushers", isolation: "Tricep Rope Pushdowns" },
+                    { bodyPart: "Rotator Cuff", primary: "N/A", assistance: "Face Pulls", isolation: "Cable External Rotations" }
+                ]
+            },
+            {
+                complex: "The Pull Complex",
+                goal: "Posterior Pulling Muscles",
+                rows: [
+                    { bodyPart: "Latissimus Dorsi", primary: "Weighted Pull-Ups", assistance: "Wide-Grip Lat Pulldowns", isolation: "Straight-Arm Pulldowns" },
+                    { bodyPart: "Mid-Back", primary: "Barbell Rows", assistance: "Chest-Supported T-Bar Rows", isolation: "Seated Cable Rows" },
+                    { bodyPart: "Erector Spinae", primary: "Rack Pulls", assistance: "Good Mornings", isolation: "Weighted Hyperextensions" },
+                    { bodyPart: "Trapezius", primary: "Farmer’s Walks", assistance: "Barbell Shrugs", isolation: "Kelso Shrugs" },
+                    { bodyPart: "Biceps Brachii", primary: "Weighted Chin-Ups", assistance: "Barbell Curls", isolation: "Incline Dumbbell Curls" },
+                    { bodyPart: "Forearm Muscles", primary: "Reverse Barbell Curls", assistance: "Barbell Wrist Curls", isolation: "Plate Pinches" }
+                ]
+            },
+            {
+                complex: "The Leg Complex",
+                goal: "Lower Body",
+                rows: [
+                    { bodyPart: "Quadriceps", primary: "Barbell Back Squat", assistance: "Bulgarian Split Squats", isolation: "Leg Extensions" },
+                    { bodyPart: "Hamstrings", primary: "Deadlifts", assistance: "Romanian Deadlifts (RDL)", isolation: "Seated Leg Curls" },
+                    { bodyPart: "Glutes", primary: "Barbell Hip Thrusts", assistance: "Walking Lunges", isolation: "Cable Hip Abductions" },
+                    { bodyPart: "Calves", primary: "Donkey Calf Raises", assistance: "Standing Calf Raises", isolation: "Seated Calf Raises" },
+                    { bodyPart: "Inner Thigh", primary: "Sumo Squats", assistance: "Copenhagen Plank", isolation: "Adductor Machine" }
+                ]
+            }
+        ];
+
+        const anatomicalFocus = {
+            "Flat Barbell Bench Press": "Pectoralis Major (Sternal Head)",
+            "Incline Dumbbell Press": "Pectoralis Major (Clavicular Head)",
+            "Cable Crossovers": "Serratus Anterior",
+            "Military Press": "Anterior & Lateral Deltoids",
+            "Seated Dumbbell Overhead Press": "Anterior Deltoid",
+            "Cable Lateral Raises": "Lateral Deltoid",
+            "Close-Grip Bench Press": "Triceps Brachii (Medial & Lateral Heads)",
+            "Skullcrushers": "Triceps Brachii (Long Head focus)",
+            "Tricep Rope Pushdowns": "Triceps Brachii (Lateral Head focus)",
+            "Face Pulls": "Posterior Deltoid, Rotator Cuff",
+            "Cable External Rotations": "Rotator Cuff",
+            "Weighted Pull-Ups": "Latissimus Dorsi, Teres Major",
+            "Wide-Grip Lat Pulldowns": "Latissimus Dorsi, Rhomboids",
+            "Straight-Arm Pulldowns": "Latissimus Dorsi",
+            "Barbell Rows": "Rhomboids, Middle Traps",
+            "Chest-Supported T-Bar Rows": "Rhomboids",
+            "Seated Cable Rows": "Latissimus Dorsi, Rhomboids",
+            "Rack Pulls": "Erector Spinae, Traps",
+            "Good Mornings": "Erector Spinae, Hamstrings",
+            "Weighted Hyperextensions": "Erector Spinae",
+            "Farmer’s Walks": "Upper Traps, Forearms",
+            "Barbell Shrugs": "Upper Traps",
+            "Kelso Shrugs": "Middle & Lower Trapezius",
+            "Weighted Chin-Ups": "Biceps Brachii",
+            "Barbell Curls": "Biceps Brachii",
+            "Incline Dumbbell Curls": "Biceps Brachii (Long Head)",
+            "Reverse Barbell Curls": "Brachioradialis",
+            "Barbell Wrist Curls": "Wrist Flexors",
+            "Plate Pinches": "Forearm/Grip",
+            "Barbell Back Squat": "Quadriceps (Vastus Medialis/Lateralis)",
+            "Bulgarian Split Squats": "Rectus Femoris, Glute Medius",
+            "Leg Extensions": "Rectus Femoris",
+            "Deadlifts": "Hamstrings, Glute Max",
+            "Romanian Deadlifts (RDL)": "Hamstrings",
+            "Seated Leg Curls": "Hamstrings (Biceps Femoris)",
+            "Barbell Hip Thrusts": "Gluteus Maximus",
+            "Walking Lunges": "Gluteus Maximus",
+            "Cable Hip Abductions": "Gluteus Medius",
+            "Donkey Calf Raises": "Gastrocnemius",
+            "Standing Calf Raises": "Gastrocnemius",
+            "Seated Calf Raises": "Soleus",
+            "Sumo Squats": "Hip Adductors",
+            "Copenhagen Plank": "Hip Adductors",
+            "Adductor Machine": "Hip Adductors"
+        };
+
+        const exerciseDescriptions = {
+            "Flat Barbell Bench Press": "This horizontal push is a cornerstone for building the sternal head of the pectoralis major. By lying flat and driving the bar away from the chest, you engage the anterior deltoids and triceps as secondary movers. It allows for the highest total load of any chest movement, promoting maximum mechanical tension and upper body power.",
+            "Incline Dumbbell Press": "This movement emphasizes the clavicular head (upper portion) of the chest by utilizing a 30 to 45-degree bench angle. Using dumbbells allows for a greater range of motion and independent limb control, which helps correct muscle imbalances. It is essential for developing a full, well-rounded chest and improving shoulder stability during pressing.",
+            "Cable Crossovers": "A superior isolation movement that maintains constant tension on the chest fibers throughout the entire range of motion. Unlike free weights, cables provide resistance even at the peak contraction where the hands cross. It specifically targets the inner chest and serratus anterior, making it ideal for metabolic stress and muscle definition.",
+            "Military Press": "The military press is a fundamental vertical push performed while standing, requiring significant core and lower body stability. It primarily targets the anterior and lateral heads of the deltoids while heavily involving the upper trapezius. This exercise is one of the best tests of total body overhead strength and shoulder health.",
+            "Seated Dumbbell Overhead Press": "Performing the overhead press seated minimizes lower body involvement, allowing for a more isolated focus on the shoulder musculature. The use of dumbbells permits a more natural path of motion for the shoulder joint compared to a barbell. This movement is highly effective for hypertrophy in the anterior deltoid and the triceps.",
+            "Cable Lateral Raises": "This isolation exercise is designed to target the lateral deltoid, which is responsible for the 'width' of the shoulders. Using a cable ensures that the muscle is under tension from the very beginning of the lift to the end. It allows for strict form and consistent torque, which is often lost when using dumbbells due to momentum.",
+            "Close-Grip Bench Press": "By narrowing the grip on a barbell, the mechanical load is shifted from the chest toward the triceps brachii. This compound movement allows for heavy loading, which is key for building the lateral and medial heads of the triceps. It also carries over significantly to improving your standard bench press lockout strength.",
+            "Skullcrushers": "This isolation exercise, typically performed with an EZ-Bar, targets the long head of the triceps by placing it in a stretched position. By lowering the weight toward the forehead or slightly behind the head, you maximize the eccentric load on the triceps. It is a premier movement for building 'thickness' in the back of the arm.",
+            "Tricep Rope Pushdowns": "This cable isolation exercise focuses on the lateral head of the triceps, providing a strong peak contraction at the bottom of the movement. Spreading the rope ends at the bottom increases the intensity of the contraction through greater elbow extension. It is excellent for high-volume training and achieving a deep 'pump' in the triceps.",
+            "Face Pulls": "A critical 'prehab' and aesthetic movement that targets the posterior deltoids, rhomboids, and external rotators. Pulling the rope toward the face while pulling the ends apart encourages healthy scapular retraction and shoulder health. It helps balance out the anterior-heavy nature of many pressing programs.",
+            "Cable External Rotations": "This specialized isolation movement targets the small but vital muscles of the rotator cuff, specifically the infraspinatus and teres minor. It improves the stability of the glenohumeral joint, which is essential for heavy pressing movements. Regular inclusion of this exercise prevents common shoulder injuries and improves overall posture.",
+            "Weighted Pull-Ups": "A powerhouse compound movement that builds immense width in the latissimus dorsi and strength in the biceps. By adding external weight to a standard pull-up, you provide the progressive overload necessary for serious back hypertrophy. It also develops significant grip strength and control over the scapulae.",
+            "Wide-Grip Lat Pulldowns": "This vertical pull utilizes a wide bar to emphasize the lateral fibers of the lats, contributing to the 'V-taper' look. It is a more controlled alternative to the pull-up, allowing for targeted muscle-mind connection and high-rep volume. It also engages the rhomboids and lower traps to stabilize the shoulders.",
+            "Straight-Arm Pulldowns": "This isolation movement removes the biceps from the equation, forcing the latissimus dorsi to move the weight through shoulder extension. It is excellent for learning how to engage the lats without 'pulling' with the arms. It also provides a significant stretch at the top of the movement, which is beneficial for hypertrophy.",
+            "Barbell Rows": "A foundational horizontal pull that builds thickness across the entire back, particularly in the rhomboids and middle traps. Because it is a free-weight movement, it requires significant engagement of the hamstrings and erector spinae for stability. It is one of the best exercises for developing a powerful, dense posterior chain.",
+            "Chest-Supported T-Bar Rows": "By supporting the chest on a pad, this row eliminates lower back fatigue and momentum, allowing for pure back isolation. It is highly effective for targeting the rhomboids and middle trapezius with heavy loads. This movement is ideal for those looking to add back volume without taxing the central nervous system.",
+            "Seated Cable Rows": "This horizontal pull offers a consistent tension profile that is difficult to replicate with free weights. It allows for a full stretch of the lats and a hard contraction of the rhomboids at the end of the rep. It is a versatile movement that can be adjusted with different handles to target various areas of the back.",
+            "Rack Pulls": "Essentially the top half of a deadlift, rack pulls allow for extremely heavy loading of the upper traps and erector spinae. By starting the bar at knee height, you eliminate the leg-drive portion of the lift and focus entirely on the back's 'lockout' strength. It is a premier movement for building a thick, powerful upper back.",
+            "Good Mornings": "A hip-hinge movement performed with a barbell on the back, primarily targeting the hamstrings and the spinal erectors. It teaches the trainee how to maintain a flat back while hinging, which has a massive carryover to squats and deadlifts. It is a high-risk, high-reward exercise that builds incredible posterior chain resilience.",
+            "Weighted Hyperextensions": "This isolation movement targets the lower back (erector spinae) and the glutes through a controlled hinge. By adding a weight plate or dumbbell, you can progressively overload the lumbar region safely. It is excellent for building the 'lower back Christmas tree' and improving overall spinal stability.",
+            "Farmer’s Walks": "A functional carry that taxes the entire body, with a specific emphasis on grip strength and the upper trapezius. Walking while holding heavy implements forces the core to stabilize against shifting loads. It is one of the most effective 'brute strength' exercises for building trap size and forearm endurance.",
+            "Barbell Shrugs": "The primary isolation movement for the upper trapezius, focusing on the simple action of elevating the scapulae. Using a barbell allows for massive loading, which is necessary for the traps as they are a very strong muscle group. Constant tension and a slight hold at the top are key for maximizing growth.",
+            "Kelso Shrugs": "A variation of the shrug performed while leaning forward or lying face down on a bench, targeting the middle and lower traps. Instead of shrugging 'up', you shrug 'back' by retracting your shoulder blades together. It is an essential movement for correcting posture and filling out the space between the shoulder blades.",
+            "Weighted Chin-Ups": "A vertical pull with a supinated (underhand) grip that places the biceps in a mechanically advantageous position. While still a great back exercise, the chin-up is arguably the most effective way to overload the biceps with heavy weight. It builds functional strength that translates to almost every other pulling movement.",
+            "Barbell Curls": "The classic isolation movement for building the biceps brachii, allowing for significant weight and straightforward progression. By keeping the elbows tucked and avoiding momentum, you force the biceps to do all the work throughout the arc. It is a staple for adding mass to the front of the upper arms.",
+            "Incline Dumbbell Curls": "By sitting on an incline bench, the arms are positioned behind the torso, putting the long head of the biceps in a deep stretch. This increased stretch leads to higher levels of recruitment and potential for growth in the peak of the bicep. It is widely considered one of the best 'shape-building' exercises for the arms.",
+            "Reverse Barbell Curls": "Using a pronated (overhand) grip shifts the load from the biceps to the brachialis and brachioradialis. This builds thickness in the outer arm and the top of the forearm, creating a more complete arm aesthetic. It also improves grip strength and elbow health for heavy pulling exercises.",
+            "Barbell Wrist Curls": "A targeted isolation movement for the wrist flexors located on the underside of the forearm. By resting the forearms on a bench and curling the bar with just the hands, you isolate the muscles responsible for a strong grip. It is essential for those looking to build massive, 'pop-eye' style forearms.",
+            "Plate Pinches": "An isometric grip exercise that targets the thumb adductors and the deep flexors of the forearm. By pinching two or more plates together with just your fingers, you build functional 'crushing' and 'pinching' strength. It is a favorite among strength athletes for developing hands that never fail on heavy deadlifts.",
+            "Barbell Back Squat": "Known as the 'king of all exercises', the back squat targets the entire lower body, with a heavy emphasis on the quadriceps and glutes. It requires immense core stability and coordination to move heavy loads through a full range of motion. It is the single most effective movement for building total body mass and metabolic power.",
+            "Bulgarian Split Squats": "A single-leg squat variation that places an extreme demand on balance and the rectus femoris of the quads. Because it is unilateral, it helps identify and fix strength imbalances between the left and right legs. It is famously difficult but highly effective for both glute and quad hypertrophy.",
+            "Leg Extensions": "The only movement that truly isolates the quadriceps without involving the glutes or hamstrings. It allows for a peak contraction at the top of the movement, which is difficult to achieve in compound lifts like squats. It is ideal for finishing a leg workout and pushing the quads to absolute failure.",
+            "Deadlifts": "A total-body strength movement that primarily targets the hamstrings, glutes, and the entire back. By pulling a heavy weight from a dead stop on the floor, you build incredible 'starting strength' and posterior chain power. It is a fundamental movement for human performance and structural integrity.",
+            "Romanian Deadlifts (RDL)": "A deadlift variation that starts from a standing position and focuses on the eccentric (lowering) phase of the lift. By keeping the legs relatively straight and hinging at the hips, you maximize the stretch and tension on the hamstrings. It is widely regarded as the best movement for building hamstring thickness and flexibility.",
+            "Seated Leg Curls": "An isolation movement that targets the hamstrings, specifically emphasizing the biceps femoris. Being seated puts the hamstrings in a more advantageous position to be stretched compared to lying leg curls. It provides a safer way to train the hamstrings to failure with consistent mechanical tension.",
+            "Barbell Hip Thrusts": "Arguably the most effective exercise for isolating the gluteus maximus due to the horizontal loading pattern. Unlike squats, the glutes are under maximum tension at the top of the movement when the muscle is shortened. It is a staple for anyone looking to maximize glute power, size, and athletic performance.",
+            "Walking Lunges": "A dynamic movement that combines strength, balance, and coordination while targeting the quads and glutes. The constant transition from one leg to the other keeps the heart rate high and the muscles under prolonged tension. It is an excellent 'finisher' for leg day to ensure every fiber has been taxed.",
+            "Cable Hip Abductions": "An isolation movement targeting the gluteus medius and minimus, located on the side of the hip. These muscles are crucial for hip stability and preventing the knees from caving in during squats. It also helps create the 'shelf' look on the side of the glutes, contributing to a better lower-body silhouette.",
+            "Donkey Calf Raises": "A calf exercise where the trainee hinges forward, putting the gastrocnemius in a deep stretch. This position allows for a greater range of motion and a more intense stretch than standing calf raises. It is a classic 'old school' bodybuilding movement for building massive, high-peaked calves.",
+            "Standing Calf Raises": "The primary movement for building the gastrocnemius, the large visible muscle of the calf. By performing the movement with straight legs, you maximize the involvement of the gastrocnemius over the soleus. It allows for heavy loading, which is necessary for a muscle group that is used to supporting body weight all day.",
+            "Seated Calf Raises": "By sitting and bending the knees, the gastrocnemius is placed in a state of active insufficiency, forcing the soleus to do the majority of the work. The soleus is a wide muscle that lies underneath the gastrocnemius, and building it up makes the entire calf appear wider from the front. It is essential for complete lower leg development.",
+            "Sumo Squats": "A wide-stance squat that shifts the emphasis from the quads toward the inner thigh adductors and the glutes. The wider foot position reduces the range of motion for the hips but increases the demand on the adductor magnus. It is a great variation for those looking to build inner thigh thickness and strength.",
+            "Copenhagen Plank": "A specialized isometric movement that targets the adductor group through a side-plank variation. By resting the top leg on a bench and hovering the bottom leg, you force the inner thigh to stabilize the entire weight of the torso. It is a premier exercise for groin health and preventing sports-related injuries.",
+            "Adductor Machine": "A controlled isolation movement that allows for targeted training of the inner thigh muscles. It is effective for building the adductor brevis, longus, and magnus with consistent tension. This machine is ideal for high-rep sets to improve blood flow and hypertrophy in a muscle group often neglected in compound lifts."
+        };
+
+        const muscleHierarchy = [
+            {
+                category: "Upper Body (Torso)",
+                subgroups: [
+                    { 
+                        name: "Chest Muscles", 
+                        components: [
+                            { label: "Upper Chest (Clavicular Head)", ex: ["Incline Dumbbell Press"] },
+                            { label: "Mid/Lower Chest (Sternal Head)", ex: ["Flat Barbell Bench Press"] },
+                            { label: "Serratus Anterior", ex: ["Cable Crossovers"] }
+                        ]
+                    },
+                    { 
+                        name: "Back Muscles", 
+                        components: [
+                            { label: "Latissimus Dorsi", ex: ["Weighted Pull-Ups", "Wide-Grip Lat Pulldowns", "Straight-Arm Pulldowns"] },
+                            { label: "Rhomboids", ex: ["Barbell Rows", "Chest-Supported T-Bar Rows"] },
+                            { label: "Erector Spinae", ex: ["Rack Pulls", "Good Mornings", "Weighted Hyperextensions"] }
+                        ]
+                    },
+                    { 
+                        name: "Trapezius", 
+                        components: [
+                            { label: "Upper Traps", ex: ["Barbell Shrugs", "Farmer’s Walks"] },
+                            { label: "Middle/Lower Traps", ex: ["Kelso Shrugs", "Face Pulls"] }
+                        ]
+                    },
+                    { 
+                        name: "Shoulder Muscles", 
+                        components: [
+                            { label: "Anterior Deltoid", ex: ["Military Press", "Seated Dumbbell Overhead Press"] },
+                            { label: "Lateral Deltoid", ex: ["Cable Lateral Raises", "Military Press"] },
+                            { label: "Posterior Deltoid", ex: ["Face Pulls", "Seated Cable Rows"] },
+                            { label: "Rotator Cuff", ex: ["Cable External Rotations"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "Arm Muscles",
+                subgroups: [
+                    { 
+                        name: "Triceps Brachii", 
+                        components: [
+                            { label: "Long Head", ex: ["Skullcrushers"] },
+                            { label: "Lateral Head", ex: ["Tricep Rope Pushdowns", "Close-Grip Bench Press"] },
+                            { label: "Medial Head", ex: ["Close-Grip Bench Press"] }
+                        ]
+                    },
+                    { 
+                        name: "Biceps & Forearms", 
+                        components: [
+                            { label: "Biceps (Long/Short Head)", ex: ["Barbell Curls", "Weighted Chin-Ups", "Incline Dumbbell Curls"] },
+                            { label: "Brachioradialis", ex: ["Reverse Barbell Curls"] },
+                            { label: "Wrist Flexors/Extensors", ex: ["Barbell Wrist Curls", "Plate Pinches"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "Leg Muscles",
+                subgroups: [
+                    { 
+                        name: "Quadriceps", 
+                        components: [
+                            { label: "Rectus Femoris", ex: ["Leg Extensions", "Bulgarian Split Squats"] },
+                            { label: "Vastus Lateralis/Medialis", ex: ["Barbell Back Squat"] }
+                        ]
+                    },
+                    { 
+                        name: "Hamstrings & Glutes", 
+                        components: [
+                            { label: "Hamstrings", ex: ["Romanian Deadlifts (RDL)", "Seated Leg Curls", "Deadlifts"] },
+                            { label: "Gluteus Maximus", ex: ["Barbell Hip Thrusts", "Walking Lunges", "Deadlifts"] },
+                            { label: "Gluteus Medius/Minimus", ex: ["Cable Hip Abductions", "Bulgarian Split Squats"] }
+                        ]
+                    },
+                    { 
+                        name: "Lower Leg & Adductors", 
+                        components: [
+                            { label: "Gastrocnemius (Calves)", ex: ["Standing Calf Raises", "Donkey Calf Raises"] },
+                            { label: "Soleus", ex: ["Seated Calf Raises"] },
+                            { label: "Hip Adductors (Inner)", ex: ["Sumo Squats", "Adductor Machine", "Copenhagen Plank"] }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.className = 'tab-btn flex-1 py-2.5 px-4 rounded-lg font-bold text-sm text-slate-400 uppercase tracking-tighter');
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).className = 'tab-btn flex-1 py-2.5 px-4 rounded-lg font-bold text-sm bg-emerald-500 text-slate-950 shadow-lg scale-105 uppercase tracking-tighter';
+        }
+
+        function navigateToExercise(name) {
+            switchTab('exercises');
+            document.querySelectorAll('.highlight-pulse').forEach(el => el.classList.remove('highlight-pulse'));
+            const id = 'ex-' + name.replace(/\s+/g, '-').toLowerCase();
+            const target = document.getElementById(id);
+            if (target) {
+                target.classList.add('highlight-pulse');
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function renderTables() {
+            document.getElementById('tab-tables').innerHTML = rawData.map(c => `
+                <div class="space-y-4">
+                    <div class="border-l-4 border-emerald-500 pl-4"><h2 class="text-2xl font-black uppercase text-white">${c.complex}</h2></div>
+                    <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/20">
+                        <table class="w-full custom-table">
+                            <thead><tr><th>Body Part</th><th>Primary</th><th>Assistance</th><th>Isolation</th></tr></thead>
+                            <tbody>${c.rows.map(r => `<tr>
+                                <td class="font-bold text-slate-200">${r.bodyPart}</td>
+                                <td class="cursor-pointer hover:text-emerald-400" onclick="navigateToExercise('${r.primary}')">${r.primary}</td>
+                                <td class="cursor-pointer hover:text-emerald-400" onclick="navigateToExercise('${r.assistance}')">${r.assistance}</td>
+                                <td class="cursor-pointer hover:text-emerald-400" onclick="navigateToExercise('${r.isolation}')">${r.isolation}</td>
+                            </tr>`).join('')}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderExercises() {
+            const sections = document.getElementById('exercise-sections');
+            sections.innerHTML = '';
+
+            rawData.forEach(complex => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.innerHTML = `
+                    <div class="muscle-group-header">
+                        <h2 class="text-3xl font-black uppercase text-white">${complex.complex}</h2>
+                        <p class="text-emerald-500 text-xs font-bold uppercase tracking-[0.2em]">${complex.goal}</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+                        ${complex.rows.flatMap(r => 
+                            ['primary', 'assistance', 'isolation']
+                                .map(type => {
+                                    const name = r[type];
+                                    if (name === "N/A") return null;
+                                    return `
+                                        <div id="ex-${name.replace(/\s+/g, '-').toLowerCase()}" class="p-6 bg-slate-900 border border-slate-800 rounded-2xl transition-all hover:border-emerald-500/30">
+                                            <div class="flex justify-between items-start mb-4">
+                                                <span class="badge-primary">${type}</span>
+                                                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                                                   <i data-lucide="dumbbell" class="w-4 h-4 text-emerald-500"></i>
+                                                </div>
+                                            </div>
+                                            <h3 class="font-black text-xl text-slate-100 mb-1 uppercase tracking-tight">${name}</h3>
+                                            <p class="text-xs text-emerald-500 font-bold uppercase tracking-widest mb-4">Target: ${anatomicalFocus[name] || 'General'}</p>
+                                            
+                                            <div class="p-4 bg-slate-950/50 rounded-xl border border-slate-800/50 mb-4">
+                                                <p class="text-sm text-slate-400 leading-relaxed font-medium">
+                                                    ${exerciseDescriptions[name] || "Detailed description available in main database logic."}
+                                                </p>
+                                            </div>
+
+                                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">${r.bodyPart}</p>
+                                        </div>
+                                    `;
+                                })
+                        ).filter(Boolean).join('')}
+                    </div>
+                `;
+                sections.appendChild(sectionDiv);
+            });
+            lucide.createIcons();
+        }
+
+        function renderMuscles() {
+            document.getElementById('tab-muscles').innerHTML = muscleHierarchy.map(cat => `
+                <div class="muscle-group-header"><h2 class="text-3xl font-black uppercase text-white">${cat.category}</h2></div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${cat.subgroups.map(sub => `
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                            <h3 class="text-emerald-500 font-black uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">${sub.name}</h3>
+                            <div class="space-y-6">
+                                ${sub.components.map(comp => `
+                                    <div>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">${comp.label}</p>
+                                        <div class="flex flex-col gap-1.5">
+                                            ${comp.ex.map(e => `
+                                                <button onclick="navigateToExercise('${e}')" class="text-left text-xs bg-slate-800/50 hover:bg-emerald-500/10 hover:text-emerald-400 p-2 rounded border border-slate-700/50 transition-colors flex items-center justify-between">
+                                                    <span>${e}</span>
+                                                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                                                </button>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.onload = () => {
+            renderTables();
+            renderExercises();
+            renderMuscles();
+            switchTab('tables');
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
