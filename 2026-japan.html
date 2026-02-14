@@ -1000,6 +1000,31 @@
 
     <!-- Maps Script -->
     <script>
+        // SVG marker icon factory
+        function markerSvg(fill) {
+            return '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">' +
+                '<path d="M12.5 0C5.6 0 0 5.6 0 12.5C0 22 12.5 41 12.5 41S25 22 25 12.5C25 5.6 19.4 0 12.5 0z" fill="' + fill + '" stroke="white" stroke-width="1.5"/>' +
+                '<circle cx="12.5" cy="12.5" r="5" fill="white"/>' +
+                '</svg>';
+        }
+
+        var mainIcon = L.divIcon({
+            className: '',
+            html: markerSvg('#2563eb'),
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+
+        var optionalIcon = L.divIcon({
+            className: '',
+            html: markerSvg('#f97316'),
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
+
+        // Pin format: [lat, lng, label, optional]
         const dayPins = {
             day1: [
                 [35.5494, 139.7798, "Haneda Airport (HND)"],
@@ -1009,23 +1034,27 @@
                 [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
                 [35.6938, 139.6994, "Map Camera (Shinjuku)"],
                 [35.6914, 139.7044, "Isetan Shinjuku Main Store"],
+                [35.6934, 139.6981, "Omoide Yokocho (Memory Lane)"],
+                [35.6879, 139.7022, "Takashimaya Times Square (Depachika)", true],
             ],
             day3: [
                 [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
                 [35.7155, 139.7508, "Ushi-Tenjin Kitano Jinja Shrine"],
                 [35.7080, 139.7474, "Koishikawa Korakuen Garden"],
                 [35.7050, 139.7515, "Tokyo Dome City / ASOBono"],
+                [35.7020, 139.7410, "Kagurazaka", true],
             ],
             day4: [
                 [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
                 [35.6596, 139.7343, "TeamLab Borderless (Azabudai Hills)"],
                 [35.7101, 139.8107, "Tokyo Skytree"],
                 [35.7096, 139.8100, "Solamachi"],
+                [35.6741, 139.7379, "Hie-jinja Shrine", true],
             ],
             day5: [
                 [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
-                [35.6896, 139.7006, "Shinjuku"],
                 [35.6697, 139.4774, "Flying Strawberry Tokyo (Fuchu)"],
+                [35.6747, 139.7627, "Yurakucho (Bridlen / Bic Camera)", true],
             ],
             day6: [
                 [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
@@ -1041,8 +1070,10 @@
                 [35.7147, 139.7713, "Ueno Zoo"],
                 [35.7207, 139.7614, "Nezu Shrine"],
                 [35.7079, 139.7685, "Yushima Tenjin Shrine"],
-                [35.7023, 139.7745, "Akihabara"],
+                [35.7093, 139.7747, "Ameyoko Market"],
                 [35.7146, 139.7874, "Kappabashi Street"],
+                [35.7023, 139.7745, "Akihabara", true],
+                [35.6379, 139.8612, "Kasai Rinkai Park", true],
             ],
             day8: [
                 [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
@@ -1054,6 +1085,7 @@
                 [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
                 [34.8108, 135.5310, "Expo '70 Park &mdash; Plum Blossom Festival"],
                 [34.8052, 135.5329, "Nifrel (Expocity)"],
+                [34.6151, 135.5181, "TeamLab Botanical Gardens Osaka", true],
             ],
             day10: [
                 [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
@@ -1061,6 +1093,7 @@
                 [34.8385, 135.4695, "Minoh Falls"],
                 [34.6749, 135.5015, "Shinsaibashi"],
                 [34.6687, 135.5013, "Namba / Dotonbori"],
+                [34.8367, 135.4688, "Ryuanji Temple", true],
             ],
             day11: [
                 [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
@@ -1071,7 +1104,6 @@
                 [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
                 [34.8890, 135.8076, "Byodo-in Temple (Uji)"],
                 [34.8914, 135.8087, "Tale of Genji Museum"],
-                [34.9806, 135.7477, "Toji Temple (Kyoto)"],
                 [35.0505, 135.7620, "Kyoto Botanical Garden &mdash; Light Cycle"],
             ],
             day13: [
@@ -1082,26 +1114,36 @@
             day14: [
                 [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
                 [34.4320, 135.2304, "Kansai International Airport (KIX)"],
+                [34.6530, 135.4295, "Tempozan Marketplace &amp; Ferris Wheel", true],
+                [34.6525, 135.5064, "Tennoji Park &amp; Shinsekai", true],
+                [34.6873, 135.5259, "Osaka Castle Park", true],
+                [34.4219, 135.2927, "Rinku Premium Outlets", true],
+                [34.6580, 135.4290, "Solaniwa Onsen", true],
             ],
         };
 
         Object.keys(dayPins).forEach(function(key) {
-            const pins = dayPins[key];
-            const mapEl = document.getElementById("map-" + key);
+            var pins = dayPins[key];
+            var mapEl = document.getElementById("map-" + key);
             if (!mapEl || pins.length === 0) return;
 
-            const map = L.map(mapEl, { scrollWheelZoom: false });
+            var map = L.map(mapEl, { scrollWheelZoom: false });
 
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 maxZoom: 18,
             }).addTo(map);
 
-            const markers = pins.map(function(pin) {
-                return L.marker([pin[0], pin[1]]).addTo(map).bindPopup("<strong>" + pin[2] + "</strong>");
+            var markers = pins.map(function(pin) {
+                var isOptional = pin[3] === true;
+                var icon = isOptional ? optionalIcon : mainIcon;
+                var popup = isOptional
+                    ? "<span style='color:#f97316;font-weight:600;font-size:11px'>OPTIONAL</span><br><strong>" + pin[2] + "</strong>"
+                    : "<strong>" + pin[2] + "</strong>";
+                return L.marker([pin[0], pin[1]], { icon: icon }).addTo(map).bindPopup(popup);
             });
 
-            const group = L.featureGroup(markers);
+            var group = L.featureGroup(markers);
             map.fitBounds(group.getBounds().pad(0.15));
         });
     </script>
