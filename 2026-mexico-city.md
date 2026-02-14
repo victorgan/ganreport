@@ -19,7 +19,6 @@
   - [Museums & Galleries](#museums--galleries)
   - [Neighborhoods](#neighborhoods)
   - [Parks & Nature](#parks--nature)
-  - [Markets & Food](#markets--food)
   - [Architecture & Libraries](#architecture--libraries)
   - [Entertainment & Experiences](#entertainment--experiences)
 - [Food Guide by Neighborhood](#food-guide-by-neighborhood)
@@ -247,32 +246,6 @@ One of the largest urban parks in the Western Hemisphere at over 680 hectares. C
 ### Xochimilco
 A UNESCO World Heritage Site in the south of the city, known for its network of canals and colorful trajinera boats. Hire a boat and float past floating gardens (chinampas), mariachi bands, and food vendors on the water. Best on weekends for the full atmosphere.
 
-## Markets & Food
-
-### Mercado de la Merced
-The largest traditional market in the city — a sprawling, chaotic, and completely authentic experience. Everything from produce and spices to housewares and clothing. The food stalls serve some of the best cheap eats in the city.
-
-### Mercado Roma
-A modern, curated food hall in Roma Norte with stalls offering everything from craft beer to sushi to traditional Mexican dishes. A good introduction to the breadth of Mexico City's food scene in a more accessible setting.
-
-### Mercado de San Juan
-The go-to market for exotic and gourmet ingredients. Imported cheeses, wild game, insects, artisanal mole pastes, and fresh seafood. Popular with chefs and adventurous eaters.
-
-### Entremar
-Sinaloan seafood from the Contramar team, located in Condesa. Aguachiles, ceviches, and whole grilled fish in a bright, lively space. A more casual alternative to Contramar with equally fresh seafood and no-reservation waits.
-
-### Maximo Bistrot
-Chef Eduardo Garcia's farm-to-table bistro in Roma Norte with a daily-changing menu based on what's fresh at market. Small space, big flavors. Reserve ahead.
-
-### Contramar
-One of the city's most beloved seafood restaurants. Famous for the tuna tostadas and the red-and-green grilled whole fish. The open-air setting and buzzing atmosphere make lunch here a quintessential CDMX experience. Reserve ahead.
-
-### Pujol
-Chef Enrique Olvera's flagship, consistently ranked among the world's best restaurants. The tasting menu highlights Mexican ingredients and techniques — the mole madre, aged for 1,500+ days, is legendary. Reserve weeks in advance.
-
-### Quintonil
-Chef Jorge Valles' refined take on Mexican cuisine using hyper-local and seasonal ingredients, many grown in the restaurant's own garden. A more intimate alternative to Pujol with equally inventive food. Reserve well in advance.
-
 ## Architecture & Libraries
 
 ### Biblioteca Vasconcelos
@@ -296,14 +269,14 @@ Mexican professional wrestling in its spiritual home. The colorful masks, acroba
 - **Contramar** — The city's most iconic seafood lunch spot. The grilled whole fish painted half red, half green is the signature. Tuna tostadas are a must. Open for lunch only; reserve ahead.
 - **Rosetta** — Chef Elena Reygadas' acclaimed Italian-Mexican restaurant in a gorgeous Roma mansion. Handmade pastas, seasonal dishes, and incredible bread. Reserve a few days out.
 - **Lardo** — Mediterranean-meets-Mexican from the Rosetta team. Wood-fired dishes, excellent natural wine list, and a beautiful courtyard. Great for a relaxed dinner.
-- **Maximo Bistrot** — Chef Eduardo Garcia's farm-to-table bistro with a daily-changing menu based on what's fresh at market. Small space, big flavors. Reserve ahead.
+- <a id="maximo-bistrot"></a>**Maximo Bistrot** — Chef Eduardo Garcia's farm-to-table bistro with a daily-changing menu based on what's fresh at market. Small space, big flavors. Reserve ahead.
 - **Paramo** — Rooftop mezcal bar and restaurant with creative Mexican small plates. Great for evening drinks and snacks with a view.
 
 ### Quick Lunch & Street Food
 - **Tacos Orinoco** — Fast, excellent tacos de chicharron prensado and gobernador. Always a line, always worth it.
 - **El Vilsito** — A mechanic shop by day, legendary taco stand by night (opens ~8pm). Pastor, suadero, and longaniza tacos.
 - **Panaderia Rosetta** — Elena Reygadas' bakery. Guava croissants, conchas, and the famous role de canela. Perfect for breakfast or a snack.
-- **Mercado Roma** — The curated food hall with dozens of stalls. Good for a casual browse-and-graze lunch.
+- **Mercado Roma** — A modern, curated food hall with dozens of stalls offering everything from craft beer to sushi to traditional Mexican dishes. A good introduction to the breadth of Mexico City's food scene in a more accessible setting.
 - **Taqueria El Greco** — No-frills corner taqueria with excellent al pastor and cheap beer.
 
 ### Coffee & Cafes
@@ -315,7 +288,7 @@ Mexican professional wrestling in its spiritual home. The colorful masks, acroba
 
 ### Top Restaurants
 - **Azul Condesa** — Elevated traditional Mexican cuisine by Ricardo Munoz Zurita, one of Mexico's foremost authorities on national cuisine. Beautiful garden setting.
-- **Entremar** — Sinaloan seafood from the Contramar team. Aguachiles, ceviches, and whole grilled fish in a bright, lively space.
+- <a id="entremar"></a>**Entremar** — Sinaloan seafood from the Contramar team. Aguachiles, ceviches, and whole grilled fish in a bright, lively space. A more casual alternative to Contramar with equally fresh seafood.
 - **Ojo de Agua** — Health-focused Mexican restaurant and juice bar. Great breakfasts and fresh-pressed juices.
 - **Tamal de Cazuela** — Unpretentious spot specializing in home-style Mexican comfort food. The tamales and mole are standouts.
 
@@ -331,8 +304,8 @@ Mexican professional wrestling in its spiritual home. The colorful masks, acroba
 ## Polanco
 
 ### Top Restaurants
-- **Pujol** — Enrique Olvera's flagship, regularly on the World's 50 Best list. The omakase-style tasting menu and the 1,500+ day mole madre are once-in-a-lifetime. Reserve weeks ahead.
-- **Quintonil** — Jorge Valles' refined seasonal Mexican cuisine. Ingredients from the restaurant's garden. More intimate than Pujol, equally inventive. Reserve well in advance.
+- <a id="pujol"></a>**Pujol** — Enrique Olvera's flagship, regularly on the World's 50 Best list. The omakase-style tasting menu and the 1,500+ day mole madre are once-in-a-lifetime. Reserve weeks ahead.
+- <a id="quintonil"></a>**Quintonil** — Jorge Valles' refined seasonal Mexican cuisine. Ingredients from the restaurant's garden. More intimate than Pujol, equally inventive. Reserve well in advance.
 - **Dulce Patria** — Chef Martha Ortiz's colorful, playful take on Mexican cuisine. Dishes are as beautiful as they are delicious. Great mole selection.
 - **Nobu Mexico City** — The global chain's outpost, but well-executed. Good for when you want a break from Mexican food.
 
@@ -352,6 +325,10 @@ Mexican professional wrestling in its spiritual home. The colorful masks, acroba
 - **El Cardenal** — Institution for traditional Mexican breakfast and lunch. Excellent mole, escamoles (ant larvae) in season, and handmade tortillas.
 - **Limosneros** — Modern Mexican in a beautifully restored colonial space. Creative dishes rooted in pre-Hispanic ingredients. Good cocktail program.
 - **Balcon del Zocalo** — Rooftop restaurant overlooking the Zocalo. The food is decent, but you're paying for one of the best views in the city.
+
+### Markets
+- **Mercado de la Merced** — The largest traditional market in the city — a sprawling, chaotic, and completely authentic experience. Everything from produce and spices to housewares and clothing. The food stalls serve some of the best cheap eats in the city.
+- **Mercado de San Juan** — The go-to market for exotic and gourmet ingredients. Imported cheeses, wild game, insects, artisanal mole pastes, and fresh seafood. Popular with chefs and adventurous eaters.
 
 ### Quick Lunch & Street Food
 - **Tostadas de Coyoacan (Mercado San Camilito)** — Just off the Zocalo, excellent tostadas and quesadillas at market prices.
