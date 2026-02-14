@@ -4,7 +4,7 @@
 
 - [Itinerary](#day-1---saturday-march-7-arrival)
   - [Day 1 - Arrival](#day-1---saturday-march-7-arrival)
-  - [Day 2 - Centro Historico & Chapultepec](#day-2---sunday-march-8-centro-historico--chapultepec)
+  - [Day 2 - Paseo de la Reforma & Centro Historico](#day-2---sunday-march-8-paseo-de-la-reforma--centro-historico)
   - [Day 3 - Work](#day-3---monday-march-9-work)
   - [Day 4 - Work](#day-4---tuesday-march-10-work)
   - [Day 5 - Work](#day-5---wednesday-march-11-work)
@@ -54,20 +54,27 @@
 - Walk Avenida Presidente Masaryk, explore the neighborhood
 - Dinner in [Polanco](#polanco) — try Dulce Patria or a local spot
 
-## Day 2 - Sunday, March 8: Centro Historico & Chapultepec
+## Day 2 - Sunday, March 8: Paseo de la Reforma & Centro Historico
 
 ### Morning
+- **Muevete en Bici** — Paseo de la Reforma closes to cars for cyclists and pedestrians every Sunday 8am-2pm. Rent a bike (Ecobici stations along the route) and ride the full stretch
+- Sights along the Reforma route:
+  - Angel de la Independencia (El Angel) — the iconic golden victory column, Mexico City's most recognizable landmark
+  - Glorieta de la Diana Cazadora — the Diana the Huntress fountain
+  - Monumento a la Revolucion — massive Art Deco monument with a mirador and underground museum; visible just off Reforma
+  - [Bosque de Chapultepec](#bosque-de-chapultepec) — Reforma leads straight into the park at its western end
+  - [Chapultepec Castle](#chapultepec-castle) — visible from Reforma, perched on the hilltop
+- The route runs roughly from the Zocalo area through Roma/Juarez, past the Angel, and into Chapultepec
+
+### Afternoon
+- Lunch at Cafe de Tacuba in Centro Historico
 - [Zocalo & Catedral Metropolitana](#zocalo--catedral-metropolitana) (main square)
 - [Palacio Nacional](#palacio-nacional) (Diego Rivera murals)
 - [Templo Mayor](#templo-mayor) ruins and museum
-
-### Afternoon
-- Lunch at Cafe de Tacuba
 - Walk down Calle Madero to [Palacio de Bellas Artes](#palacio-de-bellas-artes)
-- [Museo Nacional de Antropologia](#museo-nacional-de-antropologia) (plan 3-4 hours)
 
 ### Evening
-- Walk through [Bosque de Chapultepec](#bosque-de-chapultepec)
+- [Museo Nacional de Antropologia](#museo-nacional-de-antropologia) (open until 5pm — go for the last couple hours or save for another day)
 - Dinner and mezcal tasting in [Roma Norte](#roma-norte)
 
 ## Day 3 - Monday, March 9: Work
