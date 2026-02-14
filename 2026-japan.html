@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Trip: February 22 &ndash; March 7, 2026</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .leaflet-container { border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-[1000]">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold text-stone-900">Japan</h1>
+            <p class="text-stone-500 text-sm">February 22 &ndash; March 7, 2026</p>
+        </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <nav class="bg-white border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-6 py-3 flex flex-wrap gap-2 text-sm">
+            <a href="#day1" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 1</a>
+            <a href="#day2" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 2</a>
+            <a href="#day3" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 3</a>
+            <a href="#day4" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 4</a>
+            <a href="#day5" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 5</a>
+            <a href="#day6" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 6</a>
+            <a href="#day7" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 7</a>
+            <a href="#day8" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 8</a>
+            <a href="#day9" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 9</a>
+            <a href="#day10" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 10</a>
+            <a href="#day11" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 11</a>
+            <a href="#day12" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 12</a>
+            <a href="#day13" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 13</a>
+            <a href="#day14" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 14</a>
+            <a href="#notes" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Notes</a>
+            <a href="#top-sights" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Sights</a>
+            <a href="#food-guide" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Food</a>
+            <a href="#shopping-guide" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Shopping</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8 space-y-12">
+
+        <!-- Day 1 -->
+        <section id="day1">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 1 &mdash; Sunday, February 22: Arrival in Tokyo</h2>
+            <p class="text-stone-500 text-sm mb-4">Flight in, settle into Hamamatsucho, groceries &amp; rest</p>
+            <div id="map-day1" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Arrive HND 4:40pm (YYZ &rarr; HND, departed Feb 21 12:30pm)</li>
+                        <li>Booking Ref: AT3OMM</li>
+                        <li>30 min train from Haneda to Hamamatsucho</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Check in at MONday Apart Premium Hamamatsucho (open until 10pm)</li>
+                        <li>Find groceries nearby</li>
+                        <li>Rest and recover from the flight</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 2 -->
+        <section id="day2">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 2 &mdash; Monday, February 23: Shinjuku Shopping</h2>
+            <p class="text-stone-500 text-sm mb-4">Float day &mdash; camera gear, shirts, diapers</p>
+            <div id="map-day2" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning / Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Map Camera in Shinjuku &mdash; camera gear shopping</li>
+                        <li>Kamakura Shirts (Shinjuku location)</li>
+                        <li>Isetan Shinjuku Main Store &mdash; socks (Il Regalo)</li>
+                        <li>Look for diapers &mdash; Akachan Honpo, Don Quijote, or Matsumoto Kiyoshi</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 3 -->
+        <section id="day3">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 3 &mdash; Tuesday, February 24: Bunkyo City</h2>
+            <p class="text-stone-500 text-sm mb-4">Float day &mdash; plum blossoms, gardens, kids play</p>
+            <div id="map-day3" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Ushi-Tenjin Kitano Jinja Shrine for plum blossoms (6am&ndash;5pm)</li>
+                        <li>Koishikawa Korakuen Garden (9am&ndash;5pm)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Tokyo Dome City (10am&ndash;9pm) &mdash; Uniqlo</li>
+                        <li>ASOBono kids play area (10am&ndash;6pm) &mdash; &yen;950+950 or day pass &yen;2,100</li>
+                        <li>Tokyo Toy Museum (closed Thursdays)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 4 -->
+        <section id="day4">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 4 &mdash; Wednesday, February 25: TeamLab &amp; Skytree</h2>
+            <p class="text-stone-500 text-sm mb-4">Digital art, panoramic views, Solamachi</p>
+            <div id="map-day4" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>TeamLab Borderless (Azabudai Hills) &mdash; &yen;4,800 (cheaper in the afternoon)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Tokyo Skytree &mdash; &yen;1,400+700 or &yen;2,000+1,000 day pass</li>
+                        <li>Solamachi shopping complex &mdash; 5th floor Chikyu no Niwa (kid play)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 5 -->
+        <section id="day5">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 5 &mdash; Thursday, February 26: Shinjuku &amp; Strawberry Picking</h2>
+            <p class="text-stone-500 text-sm mb-4">Morning shopping, afternoon strawberries in Fuchu</p>
+            <div id="map-day5" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Hang out near Shinjuku</li>
+                        <li>Isetan Shinjuku Main Store for socks</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Leave by 1pm (35 min travel)</li>
+                        <li>Flying Strawberry Tokyo &mdash; 3-43 Bubai-cho, Fuchu, Tokyo</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>1hr 20min travel back</li>
+                        <li>Kamakura Shirts (if not yet visited)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 6 -->
+        <section id="day6">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 6 &mdash; Friday, February 27: Kawagoe Day Trip</h2>
+            <p class="text-stone-500 text-sm mb-4">Little Edo &mdash; historic warehouses, candy alley, shrines</p>
+            <div id="map-day6" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>1.5hr travel &mdash; Kawagoe Tobu Pass</li>
+                        <li>Kitain Temple (&yen;400)</li>
+                        <li>Kawagoe Hikawa Shrine</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Kashiya Yokocho (Candy Alley)</li>
+                        <li>Kurazukuri Street &mdash; historic warehouse district</li>
+                        <li>Toki no Kane (bell tower) &mdash; chimes at 6:00, 12:00, 15:00, 18:00</li>
+                        <li>Kura no Machi &mdash; famous for unagi (freshwater eel)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>45 min travel back to Tokyo</li>
+                        <li>Ikebukuro &mdash; Seibu Ikebukuro Main Store for socks</li>
+                        <li>Kamakura Shirts (Ikebukuro location)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 7 -->
+        <section id="day7">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 7 &mdash; Saturday, February 28: Ueno, Nezu &amp; Akihabara</h2>
+            <p class="text-stone-500 text-sm mb-4">Zoo, shrines, plum blossoms, electronics &amp; kitchenware</p>
+            <div id="map-day7" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Ueno Zoo (opens 9:30am, closed Mondays)</li>
+                        <li>Nezu Shrine &mdash; torii gate tunnel</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Yushima Tenjin Shrine &mdash; plum blossoms (opens 6am)</li>
+                        <li>Akihabara &mdash; electronics and anime district</li>
+                        <li>Kappabashi Street &mdash; kitchenware and restaurant supply district</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 8 -->
+        <section id="day8">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 8 &mdash; Sunday, March 1: Travel to Osaka</h2>
+            <p class="text-stone-500 text-sm mb-4">Shinkansen to Osaka, check in, private onsen</p>
+            <div id="map-day8" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Check out by 10am</li>
+                        <li>Kamakura Shirts near Tokyo Station (last chance)</li>
+                        <li>Stash luggage in locker at Tokyo Station</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Travel to Osaka (~3 hours by Shinkansen)</li>
+                        <li>Check in at ART HOTEL Osaka Bay Tower (3pm)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Solaniwa Onsen (&yen;1,500) &mdash; private onsen option (&yen;8,800 for 90 min)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 9 -->
+        <section id="day9">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 9 &mdash; Monday, March 2: Katsouji Temple &amp; Nifrel</h2>
+            <p class="text-stone-500 text-sm mb-4">Daruma temple, aqua-zoo, Ferris wheel</p>
+            <div id="map-day9" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>1.5hr travel to Katsouji Temple (&yen;500) &mdash; famous for daruma dolls</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Nifrel aqua-zoo (&yen;2,200)</li>
+                        <li>Ferris wheel at Expocity</li>
+                        <li>Rent paddle boat at Dream Pond</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 10 -->
+        <section id="day10">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 10 &mdash; Tuesday, March 3: Expo &rsquo;70 &amp; Shopping</h2>
+            <p class="text-stone-500 text-sm mb-4">Plum blossom festival, Shinsaibashi &amp; Namba</p>
+            <div id="map-day10" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>1hr travel</li>
+                        <li>Expo &rsquo;70 Commemorative Park &mdash; Plum Blossom Festival (&yen;260, closed Wednesdays)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon / Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Shopping in Shinsaibashi &amp; Namba</li>
+                        <li>Dotonbori &mdash; street food and neon lights</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 11 -->
+        <section id="day11">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 11 &mdash; Wednesday, March 4: Kids Plaza Osaka</h2>
+            <p class="text-stone-500 text-sm mb-4">Interactive children&rsquo;s museum, shopping</p>
+            <div id="map-day11" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning / Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Kids Plaza Osaka (&yen;1,500)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Shopping</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 12 -->
+        <section id="day12">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 12 &mdash; Thursday, March 5: Uji Day Trip</h2>
+            <p class="text-stone-500 text-sm mb-4">JR Kansai Mini Pass &mdash; Byodo-in, matcha tea, Tale of Genji</p>
+            <div id="map-day12" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>JR Kansai Mini Pass (&yen;660)</li>
+                        <li>Osaka Station &rarr; Uji Station (~1hr)</li>
+                        <li>Byodo-in Temple (&yen;700) &mdash; UNESCO World Heritage Site</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Byodoin Omotesando Street &mdash; matcha shops and souvenirs</li>
+                        <li>Walk along the Uji River</li>
+                        <li>Tale of Genji Museum</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Toji Temple &mdash; moon corridor illumination</li>
+                        <li>Light Cycle Kyoto Botanical Garden (&yen;2,300) &mdash; earliest slot 6:30pm</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 13 -->
+        <section id="day13">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 13 &mdash; Friday, March 6: Kyoto &amp; Osaka Aquarium</h2>
+            <p class="text-stone-500 text-sm mb-4">Weeping plums, aquarium</p>
+            <div id="map-day13" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Osaka Station &rarr; Kyoto Station (~30 min)</li>
+                        <li>Jonan-gu Shrine &mdash; Weeping Plum and Camellia Festival (&yen;1,000, Feb 18&ndash;Mar 22, 9am&ndash;4:30pm)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Osaka Aquarium Kaiyukan (&yen;2,700)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 14 -->
+        <section id="day14">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 14 &mdash; Saturday, March 7: Departure</h2>
+            <p class="text-stone-500 text-sm mb-4">Check out and fly home</p>
+            <div id="map-day14" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Check out by 11am</li>
+                        <li>Travel to Kansai International Airport (~1hr)</li>
+                        <li>Arrive by 5pm</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Flight KIX &rarr; YVR &rarr; YYZ, departs 7:25pm, arrives 8:59pm</li>
+                        <li>Booking Ref: AT3OMM</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notes -->
+        <section id="notes" class="border-t border-stone-200 pt-8">
+            <h2 class="text-xl font-bold text-stone-900 mb-4">Notes</h2>
+            <ul class="list-disc list-inside text-stone-600 space-y-2 text-sm">
+                <li><strong>Tokyo Hotel:</strong> MONday Apart Premium Hamamatsucho (Feb 22&ndash;Mar 1)</li>
+                <li><strong>Osaka Hotel:</strong> ART HOTEL Osaka Bay Tower (Mar 1&ndash;Mar 7)</li>
+                <li><strong>Transport:</strong> Tokyo Metro 72hr Pass (&yen;1,500), Kawagoe Tobu Pass, JR Kansai Mini Pass, Klook Kansai Pass</li>
+                <li><strong>Things to book:</strong> Tokyo Metro Pass, TeamLab Borderless, Solaniwa private onsen, Osaka Aquarium</li>
+                <li><strong>Diapers:</strong> Akachan Honpo, Toys R Us, Nishimatsuya, Don Quijote, Matsumoto Kiyoshi</li>
+                <li><strong>Restaurant search:</strong> Tabelog app</li>
+                <li><strong>Currency:</strong> Japanese Yen (JPY)</li>
+                <li><strong>Booking Ref:</strong> AT3OMM</li>
+            </ul>
+        </section>
+
+        <!-- Top Sights -->
+        <section id="top-sights" class="border-t border-stone-200 pt-8">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6">Things to See</h2>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Tokyo</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">TeamLab Borderless</h4>
+                    <p class="text-sm text-stone-600">Immersive digital art museum at Azabudai Hills. Wander through a borderless world of interactive light installations. Half day. &yen;4,800.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Tokyo Skytree &amp; Solamachi</h4>
+                    <p class="text-sm text-stone-600">The tallest tower in Japan at 634m. Observation decks with panoramic city views. Solamachi shopping complex at the base has kid play on the 5th floor (Chikyu no Niwa).</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Ueno Zoo</h4>
+                    <p class="text-sm text-stone-600">Japan&rsquo;s oldest zoo, located in Ueno Park. Giant pandas, gorillas, and a petting zoo area for kids. Opens 9:30am, closed Mondays.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Nezu Shrine</h4>
+                    <p class="text-sm text-stone-600">A stunning shrine in the Bunkyo ward known for its tunnel of vermilion torii gates, similar to Fushimi Inari but far less crowded.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Yushima Tenjin Shrine</h4>
+                    <p class="text-sm text-stone-600">Famous for its plum blossom garden with over 300 trees. Peak bloom in late February. Opens 6am.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Ushi-Tenjin Kitano Jinja Shrine</h4>
+                    <p class="text-sm text-stone-600">A lesser-known shrine in Bunkyo City with beautiful plum blossoms. Open 6am&ndash;5pm.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Koishikawa Korakuen Garden</h4>
+                    <p class="text-sm text-stone-600">One of Tokyo&rsquo;s oldest and most beautiful Japanese gardens, next to Tokyo Dome. Plum blossoms in February. Open 9am&ndash;5pm.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">ASOBono (Tokyo Dome City)</h4>
+                    <p class="text-sm text-stone-600">Large indoor kids play facility in Bunkyo City. Ball pits, play structures, and toddler areas. &yen;950+950 or day pass &yen;2,100. Open 10am&ndash;6pm.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Tokyo Toy Museum</h4>
+                    <p class="text-sm text-stone-600">Interactive toy museum in Shinjuku for kids. Hands-on wooden toys and play areas. Closed Thursdays.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Akihabara</h4>
+                    <p class="text-sm text-stone-600">Tokyo&rsquo;s electric town. Electronics, anime, manga, and gaming culture. Bic Camera and countless specialty shops.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kappabashi Street</h4>
+                    <p class="text-sm text-stone-600">Tokyo&rsquo;s &ldquo;Kitchen Town&rdquo; &mdash; a street dedicated to restaurant supplies, Japanese knives, ceramics, and the famous plastic food samples.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Kawagoe Day Trip</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kawagoe (&ldquo;Little Edo&rdquo;)</h4>
+                    <p class="text-sm text-stone-600">A historic town about 1.5 hours north of Tokyo, famous for its Edo-period warehouse district. Known for unagi (freshwater eel). Get the Kawagoe Tobu discount pass.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kitain Temple</h4>
+                    <p class="text-sm text-stone-600">A major Buddhist temple in Kawagoe with 500 unique stone rakan statues. &yen;400.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kawagoe Hikawa Shrine</h4>
+                    <p class="text-sm text-stone-600">A Shinto shrine known for its tunnel of wind chimes in summer and romantic atmosphere. Free.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kashiya Yokocho (Candy Alley)</h4>
+                    <p class="text-sm text-stone-600">A charming alley lined with about 20 candy shops selling traditional Japanese sweets. Great for kids.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Toki no Kane (Bell Tower)</h4>
+                    <p class="text-sm text-stone-600">Kawagoe&rsquo;s iconic wooden bell tower, a symbol of the city. Chimes four times daily at 6:00, 12:00, 15:00, and 18:00.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Osaka</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Solaniwa Onsen</h4>
+                    <p class="text-sm text-stone-600">A large hot spring theme park near the Osaka Bay area. General admission &yen;1,500, private onsen room &yen;8,800 for 90 minutes.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Katsouji Temple</h4>
+                    <p class="text-sm text-stone-600">A mountaintop temple famous for its thousands of daruma dolls. Beautiful grounds with gardens and nature trails. &yen;500. About 1.5 hours from central Osaka.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Nifrel</h4>
+                    <p class="text-sm text-stone-600">An artistic aqua-zoo at Expocity in Suita. Interactive exhibits blending art and nature. &yen;2,200.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Expo &rsquo;70 Commemorative Park</h4>
+                    <p class="text-sm text-stone-600">A large park built on the site of the 1970 World Expo. Plum Blossom Festival runs Feb 8&ndash;Mar 9 (9am&ndash;5pm, closed Wednesdays). &yen;260. East side has preschooler play areas.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kids Plaza Osaka</h4>
+                    <p class="text-sm text-stone-600">A large interactive children&rsquo;s museum with hands-on exhibits, a fantasy castle, and creative workshops. &yen;1,500.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Osaka Aquarium Kaiyukan</h4>
+                    <p class="text-sm text-stone-600">One of the largest aquariums in the world, featuring a massive whale shark tank. Near the hotel in the Bay area. &yen;2,700.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Dotonbori &amp; Shinsaibashi</h4>
+                    <p class="text-sm text-stone-600">Osaka&rsquo;s most famous entertainment and shopping district. Iconic neon signs, street food, and the Glico Running Man. Shinsaibashi-suji is a long covered shopping arcade.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Kyoto &amp; Uji</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Byodo-in Temple (Uji)</h4>
+                    <p class="text-sm text-stone-600">A UNESCO World Heritage Site famous for its Phoenix Hall, depicted on the &yen;10 coin. Surrounded by gardens and the Uji River. &yen;700.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Byodoin Omotesando Street</h4>
+                    <p class="text-sm text-stone-600">The approach road to Byodo-in lined with matcha tea shops and souvenir stores. Uji is the birthplace of Japanese green tea.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Tale of Genji Museum</h4>
+                    <p class="text-sm text-stone-600">A museum dedicated to the world&rsquo;s first novel, written by Murasaki Shikibu in Uji. Immersive exhibits recreating scenes from the story.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Toji Temple</h4>
+                    <p class="text-sm text-stone-600">A UNESCO World Heritage temple in Kyoto with Japan&rsquo;s tallest five-story wooden pagoda. Moon corridor illumination in the evenings.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Light Cycle Kyoto Botanical Garden</h4>
+                    <p class="text-sm text-stone-600">An evening light installation at Kyoto Botanical Garden. Timed slot tickets, earliest slot 6:30pm. &yen;2,300. Closed Mondays.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Jonan-gu Shrine</h4>
+                    <p class="text-sm text-stone-600">A Shinto shrine in southern Kyoto famous for its Weeping Plum and Camellia Festival (Feb 18&ndash;Mar 22, 9am&ndash;4:30pm). &yen;1,000.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Other Tokyo Options</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Ghibli Museum</h4>
+                    <p class="text-sm text-stone-600">Studio Ghibli&rsquo;s museum in Mitaka. Tickets must be purchased in advance and sell out quickly. Half day.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Hie-jinja Shrine</h4>
+                    <p class="text-sm text-stone-600">A shrine near Akasaka with a beautiful tunnel of torii gates, similar to Nezu Shrine.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Tokyo Sea Life Park</h4>
+                    <p class="text-sm text-stone-600">An aquarium in Edogawa City near Kasai Rinkai Park. Penguin exhibits and bluefin tuna tank.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Kasai Rinkai Park</h4>
+                    <p class="text-sm text-stone-600">A seaside park in Edogawa. Daffodil flower and light event in late February (5pm&ndash;9pm).</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Shibuya Playground</h4>
+                    <p class="text-sm text-stone-600">Indoor playground for kids in Shibuya. Reservation only.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food Guide -->
+        <section id="food-guide" class="border-t border-stone-200 pt-8">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6">Food Guide</h2>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Chain Restaurants (Kid-Friendly)</h3>
+            <div class="mb-8">
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li><strong>Kura Sushi</strong> &mdash; Conveyor belt sushi chain. Fun gachapon game for every 5 plates. Very kid-friendly.</li>
+                    <li><strong>Sushiro</strong> &mdash; Another popular conveyor belt sushi chain with good value and variety.</li>
+                    <li><strong>Ootoya</strong> &mdash; Home-style Japanese set meals (teishoku). Balanced, healthy options.</li>
+                    <li><strong>Yayoi Ken</strong> &mdash; Teishoku chain with set meals at reasonable prices.</li>
+                    <li><strong>Komeda Coffee</strong> &mdash; Popular coffee shop chain known for generous portions and morning sets (shiro-noir dessert).</li>
+                    <li><strong>Jonathan&rsquo;s</strong> &mdash; Family restaurant chain with a wide menu including Japanese and Western dishes. Drink bar included.</li>
+                    <li><strong>Denny&rsquo;s (Japan)</strong> &mdash; Different from North American Denny&rsquo;s. Japanese-Western fusion family restaurant with kids menu.</li>
+                    <li><strong>Joyfull</strong> &mdash; Budget-friendly family restaurant chain with a large menu.</li>
+                </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Recommended Dining Tips</h3>
+            <div class="mb-8">
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li>Use <strong>Tabelog</strong> (the Japanese Yelp) to find highly-rated restaurants nearby</li>
+                    <li>Look for <strong>teishoku</strong> (set meal) restaurants for balanced, affordable meals</li>
+                    <li>Department store <strong>depachika</strong> (basement food halls) are great for takeaway bento, sweets, and fresh food</li>
+                    <li>Convenience stores (<strong>konbini</strong>) like 7-Eleven, Lawson, and FamilyMart have surprisingly good onigiri, sandwiches, and prepared meals</li>
+                    <li>In Kawagoe, try <strong>unagi</strong> (freshwater eel) &mdash; a local specialty</li>
+                    <li>In Uji, try <strong>matcha</strong> everything &mdash; the birthplace of Japanese green tea</li>
+                    <li>In Osaka, try <strong>takoyaki</strong> (octopus balls) and <strong>okonomiyaki</strong> (savory pancakes) at Dotonbori</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Shopping Guide -->
+        <section id="shopping-guide" class="border-t border-stone-200 pt-8">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6">Shopping Guide</h2>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Clothing &amp; Accessories</h3>
+            <div class="mb-8">
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li><strong>Kamakura Shirts</strong> &mdash; High-quality dress shirts at reasonable prices. Locations in Shinjuku, Ikebukuro, near Tokyo Station, and Osaka.</li>
+                    <li><strong>Il Regalo</strong> &mdash; Dress socks available at department stores (Isetan, Seibu). Beautiful patterns and quality.</li>
+                    <li><strong>Isetan Shinjuku Main Store</strong> &mdash; Premium department store. Men&rsquo;s building has excellent sock and accessory selection.</li>
+                    <li><strong>Seibu Ikebukuro Main Store</strong> &mdash; Large department store in Ikebukuro with good sock and clothing departments.</li>
+                    <li><strong>Uniqlo</strong> &mdash; Tokyo Dome City location. Basics at great prices, Japan-exclusive items.</li>
+                    <li><strong>Bridlen</strong> &mdash; Dress shoe store, Tokyo only (Yurakucho Marui).</li>
+                </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Electronics &amp; Camera</h3>
+            <div class="mb-8">
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li><strong>Map Camera</strong> &mdash; Shinjuku&rsquo;s premier used and new camera store. Great prices on lenses and bodies.</li>
+                    <li><strong>Bic Camera</strong> &mdash; Major electronics chain with locations in Shinjuku, Shibuya, Yurakucho, Nihombashi, Ueno, Akihabara, Ikebukuro.</li>
+                    <li><strong>Akihabara</strong> &mdash; Electronics district with countless specialty shops.</li>
+                </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Kitchen &amp; Home</h3>
+            <div class="mb-8">
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li><strong>Kappabashi Street</strong> &mdash; Kitchen Town. Japanese knives, ceramics, lacquerware, and plastic food samples.</li>
+                    <li><strong>Don Quijote</strong> &mdash; Discount store with everything from snacks to electronics to souvenirs. Open late.</li>
+                </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Baby &amp; Kids</h3>
+            <div class="mb-8">
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li><strong>Akachan Honpo</strong> &mdash; Major baby goods store. Diapers, clothing, toys, and feeding supplies.</li>
+                    <li><strong>Nishimatsuya</strong> &mdash; Budget baby and kids clothing and supplies.</li>
+                    <li><strong>Toys R Us</strong> &mdash; Still operating in Japan with good toy selection.</li>
+                    <li><strong>Matsumoto Kiyoshi</strong> &mdash; Drugstore chain with baby supplies and diapers at good prices.</li>
+                </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Osaka Shopping</h3>
+            <div>
+                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                    <li><strong>Shinsaibashi-suji</strong> &mdash; Long covered shopping arcade with fashion, cosmetics, and souvenirs.</li>
+                    <li><strong>Namba</strong> &mdash; Major shopping and entertainment district adjacent to Dotonbori.</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Maps Script -->
+    <script>
+        const dayPins = {
+            day1: [
+                [35.5494, 139.7798, "Haneda Airport (HND)"],
+                [35.6555, 139.7567, "MONday Apart Premium Hamamatsucho"],
+            ],
+            day2: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.6938, 139.6994, "Map Camera (Shinjuku)"],
+                [35.6914, 139.7044, "Isetan Shinjuku Main Store"],
+            ],
+            day3: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.7155, 139.7508, "Ushi-Tenjin Kitano Jinja Shrine"],
+                [35.7080, 139.7474, "Koishikawa Korakuen Garden"],
+                [35.7050, 139.7515, "Tokyo Dome City / ASOBono"],
+            ],
+            day4: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.6596, 139.7343, "TeamLab Borderless (Azabudai Hills)"],
+                [35.7101, 139.8107, "Tokyo Skytree"],
+                [35.7096, 139.8100, "Solamachi"],
+            ],
+            day5: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.6914, 139.7044, "Isetan Shinjuku"],
+                [35.6697, 139.4774, "Flying Strawberry Tokyo (Fuchu)"],
+            ],
+            day6: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.9196, 139.4856, "Kitain Temple"],
+                [35.9309, 139.4835, "Kawagoe Hikawa Shrine"],
+                [35.9284, 139.4803, "Kashiya Yokocho (Candy Alley)"],
+                [35.9258, 139.4831, "Kurazukuri Street"],
+                [35.9265, 139.4820, "Toki no Kane (Bell Tower)"],
+                [35.7295, 139.7109, "Seibu Ikebukuro"],
+            ],
+            day7: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.7147, 139.7713, "Ueno Zoo"],
+                [35.7207, 139.7614, "Nezu Shrine"],
+                [35.7079, 139.7685, "Yushima Tenjin Shrine"],
+                [35.7023, 139.7745, "Akihabara"],
+                [35.7146, 139.7874, "Kappabashi Street"],
+            ],
+            day8: [
+                [35.6555, 139.7567, "Hotel &mdash; Hamamatsucho"],
+                [35.6812, 139.7671, "Tokyo Station"],
+                [34.6572, 135.4319, "ART HOTEL Osaka Bay Tower"],
+                [34.6580, 135.4290, "Solaniwa Onsen"],
+            ],
+            day9: [
+                [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
+                [34.8765, 135.4955, "Katsouji Temple"],
+                [34.8052, 135.5329, "Nifrel (Expocity)"],
+            ],
+            day10: [
+                [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
+                [34.8108, 135.5310, "Expo '70 Park &mdash; Plum Blossom Festival"],
+                [34.6749, 135.5015, "Shinsaibashi"],
+                [34.6687, 135.5013, "Namba / Dotonbori"],
+            ],
+            day11: [
+                [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
+                [34.7060, 135.5034, "Kids Plaza Osaka"],
+            ],
+            day12: [
+                [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
+                [34.8890, 135.8076, "Byodo-in Temple (Uji)"],
+                [34.8914, 135.8087, "Tale of Genji Museum"],
+                [34.9806, 135.7477, "Toji Temple (Kyoto)"],
+                [35.0505, 135.7620, "Kyoto Botanical Garden &mdash; Light Cycle"],
+            ],
+            day13: [
+                [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
+                [34.9544, 135.7430, "Jonan-gu Shrine (Kyoto)"],
+                [34.6545, 135.4289, "Osaka Aquarium Kaiyukan"],
+            ],
+            day14: [
+                [34.6572, 135.4319, "Hotel &mdash; Osaka Bay Tower"],
+                [34.4320, 135.2304, "Kansai International Airport (KIX)"],
+            ],
+        };
+
+        Object.keys(dayPins).forEach(function(key) {
+            const pins = dayPins[key];
+            const mapEl = document.getElementById("map-" + key);
+            if (!mapEl || pins.length === 0) return;
+
+            const map = L.map(mapEl, { scrollWheelZoom: false });
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 18,
+            }).addTo(map);
+
+            const markers = pins.map(function(pin) {
+                return L.marker([pin[0], pin[1]]).addTo(map).bindPopup("<strong>" + pin[2] + "</strong>");
+            });
+
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.15));
+        });
+    </script>
+</body>
+</html>
