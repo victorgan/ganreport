@@ -181,7 +181,7 @@
 ---
 
 ## Notes
-- **Accommodation:** 103 Elegancia y Confort, Polanco
+- **Accommodation:** Carlos Dickens 43, Mexico City 11550, Polanco
 - **Transport:** Metro + Uber for getting around
 - **Reservations needed:** Frida Kahlo Museum, Pujol/Quintonil, Rosetta
 - **Currency:** Mexican Peso (MXN)
