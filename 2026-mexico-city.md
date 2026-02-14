@@ -52,6 +52,7 @@
 
 ### Evening
 - Walk Avenida Presidente Masaryk, explore the neighborhood
+- Grocery run at Superama (Walmart Express), Avenida Homero 310 — open 24 hours, a short walk from the hotel
 - Dinner in [Polanco](#polanco) — try Dulce Patria or a local spot
 
 ## Day 2 - Sunday, March 8: Paseo de la Reforma & Centro Historico
@@ -181,7 +182,7 @@
 ---
 
 ## Notes
-- **Accommodation:** Hotel in Polanco
+- **Accommodation:** 103 Elegancia y Confort, Polanco
 - **Transport:** Metro + Uber for getting around; arrange private transport for Teotihuacan
 - **Reservations needed:** Frida Kahlo Museum, Pujol/Quintonil, Rosetta
 - **Currency:** Mexican Peso (MXN)
