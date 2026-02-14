@@ -127,7 +127,7 @@
 - Work
 
 ### Evening
-- Dinner at Maximo Bistrot in [Roma Norte](#roma-norte)
+- 5pm reservation at [Maximo Bistrot](#maximo-bistrot) in [Roma Norte](#roma-norte)
 - Rooftop drinks at Paramo
 - Browse shops in [Roma Norte](#roma-norte)
 
@@ -260,6 +260,9 @@ The go-to market for exotic and gourmet ingredients. Imported cheeses, wild game
 
 ### Entremar
 Sinaloan seafood from the Contramar team, located in Condesa. Aguachiles, ceviches, and whole grilled fish in a bright, lively space. A more casual alternative to Contramar with equally fresh seafood and no-reservation waits.
+
+### Maximo Bistrot
+Chef Eduardo Garcia's farm-to-table bistro in Roma Norte with a daily-changing menu based on what's fresh at market. Small space, big flavors. Reserve ahead.
 
 ### Contramar
 One of the city's most beloved seafood restaurants. Famous for the tuna tostadas and the red-and-green grilled whole fish. The open-air setting and buzzing atmosphere make lunch here a quintessential CDMX experience. Reserve ahead.
