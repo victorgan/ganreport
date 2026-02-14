@@ -4,14 +4,14 @@
 
 - [Itinerary](#day-1---saturday-march-7-arrival)
   - [Day 1 - Arrival](#day-1---saturday-march-7-arrival)
-  - [Day 2 - Centro Historico](#day-2---sunday-march-8-centro-historico)
-  - [Day 3 - Chapultepec](#day-3---monday-march-9-chapultepec)
-  - [Day 4 - Coyoacan & Xochimilco](#day-4---tuesday-march-10-coyoacan--xochimilco)
-  - [Day 5 - Condesa & Roma](#day-5---wednesday-march-11-condesa--roma)
-  - [Day 6 - Teotihuacan](#day-6---thursday-march-12-day-trip-to-teotihuacan)
-  - [Day 7 - Markets & Food Tour](#day-7---friday-march-13-markets--food-tour)
-  - [Day 8 - Art & Culture](#day-8---saturday-march-14-art--culture)
-  - [Day 9 - San Angel & Leisure](#day-9---sunday-march-15-san-angel--leisure)
+  - [Day 2 - Centro Historico & Chapultepec](#day-2---sunday-march-8-centro-historico--chapultepec)
+  - [Day 3 - Work](#day-3---monday-march-9-work)
+  - [Day 4 - Work](#day-4---tuesday-march-10-work)
+  - [Day 5 - Work](#day-5---wednesday-march-11-work)
+  - [Day 6 - Work](#day-6---thursday-march-12-work)
+  - [Day 7 - Work](#day-7---friday-march-13-work)
+  - [Day 8 - Teotihuacan & Museo Soumaya](#day-8---saturday-march-14-teotihuacan--museo-soumaya)
+  - [Day 9 - Coyoacan & Xochimilco](#day-9---sunday-march-15-coyoacan--xochimilco)
   - [Day 10 - Departure](#day-10---monday-march-16-departure)
   - [Notes](#notes)
 - [Top Sights](#top-sights)
@@ -42,78 +42,139 @@
 ---
 
 ## Day 1 - Saturday, March 7: Arrival
-- Fly into Mexico City (MEX)
-- Check into hotel in [Roma Norte](#roma-norte)
-- Evening walk around the neighborhood
-- Dinner at a local taqueria
 
-## Day 2 - Sunday, March 8: Centro Historico
+### Morning
+- Fly into Mexico City (MEX)
+
+### Afternoon
+- Check into hotel in [Polanco](#polanco)
+- Walk Avenida Presidente Masaryk, explore the neighborhood
+
+### Evening
+- Dinner in [Polanco](#polanco) — try Dulce Patria or a local spot
+
+## Day 2 - Sunday, March 8: Centro Historico & Chapultepec
+
+### Morning
 - [Zocalo & Catedral Metropolitana](#zocalo--catedral-metropolitana) (main square)
 - [Palacio Nacional](#palacio-nacional) (Diego Rivera murals)
 - [Templo Mayor](#templo-mayor) ruins and museum
+
+### Afternoon
 - Lunch at Cafe de Tacuba
 - Walk down Calle Madero to [Palacio de Bellas Artes](#palacio-de-bellas-artes)
-- Evening mezcal tasting in [Roma Norte](#roma-norte)
+- [Museo Nacional de Antropologia](#museo-nacional-de-antropologia) (plan 3-4 hours)
 
-## Day 3 - Monday, March 9: Chapultepec
-- [Chapultepec Castle](#chapultepec-castle) and views of the city
-- [Museo Nacional de Antropologia](#museo-nacional-de-antropologia) (spend the afternoon)
+### Evening
 - Walk through [Bosque de Chapultepec](#bosque-de-chapultepec)
-- Dinner in [Polanco](#polanco)
+- Dinner and mezcal tasting in [Roma Norte](#roma-norte)
 
-## Day 4 - Tuesday, March 10: Coyoacan & Xochimilco
-- Morning at [Frida Kahlo Museum (Casa Azul)](#frida-kahlo-museum-casa-azul) - book tickets in advance
-- Explore [Coyoacan](#coyoacan) market and town square
-- Afternoon trajinera boat ride on [Xochimilco](#xochimilco) canals
-- Dinner in [Coyoacan](#coyoacan)
+## Day 3 - Monday, March 9: Work
 
-## Day 5 - Wednesday, March 11: Condesa & Roma
-- Morning at [Mercado Roma](#mercado-roma) for brunch
+### Morning
+- Breakfast at hotel
+- Morning walk through [Bosque de Chapultepec](#bosque-de-chapultepec) before work
+
+### Afternoon
+- Work — lunch break at Eno or Taqueria el Califa de Leon in [Polanco](#polanco)
+
+### Evening
+- Explore [Roma Norte](#roma-norte) — bookshops and cafes
+- Dinner at Rosetta or Lardo
+
+## Day 4 - Tuesday, March 10: Work
+
+### Morning
+- Breakfast at hotel
+
+### Afternoon
+- Work — lunch at La Casa de Tono (pozole)
+
+### Evening
 - Walk Avenida Amsterdam loop in [Condesa](#condesa)
-- Visit [Museo Tamayo](#museo-tamayo) or [MUAC](#muac)
-- Afternoon coffee and bookshops in Roma
-- Dinner at [Contramar](#contramar) (reserve ahead)
+- Dinner at Azul Condesa
+- Drinks at a mezcal bar
 
-## Day 6 - Thursday, March 12: Day Trip to Teotihuacan
+## Day 5 - Wednesday, March 11: Work
+
+### Morning
+- Breakfast at hotel
+
+### Afternoon
+- Work
+
+### Evening
+- Dinner at [Pujol](#pujol) or [Quintonil](#quintonil) in [Polanco](#polanco) (reserve well in advance)
+
+## Day 6 - Thursday, March 12: Work
+
+### Morning
+- Breakfast at hotel
+
+### Afternoon
+- Work
+
+### Evening
+- [Lucha libre at Arena Mexico](#lucha-libre-at-arena-mexico)
+- Late-night tacos at El Vilsito or Los Cocuyos
+
+## Day 7 - Friday, March 13: Work
+
+### Morning
+- Breakfast at hotel
+
+### Afternoon
+- Work
+
+### Evening
+- Dinner at Maximo Bistrot in [Roma Norte](#roma-norte)
+- Rooftop drinks at Paramo
+- Browse shops in [Roma Norte](#roma-norte)
+
+## Day 8 - Saturday, March 14: Teotihuacan & Museo Soumaya
+
+### Morning
 - Early departure to [Teotihuacan](#teotihuacan) pyramids
 - Climb the Pyramid of the Sun and Pyramid of the Moon
 - Walk the Avenue of the Dead
+
+### Afternoon
 - Lunch near the site
-- Return to the city in the afternoon
-- Relaxed evening, rooftop drinks
+- Return to the city
+- [Museo Soumaya](#museo-soumaya) in [Polanco](#polanco) (free entry)
 
-## Day 7 - Friday, March 13: Markets & Food Tour
-- Morning at [Mercado de la Merced](#mercado-de-la-merced) (largest market in the city)
-- Street food tour: tamales, tlacoyos, quesadillas, elote
-- Afternoon at [Mercado de San Juan](#mercado-de-san-juan) (gourmet ingredients)
-- Visit [Biblioteca Vasconcelos](#biblioteca-vasconcelos)
-- Dinner at [Pujol](#pujol) or [Quintonil](#quintonil) (reserve well in advance)
+### Evening
+- Rooftop drinks
+- Dinner in [Polanco](#polanco)
 
-## Day 8 - Saturday, March 14: Art & Culture
-- Morning at [UNAM Campus](#unam-campus) (murals and architecture)
-- [MUAC](#muac)
-- Afternoon at [Museo Soumaya](#museo-soumaya) in [Polanco](#polanco) (free entry)
-- Walk Avenida Presidente Masaryk for shopping
-- Evening [lucha libre at Arena Mexico](#lucha-libre-at-arena-mexico)
+## Day 9 - Sunday, March 15: Coyoacan & Xochimilco
 
-## Day 9 - Sunday, March 15: San Angel & Leisure
-- Sunday art bazaar at Plaza San Jacinto in [San Angel](#san-angel)
-- Brunch at San Angel Inn
-- Afternoon at [Museo de El Carmen](#museo-de-el-carmen)
-- Pack and relax at hotel
+### Morning
+- [Frida Kahlo Museum (Casa Azul)](#frida-kahlo-museum-casa-azul) — book tickets in advance
+- Explore [Coyoacan](#coyoacan) market and town square
+- Lunch at Los Danzantes
+
+### Afternoon
+- Trajinera boat ride on [Xochimilco](#xochimilco) canals
+
+### Evening
 - Farewell dinner in [Roma Norte](#roma-norte)
 
 ## Day 10 - Monday, March 16: Departure
-- Morning breakfast at a local cafe
+
+### Morning
+- Breakfast at a local cafe
 - Last-minute souvenir shopping
+
+### Afternoon
 - Depart from MEX
 
 ---
 
 ## Notes
-- **Accommodation:** Roma Norte or Condesa recommended
+- **Accommodation:** Hotel in Polanco
 - **Transport:** Metro + Uber for getting around; arrange private transport for Teotihuacan
-- **Reservations needed:** Frida Kahlo Museum, Contramar, Pujol/Quintonil
+- **Reservations needed:** Frida Kahlo Museum, Pujol/Quintonil, Rosetta
 - **Currency:** Mexican Peso (MXN)
 - **Weather:** Warm and dry, highs around 25C / 77F
 
