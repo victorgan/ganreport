@@ -97,7 +97,7 @@
 - Breakfast at hotel
 
 ### Afternoon
-- Work — 1pm lunch reservation at [Entremar](#entremar) in Condesa
+- Work
 
 ### Evening
 - Walk Avenida Amsterdam loop in [Condesa](#condesa)
@@ -121,7 +121,7 @@
 - Breakfast at hotel
 
 ### Afternoon
-- Work
+- Work — 1pm lunch reservation at [Entremar](#entremar) in Condesa
 
 ### Evening
 - [Lucha libre at Arena Mexico](#lucha-libre-at-arena-mexico)
