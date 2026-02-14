@@ -177,3 +177,125 @@ The main campus of the National Autonomous University of Mexico is a UNESCO Worl
 
 ### Lucha Libre at Arena Mexico
 Mexican professional wrestling in its spiritual home. The colorful masks, acrobatic moves, crowd energy, and theatrical rivalries make this an unforgettable night out even if you're not a wrestling fan. Friday nights are the main event. Buy tickets at the arena or through a tour operator.
+
+---
+
+# Food Guide by Neighborhood
+
+## Roma Norte
+
+### Top Restaurants
+- **Contramar** — The city's most iconic seafood lunch spot. The grilled whole fish painted half red, half green is the signature. Tuna tostadas are a must. Open for lunch only; reserve ahead.
+- **Rosetta** — Chef Elena Reygadas' acclaimed Italian-Mexican restaurant in a gorgeous Roma mansion. Handmade pastas, seasonal dishes, and incredible bread. Reserve a few days out.
+- **Lardo** — Mediterranean-meets-Mexican from the Rosetta team. Wood-fired dishes, excellent natural wine list, and a beautiful courtyard. Great for a relaxed dinner.
+- **Maximo Bistrot** — Chef Eduardo Garcia's farm-to-table bistro with a daily-changing menu based on what's fresh at market. Small space, big flavors. Reserve ahead.
+- **Paramo** — Rooftop mezcal bar and restaurant with creative Mexican small plates. Great for evening drinks and snacks with a view.
+
+### Quick Lunch & Street Food
+- **Tacos Orinoco** — Fast, excellent tacos de chicharron prensado and gobernador. Always a line, always worth it.
+- **El Vilsito** — A mechanic shop by day, legendary taco stand by night (opens ~8pm). Pastor, suadero, and longaniza tacos.
+- **Panaderia Rosetta** — Elena Reygadas' bakery. Guava croissants, conchas, and the famous role de canela. Perfect for breakfast or a snack.
+- **Mercado Roma** — The curated food hall with dozens of stalls. Good for a casual browse-and-graze lunch.
+- **Taqueria El Greco** — No-frills corner taqueria with excellent al pastor and cheap beer.
+
+### Coffee & Cafes
+- **Cafe Nin** — Beautiful specialty coffee shop with excellent pastries, run by the Rosetta group.
+- **Quentin Cafe** — Cozy spot popular with remote workers. Good espresso and light bites.
+- **Buna** — Local specialty coffee roaster with multiple Roma locations.
+
+## Condesa
+
+### Top Restaurants
+- **Azul Condesa** — Elevated traditional Mexican cuisine by Ricardo Munoz Zurita, one of Mexico's foremost authorities on national cuisine. Beautiful garden setting.
+- **Entremar** — Sinaloan seafood from the Contramar team. Aguachiles, ceviches, and whole grilled fish in a bright, lively space.
+- **Ojo de Agua** — Health-focused Mexican restaurant and juice bar. Great breakfasts and fresh-pressed juices.
+- **Tamal de Cazuela** — Unpretentious spot specializing in home-style Mexican comfort food. The tamales and mole are standouts.
+
+### Quick Lunch & Street Food
+- **El Tizoncito** — Claims to have invented tacos al pastor. Whether or not that's true, the pastor here is excellent.
+- **Neveria Roxy** — Old-school ice cream parlor on Avenida Tamaulipas. Classic Mexican flavors like mamey, guanabana, and rompope.
+- **Supercocina Conchita** — Home-style comida corrida (set lunch menu) that changes daily. Cheap, filling, and delicious.
+
+### Coffee & Cafes
+- **Cafe Villarias** — Neighborhood institution with sidewalk seating on a tree-lined street. Good for people-watching.
+- **Almanegra Cafe** — Specialty roaster with a modern industrial space. Some of the best single-origin pour-overs in the city.
+
+## Polanco
+
+### Top Restaurants
+- **Pujol** — Enrique Olvera's flagship, regularly on the World's 50 Best list. The omakase-style tasting menu and the 1,500+ day mole madre are once-in-a-lifetime. Reserve weeks ahead.
+- **Quintonil** — Jorge Valles' refined seasonal Mexican cuisine. Ingredients from the restaurant's garden. More intimate than Pujol, equally inventive. Reserve well in advance.
+- **Dulce Patria** — Chef Martha Ortiz's colorful, playful take on Mexican cuisine. Dishes are as beautiful as they are delicious. Great mole selection.
+- **Nobu Mexico City** — The global chain's outpost, but well-executed. Good for when you want a break from Mexican food.
+
+### Quick Lunch & Street Food
+- **Eno** — Gourmet sandwich and salad spot with multiple locations. Fast, fresh, and reliable.
+- **La Casa de Tono** — Legendary no-frills spot for pozole, open 24 hours. The green pozole is the move.
+- **Taqueria el Califa de Leon** — Michelin-recognized taco stand. Simple menu: bistec, chuleta, costilla, or chorizo on a tortilla. That's it, and it's perfect.
+
+### Coffee & Cafes
+- **Cafe de la Mancha** — Charming bookshop-cafe hybrid on a quiet Polanco side street.
+- **Dosis Cafe** — Sleek specialty coffee with excellent espresso drinks.
+
+## Centro Historico
+
+### Top Restaurants
+- **Cafe de Tacuba** — Operating since 1912 in a stunning colonial building. Traditional Mexican dishes, live music, and incredible atmosphere. A must for at least one meal.
+- **El Cardenal** — Institution for traditional Mexican breakfast and lunch. Excellent mole, escamoles (ant larvae) in season, and handmade tortillas.
+- **Limosneros** — Modern Mexican in a beautifully restored colonial space. Creative dishes rooted in pre-Hispanic ingredients. Good cocktail program.
+- **Balcon del Zocalo** — Rooftop restaurant overlooking the Zocalo. The food is decent, but you're paying for one of the best views in the city.
+
+### Quick Lunch & Street Food
+- **Tostadas de Coyoacan (Mercado San Camilito)** — Just off the Zocalo, excellent tostadas and quesadillas at market prices.
+- **Los Cocuyos** — Tiny street stall on Calle Bolivar famous for tacos de suadero, cabeza, and lengua. Open late.
+- **Churreria El Moro** — Operating since 1935, serving churros and hot chocolate around the clock. The perfect afternoon snack or late-night treat.
+- **La Casa de los Tacos** — Simple, reliable tacos near the Zocalo. Good al pastor and bistec.
+
+### Coffee & Cafes
+- **Cafe Jekemir** — Classic old-school cafe near Bellas Artes. Traditional Mexican coffee drinks.
+- **Cardinal Casa de Cafe** — Upscale coffee experience from the El Cardenal team. Specialty Mexican-grown beans.
+
+## Coyoacan
+
+### Top Restaurants
+- **Los Danzantes** — On the main plaza, serving elevated Oaxacan cuisine. Excellent mole negro and mezcal selection. The courtyard setting is lovely.
+- **Corazon de Maguey** — Oaxacan food and mezcal in a colorful, relaxed atmosphere. Good tlayudas and tasajo.
+- **Fonda El Morral** — Traditional home-style Mexican cooking. Daily changing comida corrida with soups, mains, agua fresca, and dessert for a great price.
+
+### Quick Lunch & Street Food
+- **Mercado de Coyoacan** — The neighborhood market with food stalls serving tostadas, quesadillas, and the famous tostadas de tinga. Don't miss the fruit stalls.
+- **Churreria de Coyoacan** — Churros and esquites on the square. Perfect for snacking while you explore.
+- **Jardines de Coyoacan street vendors** — The streets around the main plaza are lined with vendors selling elote, esquites, marquesitas, and other antojitos.
+
+### Coffee & Cafes
+- **Cafe Avellaneda** — Specialty coffee roaster in a charming Coyoacan house. One of the best cups in the south of the city.
+- **Cafe El Jarocho** — Coyoacan institution since 1953. Standing-room coffee served in styrofoam cups. Nothing fancy, completely authentic, and always packed with locals.
+
+## San Angel
+
+### Top Restaurants
+- **San Angel Inn** — A hacienda dating to 1692, serving refined Mexican cuisine in a gorgeous garden setting. A splurge-worthy brunch destination, especially on Saturdays when paired with the nearby art bazaar.
+- **Saks** — Modern international restaurant with a strong brunch and cocktail game. Popular with the well-heeled San Angel crowd.
+- **Cluny** — French-Mexican bistro in a beautiful old house. Good for a leisurely weekend lunch.
+
+### Quick Lunch & Street Food
+- **Mercado del Carmen** — The local market with food stalls serving comida corrida, fresh juices, and antojitos.
+- **Saturday bazaar food vendors** — When the art market is on at Plaza San Jacinto, surrounding streets fill with vendors selling pambazo, gorditas, and other street food.
+
+### Coffee & Cafes
+- **Cafe Gandhi** — Bookstore cafe near the bazaar. Browse books and sip coffee after the Saturday market.
+
+## Juarez & Cuauhtemoc
+
+### Top Restaurants
+- **Cicatriz** — Creative contemporary Mexican in the up-and-coming Juarez neighborhood. Interesting cocktails and a moody, intimate space.
+- **Amaya** — Chef Jair Tellez's no-menu restaurant. You eat what he's cooking that day, which is always excellent. Small, personal, and memorable.
+- **Restaurante Nicos** — A family-run institution since 1957, serving traditional Mexican dishes that have earned it a place on Latin America's 50 Best list. The chiles en nogada are legendary.
+
+### Quick Lunch & Street Food
+- **Tacos Hola** — Korean-Mexican fusion tacos. Short menu, big flavors, always a line at lunch.
+- **Tortas Don Polo** — Massive, messy tortas stuffed with milanesa, pierna, or chorizo. A proper Mexico City lunch.
+
+### Coffee & Cafes
+- **Chiquitito Cafe** — Tiny, beloved specialty coffee shop with a few sidewalk tables. Excellent cortados.
+- **Blend Station** — Health-focused cafe with smoothie bowls and good espresso. Popular breakfast spot.
