@@ -97,7 +97,7 @@
 - Breakfast at hotel
 
 ### Afternoon
-- Work — 12pm lunch reservation at [Entremar](#entremar) in Condesa
+- Work — 1pm lunch reservation at [Entremar](#entremar) in Condesa
 
 ### Evening
 - Walk Avenida Amsterdam loop in [Condesa](#condesa)
