@@ -88,7 +88,7 @@
 - Breakfast at hotel
 
 ### Afternoon
-- Work — lunch at La Casa de Tono (pozole)
+- Work — 12pm lunch reservation at [Entremar](#entremar) in Condesa
 
 ### Evening
 - Walk Avenida Amsterdam loop in [Condesa](#condesa)
@@ -257,6 +257,9 @@ A modern, curated food hall in Roma Norte with stalls offering everything from c
 
 ### Mercado de San Juan
 The go-to market for exotic and gourmet ingredients. Imported cheeses, wild game, insects, artisanal mole pastes, and fresh seafood. Popular with chefs and adventurous eaters.
+
+### Entremar
+Sinaloan seafood from the Contramar team, located in Condesa. Aguachiles, ceviches, and whole grilled fish in a bright, lively space. A more casual alternative to Contramar with equally fresh seafood and no-reservation waits.
 
 ### Contramar
 One of the city's most beloved seafood restaurants. Famous for the tuna tostadas and the red-and-green grilled whole fish. The open-air setting and buzzing atmosphere make lunch here a quintessential CDMX experience. Reserve ahead.
