@@ -182,7 +182,7 @@
 
 ## Notes
 - **Accommodation:** 103 Elegancia y Confort, Polanco
-- **Transport:** Metro + Uber for getting around; arrange private transport for Teotihuacan
+- **Transport:** Metro + Uber for getting around
 - **Reservations needed:** Frida Kahlo Museum, Pujol/Quintonil, Rosetta
 - **Currency:** Mexican Peso (MXN)
 - **Weather:** Warm and dry, highs around 25C / 77F
