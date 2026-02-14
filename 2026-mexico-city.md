@@ -1,5 +1,46 @@
 # Mexico City Trip: March 7-16, 2026
 
+## Table of Contents
+
+- [Itinerary](#day-1---saturday-march-7-arrival)
+  - [Day 1 - Arrival](#day-1---saturday-march-7-arrival)
+  - [Day 2 - Centro Historico](#day-2---sunday-march-8-centro-historico)
+  - [Day 3 - Chapultepec](#day-3---monday-march-9-chapultepec)
+  - [Day 4 - Coyoacan & Xochimilco](#day-4---tuesday-march-10-coyoacan--xochimilco)
+  - [Day 5 - Condesa & Roma](#day-5---wednesday-march-11-condesa--roma)
+  - [Day 6 - Teotihuacan](#day-6---thursday-march-12-day-trip-to-teotihuacan)
+  - [Day 7 - Markets & Food Tour](#day-7---friday-march-13-markets--food-tour)
+  - [Day 8 - Art & Culture](#day-8---saturday-march-14-art--culture)
+  - [Day 9 - San Angel & Leisure](#day-9---sunday-march-15-san-angel--leisure)
+  - [Day 10 - Departure](#day-10---monday-march-16-departure)
+  - [Notes](#notes)
+- [Top Sights](#top-sights)
+  - [Historical & Archaeological Sites](#historical--archaeological-sites)
+  - [Museums & Galleries](#museums--galleries)
+  - [Neighborhoods](#neighborhoods)
+  - [Parks & Nature](#parks--nature)
+  - [Markets & Food](#markets--food)
+  - [Architecture & Libraries](#architecture--libraries)
+  - [Entertainment & Experiences](#entertainment--experiences)
+- [Food Guide by Neighborhood](#food-guide-by-neighborhood)
+  - [Roma Norte](#roma-norte-1)
+  - [Condesa](#condesa-1)
+  - [Polanco](#polanco-1)
+  - [Centro Historico](#centro-historico)
+  - [Coyoacan](#coyoacan-1)
+  - [San Angel](#san-angel-1)
+  - [Juarez & Cuauhtemoc](#juarez--cuauhtemoc)
+- [Shopping Guide by Neighborhood](#shopping-guide-by-neighborhood)
+  - [Roma Norte](#roma-norte-2)
+  - [Condesa](#condesa-2)
+  - [Polanco](#polanco-2)
+  - [Centro Historico](#centro-historico-1)
+  - [Coyoacan](#coyoacan-2)
+  - [San Angel](#san-angel-2)
+  - [Juarez & Cuauhtemoc](#juarez--cuauhtemoc-1)
+
+---
+
 ## Day 1 - Saturday, March 7: Arrival
 - Fly into Mexico City (MEX)
 - Check into hotel in [Roma Norte](#roma-norte)
