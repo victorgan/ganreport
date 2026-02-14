@@ -10,7 +10,7 @@
   - [Day 5 - Work](#day-5---wednesday-march-11-work)
   - [Day 6 - Work](#day-6---thursday-march-12-work)
   - [Day 7 - Work](#day-7---friday-march-13-work)
-  - [Day 8 - Teotihuacan & Museo Soumaya](#day-8---saturday-march-14-teotihuacan--museo-soumaya)
+  - [Day 8 - San Angel, UNAM & Museo Soumaya](#day-8---saturday-march-14-san-angel-unam--museo-soumaya)
   - [Day 9 - Coyoacan & Xochimilco](#day-9---sunday-march-15-coyoacan--xochimilco)
   - [Day 10 - Departure](#day-10---monday-march-16-departure)
   - [Notes](#notes)
@@ -140,16 +140,15 @@
 - Rooftop drinks at Paramo
 - Browse shops in [Roma Norte](#roma-norte)
 
-## Day 8 - Saturday, March 14: Teotihuacan & Museo Soumaya
+## Day 8 - Saturday, March 14: San Angel, UNAM & Museo Soumaya
 
 ### Morning
-- Early departure to [Teotihuacan](#teotihuacan) pyramids
-- Climb the Pyramid of the Sun and Pyramid of the Moon
-- Walk the Avenue of the Dead
+- [Bazaar Sabado](#bazaar-sabado-saturday-bazaar) at Plaza San Jacinto in [San Angel](#san-angel) — the famous Saturday art market
+- Browse the surrounding cobblestone streets — antique shops, galleries, street food vendors
+- Brunch at San Angel Inn or Cluny
 
 ### Afternoon
-- Lunch near the site
-- Return to the city
+- [UNAM Campus](#unam-campus) — UNESCO World Heritage Site: Central Library mosaic murals, Espacio Escultorico, Rectory Tower murals
 - [Museo Soumaya](#museo-soumaya) in [Polanco](#polanco) (free entry)
 
 ### Evening
