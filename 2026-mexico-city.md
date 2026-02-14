@@ -44,13 +44,14 @@
 ## Day 1 - Saturday, March 7: Arrival
 
 ### Morning
-- Fly into Mexico City (MEX)
+- Flight AM495: Seattle (SEA) → Mexico City (MEX)
 
 ### Afternoon
-- Check into hotel in [Polanco](#polanco)
-- Walk Avenida Presidente Masaryk, explore the neighborhood
+- Arrive 5pm, taxi/Uber to hotel in [Polanco](#polanco)
+- Check in and freshen up
 
 ### Evening
+- Walk Avenida Presidente Masaryk, explore the neighborhood
 - Dinner in [Polanco](#polanco) — try Dulce Patria or a local spot
 
 ## Day 2 - Sunday, March 8: Centro Historico & Chapultepec
