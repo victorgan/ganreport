@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mexico City Trip: March 7-16, 2026</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .leaflet-container { border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-[1000]">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold text-stone-900">Mexico City</h1>
+            <p class="text-stone-500 text-sm">March 7 &ndash; 16, 2026</p>
+        </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <nav class="bg-white border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-6 py-3 flex flex-wrap gap-2 text-sm">
+            <a href="#day1" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 1</a>
+            <a href="#day2" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 2</a>
+            <a href="#day3" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 3</a>
+            <a href="#day4" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 4</a>
+            <a href="#day5" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 5</a>
+            <a href="#day6" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 6</a>
+            <a href="#day7" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 7</a>
+            <a href="#day8" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 8</a>
+            <a href="#day9" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 9</a>
+            <a href="#day10" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 10</a>
+            <a href="#notes" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Notes</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8 space-y-12">
+
+        <!-- Day 1 -->
+        <section id="day1">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 1 &mdash; Saturday, March 7: Arrival</h2>
+            <p class="text-stone-500 text-sm mb-4">Flight in, settle into Polanco, evening stroll</p>
+            <div id="map-day1" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Flight AM495: Seattle (SEA) &rarr; Mexico City (MEX)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Arrive 5pm, taxi/Uber to hotel in Polanco</li>
+                        <li>Check in and freshen up</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Walk Avenida Presidente Masaryk, explore the neighborhood</li>
+                        <li>Grocery run at Superama (Walmart Express), Avenida Homero 310 &mdash; open 24 hours</li>
+                        <li>Dinner in Polanco &mdash; try Dulce Patria or a local spot</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 2 -->
+        <section id="day2">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 2 &mdash; Sunday, March 8: Paseo de la Reforma &amp; Centro Historico</h2>
+            <p class="text-stone-500 text-sm mb-4">Bike ride on Reforma, explore the historic center</p>
+            <div id="map-day2" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Muevete en Bici</strong> &mdash; Paseo de la Reforma closes to cars for cyclists and pedestrians every Sunday 8am&ndash;2pm. Rent a bike (Ecobici) and ride the full stretch</li>
+                        <li>Sights along the route: Angel de la Independencia, Diana Cazadora fountain, Monumento a la Revolucion, Bosque de Chapultepec, Chapultepec Castle</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Lunch at Cafe de Tacuba in Centro Historico</li>
+                        <li>Zocalo &amp; Catedral Metropolitana</li>
+                        <li>Palacio Nacional (Diego Rivera murals)</li>
+                        <li>Templo Mayor ruins and museum</li>
+                        <li>Walk down Calle Madero to Palacio de Bellas Artes</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Museo Nacional de Antropologia (open until 5pm)</li>
+                        <li>Dinner and mezcal tasting in Roma Norte</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 3 -->
+        <section id="day3">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 3 &mdash; Monday, March 9: Work</h2>
+            <p class="text-stone-500 text-sm mb-4">Morning walk in Chapultepec, evening in Roma Norte</p>
+            <div id="map-day3" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Breakfast at hotel</li>
+                        <li>Morning walk through Bosque de Chapultepec before work</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Work &mdash; lunch break at Eno or Taqueria el Califa de Leon in Polanco</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Explore Roma Norte &mdash; bookshops and cafes</li>
+                        <li>Dinner at Rosetta or Lardo</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 4 -->
+        <section id="day4">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 4 &mdash; Tuesday, March 10: Work</h2>
+            <p class="text-stone-500 text-sm mb-4">Lunch at Entremar, evening stroll along Avenida Amsterdam</p>
+            <div id="map-day4" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Breakfast at hotel</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Work &mdash; 12pm lunch reservation at Entremar in Condesa</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Walk Avenida Amsterdam loop in Condesa</li>
+                        <li>Dinner at Azul Condesa</li>
+                        <li>Drinks at a mezcal bar</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 5 -->
+        <section id="day5">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 5 &mdash; Wednesday, March 11: Work</h2>
+            <p class="text-stone-500 text-sm mb-4">Fine dining evening &mdash; Pujol or Quintonil</p>
+            <div id="map-day5" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Breakfast at hotel</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Work</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Dinner at Pujol or Quintonil in Polanco (reserve well in advance)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 6 -->
+        <section id="day6">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 6 &mdash; Thursday, March 12: Work</h2>
+            <p class="text-stone-500 text-sm mb-4">Lucha libre and late-night tacos</p>
+            <div id="map-day6" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Breakfast at hotel</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Work</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Lucha libre at Arena Mexico</li>
+                        <li>Late-night tacos at El Vilsito or Los Cocuyos</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 7 -->
+        <section id="day7">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 7 &mdash; Friday, March 13: Work</h2>
+            <p class="text-stone-500 text-sm mb-4">Maximo Bistrot, rooftop drinks, Roma Norte shops</p>
+            <div id="map-day7" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Breakfast at hotel</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Work</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>5pm reservation at Maximo Bistrot in Roma Norte</li>
+                        <li>Rooftop drinks at Paramo</li>
+                        <li>Browse shops in Roma Norte</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 8 -->
+        <section id="day8">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 8 &mdash; Saturday, March 14: Teotihuacan &amp; Museo Soumaya</h2>
+            <p class="text-stone-500 text-sm mb-4">Pyramids in the morning, museum and rooftop in the evening</p>
+            <div id="map-day8" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Early departure to Teotihuacan pyramids</li>
+                        <li>Climb the Pyramid of the Sun and Pyramid of the Moon</li>
+                        <li>Walk the Avenue of the Dead</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Lunch near the site</li>
+                        <li>Return to the city</li>
+                        <li>Museo Soumaya in Polanco (free entry)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Rooftop drinks</li>
+                        <li>Dinner in Polanco</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 9 -->
+        <section id="day9">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 9 &mdash; Sunday, March 15: Coyoacan &amp; Xochimilco</h2>
+            <p class="text-stone-500 text-sm mb-4">Frida Kahlo Museum, canal boats, farewell dinner</p>
+            <div id="map-day9" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Frida Kahlo Museum (Casa Azul) &mdash; book tickets in advance</li>
+                        <li>Explore Coyoacan market and town square</li>
+                        <li>Lunch at Los Danzantes</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Trajinera boat ride on Xochimilco canals</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Farewell dinner in Roma Norte</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 10 -->
+        <section id="day10">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 10 &mdash; Monday, March 16: Departure</h2>
+            <p class="text-stone-500 text-sm mb-4">Last morning, then fly home</p>
+            <div id="map-day10" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Breakfast at a local cafe</li>
+                        <li>Last-minute souvenir shopping</li>
+                        <li>Head to MEX by noon</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Flight AM494: Mexico City (MEX) 2:50pm &rarr; Seattle (SEA) 7:55pm</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notes -->
+        <section id="notes" class="border-t border-stone-200 pt-8">
+            <h2 class="text-xl font-bold text-stone-900 mb-4">Notes</h2>
+            <ul class="list-disc list-inside text-stone-600 space-y-2 text-sm">
+                <li><strong>Accommodation:</strong> 103 Elegancia y Confort, Polanco</li>
+                <li><strong>Transport:</strong> Metro + Uber for getting around; arrange private transport for Teotihuacan</li>
+                <li><strong>Reservations needed:</strong> Frida Kahlo Museum, Pujol/Quintonil, Rosetta</li>
+                <li><strong>Currency:</strong> Mexican Peso (MXN)</li>
+                <li><strong>Weather:</strong> Warm and dry, highs around 25&deg;C / 77&deg;F</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <!-- Maps Script -->
+    <script>
+        const dayPins = {
+            day1: [
+                [19.4363, -99.0721, "MEX Airport"],
+                [19.4340, -99.1935, "Hotel &mdash; 103 Elegancia y Confort, Polanco"],
+                [19.4329, -99.1908, "Avenida Presidente Masaryk"],
+                [19.4350, -99.1945, "Superama, Av. Homero 310"],
+                [19.4324, -99.1892, "Dulce Patria"],
+            ],
+            day2: [
+                [19.4270, -99.1677, "Angel de la Independencia"],
+                [19.4262, -99.1735, "Diana Cazadora"],
+                [19.4361, -99.1540, "Monumento a la Revolucion"],
+                [19.4204, -99.1892, "Bosque de Chapultepec"],
+                [19.4205, -99.1818, "Chapultepec Castle"],
+                [19.4345, -99.1389, "Cafe de Tacuba"],
+                [19.4326, -99.1332, "Zocalo &amp; Catedral Metropolitana"],
+                [19.4319, -99.1312, "Palacio Nacional"],
+                [19.4352, -99.1314, "Templo Mayor"],
+                [19.4353, -99.1413, "Palacio de Bellas Artes"],
+                [19.4260, -99.1861, "Museo Nacional de Antropologia"],
+                [19.4195, -99.1617, "Roma Norte"],
+            ],
+            day3: [
+                [19.4340, -99.1935, "Hotel &mdash; Polanco"],
+                [19.4204, -99.1892, "Bosque de Chapultepec"],
+                [19.4348, -99.1880, "Eno / Taqueria el Califa de Leon"],
+                [19.4197, -99.1625, "Rosetta"],
+                [19.4190, -99.1630, "Lardo"],
+                [19.4195, -99.1617, "Roma Norte"],
+            ],
+            day4: [
+                [19.4340, -99.1935, "Hotel &mdash; Polanco"],
+                [19.4138, -99.1738, "Entremar"],
+                [19.4115, -99.1710, "Avenida Amsterdam"],
+                [19.4129, -99.1695, "Azul Condesa"],
+            ],
+            day5: [
+                [19.4340, -99.1935, "Hotel &mdash; Polanco"],
+                [19.4324, -99.1920, "Pujol"],
+                [19.4350, -99.1897, "Quintonil"],
+            ],
+            day6: [
+                [19.4340, -99.1935, "Hotel &mdash; Polanco"],
+                [19.4269, -99.1447, "Arena Mexico (Lucha Libre)"],
+                [19.4111, -99.1627, "El Vilsito"],
+                [19.4340, -99.1372, "Los Cocuyos"],
+            ],
+            day7: [
+                [19.4340, -99.1935, "Hotel &mdash; Polanco"],
+                [19.4190, -99.1581, "Maximo Bistrot"],
+                [19.4178, -99.1615, "Paramo"],
+                [19.4195, -99.1617, "Roma Norte"],
+            ],
+            day8: [
+                [19.6953, -98.8439, "Pyramid of the Sun"],
+                [19.6983, -98.8448, "Pyramid of the Moon"],
+                [19.6968, -98.8444, "Avenue of the Dead"],
+                [19.4408, -99.2048, "Museo Soumaya"],
+            ],
+            day9: [
+                [19.3555, -99.1626, "Frida Kahlo Museum (Casa Azul)"],
+                [19.3500, -99.1620, "Coyoacan Market &amp; Square"],
+                [19.3498, -99.1621, "Los Danzantes"],
+                [19.2571, -99.1035, "Xochimilco Canals"],
+                [19.4195, -99.1617, "Roma Norte (farewell dinner)"],
+            ],
+            day10: [
+                [19.4340, -99.1935, "Hotel &mdash; Polanco"],
+                [19.4363, -99.0721, "MEX Airport"],
+            ],
+        };
+
+        Object.keys(dayPins).forEach(function(dayKey) {
+            const pins = dayPins[dayKey];
+            const mapEl = document.getElementById("map-" + dayKey);
+            if (!mapEl || pins.length === 0) return;
+
+            const map = L.map(mapEl, { scrollWheelZoom: false });
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 18,
+            }).addTo(map);
+
+            const markers = pins.map(function(pin) {
+                return L.marker([pin[0], pin[1]]).addTo(map).bindPopup("<strong>" + pin[2] + "</strong>");
+            });
+
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.15));
+        });
+    </script>
+</body>
+</html>
