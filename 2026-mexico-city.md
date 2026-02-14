@@ -21,6 +21,7 @@
   - [Parks & Nature](#parks--nature)
   - [Architecture & Libraries](#architecture--libraries)
   - [Entertainment & Experiences](#entertainment--experiences)
+  - [Day Trips](#day-trips)
 - [Food Guide by Neighborhood](#food-guide-by-neighborhood)
   - [Roma Norte](#roma-norte-1)
   - [Condesa](#condesa-1)
@@ -195,9 +196,6 @@ The excavated ruins of the main temple of the Aztec capital Tenochtitlan, discov
 ### Chapultepec Castle
 The only royal castle in the Americas, perched atop Chapultepec Hill. Served as a residence for Emperor Maximilian I and later Mexican presidents. Stunning city views and a beautifully preserved interior with murals, period furniture, and the National History Museum.
 
-### Teotihuacan
-The massive pre-Aztec archaeological site about 50 km northeast of the city. Features the Pyramid of the Sun (third-largest pyramid in the world), the Pyramid of the Moon, and the Avenue of the Dead. Arrive early to beat the crowds and heat.
-
 ## Museums & Galleries
 
 ### Museo Nacional de Antropologia
@@ -258,6 +256,29 @@ The main campus of the National Autonomous University of Mexico is a UNESCO Worl
 
 ### Lucha Libre at Arena Mexico
 Mexican professional wrestling in its spiritual home. The colorful masks, acrobatic moves, crowd energy, and theatrical rivalries make this an unforgettable night out even if you're not a wrestling fan. Friday nights are the main event. Buy tickets at the arena or through a tour operator.
+
+## Day Trips
+
+### Teotihuacan
+The massive pre-Aztec archaeological site about 50 km northeast of the city. Features the Pyramid of the Sun (third-largest pyramid in the world), the Pyramid of the Moon, and the Avenue of the Dead. Arrive early to beat the crowds and heat. About 1 hour by car; arrange private transport or take a bus from Terminal del Norte.
+
+### Tepoztlan
+A magical pueblo about 1.5 hours south of the city, nestled in dramatic volcanic cliffs. Climb the Tepozteco pyramid perched on a mountaintop for stunning valley views (about 1-2 hours up). The town itself has a lively weekend market, excellent street food (cecina, itacates, tepoznieves ice cream), and a laid-back bohemian atmosphere. Great for a Saturday or Sunday day trip.
+
+### Grutas de Tolantongo
+A stunning canyon hot springs complex about 4 hours north of the city in Hidalgo state. Thermal river pools carved into the cliffside, cave hot springs with waterfalls, and infinity-style pools overlooking the canyon. Worth an overnight stay or a very long day trip. Best visited on weekdays to avoid crowds. Bring cash — no cards accepted on-site.
+
+### Las Grutas de Cacahuamilpa
+One of the largest cave systems in the world, about 2.5 hours southwest of the city in Guerrero state. Guided tours take you through enormous caverns with dramatic stalactite and stalagmite formations. Often combined with a visit to the nearby underground river at Dos Bocas for swimming and cliff jumping.
+
+### Grutas de la Estrella
+A cave system about 2 hours south of the city near Tonatico. Features an underground boat ride through illuminated caverns with striking rock formations reflected in still water. Less touristy than Cacahuamilpa, with a more intimate experience. Nearby thermal pools at Ixtapan de la Sal make for a good combo trip.
+
+### Val'Quirico
+A Tuscan-inspired village about 2 hours east of the city in Tlaxcala. Built as a commercial and residential development, it feels like stepping into a European hill town. Cobblestone streets, craft breweries, wine bars, artisan shops, and restaurants. A fun, low-key day trip for food and shopping, especially on weekends.
+
+### Puebla
+Mexico's fourth-largest city, about 2 hours east. Famous for mole poblano, chiles en nogada, and Talavera pottery. The historic center is a UNESCO World Heritage Site with beautiful colonial architecture, the ornate Capilla del Rosario, and the Great Pyramid of Cholula (the largest pyramid by volume in the world) on the outskirts. Easily a full day trip.
 
 ---
 
