@@ -166,9 +166,10 @@
 ### Morning
 - Breakfast at a local cafe
 - Last-minute souvenir shopping
+- Head to MEX by noon
 
 ### Afternoon
-- Depart from MEX
+- Flight AM494: Mexico City (MEX) 2:50pm → Seattle (SEA) 7:55pm
 
 ---
 
