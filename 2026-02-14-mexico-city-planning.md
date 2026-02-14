@@ -299,3 +299,107 @@ Mexican professional wrestling in its spiritual home. The colorful masks, acroba
 ### Coffee & Cafes
 - **Chiquitito Cafe** — Tiny, beloved specialty coffee shop with a few sidewalk tables. Excellent cortados.
 - **Blend Station** — Health-focused cafe with smoothie bowls and good espresso. Popular breakfast spot.
+
+---
+
+# Shopping Guide by Neighborhood
+
+## Roma Norte
+
+### Boutiques & Design
+- **Bye Bye Baby** — Curated vintage and contemporary clothing. A mix of local designers and international secondhand finds. One of the best-edited shops in the neighborhood.
+- **Carla Fernandez** — Mexican fashion designer known for geometric patterns inspired by indigenous textile traditions. Beautiful statement pieces and accessories.
+- **Onora Casa** — Contemporary Mexican home goods and ceramics. Hand-crafted pieces from artisans across the country. Great for gifts.
+- **Lago** — Design shop and gallery carrying Mexican-made furniture, lighting, ceramics, and art objects.
+- **180 Grados** — Concept store with local independent fashion, jewelry, and accessories. Good for discovering emerging Mexican designers.
+
+### Thrift & Vintage
+- **Goodbye Folk** — Well-curated vintage store with leather jackets, denim, band tees, and retro accessories.
+- **El Armario de la Guelaguetza** — Secondhand shop with a mix of vintage clothing and traditional Oaxacan textiles repurposed into modern garments.
+- **Retroactivo** — Vintage furniture, clothing, and oddities. Fun to browse even if you're not buying.
+- **Roma Norte tianguis (Sunday street market)** — The weekly street market along Alvaro Obregon has stalls selling secondhand clothes, vinyl, books, and handmade goods.
+
+### Bookshops
+- **Cafebreria El Pendulo** — Beautiful bookshop-cafe-bar in a plant-filled atrium. Spanish and English titles, live music events.
+- **Under the Volcano Books** — English-language bookshop specializing in literature about Mexico. Named after the Malcolm Lowry novel.
+
+## Condesa
+
+### Boutiques & Design
+- **Tane** — High-end Mexican silver jewelry brand with roots going back to 1942. Elegant, minimalist pieces.
+- **Ikal** — Concept store with Mexican-made clothing, home goods, and beauty products. Clean, modern aesthetic.
+- **Lemur** — Quirky independent shop with handmade accessories, stationery, and small gifts from local makers.
+
+### Thrift & Vintage
+- **Hunting Vintage** — Well-organized vintage shop on Tamaulipas. Good selection of 70s and 80s pieces, denim, and leather.
+- **Condesa tianguis (Tuesday market)** — Weekly street market with secondhand clothes and accessories alongside produce and food stalls.
+
+### Records & Vinyl
+- **Retroactivo Records** — Vinyl shop with a strong selection of Mexican rock, Latin jazz, cumbia, and international titles.
+
+## Polanco
+
+### Luxury & High-End
+- **Avenida Presidente Masaryk** — Mexico City's premier luxury shopping street. Louis Vuitton, Gucci, Cartier, Hermes, and other international brands line the boulevard.
+- **Antara Fashion Hall** — Upscale open-air mall with international and Mexican luxury brands, plus good restaurants.
+- **Common People** — High-end streetwear and sneaker boutique. Carries hard-to-find international brands alongside Mexican labels.
+- **Tane (Polanco flagship)** — The brand's largest location, with the full range of their silver jewelry and home accessories.
+
+### Mexican Design & Art
+- **Museo Jumex Shop** — The museum gift shop carries excellent art books, prints, and design objects.
+- **Pineda Covalin** — Mexican brand known for silk scarves, ties, and accessories featuring pre-Hispanic and nature-inspired patterns. Good souvenir splurge.
+
+### Markets
+- **Mercado de Polanco** — A small neighborhood market that's more upscale than most. Good for specialty foods, flowers, and a quick lunch among locals.
+
+## Centro Historico
+
+### Traditional Markets & Crafts
+- **Mercado de Artesanias de la Ciudadela** — The best single stop for Mexican handicrafts. Hundreds of stalls selling alebrijes, Talavera pottery, textiles, silver jewelry, lucha libre masks, and folk art from every region. Prices are negotiable.
+- **Mercado de San Juan** — Beyond the gourmet food, the surrounding streets have shops selling imported goods, spices, and kitchen equipment.
+- **Calle Madero shops** — The pedestrian street connecting the Zocalo to Bellas Artes is lined with shops. Sanborns (in the Casa de los Azulejos) is worth a visit for the building alone.
+
+### Thrift & Vintage
+- **Lagunilla Market (Sunday)** — Mexico City's legendary flea market. Antiques, vintage clothing, furniture, vinyl records, old cameras, and endless curiosities. Go early, bargain hard, and watch your belongings.
+- **Calle de Moneda vintage shops** — Several small vintage and antique shops line this street near the Zocalo. Good for old books, coins, and curiosities.
+
+### Books & Stationery
+- **Libreria Porrua (Zocalo)** — One of Mexico's oldest bookshop chains, in a beautiful Centro location. Good for Spanish-language literature and books about Mexican history.
+- **Mercado de Libros** — Open-air book market near the Ciudadela. Secondhand and new books at great prices.
+
+## Coyoacan
+
+### Artisan Markets & Crafts
+- **Mercado de Artesanias de Coyoacan** — Small craft market near the main plaza selling jewelry, textiles, pottery, and leather goods. More relaxed than Ciudadela, with fair prices.
+- **Bazar Artesanal Mexicano** — Weekend craft stalls around the Jardin Centenario. Handmade jewelry, embroidered clothing, and traditional toys.
+
+### Boutiques
+- **Coyoacan boutiques on Felipe Carrillo Puerto** — The streets near the plaza have small independent shops selling clothing, handmade jewelry, and artisan goods.
+- **Libreria Elena Garro** — Beautiful bookshop run by the Fondo de Cultura Economica. Great architecture, curated selection, and a nice garden cafe.
+
+### Thrift & Vintage
+- **Bazar de Coyoacan** — Indoor market with a mix of new and secondhand items. Vintage clothing, handmade goods, and collectibles.
+
+## San Angel
+
+### Art & Antiques
+- **Bazaar Sabado (Saturday Bazaar)** — The famous Saturday art market at Plaza San Jacinto. Paintings, sculptures, jewelry, ceramics, and textiles from artists across Mexico. Inside the bazaar building, quality is high and prices reflect it; outside stalls are more affordable.
+- **Galeria de Arte San Angel** — Fine art gallery featuring established Mexican artists. Paintings, sculpture, and photography.
+
+### Boutiques & Design
+- **Fonart** — Government-backed shop promoting Mexican artisan crafts. Fixed prices, high quality, and proceeds go directly to artisans. Good for Oaxacan black clay, Michoacan lacquerware, and embroidered textiles.
+- **San Angel shops on Avenida de la Paz** — Upscale antique shops, home decor stores, and small galleries line this avenue.
+
+## Juarez & Cuauhtemoc
+
+### Thrift & Vintage
+- **El Chopo tianguis (Saturday)** — A legendary counterculture market. Punk, goth, metal, and alternative fashion, plus vinyl, patches, band merch, and tattoo artists. An experience even if you don't buy anything.
+- **Avenida Chapultepec vintage shops** — A strip of vintage and secondhand stores along the avenue. Good for denim, leather, and retro streetwear.
+
+### Boutiques & Design
+- **Utilitario Mexicano** — Celebrates everyday Mexican design objects — enamelware, market bags, molcajetes, woven baskets — displayed like art. Beautifully curated and great for unique, affordable gifts.
+- **Feria de Diseno Independiente** — Regular pop-up markets in the Juarez neighborhood featuring independent Mexican designers. Check social media for dates.
+
+### Records & Books
+- **Discos Chowell** — Vinyl shop with a deep selection of Mexican and Latin American music. Knowledgeable staff.
+- **Libreria Rosario Castellanos (Centro Cultural Bella Epoca)** — Stunning bookshop in a converted Art Deco cinema. Worth visiting for the architecture alone.
