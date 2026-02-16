@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PE Exposure Risk Model</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep: #08090c;
+  --bg-card: #0f1117;
+  --bg-hover: #161820;
+  --bg-elevated: #1a1c26;
+  --border: #1e2030;
+  --border-focus: #2a2d42;
+  --text-primary: #e2e4ec;
+  --text-secondary: #8b8fa4;
+  --text-muted: #565a6e;
+  --red: #f0545c;
+  --red-dim: rgba(240,84,92,0.12);
+  --orange: #f0943c;
+  --yellow: #e8c84a;
+  --green: #4ade80;
+  --blue: #5b8def;
+  --blue-dim: rgba(91,141,239,0.15);
+  --purple: #a78bfa;
+  --font-display: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { font-size: 15px; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  line-height: 1.55;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+/* Header */
+.header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.header p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* Summary grid */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-value.red { color: var(--red); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-value.orange { color: var(--orange); }
+
+.stat-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Top Risks */
+.top-risks {
+  background: var(--bg-card);
+  border: 1px solid rgba(240,84,92,0.2);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.top-risks h2 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.top-risk-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+}
+
+.top-risk-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.top-risk-num {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  width: 1.2rem;
+}
+
+.pe-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  background: var(--red-dim);
+  color: var(--red);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.filter-btn {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--bg-card);
+  color: var(--text-muted);
+}
+
+.filter-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.filter-btn.active {
+  background: var(--blue-dim);
+  color: var(--blue);
+  border-color: rgba(91,141,239,0.25);
+}
+
+.sort-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.sort-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-right: 0.2rem;
+}
+
+.sort-btn {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.sort-btn:hover { color: var(--text-secondary); }
+
+.sort-btn.active {
+  background: var(--bg-elevated);
+  color: #fff;
+}
+
+/* Service rows */
+.service-list { display: flex; flex-direction: column; gap: 3px; }
+
+.service-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.service-row:hover { border-color: var(--border-focus); }
+
+.service-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+}
+
+.service-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.cat-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.service-info { min-width: 0; }
+
+.service-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.service-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.service-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+}
+
+.spend-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.exposure-score {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.exposure-score.high { color: var(--red); }
+.exposure-score.med { color: var(--yellow); }
+.exposure-score.low { color: var(--green); }
+
+.chevron {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.service-row.expanded .chevron { transform: rotate(180deg); }
+
+/* Expanded detail */
+.service-detail {
+  display: none;
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.service-row.expanded .service-detail { display: block; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin: 0.85rem 0;
+}
+
+@media (max-width: 500px) {
+  .detail-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.detail-metric-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.detail-metric-value {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.detail-notes {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0.6rem;
+}
+
+.detail-social {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.detail-social strong {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.exposure-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.65rem;
+}
+
+.exposure-bar-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  width: 4.5rem;
+  flex-shrink: 0;
+}
+
+.exposure-bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.exposure-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Formula footer */
+.formula-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.formula-box h3 {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.formula-box code {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--blue);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.formula-box p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.formula-box p + p { margin-top: 0.35rem; }
+
+@media (max-width: 640px) {
+  .spend-tag { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="app"></div>
+
+<script>
+const SERVICES = [
+  {name:"Apartment (rental)",category:"Housing",example:"Equity Residential / Greystar unit",ownershipType:"PE-backed REIT",alreadyPE:true,acquisitionRisk:.95,dependency:.95,switchingCost:.85,degradationImpact:.9,monthlySpend:2200,notes:"Institutional landlords dominate Seattle rentals. Rent increases, deferred maintenance, fee layering are common PE playbook.",socialAsset:"Stability, neighborhood ties, commute patterns"},
+  {name:"Renters Insurance",category:"Housing",example:"Lemonade / Assurant",ownershipType:"VC/Public",alreadyPE:false,acquisitionRisk:.4,dependency:.3,switchingCost:.15,degradationImpact:.3,monthlySpend:20,notes:"Commoditized, easy to switch. Low social risk.",socialAsset:"None significant"},
+  {name:"Primary Care Provider",category:"Healthcare",example:"One Medical / PacMed / MultiCare",ownershipType:"Corporate/PE-adjacent",alreadyPE:true,acquisitionRisk:.85,dependency:.8,switchingCost:.7,degradationImpact:.95,monthlySpend:50,notes:"Physician practice consolidation is one of PE's hottest sectors. Visit times shrink, provider turnover increases. Continuity of care is the social asset at risk.",socialAsset:"Doctor-patient relationship, medical history continuity"},
+  {name:"Dentist",category:"Healthcare",example:"Aspen Dental / Pacific Dental",ownershipType:"PE-backed DSO",alreadyPE:true,acquisitionRisk:.9,dependency:.6,switchingCost:.4,degradationImpact:.7,monthlySpend:30,notes:"Dental Service Organizations (DSOs) are heavily PE-consolidated. Upselling unnecessary procedures is a documented pattern.",socialAsset:"Trust relationship, treatment continuity"},
+  {name:"Urgent Care / ER",category:"Healthcare",example:"TeamHealth / Envision staffing",ownershipType:"PE-backed",alreadyPE:true,acquisitionRisk:.9,dependency:.7,switchingCost:.1,degradationImpact:.95,monthlySpend:0,notes:"You don't choose your ER. PE-backed staffing firms drove the surprise billing crisis. You're exposed even if the hospital itself isn't PE-owned.",socialAsset:"Emergency safety net"},
+  {name:"Therapy / Mental Health",category:"Healthcare",example:"Lifestance Health / local practice",ownershipType:"Increasingly PE-backed",alreadyPE:false,acquisitionRisk:.75,dependency:.7,switchingCost:.8,degradationImpact:.85,monthlySpend:120,notes:"Mental health is a fast-growing PE target. Therapeutic relationship is deeply personal — switching cost is emotional, not just logistical.",socialAsset:"Therapeutic relationship, psychological safety"},
+  {name:"Pharmacy",category:"Healthcare",example:"CVS / Walgreens / Amazon Pharmacy",ownershipType:"Public corporate",alreadyPE:false,acquisitionRisk:.3,dependency:.6,switchingCost:.3,degradationImpact:.5,monthlySpend:25,notes:"Already corporatized. Independent pharmacies are being squeezed by PBMs, many of which are PE-adjacent.",socialAsset:"Pharmacist relationship, medication management"},
+  {name:"Vision / Optometry",category:"Healthcare",example:"MyEyeDr / Warby Parker",ownershipType:"PE-backed",alreadyPE:true,acquisitionRisk:.8,dependency:.4,switchingCost:.3,degradationImpact:.4,monthlySpend:15,notes:"Optometry chains are heavily consolidated by PE. MyEyeDr is Goldman-backed.",socialAsset:"Prescription continuity"},
+  {name:"Bouldering / Climbing Gym",category:"Fitness & Community",example:"Seattle Bouldering Project / Stone Gardens",ownershipType:"Independent / small chain",alreadyPE:false,acquisitionRisk:.55,dependency:.6,switchingCost:.7,degradationImpact:.75,monthlySpend:85,notes:"Climbing gyms are an emerging PE target as the sector grows. The community IS the product — regulars, route setters, culture. PE acquisition typically raises prices and homogenizes experience.",socialAsset:"Friend group, community identity, belonging"},
+  {name:"Traditional Gym / Weight Room",category:"Fitness & Community",example:"Equinox / LA Fitness / local gym",ownershipType:"Mixed",alreadyPE:false,acquisitionRisk:.65,dependency:.7,switchingCost:.5,degradationImpact:.6,monthlySpend:70,notes:"Gym chains are classic PE targets. Equipment maintenance degrades, hours change, staff turnover increases. Your training routine is disrupted.",socialAsset:"Training community, routine, equipment familiarity"},
+  {name:"Zwift / Indoor Cycling Platform",category:"Fitness & Community",example:"Zwift",ownershipType:"VC-backed private",alreadyPE:false,acquisitionRisk:.6,dependency:.5,switchingCost:.5,degradationImpact:.4,monthlySpend:18,notes:"Digital fitness platforms are acquisition targets. Your training data, routes, and social connections are locked in. Peloton's struggles show the sector is ripe for consolidation.",socialAsset:"Training data history, virtual community"},
+  {name:"Running Club / Group",category:"Fitness & Community",example:"Local running club",ownershipType:"Informal / nonprofit",alreadyPE:false,acquisitionRisk:0,dependency:.3,switchingCost:.2,degradationImpact:.3,monthlySpend:0,notes:"Informal communities are PE-proof. This is the resilient end of the spectrum.",socialAsset:"Social connection, accountability"},
+  {name:"Grocery Store",category:"Daily Life",example:"QFC (Kroger) / Whole Foods (Amazon) / Trader Joe's",ownershipType:"Public corporate",alreadyPE:false,acquisitionRisk:.35,dependency:.8,switchingCost:.3,degradationImpact:.4,monthlySpend:500,notes:"Already corporatized but not heavily PE. The Kroger-Albertsons merger attempt shows consolidation pressure. Food deserts are a PE-adjacent risk in some neighborhoods.",socialAsset:"Neighborhood walkability, food access"},
+  {name:"Favorite Restaurant / Bar",category:"Daily Life",example:"Local independent spot",ownershipType:"Independent",alreadyPE:false,acquisitionRisk:.2,dependency:.3,switchingCost:.4,degradationImpact:.5,monthlySpend:200,notes:"Individual restaurants aren't PE targets, but the building they lease IS. PE-backed commercial landlords can force closure via rent increases.",socialAsset:"Third place, social identity, community anchor"},
+  {name:"Coffee Shop (regular spot)",category:"Daily Life",example:"Local independent / Starbucks",ownershipType:"Mixed",alreadyPE:false,acquisitionRisk:.25,dependency:.3,switchingCost:.2,degradationImpact:.3,monthlySpend:100,notes:"Similar to restaurants — the real risk is commercial real estate PE, not the coffee shop itself.",socialAsset:"Third place, routine, barista familiarity"},
+  {name:"Employer (Google)",category:"Employment",example:"Google / Alphabet",ownershipType:"Public mega-cap",alreadyPE:false,acquisitionRisk:0,dependency:.95,switchingCost:.8,degradationImpact:.95,monthlySpend:-15000,notes:"Not a PE target — too large. But PE dynamics affect your employer indirectly: PE-owned competitors, PE-owned vendors, and PE-driven market dynamics all shape your work environment. H1-B dependency amplifies employment risk.",socialAsset:"Income, visa status, identity, professional network"},
+  {name:"Bank / Checking",category:"Financial",example:"Chase / BofA / local credit union",ownershipType:"Public bank",alreadyPE:false,acquisitionRisk:.15,dependency:.7,switchingCost:.6,degradationImpact:.4,monthlySpend:0,notes:"Big banks aren't PE targets. Credit unions are PE-proof by structure. Fintech banks (Chime etc.) are more vulnerable.",socialAsset:"Financial infrastructure"},
+  {name:"ISP / Internet",category:"Digital Infrastructure",example:"Xfinity / CenturyLink / Ziply",ownershipType:"PE-adjacent (some)",alreadyPE:false,acquisitionRisk:.45,dependency:.95,switchingCost:.7,degradationImpact:.7,monthlySpend:80,notes:"ISPs in many markets are near-monopolies. PE firms have acquired regional ISPs and cable companies. You often can't switch even if quality degrades.",socialAsset:"Remote work capability, digital life access"},
+  {name:"Mobile Carrier",category:"Digital Infrastructure",example:"T-Mobile / Mint (owned by T-Mobile)",ownershipType:"Public corporate",alreadyPE:false,acquisitionRisk:.2,dependency:.85,switchingCost:.3,degradationImpact:.5,monthlySpend:50,notes:"MVNOs (Mint, Visible, etc.) can be acquired. Major carriers are too large.",socialAsset:"Communication access"},
+  {name:"Veterinarian",category:"Pet Care",example:"VCA (Mars) / Banfield / local vet",ownershipType:"Heavily PE/corporate consolidated",alreadyPE:true,acquisitionRisk:.9,dependency:.7,switchingCost:.65,degradationImpact:.8,monthlySpend:60,notes:"Vet clinics are one of the most aggressively PE-targeted sectors. Mars (VCA, Banfield), JAB Holdings, and others have rolled up thousands of practices. Prices spike, vet turnover increases, upselling grows.",socialAsset:"Vet-pet relationship, medical history, trust"},
+  {name:"Dog Daycare / Boarding",category:"Pet Care",example:"Camp Bow Wow / local daycare",ownershipType:"Mixed — franchise chains PE-backed",alreadyPE:false,acquisitionRisk:.6,dependency:.5,switchingCost:.5,degradationImpact:.6,monthlySpend:100,notes:"Pet services are a growing PE target. Trust is everything — your dog can't tell you if care quality dropped.",socialAsset:"Pet safety, trust"},
+  {name:"Auto Repair / Mechanic",category:"Transportation",example:"Midas / Meineke / independent shop",ownershipType:"Mixed",alreadyPE:false,acquisitionRisk:.55,dependency:.4,switchingCost:.5,degradationImpact:.5,monthlySpend:50,notes:"Auto repair chains are PE rollup targets. Independent mechanics are safer but face commercial rent pressure.",socialAsset:"Trust, fair pricing, vehicle knowledge"},
+  {name:"Coworking Space",category:"Community",example:"WeWork / Industrious",ownershipType:"VC/PE-backed",alreadyPE:true,acquisitionRisk:.8,dependency:.3,switchingCost:.4,degradationImpact:.4,monthlySpend:0,notes:"If you use one. Coworking is heavily PE/VC. CBRE (Industrious) is corporate. Community promises rarely survive acquisition.",socialAsset:"Professional community, work environment"},
+  {name:"Local Bar / Third Place",category:"Community",example:"Neighborhood bar",ownershipType:"Independent",alreadyPE:false,acquisitionRisk:.15,dependency:.4,switchingCost:.5,degradationImpact:.6,monthlySpend:150,notes:"Not directly a PE target, but dies when PE-owned commercial landlord raises rent. The displacement is indirect but real.",socialAsset:"Friend group, belonging, regulars culture"},
+  {name:"Hobby Community / Meetup",category:"Community",example:"Board game night / tech meetup",ownershipType:"Informal",alreadyPE:false,acquisitionRisk:.05,dependency:.4,switchingCost:.3,degradationImpact:.5,monthlySpend:0,notes:"Informal communities are resilient, but they often depend on a VENUE that is PE-vulnerable. The community survives but gets displaced.",socialAsset:"Social connection, identity, belonging"},
+  {name:"Online Learning Platform",category:"Education",example:"Coursera / Udemy / Pluralsight",ownershipType:"VC/PE-backed",alreadyPE:true,acquisitionRisk:.7,dependency:.3,switchingCost:.2,degradationImpact:.3,monthlySpend:30,notes:"Pluralsight was taken private by Vista Equity Partners. Course quality and instructor pay are the first things optimized.",socialAsset:"Skill development, career growth"},
+  {name:"Childcare / Daycare",category:"Family",example:"KinderCare / Bright Horizons",ownershipType:"PE-backed",alreadyPE:true,acquisitionRisk:.85,dependency:.95,switchingCost:.9,degradationImpact:.95,monthlySpend:2000,notes:"KinderCare is KKR-backed. Childcare is one of the most consequential PE sectors — you can't easily switch, quality directly affects your child, and you have almost no leverage. Included because it's likely relevant within 5 years.",socialAsset:"Child safety, development, parent community"},
+  {name:"Funeral Services",category:"End of Life",example:"SCI (Dignity Memorial)",ownershipType:"Corporate/PE-consolidated",alreadyPE:true,acquisitionRisk:.85,dependency:.3,switchingCost:.1,degradationImpact:.6,monthlySpend:0,notes:"Service Corporation International owns ~20% of US funeral homes. Prices have risen dramatically. You're making decisions while grieving — maximum vulnerability, minimum price sensitivity. Classic PE targeting.",socialAsset:"Dignity, cultural practice"}
+];
+
+const CATEGORY_COLORS = {
+  "Housing":"#ef4444","Healthcare":"#f97316","Fitness & Community":"#eab308","Daily Life":"#84cc16",
+  "Employment":"#22c55e","Financial":"#14b8a6","Digital Infrastructure":"#06b6d4","Pet Care":"#8b5cf6",
+  "Transportation":"#a855f7","Community":"#ec4899","Education":"#6366f1","Family":"#dc2626","End of Life":"#737373"
+};
+
+const CATEGORIES = [...new Set(SERVICES.map(s => s.category))];
+
+function exposure(s) {
+  return s.dependency * s.degradationImpact * (s.alreadyPE ? 1.0 : s.acquisitionRisk);
+}
+
+function exposureClass(e) {
+  return e >= 0.65 ? 'high' : e >= 0.4 ? 'med' : 'low';
+}
+
+function exposureColor(e) {
+  return e >= 0.65 ? 'var(--red)' : e >= 0.4 ? 'var(--yellow)' : 'var(--green)';
+}
+
+let state = {
+  category: 'All',
+  sort: 'exposure',
+  expanded: null
+};
+
+function getFiltered() {
+  let list = state.category === 'All' ? [...SERVICES] : SERVICES.filter(s => s.category === state.category);
+  if (state.sort === 'exposure') list.sort((a, b) => exposure(b) - exposure(a));
+  else if (state.sort === 'spend') list.sort((a, b) => b.monthlySpend - a.monthlySpend);
+  else if (state.sort === 'switching') list.sort((a, b) => b.switchingCost - a.switchingCost);
+  return list;
+}
+
+function render() {
+  const totalSpend = SERVICES.filter(s => s.monthlySpend > 0).reduce((a, s) => a + s.monthlySpend, 0);
+  const peSpend = SERVICES.filter(s => s.monthlySpend > 0 && (s.alreadyPE || s.acquisitionRisk > 0.6)).reduce((a, s) => a + s.monthlySpend, 0);
+  const avgExp = SERVICES.reduce((a, s) => a + exposure(s), 0) / SERVICES.length;
+  const peCount = SERVICES.filter(s => s.alreadyPE).length;
+  const topRisks = [...SERVICES].sort((a, b) => exposure(b) - exposure(a)).slice(0, 5);
+  const filtered = getFiltered();
+
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="header">
+      <h1>PE Exposure Risk Model</h1>
+      <p>35-year-old renter in Seattle — services, dependencies, and private equity risk</p>
+    </div>
+
+    <div class="summary-grid">
+      <div class="stat-card">
+        <div class="stat-label">Services Tracked</div>
+        <div class="stat-value">${SERVICES.length}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Already PE-Owned</div>
+        <div class="stat-value red">${peCount}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Monthly Spend at Risk</div>
+        <div class="stat-value yellow">$${peSpend.toLocaleString()}</div>
+        <div class="stat-sub">of $${totalSpend.toLocaleString()} total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Exposure Score</div>
+        <div class="stat-value orange">${Math.round(avgExp * 100)}%</div>
+      </div>
+    </div>
+
+    <div class="top-risks">
+      <h2>Highest Exposure Items</h2>
+      ${topRisks.map((s, i) => {
+        const e = exposure(s);
+        return `<div class="top-risk-item">
+          <div class="top-risk-left">
+            <span class="top-risk-num">${i + 1}.</span>
+            <span>${s.name}</span>
+            ${s.alreadyPE ? '<span class="pe-badge">PE-owned</span>' : ''}
+          </div>
+          <span class="exposure-score ${exposureClass(e)}">${Math.round(e * 100)}%</span>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn ${state.category === 'All' ? 'active' : ''}" data-cat="All">All</button>
+      ${CATEGORIES.map(c => `<button class="filter-btn ${state.category === c ? 'active' : ''}" data-cat="${c}">${c}</button>`).join('')}
+    </div>
+
+    <div class="sort-row">
+      <span class="sort-label">Sort:</span>
+      ${[['exposure','Exposure'],['spend','Spend'],['switching','Lock-in']].map(([k, l]) =>
+        `<button class="sort-btn ${state.sort === k ? 'active' : ''}" data-sort="${k}">${l}</button>`
+      ).join('')}
+    </div>
+
+    <div class="service-list">
+      ${filtered.map((s, i) => {
+        const e = exposure(s);
+        const isExpanded = state.expanded === s.name;
+        return `<div class="service-row ${isExpanded ? 'expanded' : ''}" data-name="${s.name}">
+          <button class="service-header" data-toggle="${s.name}">
+            <div class="service-left">
+              <div class="cat-dot" style="background:${CATEGORY_COLORS[s.category] || '#666'}"></div>
+              <div class="service-info">
+                <div class="service-name">
+                  ${s.name}
+                  ${s.alreadyPE ? '<span class="pe-badge">PE</span>' : ''}
+                </div>
+                <div class="service-meta">${s.category} · ${s.example}</div>
+              </div>
+            </div>
+            <div class="service-right">
+              ${s.monthlySpend > 0 ? `<span class="spend-tag">$${s.monthlySpend}/mo</span>` : ''}
+              <span class="exposure-score ${exposureClass(e)}">${Math.round(e * 100)}%</span>
+              <span class="chevron">▼</span>
+            </div>
+          </button>
+          <div class="service-detail">
+            <div class="detail-grid">
+              <div>
+                <div class="detail-metric-label">Dependency</div>
+                <div class="detail-metric-value">${Math.round(s.dependency * 100)}%</div>
+              </div>
+              <div>
+                <div class="detail-metric-label">Switching Cost</div>
+                <div class="detail-metric-value">${Math.round(s.switchingCost * 100)}%</div>
+              </div>
+              <div>
+                <div class="detail-metric-label">Degradation Impact</div>
+                <div class="detail-metric-value">${Math.round(s.degradationImpact * 100)}%</div>
+              </div>
+              <div>
+                <div class="detail-metric-label">Acquisition Risk</div>
+                <div class="detail-metric-value">${s.alreadyPE ? 'Already PE' : Math.round(s.acquisitionRisk * 100) + '%'}</div>
+              </div>
+            </div>
+            <div class="detail-notes">${s.notes}</div>
+            <div class="detail-social"><strong>Social asset at risk:</strong> ${s.socialAsset}</div>
+            <div class="exposure-bar-container">
+              <span class="exposure-bar-label">Exposure</span>
+              <div class="exposure-bar-track">
+                <div class="exposure-bar-fill" style="width:${Math.round(e * 100)}%;background:${exposureColor(e)}"></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="formula-box">
+      <h3>Exposure Score Formula</h3>
+      <code>exposure = dependency × degradation_impact × p(PE)</code>
+      <p>Where p(PE) = 1.0 if already PE-owned, otherwise the estimated acquisition probability. High exposure means: you depend on it heavily, quality loss hurts you, and PE involvement is likely or actual.</p>
+      <p>Switching cost is tracked separately — it determines your ability to escape, not your exposure level.</p>
+    </div>
+  `;
+
+  // Event listeners
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.category = btn.dataset.cat;
+      state.expanded = null;
+      render();
+    });
+  });
+
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.sort = btn.dataset.sort;
+      render();
+    });
+  });
+
+  document.querySelectorAll('.service-header').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.toggle;
+      state.expanded = state.expanded === name ? null : name;
+      render();
+    });
+  });
+}
+
+render();
+</script>
+</body>
+</html>
