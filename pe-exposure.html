@@ -436,6 +436,209 @@ body {
 @media (max-width: 640px) {
   .spend-tag { display: none; }
 }
+
+/* Guide section */
+.guide-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1.15rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  transition: border-color 0.15s;
+}
+
+.guide-toggle:hover { border-color: var(--border-focus); }
+
+.guide-toggle-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.guide-toggle-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--blue-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.guide-toggle-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.guide-toggle-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.guide-chevron {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.guide-chevron.open { transform: rotate(180deg); }
+
+.guide-body {
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  margin-top: -1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.guide-body.open { display: block; }
+
+.guide-toggle.open {
+  border-radius: 10px 10px 0 0;
+  margin-bottom: 0;
+}
+
+.guide-section {
+  padding-top: 1.1rem;
+}
+
+.guide-section + .guide-section {
+  border-top: 1px solid var(--border);
+  margin-top: 1.1rem;
+}
+
+.guide-section-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.6rem;
+}
+
+.guide-section p {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 0.6rem;
+}
+
+.guide-section p:last-child { margin-bottom: 0; }
+
+.guide-section strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.guide-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 500px) {
+  .guide-metric-grid { grid-template-columns: 1fr; }
+}
+
+.guide-metric {
+  background: var(--bg-elevated);
+  border-radius: 7px;
+  padding: 0.7rem 0.85rem;
+}
+
+.guide-metric-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.guide-metric-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.guide-scale {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.guide-scale-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+}
+
+.guide-scale-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.guide-action-list {
+  margin-top: 0.4rem;
+}
+
+.guide-action {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.55rem 0;
+}
+
+.guide-action + .guide-action {
+  border-top: 1px solid rgba(30,32,48,0.6);
+}
+
+.guide-action-marker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  width: 1.5rem;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+.guide-action-content {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.guide-action-content strong {
+  color: var(--text-primary);
+}
+
+.guide-callout {
+  background: rgba(240,84,92,0.06);
+  border-left: 3px solid var(--red);
+  border-radius: 0 6px 6px 0;
+  padding: 0.7rem 0.9rem;
+  margin-top: 0.7rem;
+}
+
+.guide-callout p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
 </style>
 </head>
 <body>
@@ -497,7 +700,8 @@ function exposureColor(e) {
 let state = {
   category: 'All',
   sort: 'exposure',
-  expanded: null
+  expanded: null,
+  guideOpen: false
 };
 
 function getFiltered() {
@@ -521,6 +725,109 @@ function render() {
     <div class="header">
       <h1>PE Exposure Risk Model</h1>
       <p>35-year-old renter in Seattle — services, dependencies, and private equity risk</p>
+    </div>
+
+    <button class="guide-toggle ${state.guideOpen ? 'open' : ''}" id="guide-toggle">
+      <div class="guide-toggle-left">
+        <div class="guide-toggle-icon">?</div>
+        <div>
+          <div class="guide-toggle-label">How to Read This Model</div>
+          <div class="guide-toggle-hint">What this is, how it works, and what to do about it</div>
+        </div>
+      </div>
+      <span class="guide-chevron ${state.guideOpen ? 'open' : ''}">▼</span>
+    </button>
+
+    <div class="guide-body ${state.guideOpen ? 'open' : ''}" id="guide-body">
+      <div class="guide-section">
+        <div class="guide-section-title">What This Is</div>
+        <p>This is a personal risk model for <strong>private equity exposure</strong> — a way to see how much of your daily life depends on services that are owned by, or vulnerable to acquisition by, PE firms. PE firms buy companies, load them with debt, cut costs to increase margins, and sell them within 3–7 years. The problem is that "cutting costs" often means degrading the thing you rely on: shorter doctor visits, worse apartment maintenance, hollowed-out newsrooms, upsold dental procedures.</p>
+        <p>The services below aren't hypothetical. They represent the actual categories of dependency a typical renter in their mid-30s in Seattle has — from healthcare to housing to the climbing gym where you've built a friend group. Each one carries embedded <strong>social value</strong> (trust, community, continuity of care) that doesn't appear on any balance sheet but matters deeply to your quality of life.</p>
+      </div>
+
+      <div class="guide-section">
+        <div class="guide-section-title">The Core Threat</div>
+        <p>PE optimization treats non-monetary value as waste. When a PE firm acquires your dentist's practice, they see the 30-minute appointments as margin to compress, not as the trust relationship that keeps you coming back. When they buy your apartment building, deferred maintenance is a line item to cut, not a livability concern. The model is structurally indifferent to the social fabric it disrupts.</p>
+        <p>This creates an <strong>asymmetry</strong>: you invest time, loyalty, and money into institutions that can be acquired and degraded without your input. Your doctor-patient relationship, your gym community, your neighborhood stability — all of it is contingent on ownership decisions made by people who have never met you and whose incentives are misaligned with yours.</p>
+      </div>
+
+      <div class="guide-section">
+        <div class="guide-section-title">How to Read the Scores</div>
+        <p>Every service is scored on four dimensions that combine into a single <strong>exposure score</strong>:</p>
+        <div class="guide-metric-grid">
+          <div class="guide-metric">
+            <div class="guide-metric-name">Dependency (0–100%)</div>
+            <div class="guide-metric-desc">How much you rely on this service. A high score means you can't easily live without it. Your apartment and your job are near 100%; your coffee shop is lower.</div>
+          </div>
+          <div class="guide-metric">
+            <div class="guide-metric-name">Degradation Impact (0–100%)</div>
+            <div class="guide-metric-desc">How much it hurts if quality drops. Emergency medical care degrades with life-threatening consequences. A worse online learning platform is annoying but survivable.</div>
+          </div>
+          <div class="guide-metric">
+            <div class="guide-metric-name">Acquisition Risk (0–100%)</div>
+            <div class="guide-metric-desc">The probability this service gets acquired by PE, based on sector consolidation trends, revenue profile, and market fragmentation. Set to 100% if already PE-owned.</div>
+          </div>
+          <div class="guide-metric">
+            <div class="guide-metric-name">Switching Cost (0–100%)</div>
+            <div class="guide-metric-desc">How hard it is to leave once quality drops. Tracked separately from the exposure score — this measures your escape velocity, not your risk. A therapeutic relationship has very high switching cost; renters insurance has almost none.</div>
+          </div>
+        </div>
+        <p style="margin-top:0.7rem">The <strong>exposure score</strong> formula is: <code style="font-family:var(--font-mono);color:var(--blue);font-size:0.8rem">dependency × degradation_impact × p(PE)</code>. This tells you: how likely is it that something you depend on will be degraded by PE involvement, and how much will that degradation hurt?</p>
+        <div class="guide-scale">
+          <div class="guide-scale-item">
+            <div class="guide-scale-dot" style="background:var(--red)"></div>
+            <span style="color:var(--text-secondary)">65%+ = Critical</span>
+          </div>
+          <div class="guide-scale-item">
+            <div class="guide-scale-dot" style="background:var(--yellow)"></div>
+            <span style="color:var(--text-secondary)">40–64% = Elevated</span>
+          </div>
+          <div class="guide-scale-item">
+            <div class="guide-scale-dot" style="background:var(--green)"></div>
+            <span style="color:var(--text-secondary)">&lt;40% = Manageable</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-section">
+        <div class="guide-section-title">What You Can Do</div>
+        <p>The point of modeling this isn't to induce paralysis — it's to make invisible risk visible so you can act on it. Here's the triage framework:</p>
+        <div class="guide-action-list">
+          <div class="guide-action">
+            <div class="guide-action-marker">01</div>
+            <div class="guide-action-content"><strong>Migrate away from PE-owned services where alternatives exist.</strong> Switch to a credit union. Find an independent vet or dentist. Use a co-op grocery. These are low-effort moves with real impact. Every dollar redirected from a PE-backed provider to an independent or cooperative one weakens the model.</div>
+          </div>
+          <div class="guide-action">
+            <div class="guide-action-marker">02</div>
+            <div class="guide-action-content"><strong>Reduce switching costs proactively.</strong> Keep your medical records portable. Don't let your fitness data get locked into one platform. Avoid long-term contracts with landlords if your market allows it. The goal is to preserve your ability to leave before you need to.</div>
+          </div>
+          <div class="guide-action">
+            <div class="guide-action-marker">03</div>
+            <div class="guide-action-content"><strong>Invest in PE-resistant structures.</strong> Community land trusts, cooperatives, nonprofits, and informal communities are structurally harder or impossible for PE to acquire. A running club can't be bought. A credit union's governance model prevents it. Building your life around these structures is the most durable defense.</div>
+          </div>
+          <div class="guide-action">
+            <div class="guide-action-marker">04</div>
+            <div class="guide-action-content"><strong>Build financial reserves to absorb shocks.</strong> When your landlord gets acquired and raises rent 15%, or your vet doubles their prices, your ability to switch or absorb the cost depends on having a buffer. Exposure without reserves means you're trapped.</div>
+          </div>
+          <div class="guide-action">
+            <div class="guide-action-marker">05</div>
+            <div class="guide-action-content"><strong>Monitor ownership changes.</strong> Set alerts for acquisition news in sectors you depend on. Check who owns your providers periodically. The earlier you detect an ownership change, the more time you have to plan a transition before quality degrades. Tools like PitchBook, Crunchbase, and the Private Equity Stakeholder Project can help.</div>
+          </div>
+          <div class="guide-action">
+            <div class="guide-action-marker">06</div>
+            <div class="guide-action-content"><strong>Support collective countermeasures.</strong> Unions, tenant organizations, community land trusts, and local policy advocacy all create structural friction against PE extraction. These are slower-acting but higher-leverage than individual choices alone.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-section">
+        <div class="guide-section-title">Limitations & How to Customize</div>
+        <p>This model uses <strong>estimated defaults</strong> — they reflect sector-level patterns, not your exact providers. The acquisition risk for "your dentist" depends on whether they're independent or already part of a DSO chain. The degradation impact of your gym depends on whether the community or the equipment matters more to you.</p>
+        <p>To make this model yours: fork the page, edit the <code style="font-family:var(--font-mono);color:var(--blue);font-size:0.78rem">SERVICES</code> array in the source, and adjust the scores to match your actual providers and priorities. Remove services that don't apply to you, add ones that do. The structure is the tool — the data should be your own.</p>
+        <div class="guide-callout">
+          <p>The scores also don't capture <strong>indirect exposure</strong> — your favorite bar isn't a PE target, but its commercial landlord might be. Your hobby meetup is PE-proof, but the venue it uses isn't. The social fabric is more interconnected than any individual service row can show. Read the notes on each service for these second-order risks.</p>
+        </div>
+      </div>
     </div>
 
     <div class="summary-grid">
@@ -633,6 +940,11 @@ function render() {
   `;
 
   // Event listeners
+  document.getElementById('guide-toggle').addEventListener('click', () => {
+    state.guideOpen = !state.guideOpen;
+    render();
+  });
+
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       state.category = btn.dataset.cat;
