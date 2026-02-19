@@ -307,7 +307,7 @@
       <div class="bench-card">
         <h3>Cinebench R23 — Single-Core</h3>
         <div class="bench-type">CPU · Used for Laptops & Desktops</div>
-        <p>Same 3D rendering test but restricted to a single core. Reveals raw per-core IPC (instructions per clock) and clock speed. Critical for tasks that can't be parallelized: game logic, most application UI responsiveness, single-threaded build steps, and everyday snappiness. Used for laptops because most laptop workloads are lightly threaded and multi-core scores are chassis-dependent.</p>
+        <p>Same 3D rendering test but restricted to a single core. Reveals raw per-core IPC (instructions per clock) and clock speed. Critical for tasks that can't be parallelized: game logic, application UI responsiveness, single-threaded build steps, web browsing, and everyday snappiness. Most laptop and desktop tasks depend heavily on this metric.</p>
         <div class="real-world">→ "How responsive does the machine feel?"</div>
       </div>
 
@@ -357,14 +357,14 @@
       <div class="section-label">Laptop Silicon</div>
       <h2 class="section-title">Laptop Processors Over Time</h2>
     </div>
-    <p class="chart-description">Cinebench R23 single-core scores for notable laptop CPUs. Single-core better represents the actual laptop experience — most tasks (browsing, Office, IDE responsiveness, game logic) are lightly threaded. Multi-core matters for video editing and compilation, but those workloads are also limited by laptop thermals. Single-core reveals a different story: Intel was never as far behind as multi-core charts suggest, and Lunar Lake goes from "weak" to "competitive" when you measure what laptops actually do.</p>
+    <p class="chart-description">Cinebench R23 single-core scores for notable laptop CPUs. Per-core speed determines how responsive a laptop feels — browsing, code editors, game logic, and application launch times all depend on it. By 2024–2025, all four laptop ecosystems (Intel, AMD, Apple, Qualcomm) sit within ~15% of each other, after a decade where Apple and Intel traded the lead. The widening gap in this chart isn't performance — it's the power each vendor burns to get there.</p>
     <div class="chart-wrapper">
       <canvas id="laptopCPUChart"></canvas>
-      <div class="chart-footnote">Cinebench R23 Single-Core · Higher = faster per-core IPC · Measures responsiveness, not parallel throughput</div>
+      <div class="chart-footnote">Cinebench R23 Single-Core · Higher = faster per-core IPC · Measures responsiveness</div>
     </div>
     <div class="insight">
-      <div class="insight-title">Why Single-Core Changes the Laptop Story</div>
-      <p>Multi-core charts make Apple look revolutionary and Lunar Lake look terrible. Single-core tells a more nuanced story. Intel's high clock speeds kept it per-core competitive even through the Skylake stagnation years (2015–2019). Apple's M1 (2020) was impressive at ~1500 SC from 10W — but Intel's i7-11800H matched it at 45W the same year. The real revelation is Lunar Lake: its ~1800 single-core at 17W makes it the efficiency champion — 106 pts/W, nearly 3× Intel's own H-series. By 2024–2025, all four ecosystems (Intel H, AMD, Apple, Qualcomm) converged to within ~15% in single-core, making efficiency and battery life the actual differentiators.</p>
+      <div class="insight-title">The Efficiency Arms Race</div>
+      <p>Intel's high clock speeds kept it per-core competitive even through the Skylake stagnation years (2015–2019, visible as the flat section). Apple's M1 (2020) was a landmark — ~1500 points from just 10W — though Intel's i7-11800H matched it at 4.5× the power draw. Lunar Lake (2024) flips the script for Intel: ~1800 points at just 17W makes it the most efficient x86 laptop core ever at 106 pts/W — nearly 3× Intel's own H-series. By 2025, all four platforms deliver similar per-core speed but differ dramatically in power consumption.</p>
     </div>
   </section>
 
@@ -374,7 +374,7 @@
       <div class="section-label">Desktop Silicon</div>
       <h2 class="section-title">Desktop Processors Over Time</h2>
     </div>
-    <p class="chart-description">Cinebench R23 multi-core scores for flagship desktop CPUs. Desktop tells a story of AMD's comeback: from irrelevance (2013–2016) to dominance (2019–present). Intel's response with hybrid P+E core architectures in 2021 reignited competition. These chips run without meaningful thermal constraints, so scores represent near-peak silicon capability.</p>
+    <p class="chart-description">Cinebench R23 multi-core scores for flagship desktop CPUs. Desktop tells a story of AMD's comeback: trailing Intel significantly (2013–2016) before surging to leadership (2019–present). Intel's response with hybrid P+E core architectures in 2021 reignited competition. These chips run without meaningful thermal constraints, so scores represent near-peak silicon capability.</p>
     <div class="chart-wrapper">
       <canvas id="desktopCPUChart"></canvas>
       <div class="chart-footnote">Cinebench R23 Multi-Core · Higher = faster parallel workloads · Desktop TDPs range 65–253W</div>
@@ -423,13 +423,104 @@
     </div>
   </section>
 
+  <!-- CROSS-CATEGORY COMPARISON -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-cyan);">Cross-Category</div>
+      <h2 class="section-title">How Phones, Laptops &amp; Desktops Compare</h2>
+    </div>
+    <p class="chart-description">The per-category charts above each use different benchmarks, making cross-form-factor comparison impossible. Geekbench 6 runs natively on phones, laptops, and desktops — same workloads, same scoring — giving a single axis for all three. Time Spy runs on both laptop and desktop GPUs. Same benchmark, same scale, different devices.</p>
+
+    <!-- CHART: Cross-Platform GB6 SC -->
+    <div class="chart-wrapper" style="margin-bottom: 10px;">
+      <canvas id="crossPlatformChart"></canvas>
+      <div class="chart-footnote">Geekbench 6 Single-Core · Same benchmark across all devices · Higher = faster</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">Your Phone Is Faster Than You Think</div>
+      <p>The A19 Pro (3,895) now outscores every laptop Intel H-series chip (Ultra 9 285HX: ~3,000) and most desktop chips from 2023. Apple's M4 Pro (3,850) barely edges it out. Qualcomm's SD 8 Elite Gen 5 (3,524) beats every desktop AMD chip from 2023. The gap between form factors has collapsed in single-core — phones in 2025 deliver per-core IPC that would have been best-in-class on any platform just 2–3 years ago. The remaining desktop advantage is in sustained multi-core throughput, memory bandwidth, and the ability to run at full power indefinitely.</p>
+    </div>
+
+    <!-- EQUIVALENCE TABLE -->
+    <div class="benchmark-grid" style="margin: 30px auto; max-width: 780px;">
+      <div class="bench-card" style="grid-column: 1 / -1;">
+        <h3>🔄 "My Device ≈ What Year's Bigger Device?"</h3>
+        <div class="bench-type" style="color: var(--accent-cyan);">Geekbench 6 Single-Core Equivalences</div>
+        <p style="margin-bottom: 12px;">Read across: a 2025 flagship phone delivers per-core speed equivalent to a laptop from ~2024 and a desktop from ~2023–2024. Each row is roughly the same GB6 SC tier.</p>
+        <table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11px;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border); color: var(--accent-cyan);">
+              <th style="text-align:left; padding:6px 8px;">GB6 SC Tier</th>
+              <th style="text-align:left; padding:6px 8px;">📱 Phone</th>
+              <th style="text-align:left; padding:6px 8px;">💻 Laptop</th>
+              <th style="text-align:left; padding:6px 8px;">🖥️ Desktop</th>
+            </tr>
+          </thead>
+          <tbody style="color: var(--text-main);">
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding:6px 8px; color: var(--text-dim);">~1,200</td>
+              <td style="padding:6px 8px;">A11 · 2017</td>
+              <td style="padding:6px 8px;">i7-7700HQ · 2017</td>
+              <td style="padding:6px 8px;">R7 1800X · 2017</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding:6px 8px; color: var(--text-dim);">~1,700</td>
+              <td style="padding:6px 8px;">A15 · 2021</td>
+              <td style="padding:6px 8px;">i7-11800H · 2021</td>
+              <td style="padding:6px 8px;">i9-9900K · 2019</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding:6px 8px; color: var(--text-dim);">~2,500</td>
+              <td style="padding:6px 8px;">A17 Pro · 2023</td>
+              <td style="padding:6px 8px;">i7-12700H · 2022</td>
+              <td style="padding:6px 8px;">i9-12900K · 2022</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding:6px 8px; color: var(--text-dim);">~3,000</td>
+              <td style="padding:6px 8px;">SD 8 Elite · 2024</td>
+              <td style="padding:6px 8px;">Ultra 9 285HX · 2025</td>
+              <td style="padding:6px 8px;">i9-13900K · 2023</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 8px; color: var(--text-dim);">~3,500–3,900</td>
+              <td style="padding:6px 8px;">A19 Pro · 2025</td>
+              <td style="padding:6px 8px;">M4 Pro · 2024</td>
+              <td style="padding:6px 8px;">R9 9950X · 2024</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="real-world">→ In 2025: your phone's per-core speed ≈ a laptop from ~1 year ago ≈ a desktop from ~2 years ago</div>
+      </div>
+    </div>
+
+    <!-- CHART: Laptop vs Desktop GPU Overlay -->
+    <div class="chart-wrapper" style="margin-bottom: 10px;">
+      <canvas id="gpuOverlayChart"></canvas>
+      <div class="chart-footnote">3DMark Time Spy Graphics · Same benchmark on both form factors · Midrange tier highlighted</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The "One Generation Behind" Rule</div>
+      <p>A consistent pattern holds across GPU generations: a laptop midrange GPU roughly matches the previous generation's desktop midrange. The RTX 4070 Laptop (~13,400) matches the desktop RTX 3070 (~14,000). The RTX 3070 Laptop (~10,300) matches the desktop RTX 2070 (~10,800). And in 2025, the gap nearly vanishes: the RTX 5070 Laptop (~18,000) essentially equals the desktop RTX 4070 (~17,900). NVIDIA's improving power efficiency is compressing the mobile-to-desktop penalty from ~30% down to ~20% over five generations.</p>
+    </div>
+
+    <!-- CHART: Cross-Platform Efficiency (GB6 SC / Watt) -->
+    <div class="chart-wrapper" style="margin-bottom: 10px;">
+      <canvas id="crossPlatformEffChart"></canvas>
+      <div class="chart-footnote">GB6 Single-Core ÷ rated TDP · Desktop TDP is all-core, not single-core power — real gap is ~10–15×, not 39×</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The Engineering Marvel of Mobile</div>
+      <p>The A19 Pro at ~5W scores 779 GB6 pts/W. The R9 9950X at 170W scores 20 pts/W. That's a 39× efficiency gap — though this overstates the difference because desktop TDP reflects all-core power, not single-core draw (which is ~30–50W peak, making the real gap more like 10–15×). Even so, the phone achieving 115% of the desktop's single-core speed at a fraction of the power is remarkable. The M4 Pro at ~30W sits in the efficiency sweet spot: near-desktop single-core performance, near-phone efficiency, and enough thermal headroom for sustained workloads.</p>
+    </div>
+  </section>
+
   <!-- EFFICIENCY DEEP DIVE -->
   <section class="chart-section">
     <div class="chart-header">
       <div class="section-label" style="color: var(--accent-amber);">Efficiency Deep Dive</div>
       <h2 class="section-title">Performance per Dollar &amp; per Watt</h2>
     </div>
-    <p class="chart-description">Raw benchmarks only tell half the story. These paired charts normalize performance by cost and power consumption across every category. "Per dollar" reveals where the value sweet spots are; "per watt" reveals who's actually advancing efficiency vs. just cranking up power. Higher is better on all charts. Hover for chip details.</p>
+    <p class="chart-description">Absolute benchmarks show who's fastest — but not who gives you the most for your money, or who wastes the least power getting there. These paired charts normalize performance by launch price and power consumption across every category. Higher is better on all charts. Hover for chip names, prices, and wattages.</p>
 
     <!-- PHONE SoCs -->
     <div class="chart-category-label">Phone SoCs · Geekbench 6 Single-Core</div>
@@ -447,7 +538,7 @@
     </div>
     <div class="insight">
       <div class="insight-title">Apple's Efficiency Dominance — Until Now</div>
-      <p>Apple delivered roughly 2× the benchmark score per watt of Snapdragon for a decade. But 2025 marks convergence: the SD 8 Elite Gen 5 nearly matches Apple's efficiency while costing $300 less (Galaxy S26 vs iPhone 17 Pro). Per-dollar, Snapdragon has been the better value since 2021 because Samsung cut prices while Apple held at $999+. Caveat: phone price includes display, camera, memory — the SoC is only ~$40–80 of the BOM, so "per dollar" here reflects whole-device value, not chip value.</p>
+      <p>Apple delivered roughly 2× the benchmark score per watt of Snapdragon for a decade. That gap has nearly closed: the SD 8 Elite Gen 5 approaches Apple's efficiency while costing $300 less (Galaxy S26 vs iPhone 17 Pro). Per-dollar, Snapdragon has been the better value since 2021 because Samsung cut prices while Apple held at $999+. Caveat: phone price includes display, camera, memory — the SoC is only ~$40–80 of the BOM, so "per dollar" here reflects whole-device value, not chip value.</p>
     </div>
 
     <!-- LAPTOP CPUs -->
@@ -461,12 +552,12 @@
       <div>
         <div class="chart-pair-label">Per Watt (CB R23 SC ÷ TDP)</div>
         <div class="chart-wrapper"><canvas id="laptopCPUppw"></canvas>
-        <div class="chart-footnote">Published TDP/PBP · Lunar Lake at 17W is the efficiency outlier</div></div>
+        <div class="chart-footnote">Published TDP/PBP · Includes Lunar Lake 17W thin-and-light class</div></div>
       </div>
     </div>
     <div class="insight">
-      <div class="insight-title">Lunar Lake: The Efficiency Revelation</div>
-      <p>Switching to single-core per watt completely reshuffles the leaderboard. Lunar Lake at ~1800 SC / 17W = 106 pts/W is nearly 3× Intel's own H-series (1870 / 45W = 42 pts/W) and even beats Apple's M4 Pro (~1920 / 30W = 64 pts/W). This is Intel's most efficient core design ever. Apple still leads in absolute single-core performance, but the gap is closing fast — all four platforms converged to within 15% by 2025 while differing dramatically in power consumption.</p>
+      <div class="insight-title">Lunar Lake Dominates Per-Watt</div>
+      <p>The per-watt chart tells a clear story: Lunar Lake at 17W delivers 106 pts/W, nearly 3× Intel's own H-series (42 pts/W) and comfortably ahead of Apple's M4 Pro (64 pts/W). Per-dollar is a closer fight — AMD's Ryzen H chips consistently edge out Intel on value thanks to competitive pricing at the $309–549 range. Apple is excluded from per-dollar because M-chips aren't sold standalone, but at the laptop level, a $2,000 MacBook Pro competes on total cost of ownership through battery life and longevity.</p>
     </div>
 
     <!-- DESKTOP CPUs -->
@@ -504,7 +595,7 @@
     </div>
     <div class="insight">
       <div class="insight-title">Mobile GPUs: Efficiency Gains That Matter</div>
-      <p>Laptop GPU efficiency has improved dramatically — the RTX 4060 Laptop at 115W produces more compute per watt than any prior mobile GPU. Per-dollar (using desktop MSRP as proxy), the value trend tracks desktop closely. The RTX 30-series laptops (2020) were the inflection: NVIDIA's power management allowed laptop chips to run within 10–20% of their desktop equivalents for the first time. The 50-series pushes TGP back up to 150W+ for flagship laptops.</p>
+      <p>Laptop GPU efficiency improved steadily until the RTX 4060 Laptop (115W), which produces more compute per watt than any prior mobile GPU — a result of Ada Lovelace's efficiency-focused architecture. Per-dollar (using desktop MSRP as proxy since laptop GPUs aren't sold standalone), the midrange tracks close to desktop value. The RTX 50-series flagship laptops push TGP back above 150W, trading some of that efficiency gain for raw performance.</p>
     </div>
 
     <!-- DESKTOP GPUs -->
@@ -523,7 +614,7 @@
     </div>
     <div class="insight">
       <div class="insight-title">The 1080 Ti Value Anomaly &amp; the Flagship Tax</div>
-      <p>The 1080 Ti's per-dollar spike in 2017 is visible: 12.6 pts/$ when the flagship trend was declining. No flagship since has matched it. The midrange (x70) consistently offers 30–60% better value per dollar AND per watt than the flagship tier. The RTX 5090 at 575W/82 pts per watt is less efficient than the RTX 4060 at 115W/91 pts per watt despite costing 7× more. The message: unless you need absolute peak performance, the midrange tier is objectively the smarter buy on both metrics.</p>
+      <p>The 1080 Ti's per-dollar spike in 2017 is visible: 12.6 pts/$ when the flagship trend was declining. No flagship since has matched it. The midrange (x70) consistently offers 30–60% better value per dollar AND per watt than the flagship tier. The RTX 5090 at 575W delivers 82 pts/W — less efficient than the RTX 4060 at 115W delivering 91 pts/W, despite costing 7× more.</p>
     </div>
   </section>
 
@@ -550,8 +641,8 @@
         <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year single-core</div>
         <p><strong style="color: var(--text-bright);">Typical:</strong> 8–15% per year<br>
         <strong style="color: var(--text-bright);">Big leaps:</strong> i7-11800H (+20%), i7-12700H (+21%), Alder Lake hybrid design<br>
-        <strong style="color: var(--text-bright);">Stall years:</strong> 2017–2019 Intel (~2% SC gains)</p>
-        <div class="real-world">→ ~2× every 6–7 years (SC improves slower than MC)</div>
+        <strong style="color: var(--text-bright);">Stall years:</strong> 2017–2019 Intel (~2% per-core gains)</p>
+        <div class="real-world">→ ~2× every 6–7 years</div>
       </div>
 
       <div class="bench-card">
@@ -612,6 +703,10 @@
       <div class="caveat">
         <h4>Game Consoles</h4>
         <p>PS5 and Xbox Series X use custom AMD APUs (~2020 Zen 2 + RDNA 2). The Switch 2 uses a custom NVIDIA Tegra. Console chips are heavily optimized for their fixed software stack — direct benchmark comparison with PC hardware is misleading. A PS5's "equivalent" PC GPU varies from RTX 2070 to RTX 3060 depending on the game.</p>
+      </div>
+      <div class="caveat">
+        <h4>Cross-Platform TDP Caveat</h4>
+        <p>When comparing efficiency across form factors (phone vs. laptop vs. desktop), TDP ratings aren't apples-to-apples. A phone SoC's 5W is close to its actual peak draw. A desktop's 125W TDP is its all-core sustained rating — single-core tasks may draw only 30–50W. The raw "pts/W" gap overstates the efficiency difference by 2–3×.</p>
       </div>
       <div class="caveat">
         <h4>Server & Workstation CPUs</h4>
@@ -832,7 +927,7 @@ new Chart(document.getElementById('laptopCPUChart'), {
           convergence: {
             type: 'line', xMin: '2024', xMax: '2024',
             borderColor: 'rgba(245,158,11,0.25)', borderWidth: 1, borderDash: [4,4],
-            label: { display: true, content: 'SC convergence (~15%)', position: 'end',
+            label: { display: true, content: 'All within ~15%', position: 'end',
               font: { size: 9, family: fontFamily }, color: '#f59e0b80', backgroundColor: 'transparent' }
           }
         }
@@ -1012,6 +1107,145 @@ function effTooltip(namesMap, unit) {
   };
 }
 const r = (v) => v ? Math.round(v*10)/10 : null;
+
+// --- CROSS-PLATFORM GB6 SC ---
+const xpYears = ['2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+new Chart(document.getElementById('crossPlatformChart'), {
+  type: 'line',
+  data: {
+    labels: xpYears,
+    datasets: [
+      makeDataset('📱 Phone · Apple A-series', [1050,1120,1340,1590,1750,1880,2910,3530,3895], '#f59e0b'),
+      makeDataset('📱 Phone · Snapdragon', [520,730,810,1020,1170,1250,2050,2850,3524], '#fbbf24', true),
+      makeDataset('💻 Laptop · Intel H-series', [1171,1350,1359,1400,1896,2500,2500,2700,3014], '#4f8ff7'),
+      makeDataset('💻 Laptop · Apple M-series', [null,null,null,null,2385,2600,2700,3850,3850], '#a78bfa'),
+      makeDataset('🖥️ Desktop · best available', [1600,1621,1703,1900,2200,2500,2900,3359,3400], '#f43f5e')
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true, aspectRatio: 2.0,
+    scales: commonScales('Geekbench 6 SC'),
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            const chipNames = {
+              0: {2017:'A11 · 5W',2018:'A12 · 5W',2019:'A13 · 5W',2020:'A14 · 5W',2021:'A15 · 5W',2022:'A16 · 5W',2023:'A17 Pro · 5W',2024:'A18 Pro · 5W',2025:'A19 Pro · 5W'},
+              1: {2017:'SD 835 · 4W',2018:'SD 845 · 5W',2019:'SD 855 · 5W',2020:'SD 865 · 5W',2021:'SD 888 · 5W',2022:'SD 8G1 · 5W',2023:'SD 8G2 · 5W',2024:'SD 8 Elite · 6W',2025:'SD 8 Elite G5 · 6W'},
+              2: {2017:'i7-7700HQ · 45W',2018:'i7-8750H · 45W',2019:'i7-9750H · 45W',2020:'i7-10750H · 45W',2021:'i7-11800H · 45W',2022:'i7-12700H · 45W',2023:'i7-13700H · 45W',2024:'i9-14900HX · 55W',2025:'Ultra 9 285HX · 55W'},
+              3: {2021:'M1 Pro · 30W',2022:'M2 · 22W',2023:'M2 Pro · 30W',2024:'M4 Pro · 30W',2025:'M4 Pro · 30W'},
+              4: {2017:'i7-7700K · 91W',2018:'i7-8700K · 95W',2019:'i9-9900K · 95W',2020:'i9-10900K · 125W',2021:'R7 5800X · 105W',2022:'i9-12900K · 125W',2023:'i9-13900K · 125W',2024:'R9 9950X · 170W',2025:'R9 9950X · 170W'}
+            };
+            const yr = xpYears[ctx.dataIndex];
+            const cn = chipNames[ctx.datasetIndex] && chipNames[ctx.datasetIndex][yr];
+            return `${ctx.dataset.label}: ${ctx.parsed.y}${cn ? '  · ' + cn : ''}`;
+          }
+        }
+      },
+      legend: { display: true, labels: { font: { size: 10, family: fontFamily }, color: '#999', boxWidth: 12, padding: 8 } },
+      annotation: {
+        annotations: {
+          phoneCrossover: {
+            type: 'box', xMin: '2024', xMax: '2025', yMin: 2700, yMax: 3900,
+            backgroundColor: 'rgba(245,158,11,0.05)', borderColor: 'rgba(245,158,11,0.15)', borderWidth: 1,
+            label: { display: true, content: 'Phones pass laptops', position: {x:'center',y:'start'},
+              font: { size: 9, family: fontFamily }, color: '#f59e0b80', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
+
+// --- LAPTOP vs DESKTOP GPU OVERLAY ---
+const gpuOvYears = ['2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+new Chart(document.getElementById('gpuOverlayChart'), {
+  type: 'line',
+  data: {
+    labels: gpuOvYears,
+    datasets: [
+      // Desktop tiers
+      makeDataset('🖥️ Desktop x70', [7200,null,null,10800,null,14000,null,17900,null,22500], '#f43f5e'),
+      makeDataset('🖥️ Desktop x60', [5400,null,null,8400,null,8800,null,10500,null,13000], '#f87171', true),
+      // Laptop tiers
+      makeDataset('💻 Laptop x70', [null,5200,null,8600,null,10300,null,13400,null,18000], '#4f8ff7'),
+      makeDataset('💻 Laptop x60', [null,4200,null,6800,null,8800,null,10500,null,13000], '#93c5fd', true)
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true, aspectRatio: 2.0,
+    scales: commonScales('Time Spy Graphics'),
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            const gpuNames = {
+              0: {2016:'GTX 1070 · 150W',2019:'RTX 2070 · 175W',2021:'RTX 3070 · 220W',2023:'RTX 4070 · 200W',2025:'RTX 5070 · 250W'},
+              1: {2016:'GTX 1060 · 120W',2019:'RTX 2060 · 160W',2021:'RTX 3060 · 170W',2023:'RTX 4060 · 115W',2025:'RTX 5060 · ~150W'},
+              2: {2017:'GTX 1070m · 100W',2019:'RTX 2070m · 115W',2021:'RTX 3070m · 125W',2023:'RTX 4070m · 140W',2025:'RTX 5070m · 120W'},
+              3: {2017:'GTX 1060m · 80W',2019:'RTX 2060m · 90W',2021:'RTX 3060m · 130W',2023:'RTX 4060m · 115W',2025:'RTX 5060m · ~100W'}
+            };
+            const yr = gpuOvYears[ctx.dataIndex];
+            const gn = gpuNames[ctx.datasetIndex] && gpuNames[ctx.datasetIndex][yr];
+            return `${ctx.dataset.label}: ${ctx.parsed.y}${gn ? '  · ' + gn : ''}`;
+          }
+        }
+      },
+      legend: { display: true, labels: { font: { size: 10, family: fontFamily }, color: '#999', boxWidth: 12, padding: 8 } },
+      annotation: {
+        annotations: {
+          arrow1: {
+            type: 'line', xMin: '2021', xMax: '2023', yMin: 14000, yMax: 13400,
+            borderColor: 'rgba(167,139,250,0.35)', borderWidth: 1, borderDash: [3,3],
+            label: { display: true, content: '4070m ≈ 3070', position: 'center',
+              font: { size: 8, family: fontFamily }, color: '#a78bfa80', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
+
+// --- CROSS-PLATFORM EFFICIENCY (GB6 SC per Watt) ---
+const xpEffYears = ['2017','2019','2021','2023','2025'];
+// Phone Apple: A11=1050/5W, A13=1340/5W, A15=1750/5W, A17P=2910/5W, A19P=3895/5W
+const xpEffPhoneA = [1050/5, 1340/5, 1750/5, 2910/5, 3895/5].map(r);
+// Laptop Intel H: 7700HQ=1171/45, 9750H=1359/45, 11800H=1896/45, 13700H=2500/45, 285HX=3014/55
+const xpEffLaptopI = [1171/45, 1359/45, 1896/45, 2500/45, 3014/55].map(r);
+// Laptop Apple M: null, null, M1Pro=2385/30, M2Pro=2700/30, M4Pro=3850/30
+const xpEffLaptopA = [null, null, 2385/30, 2700/30, 3850/30].map(r);
+// Desktop best: 7700K=1600/91, 9900K=1703/95, 5800X=2200/105, 13900K=2900/125, 9950X=3400/170
+const xpEffDesktop = [1600/91, 1703/95, 2200/105, 2900/125, 3400/170].map(r);
+new Chart(document.getElementById('crossPlatformEffChart'), {
+  type: 'bar',
+  data: {
+    labels: xpEffYears,
+    datasets: [
+      { label: '📱 Phone · Apple (5W)', data: xpEffPhoneA, backgroundColor: '#f59e0b', borderRadius: 3 },
+      { label: '💻 Laptop · Apple M (~30W)', data: xpEffLaptopA, backgroundColor: '#a78bfa', borderRadius: 3 },
+      { label: '💻 Laptop · Intel H (45–55W)', data: xpEffLaptopI, backgroundColor: '#4f8ff7', borderRadius: 3 },
+      { label: '🖥️ Desktop · best (91–170W)', data: xpEffDesktop, backgroundColor: '#f43f5e', borderRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true, aspectRatio: 2.0,
+    scales: {
+      x: { grid: { color: '#ffffff08' }, ticks: { font: { size: 10, family: fontFamily }, color: '#666' } },
+      y: { grid: { color: '#ffffff08' }, ticks: { font: { size: 10, family: fontFamily }, color: '#666' },
+        title: { display: true, text: 'GB6 SC / Watt', font: { size: 10, family: fontFamily }, color: '#666' } }
+    },
+    plugins: {
+      legend: { display: true, labels: { font: { size: 10, family: fontFamily }, color: '#999', boxWidth: 12, padding: 8 } },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            return `${ctx.dataset.label}: ${ctx.parsed.y} pts/W`;
+          }
+        }
+      }
+    }
+  }
+});
 
 // --- PHONE SoC: Per Dollar ---
 // GB6 SC / phone launch price. Apple=iPhone Pro, Snapdragon=Galaxy S flagship
