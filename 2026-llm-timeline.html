@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The LLM Timeline — Performance, Benchmarks & What the Numbers Mean</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.1.0/dist/chartjs-plugin-annotation.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0e12;
+  --bg-surface: #13161c;
+  --bg-elevated: #1a1e26;
+  --bg-callout: #1c1f28;
+  --border: #2a2e38;
+  --border-accent: #3a3e48;
+  --text: #c8ccd4;
+  --text-bright: #e8ecf4;
+  --text-dim: #6b7280;
+  --text-muted: #4b5260;
+  --accent: #f0a050;
+  --accent-dim: #b07030;
+  --star-gold: #f5c842;
+
+  /* Provider colors */
+  --anthropic: #e87040;
+  --openai: #4aba8a;
+  --google: #5b9cf5;
+  --meta: #a07ce8;
+  --xai: #e85050;
+  --deepseek: #50c8d8;
+  --opensource: #7a8090;
+
+  --serif: 'Source Serif 4', Georgia, serif;
+  --mono: 'DM Mono', 'Consolas', monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+
+  --content-width: 780px;
+  --sidebar-width: 220px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E");
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === LAYOUT === */
+.page-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  padding: 32px 20px;
+  overflow-y: auto;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar nav a {
+  display: block;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 6px 0;
+  transition: color 0.2s, padding-left 0.2s;
+  line-height: 1.4;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+  margin-left: -12px;
+}
+
+.sidebar nav a:hover {
+  color: var(--text-bright);
+}
+
+.sidebar nav a.active {
+  color: var(--text-bright);
+  border-left-color: var(--accent);
+}
+
+.sidebar-meta {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.content-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 32px 120px;
+}
+
+/* === TYPOGRAPHY === */
+h1 {
+  font-family: var(--serif);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-bright);
+  line-height: 1.25;
+  margin-top: 80px;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-top: 36px;
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
+}
+
+.section-subtitle {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+p { margin-bottom: 16px; }
+
+strong { color: var(--text-bright); font-weight: 600; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* === HERO === */
+.hero {
+  padding: 80px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+
+.hero h1 {
+  margin-bottom: 6px;
+}
+
+.hero h1::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-dim));
+  border-radius: 2px;
+  margin-top: 14px;
+}
+
+.hero .subtitle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 24px;
+}
+
+.hero-text {
+  font-size: 18.5px;
+  line-height: 1.75;
+  color: var(--text);
+  max-width: 680px;
+  margin-top: 20px;
+}
+
+.hero-moments {
+  display: flex;
+  gap: 16px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.hero-moment {
+  flex: 1;
+  min-width: 180px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  transition: border-color 0.3s, transform 0.2s;
+}
+
+.hero-moment:hover {
+  border-color: var(--star-gold);
+  transform: translateY(-2px);
+}
+
+.hero-moment-year {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--star-gold);
+  font-weight: 500;
+}
+
+.hero-moment-name {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin: 2px 0;
+}
+
+.hero-moment-desc {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  line-height: 1.4;
+  font-family: var(--sans);
+}
+
+/* === SECTIONS === */
+.section {
+  padding: 16px 0 32px;
+}
+
+.section + .section {
+  border-top: 1px solid var(--border);
+}
+
+/* === CHART CONTAINERS === */
+.chart-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px 24px 16px;
+  margin: 24px 0 28px;
+  transition: border-color 0.3s;
+}
+
+.chart-wrap:hover {
+  border-color: var(--border-accent);
+}
+
+.chart-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.chart-subtitle {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 360px;
+}
+
+.chart-canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-canvas-wrap.tall { height: 420px; }
+.chart-canvas-wrap.short { height: 280px; }
+
+/* === CALLOUT BOXES === */
+.callout {
+  background: var(--bg-callout);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  padding: 18px 22px;
+  margin: 24px 0;
+  font-size: 15px;
+  line-height: 1.65;
+  transition: border-left-width 0.2s;
+}
+
+.callout:hover {
+  border-left-width: 5px;
+}
+
+.callout-title {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.callout.starred {
+  border-left-color: var(--star-gold);
+  background: linear-gradient(135deg, rgba(245,200,66,0.06), rgba(245,200,66,0.02));
+}
+
+.callout.starred .callout-title {
+  color: var(--star-gold);
+}
+
+/* === STAT HIGHLIGHTS === */
+.stat-row {
+  display: flex;
+  gap: 16px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--text-bright);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.stat-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* === TABLES === */
+.data-table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+table.data-table th {
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+table.data-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+
+table.data-table tr:last-child td { border-bottom: none; }
+
+table.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+table.data-table .best {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+table.data-table .provider-anthropic { color: var(--anthropic); }
+table.data-table .provider-openai { color: var(--openai); }
+table.data-table .provider-google { color: var(--google); }
+table.data-table .provider-meta { color: var(--meta); }
+table.data-table .provider-deepseek { color: var(--deepseek); }
+
+/* === BENCHMARK PILLS === */
+.benchmark-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.benchmark-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+
+.benchmark-name {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-bright);
+}
+
+.benchmark-year {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.benchmark-desc {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.benchmark-status {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-top: 6px;
+}
+
+.status-saturated {
+  background: rgba(120,120,140,0.2);
+  color: #8a8e98;
+}
+
+.status-active {
+  background: rgba(74,186,138,0.15);
+  color: #4aba8a;
+}
+
+.status-near-sat {
+  background: rgba(240,160,80,0.15);
+  color: var(--accent);
+}
+
+/* === TIMELINE === */
+.timeline {
+  position: relative;
+  margin: 24px 0 32px;
+  padding-left: 28px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--border);
+}
+
+.tl-item {
+  position: relative;
+  padding: 10px 0 10px 20px;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -25px;
+  top: 17px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-accent);
+  border: 2px solid var(--bg);
+}
+
+.tl-item.starred::before {
+  background: var(--star-gold);
+  width: 10px;
+  height: 10px;
+  left: -26px;
+  top: 16px;
+  box-shadow: 0 0 8px rgba(245,200,66,0.4);
+}
+
+.tl-date {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.tl-item.starred .tl-date {
+  color: var(--star-gold);
+}
+
+.tl-name {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.tl-desc {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.tl-item.starred .tl-desc {
+  color: var(--text);
+}
+
+/* === EVAL TREADMILL === */
+.treadmill {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 16px 0;
+}
+
+.treadmill-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+.treadmill-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--accent-dim);
+  opacity: 0.7;
+}
+
+.treadmill-label {
+  white-space: nowrap;
+  color: var(--text-dim);
+  min-width: 130px;
+}
+
+.treadmill-years {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* === PROVIDER LEGEND === */
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 8px 0 4px;
+  font-family: var(--sans);
+  font-size: 11px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-dim);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero { animation: fadeUp 0.7s ease-out; }
+.section { animation: fadeUp 0.5s ease-out; }
+.chart-wrap { animation: fadeUp 0.4s ease-out; }
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* === RESPONSIVE === */
+@media (max-width: 960px) {
+  .sidebar { display: none; }
+  .main-content { margin-left: 0; }
+  .content-inner { padding: 0 20px 80px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 24px; }
+  .benchmark-grid { grid-template-columns: 1fr; }
+  .hero-moments { flex-direction: column; }
+  .stat-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-title">LLM Timeline</div>
+  <nav id="toc">
+    <a href="#hero">Overview</a>
+    <a href="#foundation">Benchmarks</a>
+    <a href="#knowledge">Knowledge & Science</a>
+    <a href="#coding">Coding</a>
+    <a href="#reasoning">Reasoning (ARC-AGI)</a>
+    <a href="#math">Mathematics</a>
+    <a href="#vibes">Human Preference</a>
+    <a href="#efficiency">Efficiency & Price</a>
+    <a href="#paradigms">What Drives Progress</a>
+    <a href="#timeline">Watershed Moments</a>
+    <a href="#bigpicture">The Big Picture</a>
+    <a href="#feelslike">What Numbers Feel Like</a>
+    <a href="#honesty">Intellectual Honesty</a>
+  </nav>
+  <div class="sidebar-meta">
+    Data as of Feb 19, 2026<br>
+    Approximate scores from<br>
+    official model cards &amp;<br>
+    independent evaluations.<br><br>
+    Scores marked † achieved<br>
+    with tool/scaffold access.
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+<div class="content-inner">
+
+<!-- ============================================ -->
+<!-- HERO -->
+<!-- ============================================ -->
+<section class="hero" id="hero">
+  <div class="subtitle">APPROXIMATE DATA FOR INTUITION-BUILDING · NOT PURCHASING DECISIONS</div>
+  <h1>The LLM Timeline</h1>
+  <div class="hero-text">
+    <p>In 2020, GPT-3 scored 35% on a college-level knowledge test — roughly random guessing with a flair for pattern matching. In February 2026, AI models fix 80% of real software bugs in production codebases, answer PhD-level science questions at 94%, and cost 1000× less than they did two years ago.</p>
+    <p>Three labs are within 1% of each other on coding. The top 10 models on human preference rankings are within 5%. Open-source trails frontier by months, not years. This page charts how we got here — and what the numbers actually mean.</p>
+  </div>
+  <div class="hero-moments">
+    <div class="hero-moment">
+      <div class="hero-moment-year">NOV 2022</div>
+      <div class="hero-moment-name">ChatGPT</div>
+      <div class="hero-moment-desc">The iPhone moment. 100M users in 2 months. Product beat benchmarks.</div>
+    </div>
+    <div class="hero-moment">
+      <div class="hero-moment-year">DEC 2024</div>
+      <div class="hero-moment-name">o3</div>
+      <div class="hero-moment-desc">Every benchmark shattered in a day. "Update all intuitions."</div>
+    </div>
+    <div class="hero-moment">
+      <div class="hero-moment-year">JAN 2025</div>
+      <div class="hero-moment-name">DeepSeek R1</div>
+      <div class="hero-moment-desc">Open-source reasoning at 90% less cost. Forced industry repricing.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 1: FOUNDATION -->
+<!-- ============================================ -->
+<section class="section" id="foundation">
+  <div class="section-subtitle">Foundation</div>
+  <h2>Understanding the Benchmarks</h2>
+  <p>LLM benchmarks measure different facets of intelligence — knowledge, coding, reasoning, math, and human preference. No single benchmark tells the full story, just as no single benchmark tells you whether a GPU is "good." Here are the five categories this page covers, with the primary benchmark for each.</p>
+
+  <div class="benchmark-grid">
+    <div class="benchmark-card">
+      <div class="benchmark-name">GPQA Diamond <span class="benchmark-year">2023</span></div>
+      <div class="benchmark-desc">448 graduate-level science questions designed to be un-Googleable. Non-experts with internet: 34%. Domain experts: ~65%.</div>
+      <span class="benchmark-status status-near-sat">Near-saturated · 94%</span>
+    </div>
+    <div class="benchmark-card">
+      <div class="benchmark-name">SWE-bench Verified <span class="benchmark-year">2024</span></div>
+      <div class="benchmark-desc">Drop into a real GitHub repo. Read the bug report. Find and fix the bug. 500 curated tasks from Django, scikit-learn, etc.</div>
+      <span class="benchmark-status status-active">Active frontier · 81%</span>
+    </div>
+    <div class="benchmark-card">
+      <div class="benchmark-name">ARC-AGI-2 <span class="benchmark-year">2025</span></div>
+      <div class="benchmark-desc">Visual pattern puzzles requiring novel reasoning. Designed to resist training-based improvement. Humans: ~95%+.</div>
+      <span class="benchmark-status status-active">Active frontier · 77%</span>
+    </div>
+    <div class="benchmark-card">
+      <div class="benchmark-name">Chatbot Arena <span class="benchmark-year">2023</span></div>
+      <div class="benchmark-desc">6M+ crowdsourced blind A/B votes. Two anonymous models answer; humans pick the winner. Elo ratings like chess.</div>
+      <span class="benchmark-status status-active">Active · gold standard</span>
+    </div>
+    <div class="benchmark-card">
+      <div class="benchmark-name">MMLU <span class="benchmark-year">2021</span></div>
+      <div class="benchmark-desc">57 academic subjects, high school → professional. The benchmark that defined an era — then died. Saturated at ~92%.</div>
+      <span class="benchmark-status status-saturated">Saturated · Sep 2024</span>
+    </div>
+    <div class="benchmark-card">
+      <div class="benchmark-name">AIME / FrontierMath <span class="benchmark-year">2024–25</span></div>
+      <div class="benchmark-desc">Competition math (olympiad-level) and unpublished research-level math. The solved and unsolved frontiers.</div>
+      <span class="benchmark-status status-active">Active · 100% / 40%</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">What benchmarks miss</div>
+    Benchmarks don't capture latency, cost, hallucination rate, instruction following, multi-turn coherence, tool-use reliability, or "vibes." A model scoring 5% higher on GPQA might feel worse in conversation. Self-reported scores from labs diverge from independent evaluations by 5–10 percentage points. Benchmark contamination — models training on test data — is suspected but hard to prove. Numbers are directional, not absolute truth.
+  </div>
+
+  <h3>The Eval Treadmill</h3>
+  <p>Every new "impossible" benchmark falls within 1–3 years. The goalposts move faster than the field can agree on what to measure.</p>
+
+  <div class="treadmill">
+    <div class="treadmill-item">
+      <span class="treadmill-label">MMLU</span>
+      <div class="treadmill-bar" style="width: 180px; background: #8a8e98;"></div>
+      <span class="treadmill-years">2021 → sat. Sep 2024 · 3 yrs</span>
+    </div>
+    <div class="treadmill-item">
+      <span class="treadmill-label">HumanEval</span>
+      <div class="treadmill-bar" style="width: 170px; background: #8a8e98;"></div>
+      <span class="treadmill-years">2021 → sat. mid-2024 · 3 yrs</span>
+    </div>
+    <div class="treadmill-item">
+      <span class="treadmill-label">GPQA Diamond</span>
+      <div class="treadmill-bar" style="width: 150px; background: var(--accent);"></div>
+      <span class="treadmill-years">2023 → near-sat. Feb 2026 · ~2.5 yrs</span>
+    </div>
+    <div class="treadmill-item">
+      <span class="treadmill-label">ARC-AGI-1</span>
+      <div class="treadmill-bar" style="width: 200px; background: #8a8e98;"></div>
+      <span class="treadmill-years">2019 → broken Dec 2024 · 5 yrs (then instantly)</span>
+    </div>
+    <div class="treadmill-item">
+      <span class="treadmill-label">ARC-AGI-2</span>
+      <div class="treadmill-bar" style="width: 60px; background: var(--openai);"></div>
+      <span class="treadmill-years">2025 → 77% already · &lt;1 yr</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 2: KNOWLEDGE & SCIENCE -->
+<!-- ============================================ -->
+<section class="section" id="knowledge">
+  <div class="section-subtitle">Knowledge &amp; Science</div>
+  <h2>Knowledge &amp; Science Reasoning</h2>
+
+  <p>MMLU — the benchmark that defined an era — went from GPT-3's 35% (2020) to o1-preview's 92% (Sep 2024) in four years. It saturated. Models can't meaningfully differentiate on it anymore.</p>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-value">35%</div>
+      <div class="stat-label">GPT-3 · MMLU</div>
+      <div class="stat-sub">Jun 2020</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">86%</div>
+      <div class="stat-label">GPT-4 · MMLU</div>
+      <div class="stat-sub">Mar 2023</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--text-muted); text-decoration: line-through;">92%</div>
+      <div class="stat-label">o1 · MMLU</div>
+      <div class="stat-sub">Saturated Sep 2024</div>
+    </div>
+  </div>
+
+  <p>Its harder successor — <strong>GPQA Diamond</strong> — picks up the story. PhD-level science questions, designed to be un-Googleable. Non-experts with internet access score 34%. Domain experts score ~65%. The frontier has pushed past both.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">GPQA Diamond — PhD-Level Science Reasoning Over Time</div>
+    <div class="chart-subtitle">% ACCURACY · HIGHER IS BETTER · DASHED LINES = HUMAN BASELINES</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--openai)"></div>OpenAI</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--anthropic)"></div>Anthropic</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--google)"></div>Google</div>
+    </div>
+    <div class="chart-canvas-wrap tall">
+      <canvas id="chart-gpqa"></canvas>
+    </div>
+  </div>
+
+  <p>By February 2026, three labs are above 91%. Gemini 3.1 Pro's 94.3% — launched today — means the remaining ~6% likely reflects ambiguous questions rather than model limitations. PhD-level science is effectively solved as a benchmark category.</p>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 3: CODING -->
+<!-- ============================================ -->
+<section class="section" id="coding">
+  <div class="section-subtitle">Coding</div>
+  <h2>Coding — From Party Trick to Professional Tool</h2>
+
+  <p>HumanEval (2021) asked "can it write a Python function from a docstring?" Codex scored 29%. By mid-2024, frontier models hit 92%+ and the benchmark was retired. The question shifted: <em>can it fix real bugs in real codebases?</em></p>
+
+  <p><strong>SWE-bench Verified</strong> drops a model into a real GitHub repository — Django, Matplotlib, scikit-learn — hands it a bug report, and asks: can you find the bug, write the patch, and pass the tests?</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">SWE-bench Verified — Real-World Coding Over Time</div>
+    <div class="chart-subtitle">% RESOLVED · FRONTIER SOTA · COLOR = PROVIDER</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--openai)"></div>OpenAI</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--anthropic)"></div>Anthropic</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--google)"></div>Google</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--opensource)"></div>Other / Agent</div>
+    </div>
+    <div class="chart-canvas-wrap tall">
+      <canvas id="chart-swebench"></canvas>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">4.4% to 80.9% in 25 months</div>
+    In October 2023, the best AI system could fix 4.4% of real GitHub bugs. By November 2025, it fixed 80.9%. That's an 18× improvement in 25 months. For context: desktop GPU performance improved roughly 7× over an entire decade.
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">The three-way convergence</div>
+    By Feb 2026, three labs sit within 0.3 percentage points on SWE-bench Verified: Anthropic (80.8%), Google (80.6%), OpenAI (80.0%). The easy gains are done. Differentiation is moving to harder benchmarks — and to the newer frontiers where real gaps still exist.
+  </div>
+
+  <h3>The Next Frontier — Where Differentiation Still Lives</h3>
+  <p><strong>Terminal-Bench 2.0</strong> measures whether a model can navigate a terminal, execute shell commands, and do dev-ops tasks. <strong>SWE-bench Pro</strong> is the harder, 4-language successor to Verified. These are where meaningful gaps remain in Feb 2026.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Terminal-Bench 2.0 &amp; SWE-bench Pro — Feb 2026</div>
+    <div class="chart-subtitle">% SCORE · GROUPED BY BENCHMARK · WHERE GAPS STILL EXIST</div>
+    <div class="chart-canvas-wrap short">
+      <canvas id="chart-terminal"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 4: REASONING / ARC-AGI -->
+<!-- ============================================ -->
+<section class="section" id="reasoning">
+  <div class="section-subtitle">Reasoning</div>
+  <h2>Reasoning — The ARC-AGI Story</h2>
+
+  <p>François Chollet designed ARC specifically to resist training-based improvement — visual pattern puzzles that require genuine fluid intelligence, not memorization. For four years, it worked. LLMs were stuck at 0–5%.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">ARC-AGI — The Paradigm Shift</div>
+    <div class="chart-subtitle">LEFT: ARC-AGI-1 (2020–2024) · RIGHT: ARC-AGI-2 (2025–2026)</div>
+    <div class="chart-canvas-wrap tall">
+      <canvas id="chart-arc"></canvas>
+    </div>
+  </div>
+
+  <div class="callout starred">
+    <div class="callout-title">⭐ The ARC-AGI Moment — o3, December 2024</div>
+    It took four years to go from 0% to 5%. Then days to go from 32% to 87.5%. o3 didn't break ARC through memorization — it used iterative reasoning at test time, a fundamentally new paradigm. Chollet himself said: <em>"All intuition about AI capabilities will need to get updated."</em> ARC-AGI-2 was designed to be even harder. Within six months, Gemini 3.1 Pro has already reached 77.1%.
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--google)">77.1%</div>
+      <div class="stat-label">Gemini 3.1 Pro</div>
+      <div class="stat-sub">ARC-AGI-2 · Feb 19, 2026</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--anthropic)">68.8%</div>
+      <div class="stat-label">Claude Opus 4.6</div>
+      <div class="stat-sub">ARC-AGI-2 · Feb 5, 2026</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--openai)">52.9%</div>
+      <div class="stat-label">GPT-5.2</div>
+      <div class="stat-sub">ARC-AGI-2 · Dec 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 5: MATH -->
+<!-- ============================================ -->
+<section class="section" id="math">
+  <div class="section-subtitle">Mathematics</div>
+  <h2>Mathematics — Solved and Unsolved</h2>
+
+  <p>Competition math followed a dramatic arc: GPT-4 scored ~42% on MATH Level 5 in 2023. By late 2024, o1 hit 94%. By late 2025, multiple models achieved perfect scores on AIME — olympiad-level competition math, solved.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Competition Math Performance Over Time</div>
+    <div class="chart-subtitle">MATH LEVEL 5 (%) AND AIME 2025 SCORES · THE REASONING REVOLUTION</div>
+    <div class="chart-canvas-wrap">
+      <canvas id="chart-math"></canvas>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">Competition math is solved. Research math isn't.</div>
+    The journey from GPT-4o's 9.3% on the IMO qualifier to o1's 74.4% took just four months. By late 2025, perfect AIME scores from multiple labs. But <strong>FrontierMath</strong> — unpublished research-level problems — sits at ~40% (GPT-5.2 Thinking). The question has shifted from "can it solve hard problems we know the answer to" to "can it do math that hasn't been done."
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">The reasoning revolution</div>
+    The o1 paradigm (Sep 2024) proved models could trade latency and cost for accuracy. o1 was ~6× more expensive and ~30× slower than GPT-4o — but it went from 9.3% to 74.4% on olympiad math. By Dec 2025, GPT-5.2 offered three explicit tiers — Instant (fast/cheap), Thinking (reasoning), Pro (maximum) — making this tradeoff user-controllable.
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 6: HUMAN PREFERENCE -->
+<!-- ============================================ -->
+<section class="section" id="vibes">
+  <div class="section-subtitle">Human Preference</div>
+  <h2>Human Preference — The Vibes Benchmark</h2>
+
+  <p><strong>Chatbot Arena</strong> captures what benchmarks can't: helpfulness, clarity, personality, refusal behavior — the things that actually determine whether you enjoy using a model. Over 6 million blind votes converted to Elo ratings.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Chatbot Arena — Frontier Elo Over Time</div>
+    <div class="chart-subtitle">APPROXIMATE #1 MODEL ELO AT KEY MOMENTS · SHADED BAND = #1 TO #10 SPREAD</div>
+    <div class="chart-canvas-wrap">
+      <canvas id="chart-arena"></canvas>
+    </div>
+  </div>
+
+  <p>The gap between #1 and #10 shrank from 11.9% (2023) to 5.4% (early 2025) to even tighter now. We're in the convergence era.</p>
+
+  <div class="callout">
+    <div class="callout-title">Why Arena matters — and what it gets wrong</div>
+    MMLU can be gamed. Arena can't (easily). It's the "real-world benchmark" the way gaming FPS is the real-world GPU benchmark. The tradeoff: verbose, confident-sounding answers tend to win votes even when shorter, more accurate answers are better. Arena measures "preferred," not "correct." Treat it as vibes — the most honest vibes available.
+  </div>
+
+  <p style="font-size:14px; color:var(--text-dim)"><em>Caveat: Arena Elo is not perfectly comparable over time. The scale shifts as models join and the voting population changes. The trend (convergence) is reliable; exact historical point comparisons need caution.</em></p>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 7: EFFICIENCY & PRICING -->
+<!-- ============================================ -->
+<section class="section" id="efficiency">
+  <div class="section-subtitle">Efficiency</div>
+  <h2>Efficiency — The Price of Intelligence</h2>
+
+  <p>Two stories are happening simultaneously. The frontier itself got cheaper — GPT-4's ~$36/M tokens dropped to GPT-4o's $5/M. And cheaper models caught up to what used to be frontier — GPT-4o mini ($0.38/M) matched GPT-3.5's capability. Together, these trends created a ~1000× price decline for 2023 SOTA capability in roughly two years.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Cost of Frontier-Level Performance Over Time</div>
+    <div class="chart-subtitle">$/MILLION TOKENS (LOG SCALE) · BLENDED 3:1 INPUT/OUTPUT</div>
+    <div class="chart-canvas-wrap">
+      <canvas id="chart-cost"></canvas>
+    </div>
+  </div>
+
+  <p style="font-size:13px; color:var(--text-dim);"><em>Methodology: Blended = 3:1 weighted average of input/output token prices. Reasoning models generate "thinking tokens" that can 5–10× the effective cost — not reflected in sticker price. The "1000×" figure combines frontier price deflation (~7×) and capability commoditization (~100×+).</em></p>
+
+  <div class="callout starred">
+    <div class="callout-title">⭐ The DeepSeek Moment — January 2025</div>
+    DeepSeek R1 debuted at ~$0.55/M input, ~$2.19/M output — undercutting frontier reasoning models by ~90%. Open-source. Competitive on benchmarks. It forced the entire industry to reprice: GPT-4.1 launched at 26% less than GPT-4o. Like the 1080 Ti in GPUs, DeepSeek offered next-tier performance at the current tier's price. The kind of value anomaly that reshapes what buyers expect.
+  </div>
+
+  <h3>Frontier Pricing by Tier Over Time</h3>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Era</th><th>Budget</th><th>Midrange</th><th>Frontier</th><th>Reasoning</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2023 Q1</td>
+          <td>GPT-3.5 · ~$2/M</td>
+          <td>—</td>
+          <td>GPT-4 · ~$36/M</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>2023 Q4</td>
+          <td>GPT-3.5 · ~$1/M</td>
+          <td>—</td>
+          <td>GPT-4 Turbo · ~$10/M</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>2024 Q2</td>
+          <td>—</td>
+          <td>GPT-4o · ~$5/M</td>
+          <td>Claude 3 Opus · ~$30/M</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>2024 Q3</td>
+          <td>GPT-4o mini · $0.38/M</td>
+          <td>Claude 3.5 Sonnet · ~$9/M</td>
+          <td>—</td>
+          <td>o1 · ~$45/M</td>
+        </tr>
+        <tr style="background: rgba(80,200,216,0.05);">
+          <td>2025 Q1</td>
+          <td class="provider-deepseek">DeepSeek V3 · $0.55/M</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="provider-deepseek">DeepSeek R1 · ~$1.65/M</td>
+        </tr>
+        <tr>
+          <td>2025 Q4</td>
+          <td>GPT-4.1 nano · $0.25/M</td>
+          <td>GPT-4.1 · ~$6/M</td>
+          <td class="provider-anthropic">Opus 4.5 · ~$18/M</td>
+          <td class="provider-openai">GPT-5.2 Pro · ~$58/M</td>
+        </tr>
+        <tr>
+          <td><strong>2026 Q1</strong></td>
+          <td>—</td>
+          <td class="provider-google">Gemini 3.1 Pro · ~$8/M</td>
+          <td class="provider-anthropic">Opus 4.6 · ~$18/M</td>
+          <td class="provider-openai">GPT-5.2 Pro · ~$58/M</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Gemini 3.1 Pro achieved #1 on the Artificial Analysis Intelligence Index (57 pts) at roughly half the cost of Opus 4.6 (53 pts) and GPT-5.2. The midrange sweet spot — 80% of the experience for 20% of the price — lives at the Sonnet/Gemini Pro tier.</p>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 8: WHAT DRIVES PROGRESS -->
+<!-- ============================================ -->
+<section class="section" id="paradigms">
+  <div class="section-subtitle">Paradigm Shifts</div>
+  <h2>What Drives Progress</h2>
+
+  <p>When you see a sudden jump on any chart, it's almost always one of these paradigm shifts. When you see stagnation, the field is extracting remaining gains from the current paradigm.</p>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Paradigm</th><th>Era</th><th>What Changed</th><th>Silicon Analogy</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Scaling laws</strong></td>
+          <td>2020–2023</td>
+          <td>More parameters + more data = predictably better</td>
+          <td>Cranking up clock speed</td>
+        </tr>
+        <tr>
+          <td><strong>RLHF</strong></td>
+          <td>2022–2023</td>
+          <td>Made models usable, not just impressive. The ChatGPT moment.</td>
+          <td>Software optimization</td>
+        </tr>
+        <tr>
+          <td><strong>Mixture of Experts</strong></td>
+          <td>2023–2024</td>
+          <td>Fewer active params per token. Mixtral, GPT-4 (rumored).</td>
+          <td>Hybrid P+E cores</td>
+        </tr>
+        <tr>
+          <td><strong>Test-time compute</strong></td>
+          <td>2024</td>
+          <td>Think longer → answer better. Trade cost/latency for accuracy.</td>
+          <td>Turbo boost on demand</td>
+        </tr>
+        <tr>
+          <td><strong>Distillation</strong></td>
+          <td>2024–2025</td>
+          <td>Small models absorb large model knowledge. 540B → 3.8B for same MMLU.</td>
+          <td>Die shrinks</td>
+        </tr>
+        <tr>
+          <td><strong>Agentic + tools</strong></td>
+          <td>2025–2026</td>
+          <td>Models browse, code, and use tools iteratively. Not just answering — doing.</td>
+          <td>Adding a GPU to the CPU</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Context Window Growth</h3>
+  <p>The amount of text a model can process in a single session grew from a few paragraphs to entire codebases in three years — but advertised capacity and usable performance are increasingly different metrics.</p>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Year</th><th>Typical Max</th><th>Meaning</th><th>Usability</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2022</td><td>4K tokens</td><td>A few paragraphs</td><td>—</td></tr>
+        <tr><td>2023</td><td>32–128K</td><td>A short book</td><td>—</td></tr>
+        <tr><td>2024</td><td>200K–1M</td><td>An entire codebase</td><td>Gemini 1.5 Pro: 1M advertised</td></tr>
+        <tr><td>2026</td><td>1M+ (usable)</td><td>Full codebase with recall</td><td>Opus 4.6: <strong>76%</strong> recall at 1M<br>Gemini 3 Pro: 26% recall at 1M</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Advertised context ≠ usable context. Opus 4.6 scores 76% on MRCR v2 (needle-in-a-haystack at 1M tokens). Gemini 3 Pro drops to 26.3% at the same scale. Same advertised capability, 3× the actual performance.</p>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 9: WATERSHED TIMELINE -->
+<!-- ============================================ -->
+<section class="section" id="timeline">
+  <div class="section-subtitle">Timeline</div>
+  <h2>Watershed Moments</h2>
+
+  <p>Not every model release is a watershed. These are the ones that changed what was possible.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">Jun 2020</div>
+      <div class="tl-name">GPT-3</div>
+      <div class="tl-desc">Few-shot learning. "You don't have to fine-tune anymore." MMLU ~35%.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Jun 2021</div>
+      <div class="tl-name">Codex / GitHub Copilot</div>
+      <div class="tl-desc">First serious AI code generation.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Mar 2022</div>
+      <div class="tl-name">Chinchilla</div>
+      <div class="tl-desc">Showed most LLMs were undertrained. Changed every training recipe.</div>
+    </div>
+    <div class="tl-item starred">
+      <div class="tl-date">Nov 2022</div>
+      <div class="tl-name">ChatGPT</div>
+      <div class="tl-desc">The iPhone moment. RLHF + GPT-3.5. 100 million users in 2 months. Proved product mattered more than benchmarks.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Mar 2023</div>
+      <div class="tl-name">GPT-4</div>
+      <div class="tl-desc">Multimodal. Passed the bar exam. MMLU ~86%. "This is different."</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Feb 2024</div>
+      <div class="tl-name">Gemini 1.5 Pro</div>
+      <div class="tl-desc">1M token context window. Changed what "context" meant.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Jun 2024</div>
+      <div class="tl-name">Claude 3.5 Sonnet</div>
+      <div class="tl-desc">Midrange model beating frontier. SWE-bench ~50%. The value king.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Jul 2024</div>
+      <div class="tl-name">Llama 3.1 405B</div>
+      <div class="tl-desc">Open-source reaches frontier parity on many benchmarks.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Sep 2024</div>
+      <div class="tl-name">o1 + MMLU Saturated</div>
+      <div class="tl-desc">Test-time compute paradigm. Reasoning revolution. o1-preview hits 92.3% MMLU — benchmark declared dead.</div>
+    </div>
+    <div class="tl-item starred">
+      <div class="tl-date">Dec 2024</div>
+      <div class="tl-name">o3 Announced</div>
+      <div class="tl-desc">ARC-AGI 87.5%. SWE-bench 71.7%. Codeforces 99.7th percentile. Single biggest benchmark shockwave in LLM history. "Update all intuitions."</div>
+    </div>
+    <div class="tl-item starred">
+      <div class="tl-date">Jan 2025</div>
+      <div class="tl-name">DeepSeek R1</div>
+      <div class="tl-desc">Open-source reasoning at 90% less cost. Forced industry-wide repricing. The 1080 Ti moment.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">May 2025</div>
+      <div class="tl-name">Claude Opus 4</div>
+      <div class="tl-desc">SWE-bench 72.5%. Claude Code launches — $1B run rate in 6 months.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Nov 2025</div>
+      <div class="tl-name">Claude Opus 4.5 + Gemini 3 Pro</div>
+      <div class="tl-desc">Opus 4.5: first to break 80% SWE-bench. Gemini 3 Pro: briefly #1 on everything. Google returns to frontier.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Dec 2025</div>
+      <div class="tl-name">GPT-5.2</div>
+      <div class="tl-desc">Three tiers (Instant/Thinking/Pro). 100% AIME. 40.3% FrontierMath. 400K context.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Feb 5, 2026</div>
+      <div class="tl-name">The 20-Minute War</div>
+      <div class="tl-desc">Claude Opus 4.6 launches 10:00 AM PT — Arena #1, GDPval leader, 1M usable context. GPT-5.3-Codex follows ~10:20 AM — Terminal-Bench 77.3%. "First model instrumental in creating itself."</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Feb 19, 2026</div>
+      <div class="tl-name">Gemini 3.1 Pro</div>
+      <div class="tl-desc">Launched today. 77.1% ARC-AGI-2 (2× predecessor). 94.3% GPQA Diamond. #1 Intelligence Index at half the cost.</div>
+    </div>
+  </div>
+
+  <div class="callout starred">
+    <div class="callout-title">⭐ The 20-Minute War — February 5, 2026</div>
+    Anthropic launched Opus 4.6 — Arena #1, GDPval leader by 144 Elo, 1M usable context. For roughly twenty minutes, it was the undisputed state-of-the-art. Then OpenAI dropped GPT-5.3-Codex, claiming Terminal-Bench 77.3%. Whether this was planned counter-programming or reactive launch remains debated. Anthropic's CEO gave a tight-lipped smile when asked: "Competition drives progress."
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 10: THE BIG PICTURE -->
+<!-- ============================================ -->
+<section class="section" id="bigpicture">
+  <div class="section-subtitle">Big Picture</div>
+  <h2>The Big Picture</h2>
+
+  <h3>Generational Gains at a Glance</h3>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Category</th><th>Typical Pace</th><th>Biggest Leaps</th><th>Current State</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Knowledge</strong></td>
+          <td>5–10pp/yr on active benchmarks</td>
+          <td>GPT-3→4: +51pp MMLU</td>
+          <td>MMLU saturated. GPQA near-ceiling at 94%.</td>
+        </tr>
+        <tr>
+          <td><strong>Coding</strong></td>
+          <td>~35pp/yr (SWE-bench avg)</td>
+          <td>o3: +20pp jump. 18× in 25mo.</td>
+          <td>Three labs at ~80%. Converged.</td>
+        </tr>
+        <tr>
+          <td><strong>Math</strong></td>
+          <td>Paradigm-driven, not incremental</td>
+          <td>o1: 9.3%→74.4% on IMO qualifier (4mo)</td>
+          <td>Competition math: solved. Research: ~40%.</td>
+        </tr>
+        <tr>
+          <td><strong>Reasoning</strong></td>
+          <td>Breakthrough-driven</td>
+          <td>o3: 0→87.5% ARC-AGI-1 overnight</td>
+          <td>ARC-AGI-2 at 77%. Humans ~95%.</td>
+        </tr>
+        <tr>
+          <td><strong>Preference</strong></td>
+          <td>50–100 Elo pts/yr at top</td>
+          <td>Gaps narrowing every quarter</td>
+          <td>Top 5 within ~30 Elo points.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Today's Midrange ≈ What Year's Frontier?</h3>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>If You Need...</th><th>Budget (2026)</th><th>Midrange (2026)</th><th>Frontier (2026)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPT-3.5 general knowledge</td>
+          <td>Llama 3.1 8B · free</td>
+          <td>GPT-4o mini · $0.38/M</td>
+          <td>overkill</td>
+        </tr>
+        <tr>
+          <td>GPT-4 level coding (~50% SWE)</td>
+          <td class="provider-deepseek">DeepSeek V3 · $0.55/M</td>
+          <td class="provider-anthropic">Claude Sonnet 4 · $9/M</td>
+          <td>overkill</td>
+        </tr>
+        <tr>
+          <td>PhD science (GPQA ~85%)</td>
+          <td>—</td>
+          <td class="provider-google">Gemini 3 Pro · $8/M</td>
+          <td class="provider-anthropic">Opus 4.6 · $18/M</td>
+        </tr>
+        <tr>
+          <td>Frontier coding (~80% SWE)</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Opus 4.6 / Gemini 3.1 / GPT-5.2</td>
+        </tr>
+        <tr>
+          <td>Novel reasoning (ARC ~70%+)</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="provider-google">Gemini 3.1 Pro / <span class="provider-anthropic">Opus 4.6</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Today's $0.55/M open-source model ≈ early 2025's $18/M frontier on coding. Today's $8/M midrange ≈ mid-2025's $45/M frontier. The "one generation behind" rule from GPUs applies: the gap is roughly 6–12 months.</p>
+
+  <h3>The Convergence</h3>
+  <p>Open-source trailed closed-source by 8.0% on Arena Elo in January 2024. By February 2025, the gap had narrowed to 1.7%. US–China performance gaps went from 17–32 percentage points (end of 2023) to near-zero on most benchmarks (end of 2024), driven by DeepSeek, Qwen, and GLM-series models.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Open-Source vs. Closed-Source — The Gap Closing</div>
+    <div class="chart-subtitle">APPROXIMATE CHATBOT ARENA ELO · BEST OPEN VS BEST CLOSED MODEL</div>
+    <div class="chart-canvas-wrap short">
+      <canvas id="chart-convergence"></canvas>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">The Commoditization Thesis</div>
+    SWE-bench Verified: 3 labs within 0.3%. Arena: top 10 within 5%. Open-source: 6–12 months behind instead of years. Differentiation is shifting from raw benchmarks to cost, speed, agentic reliability, safety, and personality. The era of unquestioned single-provider dominance ended in 2024.
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 11: WHAT NUMBERS FEEL LIKE -->
+<!-- ============================================ -->
+<section class="section" id="feelslike">
+  <div class="section-subtitle">Intuition</div>
+  <h2>What the Numbers Feel Like</h2>
+
+  <h3>Chatbot Arena Elo → User Experience</h3>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Elo Range</th><th>Experience</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;1100</td><td><strong>Frustrating.</strong> Frequent hallucinations, ignores instructions, loses thread. Early 2023 open-source. Fine for toy demos, painful for work.</td></tr>
+        <tr><td>1100–1250</td><td><strong>Usable.</strong> Decent email, simple questions. Needs babysitting. Occasionally confidently wrong. GPT-3.5 era.</td></tr>
+        <tr><td>1250–1350</td><td><strong>Good.</strong> Reliable writing, analysis, code help. Rarely makes you cringe. GPT-4 launch era. The threshold where you start trusting it.</td></tr>
+        <tr><td>1350–1425</td><td><strong>Excellent.</strong> Strong code, nuanced reasoning, follows complex instructions. Hard to tell models apart in blind tests.</td></tr>
+        <tr><td>1425–1475</td><td><strong>Frontier.</strong> Multi-step agentic workflows, expert-level analysis, complex creative work.</td></tr>
+        <tr><td>1475+</td><td><strong>Diminishing returns.</strong> Measurable on benchmarks, invisible in your Tuesday afternoon Slack thread.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>SWE-bench Verified → What It Can Do</h3>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Score</th><th>Capability</th><th>Era</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;10%</td><td>Suggests vaguely relevant code. Not useful autonomously. A human does the real work.</td><td>Oct 2023</td></tr>
+        <tr><td>10–30%</td><td>Fixes simple bugs if you pre-digest the context. Like an intern who needs everything spelled out.</td><td>Mid 2024</td></tr>
+        <tr><td>30–50%</td><td>Handles real bugs with minimal guidance. You'd accept its PRs after review. A useful pair programmer.</td><td>Late 2024</td></tr>
+        <tr><td>50–70%</td><td>Reads a GitHub issue, finds relevant files, writes a patch, verifies tests. An effective junior engineer on contained tasks.</td><td>Early 2025</td></tr>
+        <tr><td>70–80%</td><td>Passes Anthropic's engineering hiring exam. Fixes 4 out of 5 production bugs. Fails on architecture and ambiguity.</td><td>Late 2025</td></tr>
+        <tr><td>80%+</td><td><strong>Now (Feb 2026).</strong> Three labs. Within 0.3%. The remaining ~20% failure rate is on problems that challenge experienced engineers too.</td><td>Feb 2026</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Where the Perception Curve Flattens</h3>
+  <p>For each metric, there's a threshold beyond which improvements are invisible to most users:</p>
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-value" style="font-size:22px;">~1400</div>
+      <div class="stat-label">Arena Elo</div>
+      <div class="stat-sub">Can't tell apart in casual use</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="font-size:22px;">~70%</div>
+      <div class="stat-label">SWE-bench</div>
+      <div class="stat-sub">Failures are genuinely hard</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="font-size:22px;">~85%</div>
+      <div class="stat-label">MMLU</div>
+      <div class="stat-sub">Saturated since 2024</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="font-size:22px;">~90%</div>
+      <div class="stat-label">GPQA</div>
+      <div class="stat-sub">Near question-quality ceiling</div>
+    </div>
+  </div>
+  <p>Once you're above the threshold for your use case, you're paying for headroom and edge cases, not perceptible improvement. Knowing your threshold prevents overspending.</p>
+</section>
+
+<!-- ============================================ -->
+<!-- SECTION 12: INTELLECTUAL HONESTY -->
+<!-- ============================================ -->
+<section class="section" id="honesty">
+  <div class="section-subtitle">Caveats</div>
+  <h2>Intellectual Honesty — What This Page Doesn't Tell You</h2>
+
+  <p><strong>Hallucination rates.</strong> Not benchmarked here. Gemini 3.1 Pro halved its hallucination rate (88% → 50%), but 50% wrong on uncertain questions is still a coin flip.</p>
+
+  <p><strong>Self-reported scores.</strong> Labs benchmark their own models. Harness configs, tool access, and effort settings create 5–10pp variation. Always check who ran the eval.</p>
+
+  <p><strong>Personality vs. performance.</strong> GPT-5 users revolted when GPT-4o was retired — newer model, better benchmarks, but it felt "sterile." Benchmarks don't measure whether you enjoy the conversation.</p>
+
+  <p><strong>Advertised context ≠ usable context.</strong> Gemini 3 Pro at 1M tokens: 26% retrieval. Opus 4.6 at 1M: 76%. Same advertised window, 3× the actual performance.</p>
+
+  <p><strong>Agentic reliability.</strong> SWE-bench measures single-task success. It doesn't predict whether a model can reliably chain 10 tools over 30 minutes without going off-rails.</p>
+
+  <p><strong>Safety and alignment.</strong> Not covered. A 94% GPQA model that helps synthesize harmful substances is not "better."</p>
+
+  <p><strong>Multimodal.</strong> Vision, audio, video not covered. Gemini leads on multimodal understanding (MMMU-Pro). Increasingly important, not in this page's scope.</p>
+
+  <p><strong>Speed and latency.</strong> GPT-5.2 Pro's scores come at ~30× the latency of GPT-5.2 Instant. A 60-second "thinking" model feels terrible for chat even if it benchmarks beautifully.</p>
+
+  <p><strong>The shelf life of this page.</strong> Opus 4.6 and GPT-5.3-Codex launched 20 minutes apart. Gemini 3.1 Pro came 14 days later. Any chart here may be outdated within weeks.</p>
+
+  <p style="margin-top:40px; padding-top:20px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text-muted);">
+    Sources: Epoch AI · Artificial Analysis · LMArena / Chatbot Arena · SWE-bench · ARC Prize · Stanford AI Index 2025 · Google DeepMind Model Cards · Anthropic System Cards · OpenAI Blog · LM Council · LLM-stats.com<br><br>
+    Last updated: February 19, 2026. All benchmark scores approximate. Self-reported scores noted where applicable.
+  </p>
+</section>
+
+</div><!-- .content-inner -->
+</main>
+
+</div><!-- .page-wrapper -->
+
+<!-- ============================================ -->
+<!-- CHART.JS INITIALIZATION -->
+<!-- ============================================ -->
+<script>
+// ==========================================
+// SHARED CHART CONFIG
+// ==========================================
+const COLORS = {
+  anthropic: '#e87040',
+  openai: '#4aba8a',
+  google: '#5b9cf5',
+  meta: '#a07ce8',
+  xai: '#e85050',
+  deepseek: '#50c8d8',
+  opensource: '#7a8090',
+  accent: '#f0a050',
+  grid: '#1e222c',
+  gridLight: '#252930',
+  text: '#6b7280',
+  textBright: '#c8ccd4',
+};
+
+Chart.defaults.color = COLORS.text;
+Chart.defaults.borderColor = COLORS.grid;
+Chart.defaults.font.family = "'DM Sans', system-ui, sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.plugins.legend.display = false;
+Chart.defaults.plugins.tooltip.backgroundColor = '#1a1e26';
+Chart.defaults.plugins.tooltip.borderColor = '#2a2e38';
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+Chart.defaults.plugins.tooltip.titleFont = { family: "'DM Mono', monospace", size: 11 };
+Chart.defaults.plugins.tooltip.bodyFont = { family: "'DM Sans', sans-serif", size: 12 };
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 4;
+Chart.defaults.elements.point.radius = 5;
+Chart.defaults.elements.point.hoverRadius = 7;
+Chart.defaults.elements.line.borderWidth = 2.5;
+Chart.defaults.elements.line.tension = 0.3;
+
+const commonScales = {
+  x: {
+    type: 'linear',
+    grid: { color: COLORS.grid, drawBorder: false },
+    ticks: { font: { family: "'DM Mono', monospace", size: 10 } }
+  },
+  y: {
+    grid: { color: COLORS.grid, drawBorder: false },
+    ticks: { font: { family: "'DM Mono', monospace", size: 10 } }
+  }
+};
+
+// Utility: date to decimal year
+function d(year, month) { return year + (month - 1) / 12; }
+
+// ==========================================
+// CHART 1: GPQA Diamond
+// ==========================================
+new Chart(document.getElementById('chart-gpqa'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'OpenAI',
+        data: [
+          { x: d(2023,3), y: 35, label: 'GPT-4' },
+          { x: d(2024,5), y: 54, label: 'GPT-4o' },
+          { x: d(2024,9), y: 78, label: 'o1' },
+          { x: d(2024,12), y: 88, label: 'o3' },
+          { x: d(2025,12), y: 93.2, label: 'GPT-5.2 Pro' },
+        ],
+        borderColor: COLORS.openai,
+        backgroundColor: COLORS.openai + '40',
+        showLine: true,
+        pointStyle: 'circle',
+      },
+      {
+        label: 'Anthropic',
+        data: [
+          { x: d(2024,3), y: 50, label: 'Claude 3 Opus' },
+          { x: d(2024,6), y: 59, label: 'Claude 3.5 Sonnet' },
+          { x: d(2025,11), y: 87, label: 'Opus 4.5' },
+          { x: d(2026,2), y: 91.3, label: 'Opus 4.6' },
+        ],
+        borderColor: COLORS.anthropic,
+        backgroundColor: COLORS.anthropic + '40',
+        showLine: true,
+        pointStyle: 'triangle',
+      },
+      {
+        label: 'Google',
+        data: [
+          { x: d(2025,11), y: 91.9, label: 'Gemini 3 Pro' },
+          { x: d(2026,2.6), y: 94.3, label: 'Gemini 3.1 Pro' },
+        ],
+        borderColor: COLORS.google,
+        backgroundColor: COLORS.google + '40',
+        showLine: true,
+        pointStyle: 'rect',
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'linear',
+        min: 2023.0,
+        max: 2026.5,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono', monospace", size: 10 },
+          callback: v => {
+            if (v === 2023) return '2023';
+            if (v === 2024) return '2024';
+            if (v === 2025) return '2025';
+            if (v === 2026) return '2026';
+            return '';
+          },
+          stepSize: 0.5,
+        }
+      },
+      y: {
+        min: 25,
+        max: 100,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono', monospace", size: 10 },
+          callback: v => v + '%',
+        }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const p = ctx.raw;
+            return `${p.label}: ${p.y}%`;
+          }
+        }
+      },
+      annotation: {
+        annotations: {
+          nonExpert: {
+            type: 'line',
+            yMin: 34, yMax: 34,
+            borderColor: '#ffffff20',
+            borderDash: [6,4],
+            borderWidth: 1,
+            label: {
+              display: true,
+              content: 'Non-expert human w/ internet (34%)',
+              position: 'start',
+              font: { family: "'DM Mono'", size: 9 },
+              color: '#ffffff40',
+              backgroundColor: 'transparent',
+            }
+          },
+          expert: {
+            type: 'line',
+            yMin: 65, yMax: 65,
+            borderColor: '#ffffff20',
+            borderDash: [6,4],
+            borderWidth: 1,
+            label: {
+              display: true,
+              content: 'Domain expert (~65%)',
+              position: 'start',
+              font: { family: "'DM Mono'", size: 9 },
+              color: '#ffffff40',
+              backgroundColor: 'transparent',
+            }
+          },
+        }
+      }
+    }
+  }
+});
+
+// ==========================================
+// CHART 2: SWE-bench Verified
+// ==========================================
+new Chart(document.getElementById('chart-swebench'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'SOTA',
+        data: [
+          { x: d(2023,10), y: 4.4, label: 'RAG + GPT-4' },
+          { x: d(2024,4), y: 22, label: 'SWE-Agent + GPT-4' },
+          { x: d(2024,6), y: 33, label: 'Devin-like agents' },
+        ],
+        borderColor: COLORS.opensource,
+        backgroundColor: COLORS.opensource + '40',
+        showLine: true,
+        pointStyle: 'circle',
+      },
+      {
+        label: 'Anthropic',
+        data: [
+          { x: d(2024,6), y: 49, label: 'Claude 3.5 Sonnet (agent)' },
+          { x: d(2024,10), y: 53, label: 'Claude 3.5 Sonnet v2' },
+          { x: d(2025,5), y: 72.5, label: 'Claude Opus 4' },
+          { x: d(2025,11), y: 80.9, label: 'Claude Opus 4.5' },
+          { x: d(2026,2), y: 80.8, label: 'Claude Opus 4.6' },
+        ],
+        borderColor: COLORS.anthropic,
+        backgroundColor: COLORS.anthropic + '40',
+        showLine: true,
+        pointStyle: 'triangle',
+      },
+      {
+        label: 'OpenAI',
+        data: [
+          { x: d(2024,12), y: 71.7, label: 'o3 (announced)' },
+          { x: d(2025,8), y: 75, label: 'GPT-5' },
+          { x: d(2025,12), y: 80, label: 'GPT-5.2 Thinking' },
+        ],
+        borderColor: COLORS.openai,
+        backgroundColor: COLORS.openai + '40',
+        showLine: true,
+        pointStyle: 'circle',
+      },
+      {
+        label: 'Google',
+        data: [
+          { x: d(2026,2.6), y: 80.6, label: 'Gemini 3.1 Pro' },
+        ],
+        borderColor: COLORS.google,
+        backgroundColor: COLORS.google + '40',
+        showLine: false,
+        pointStyle: 'rect',
+        pointRadius: 7,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'linear',
+        min: 2023.6,
+        max: 2026.5,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono', monospace", size: 10 },
+          callback: v => { if (Number.isInteger(v)) return v.toString(); return ''; },
+          stepSize: 0.5,
+        }
+      },
+      y: {
+        min: 0,
+        max: 90,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono', monospace", size: 10 },
+          callback: v => v + '%',
+        }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: { label: ctx => `${ctx.raw.label}: ${ctx.raw.y}%` }
+      },
+      annotation: {
+        annotations: {
+          o3Jump: {
+            type: 'box',
+            xMin: d(2024,11.5), xMax: d(2025,0.5),
+            yMin: 48, yMax: 74,
+            backgroundColor: 'rgba(74,186,138,0.06)',
+            borderColor: 'rgba(74,186,138,0.2)',
+            borderWidth: 1,
+            label: {
+              display: true,
+              content: '20-pt jump',
+              position: { x: 'center', y: 'start' },
+              font: { family: "'DM Mono'", size: 9 },
+              color: COLORS.openai,
+              backgroundColor: 'transparent',
+            }
+          },
+          convergence: {
+            type: 'box',
+            xMin: d(2025,10.5), xMax: d(2026,3.5),
+            yMin: 79, yMax: 82,
+            backgroundColor: 'rgba(240,160,80,0.06)',
+            borderColor: 'rgba(240,160,80,0.2)',
+            borderWidth: 1,
+            borderDash: [4,3],
+            label: {
+              display: true,
+              content: '3 labs within 0.3%',
+              position: { x: 'center', y: 'end' },
+              font: { family: "'DM Mono'", size: 9 },
+              color: COLORS.accent,
+              backgroundColor: 'transparent',
+            }
+          }
+        }
+      }
+    }
+  }
+});
+
+// ==========================================
+// CHART 3: Terminal-Bench & SWE-bench Pro
+// ==========================================
+new Chart(document.getElementById('chart-terminal'), {
+  type: 'bar',
+  data: {
+    labels: ['Opus 4.6', 'Gemini 3.1 Pro', 'GPT-5.3 Codex'],
+    datasets: [
+      {
+        label: 'Terminal-Bench 2.0',
+        data: [65.4, 68.5, 77.3],
+        backgroundColor: [COLORS.anthropic + 'cc', COLORS.google + 'cc', COLORS.openai + 'cc'],
+        borderRadius: 3,
+        barPercentage: 0.7,
+      },
+      {
+        label: 'SWE-bench Pro',
+        data: [null, 54.2, 56.8],
+        backgroundColor: [COLORS.anthropic + '60', COLORS.google + '60', COLORS.openai + '60'],
+        borderRadius: 3,
+        barPercentage: 0.7,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: { font: { family: "'DM Sans'", size: 11 }, color: COLORS.text, boxWidth: 12, padding: 16 }
+      },
+      tooltip: {
+        callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` }
+      }
+    },
+    scales: {
+      x: {
+        min: 0, max: 85,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => v + '%',
+        }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { family: "'DM Sans'", size: 12 }, color: COLORS.textBright }
+      }
+    }
+  }
+});
+
+// ==========================================
+// CHART 4: ARC-AGI
+// ==========================================
+new Chart(document.getElementById('chart-arc'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'ARC-AGI-1',
+        data: [
+          { x: d(2020,6), y: 0, label: 'GPT-3' },
+          { x: d(2024,5), y: 5, label: 'GPT-4o' },
+          { x: d(2024,9), y: 32, label: 'o1' },
+          { x: d(2024,12), y: 87.5, label: 'o3 (high compute)' },
+        ],
+        borderColor: '#ffffff50',
+        backgroundColor: '#ffffff30',
+        showLine: true,
+        pointStyle: 'circle',
+        pointRadius: 5,
+        segment: {
+          borderDash: ctx => (ctx.p0DataIndex === 2) ? [] : [5,3],
+        }
+      },
+      {
+        label: 'ARC-AGI-2',
+        data: [
+          { x: d(2025,11), y: 31.1, label: 'Gemini 3 Pro' },
+          { x: d(2025,11.5), y: 37.6, label: 'Opus 4.5' },
+          { x: d(2025,12), y: 52.9, label: 'GPT-5.2' },
+          { x: d(2026,2), y: 68.8, label: 'Opus 4.6' },
+          { x: d(2026,2.6), y: 77.1, label: 'Gemini 3.1 Pro' },
+        ],
+        borderColor: COLORS.accent,
+        backgroundColor: COLORS.accent + '40',
+        showLine: true,
+        pointStyle: 'rectRot',
+        pointRadius: 6,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'linear',
+        min: 2020,
+        max: 2026.7,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => Number.isInteger(v) ? v.toString() : '',
+          stepSize: 1,
+        }
+      },
+      y: {
+        min: 0, max: 100,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => v + '%',
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: { font: { family: "'DM Sans'", size: 11 }, color: COLORS.text, boxWidth: 12, padding: 16 }
+      },
+      tooltip: {
+        callbacks: { label: ctx => `${ctx.raw.label}: ${ctx.raw.y}%` }
+      },
+      annotation: {
+        annotations: {
+          humanLine: {
+            type: 'line',
+            yMin: 95, yMax: 95,
+            borderColor: '#ffffff15',
+            borderDash: [6,4],
+            borderWidth: 1,
+            label: {
+              display: true,
+              content: 'Human ~95%',
+              position: 'end',
+              font: { family: "'DM Mono'", size: 9 },
+              color: '#ffffff30',
+              backgroundColor: 'transparent',
+            }
+          },
+          arcBreak: {
+            type: 'line',
+            xMin: d(2025,6), xMax: d(2025,6),
+            borderColor: '#ffffff12',
+            borderDash: [4,4],
+            borderWidth: 1,
+            label: {
+              display: true,
+              content: 'ARC-AGI-2 →',
+              position: 'start',
+              font: { family: "'DM Mono'", size: 9 },
+              color: '#ffffff30',
+              backgroundColor: 'transparent',
+            }
+          }
+        }
+      }
+    }
+  }
+});
+
+// ==========================================
+// CHART 5: Math
+// ==========================================
+new Chart(document.getElementById('chart-math'), {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'MATH Level 5',
+        data: [
+          { x: d(2023,3), y: 42, label: 'GPT-4' },
+          { x: d(2024,5), y: 76, label: 'GPT-4o' },
+          { x: d(2024,9), y: 94, label: 'o1' },
+          { x: d(2024,12), y: 96, label: 'o3' },
+        ],
+        borderColor: COLORS.openai,
+        backgroundColor: COLORS.openai + '40',
+        showLine: true,
+        pointRadius: 5,
+      },
+      {
+        label: 'AIME 2025',
+        data: [
+          { x: d(2024,5), y: 9.3, label: 'GPT-4o (IMO qualifier)' },
+          { x: d(2024,9), y: 74.4, label: 'o1 (IMO qualifier)' },
+          { x: d(2025,11), y: 100, label: 'Opus 4.5' },
+          { x: d(2025,12), y: 100, label: 'GPT-5.2 Pro' },
+          { x: d(2026,2.6), y: 95, label: 'Gemini 3.1 Pro' },
+        ],
+        borderColor: COLORS.accent,
+        backgroundColor: COLORS.accent + '40',
+        showLine: true,
+        pointStyle: 'triangle',
+        pointRadius: 5,
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'linear',
+        min: 2023, max: 2026.5,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => Number.isInteger(v) ? v.toString() : '',
+          stepSize: 0.5,
+        }
+      },
+      y: {
+        min: 0, max: 105,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => v + '%',
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: { font: { family: "'DM Sans'", size: 11 }, color: COLORS.text, boxWidth: 12, padding: 16 }
+      },
+      tooltip: {
+        callbacks: { label: ctx => `${ctx.raw.label}: ${ctx.raw.y}%` }
+      },
+    }
+  }
+});
+
+// ==========================================
+// CHART 6: Arena Elo (SOTA line + spread band)
+// ==========================================
+new Chart(document.getElementById('chart-arena'), {
+  type: 'line',
+  data: {
+    labels: ['May 2023', 'Dec 2023', 'Mar 2024', 'Jun 2024', 'Sep 2024', 'Mar 2025', 'Nov 2025', 'Feb 2026'],
+    datasets: [
+      {
+        label: '#1 Model Elo',
+        data: [1200, 1260, 1290, 1310, 1340, 1390, 1460, 1506],
+        borderColor: COLORS.accent,
+        backgroundColor: COLORS.accent + '20',
+        pointRadius: 4,
+        fill: false,
+      },
+      {
+        label: '#10 Model Elo',
+        data: [1057, 1130, 1170, 1210, 1250, 1310, 1400, 1440],
+        borderColor: COLORS.text + '40',
+        backgroundColor: COLORS.accent + '08',
+        pointRadius: 3,
+        fill: '-1',
+        borderDash: [4,3],
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        grid: { color: COLORS.grid },
+        ticks: { font: { family: "'DM Mono'", size: 10 }, maxRotation: 45 }
+      },
+      y: {
+        min: 1000, max: 1550,
+        grid: { color: COLORS.grid },
+        ticks: { font: { family: "'DM Mono'", size: 10 } }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: { font: { family: "'DM Sans'", size: 11 }, color: COLORS.text, boxWidth: 12, padding: 16 }
+      },
+      tooltip: {
+        callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}` }
+      }
+    }
+  }
+});
+
+// ==========================================
+// CHART 7: Cost Over Time (log scale)
+// ==========================================
+new Chart(document.getElementById('chart-cost'), {
+  type: 'scatter',
+  data: {
+    datasets: [{
+      label: 'Frontier $/M tokens',
+      data: [
+        { x: d(2023,3), y: 36, label: 'GPT-4 launch' },
+        { x: d(2023,11), y: 10, label: 'GPT-4 Turbo' },
+        { x: d(2024,5), y: 5, label: 'GPT-4o' },
+        { x: d(2024,7), y: 0.38, label: 'GPT-4o mini (GPT-3.5 level)' },
+        { x: d(2025,1), y: 1.65, label: 'DeepSeek R1' },
+        { x: d(2025,12), y: 0.40, label: 'GPT-4 equiv. commodity' },
+      ],
+      borderColor: COLORS.accent,
+      backgroundColor: COLORS.accent + '40',
+      showLine: true,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'linear',
+        min: 2023, max: 2026.2,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => Number.isInteger(v) ? v.toString() : '',
+          stepSize: 0.5,
+        }
+      },
+      y: {
+        type: 'logarithmic',
+        min: 0.1, max: 50,
+        grid: { color: COLORS.grid },
+        ticks: {
+          font: { family: "'DM Mono'", size: 10 },
+          callback: v => {
+            if ([0.1, 0.5, 1, 5, 10, 50].includes(v)) return '$' + v + '/M';
+            return '';
+          }
+        }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: { label: ctx => `${ctx.raw.label}: $${ctx.raw.y}/M` }
+      },
+      annotation: {
+        annotations: {
+          thousandX: {
+            type: 'label',
+            xValue: d(2024,9),
+            yValue: 2,
+            content: ['~1000× decline', 'in 2 years'],
+            font: { family: "'DM Mono'", size: 10 },
+            color: COLORS.accent + '80',
+            backgroundColor: 'transparent',
+          }
+        }
+      }
+    }
+  }
+});
+
+// ==========================================
+// CHART 8: Convergence (Open vs Closed)
+// ==========================================
+new Chart(document.getElementById('chart-convergence'), {
+  type: 'line',
+  data: {
+    labels: ['Jan 2024', 'Jun 2024', 'Dec 2024', 'Jun 2025', 'Feb 2026'],
+    datasets: [
+      {
+        label: 'Best Closed-Source',
+        data: [1290, 1320, 1370, 1420, 1506],
+        borderColor: COLORS.accent,
+        backgroundColor: COLORS.accent + '15',
+        pointRadius: 4,
+        fill: false,
+      },
+      {
+        label: 'Best Open-Source',
+        data: [1187, 1230, 1310, 1380, 1460],
+        borderColor: COLORS.opensource,
+        backgroundColor: COLORS.opensource + '15',
+        pointRadius: 4,
+        fill: false,
+        borderDash: [5,3],
+      },
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        grid: { color: COLORS.grid },
+        ticks: { font: { family: "'DM Mono'", size: 10 } }
+      },
+      y: {
+        min: 1100, max: 1550,
+        grid: { color: COLORS.grid },
+        ticks: { font: { family: "'DM Mono'", size: 10 } },
+        title: { display: true, text: 'Arena Elo (approx.)', font: { family: "'DM Mono'", size: 10 }, color: COLORS.text }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: { font: { family: "'DM Sans'", size: 11 }, color: COLORS.text, boxWidth: 12, padding: 16 }
+      },
+    }
+  }
+});
+
+// ==========================================
+// SIDEBAR SCROLL SPY
+// ==========================================
+const sections = document.querySelectorAll('.section, .hero');
+const navLinks = document.querySelectorAll('#toc a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const id = entry.target.id;
+      const link = document.querySelector(`#toc a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
