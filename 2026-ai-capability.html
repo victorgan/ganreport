@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Can AI Do? — A Capabilities Guide, February 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f3;
+  --bg-warm: #f4f1ea;
+  --bg-card: #ffffff;
+  --bg-dark: #1c1a16;
+  --border: #e2ddd4;
+  --border-light: #ece8e0;
+  --text: #2c2a24;
+  --text-body: #3d3a32;
+  --text-dim: #7a756a;
+  --text-muted: #a09a8e;
+  --accent: #c44d20;
+  --accent-light: #e8654030;
+  --accent-bg: #fdf0eb;
+  --blue: #2060a8;
+  --blue-light: #e8f0fa;
+  --green: #1a7a4a;
+  --green-light: #e6f5ee;
+  --purple: #6040a0;
+  --purple-light: #f0ecf8;
+  --gold: #a07820;
+  --gold-light: #faf4e0;
+
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Outfit', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Consolas', monospace;
+
+  --max-w: 740px;
+  --wide-w: 900px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text-body);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.78;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent-light); color: var(--text); }
+
+.container { max-width: var(--max-w); margin: 0 auto; padding: 0 28px; }
+
+/* === NAV === */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,248,243,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 0;
+}
+
+.topnav-inner {
+  max-width: var(--wide-w);
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.topnav-inner::-webkit-scrollbar { display: none; }
+
+.topnav-title {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text);
+  white-space: nowrap;
+  padding-right: 12px;
+  border-right: 1px solid var(--border);
+}
+
+.topnav a {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.topnav a:hover { color: var(--accent); }
+
+/* === TYPOGRAPHY === */
+h1 {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-top: 80px;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 36px;
+  margin-bottom: 8px;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: block;
+}
+
+p { margin-bottom: 18px; }
+strong { color: var(--text); font-weight: 600; }
+em { font-style: italic; }
+
+a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--accent-light); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--accent); }
+
+.note {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-family: var(--sans);
+  line-height: 1.5;
+}
+
+/* === HERO === */
+.hero {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+.hero h1 { margin-bottom: 24px; }
+
+.hero-lede {
+  font-size: 20px;
+  line-height: 1.7;
+  color: var(--text-body);
+  max-width: 640px;
+}
+
+/* === QUOTE BLOCKS === */
+.quote-block {
+  border-left: 3px solid var(--accent);
+  padding: 16px 0 16px 24px;
+  margin: 28px 0;
+}
+
+.quote-text {
+  font-size: 17px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.quote-attr {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* === EXAMPLE BLOCKS === */
+.example {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 24px 0;
+  overflow: hidden;
+}
+
+.example-header {
+  background: var(--bg-warm);
+  padding: 10px 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+.example-body {
+  padding: 18px 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-body);
+}
+
+.example-body .prompt {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--bg-warm);
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin: 8px 0;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.example-body .result {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--green);
+  margin-top: 8px;
+}
+
+/* === VIGNETTE (first-person texture) === */
+.vignette {
+  background: var(--bg-warm);
+  border-radius: 8px;
+  padding: 22px 26px;
+  margin: 24px 0;
+  font-size: 16px;
+  line-height: 1.7;
+  font-style: italic;
+  color: var(--text);
+}
+
+.vignette-attr {
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  display: block;
+}
+
+/* === CALLOUT === */
+.callout {
+  border-radius: 8px;
+  padding: 22px 26px;
+  margin: 28px 0;
+  font-size: 15.5px;
+  line-height: 1.65;
+}
+
+.callout.orange { background: var(--accent-bg); border-left: 3px solid var(--accent); }
+.callout.blue { background: var(--blue-light); border-left: 3px solid var(--blue); }
+.callout.green { background: var(--green-light); border-left: 3px solid var(--green); }
+.callout.purple { background: var(--purple-light); border-left: 3px solid var(--purple); }
+.callout.gold { background: var(--gold-light); border-left: 3px solid var(--gold); }
+
+.callout-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.callout.orange .callout-label { color: var(--accent); }
+.callout.blue .callout-label { color: var(--blue); }
+.callout.green .callout-label { color: var(--green); }
+.callout.purple .callout-label { color: var(--purple); }
+.callout.gold .callout-label { color: var(--gold); }
+
+/* === STAT PAIRS === */
+.stat-pair {
+  display: flex;
+  gap: 24px;
+  margin: 28px 0;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.stat-num {
+  font-family: var(--mono);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.stat-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* === TIMELINE === */
+.timeline {
+  position: relative;
+  margin: 32px 0;
+  padding-left: 32px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  background: var(--border);
+}
+
+.tl-item {
+  position: relative;
+  padding: 12px 0 12px 24px;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -28px;
+  top: 19px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 2px solid var(--bg);
+}
+
+.tl-item.major::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.tl-year {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.tl-item.major .tl-year { color: var(--accent); }
+
+.tl-title {
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tl-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-top: 2px;
+  font-family: var(--sans);
+}
+
+/* === TABLE === */
+.data-table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+table.dt {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 14px;
+}
+
+table.dt th {
+  background: var(--bg-warm);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  padding: 10px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+table.dt td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-body);
+  vertical-align: top;
+}
+
+table.dt tr:last-child td { border-bottom: none; }
+table.dt tr:hover td { background: rgba(0,0,0,0.015); }
+
+/* === HOW IT WORKS (TECHNICAL) === */
+.tech-diagram {
+  background: var(--bg-dark);
+  color: #c8c4ba;
+  border-radius: 8px;
+  padding: 28px 32px;
+  margin: 24px 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.tech-diagram .label { color: var(--accent); font-weight: 500; }
+.tech-diagram .dim { color: #6a665c; }
+.tech-diagram .hl { color: #e0c870; }
+
+/* === FIELD CARDS === */
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.field-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 24px;
+}
+
+.field-card h4 {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.field-card .works, .field-card .fails {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+.field-card .works { color: var(--green); }
+.field-card .fails { color: var(--accent); }
+.field-card .wf-label {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* === BEFORE/AFTER === */
+.ba-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.ba-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 22px;
+}
+
+.ba-card h5 {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.ba-card.before h5 { color: var(--text-muted); }
+.ba-card.after h5 { color: var(--green); }
+
+.ba-card p {
+  font-size: 14px;
+  font-family: var(--sans);
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin-bottom: 0;
+}
+
+/* === SECTION DIVIDERS === */
+.section-break {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 64px 0 0;
+}
+
+/* === FOOTER === */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 680px) {
+  h1 { font-size: 34px; }
+  h2 { font-size: 26px; }
+  .field-grid, .ba-grid { grid-template-columns: 1fr; }
+  .stat-pair { flex-direction: column; gap: 12px; }
+  .container { padding: 0 18px; }
+  body { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <span class="topnav-title">What Can AI Do?</span>
+    <a href="#arc">The Arc</a>
+    <a href="#code">Coding</a>
+    <a href="#knowledge">Knowledge</a>
+    <a href="#reasoning">Reasoning</a>
+    <a href="#agency">Agency</a>
+    <a href="#multimodal">Beyond Text</a>
+    <a href="#how">How It Works</a>
+    <a href="#fields">Fields</a>
+    <a href="#economics">Economics</a>
+    <a href="#cant">Limitations</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-date">FEBRUARY 19, 2026</div>
+    <h1>What Can AI Actually Do?</h1>
+    <p class="hero-lede">A guide to the real capabilities of large language models — what they're good at, what they fail at, the technology behind them, and the specific tasks and fields they're reshaping. Written for people who want intuition, not hype.</p>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ======================================= -->
+<!-- THE CAPABILITY ARC (merged: was caps + arc) -->
+<!-- ======================================= -->
+<section id="arc">
+  <hr class="section-break">
+  <span class="section-label">The 1,000-Foot View</span>
+  <h2>When AI Learned To…</h2>
+
+  <p>In early 2023, AI could answer trivia and write passable essays. In February 2026, it fixes 80% of real software bugs, answers PhD science at 94%, solves olympiad math, reads million-token codebases, and chains tools together for hours-long autonomous work. The following timeline maps not products but <em>abilities</em> — the moment each capability crossed from "not really" to "surprisingly yes."</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-year">2020</div>
+      <div class="tl-title">…write a coherent paragraph from a prompt</div>
+      <div class="tl-desc">GPT-3. The output was often wrong, but it was fluent. For the first time, AI text didn't read like AI text.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2021</div>
+      <div class="tl-title">…write a working function from a docstring</div>
+      <div class="tl-desc">Codex / GitHub Copilot. Not reliable, but usable. The beginning of AI-assisted coding.</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Nov 2022</div>
+      <div class="tl-title">…hold a conversation that feels natural</div>
+      <div class="tl-desc">ChatGPT. RLHF made AI not just capable but usable. 100 million users in 2 months proved the capability mattered — not because the technology was new, but because it finally felt like talking to someone.</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Mar 2023</div>
+      <div class="tl-title">…pass the bar exam and answer expert-level questions</div>
+      <div class="tl-desc">GPT-4. Multimodal (text + images). Scored 90th percentile on the bar exam. For the first time, "is this good enough for professional use?" had a nuanced answer.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">Feb 2024</div>
+      <div class="tl-title">…read an entire book in one session</div>
+      <div class="tl-desc">Gemini 1.5 Pro with a 1 million token context window. Changed "copy-paste the relevant section" to "just give it the whole document."</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Jun 2024</div>
+      <div class="tl-title">…fix real bugs in real codebases, unsupervised</div>
+      <div class="tl-desc">Claude 3.5 Sonnet + agent scaffolding reached ~50% on SWE-bench — real GitHub repos, real bug reports, real patches. Not a demo. Real code, fixing real problems.</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Sep 2024</div>
+      <div class="tl-title">…reason through multi-step problems by "thinking"</div>
+      <div class="tl-desc">OpenAI's o1. The model generates internal reasoning tokens before answering. 9% → 74% on olympiad math qualifiers in one release. The reasoning revolution.</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Dec 2024</div>
+      <div class="tl-title">…solve novel visual puzzles designed to be AI-proof</div>
+      <div class="tl-desc">o3 scored 87.5% on ARC-AGI — a benchmark explicitly designed to resist AI progress for years. François Chollet, who created it: "All intuition about AI capabilities will need to get updated."</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Jan 2025</div>
+      <div class="tl-title">…match frontier performance at 90% less cost</div>
+      <div class="tl-desc">DeepSeek R1. Open-source. Competitive on reasoning benchmarks with OpenAI's o1. Forced the entire industry to reprice. Changed who has access to AI capabilities.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">May 2025</div>
+      <div class="tl-title">…autonomously build software features for hours</div>
+      <div class="tl-desc">Claude Code launched. Terminal-native, agentic. Boris Cherny, its creator, shipped 300+ pull requests in one month using multiple Claude agents. $1 billion run-rate revenue in 6 months.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">Late 2025</div>
+      <div class="tl-title">…score 100% on olympiad math competitions</div>
+      <div class="tl-desc">Multiple models achieved perfect scores on AIME. Competition math — solved. Research-level math (~40%) remains the frontier.</div>
+    </div>
+    <div class="tl-item major">
+      <div class="tl-year">Feb 2026</div>
+      <div class="tl-title">…match or exceed human experts on most knowledge benchmarks</div>
+      <div class="tl-desc">Three labs within 0.3% of each other on coding (~80%). 94% on PhD science. 77% on novel reasoning. The top 5 models within 30 Elo points on human preference. The frontier converged.</div>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <span class="callout-label">The uncomfortable summary</span>
+    If you haven't used a frontier AI model in the last six months, your intuitions about what AI can and can't do are likely wrong — in both directions. It's better than you think at structured tasks and worse than you think at unstructured judgment.
+  </div>
+</section>
+
+<!-- ======================================= -->
+<!-- DEEP DIVE: CODING -->
+<!-- ======================================= -->
+<section id="code">
+  <hr class="section-break">
+  <span class="section-label">Deep Dive</span>
+  <h2>Coding — The Field That Changed First</h2>
+
+  <p>Software engineering is where AI capabilities are most measurable, most adopted, and most economically consequential. It's also where the gap between hype and reality is most documented.</p>
+
+  <div class="example">
+    <div class="example-header">What It Actually Does · Bug Fixing</div>
+    <div class="example-body">
+      <div class="prompt">GitHub Issue #4823: "DateTimeField with auto_now=True ignores timezone-aware defaults when migrating from SQLite to PostgreSQL"</div>
+      <p style="margin-top:12px;">A frontier model, given access to the Django repository, will: navigate to the relevant migration files, identify the timezone handling bug in <code>django/db/backends/postgresql/operations.py</code>, write a patch that preserves existing behavior while fixing the conversion, and run the test suite to verify.</p>
+      <div class="result">✓ Success rate on curated bugs like this: ~80% (3 labs, Feb 2026)</div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-header">What It Actually Does · Autonomous Feature Development</div>
+    <div class="example-body">
+      <div class="prompt">"Add OAuth2 login with Google and GitHub providers to the existing FastAPI app. Use the existing user model, create migrations, and add tests."</div>
+      <p style="margin-top:12px;">Claude Code scaffolds the OAuth flow, creates migrations, implements callback handlers, writes integration tests, and iterates when tests fail — often over 15-30 minutes of autonomous work.</p>
+      <div class="result">✓ Tasks that took humans ~5 hours in mid-2025 now completed at 50%+ success rate (METR estimates)</div>
+    </div>
+  </div>
+
+  <h3>What It Feels Like to Use</h3>
+
+  <div class="vignette">
+    "I think we'll remember December 2025 as this inflection point where all of a sudden everything changed. Claude is becoming the verb now, in the same way that ChatGPT was when it launched."
+    <span class="vignette-attr">— Mike Brevoort, principal architect at Mytra, after prototyping with Claude Code over the holidays</span>
+  </div>
+
+  <p>At a Seattle meetup in January 2026, over 150 engineers packed a room to trade Claude Code use cases. One Google principal engineer publicly said Claude reproduced a year of architectural work in one hour. Microsoft — which sells GitHub Copilot — has widely adopted Claude Code internally across major engineering teams. Boris Cherny, Claude Code's creator, used multiple Claude agents running in parallel to ship 300+ pull requests in December — his most productive month in a year and a half at Anthropic.</p>
+
+  <h3>What the Evidence Actually Says</h3>
+
+  <div class="callout orange">
+    <span class="callout-label">The METR study — a necessary reality check</span>
+    A 2025 randomized controlled trial tested 16 experienced open-source developers on 246 real tasks in their own repositories. Developers <em>predicted</em> AI tools would save 24% of their time. AI tools actually <strong>increased completion time by 19%</strong>. Important context: these were developers with 5+ years in their repos, working in mature codebases averaging 1.1 million lines of code. The study explicitly notes: "These results do not imply that current AI systems are not useful in many realistic, economically relevant settings." Less experienced developers, unfamiliar codebases, and greenfield feature development may show very different results. The tools have also improved substantially since early 2025.
+  </div>
+
+  <div class="callout green">
+    <span class="callout-label">The adoption numbers</span>
+    Claude Code hit $1 billion in annual run-rate revenue 6 months after launch (Nov 2025) — faster than any enterprise software product in history. By Feb 2026, that number had passed $2.5 billion. The task length AI can handle at 50% success rate has been doubling every 5–7 months.
+  </div>
+
+  <h3>Where It Still Fails</h3>
+  <p>AI coding tools fail predictably on <strong>large-scale architectural decisions</strong> (choosing between microservices and monolith), <strong>ambiguous requirements</strong> (when the bug report is incomplete), <strong>cross-system coordination</strong> (changes spanning multiple services), and <strong>subtle security bugs</strong> — researchers flag concerns about AI-introduced vulnerabilities in complex code. The remaining ~20% failure rate on SWE-bench concentrates in exactly these areas: problems that challenge experienced engineers too.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- DEEP DIVE: KNOWLEDGE & SCIENCE -->
+<!-- ======================================= -->
+<section id="knowledge">
+  <hr class="section-break">
+  <span class="section-label">Deep Dive</span>
+  <h2>Knowledge &amp; Science — From Trivia to Research</h2>
+
+  <div class="stat-pair">
+    <div class="stat-item">
+      <div class="stat-num">35%</div>
+      <div class="stat-desc">GPT-3 on MMLU<br>Jun 2020 · ~random</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">86%</div>
+      <div class="stat-desc">GPT-4 on MMLU<br>Mar 2023</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">94.3%</div>
+      <div class="stat-desc">Gemini 3.1 Pro on GPQA Diamond<br>Feb 2026 · PhD-level science</div>
+    </div>
+  </div>
+
+  <p>MMLU — 57 academic subjects from high school to professional — went from random guessing (2020) to saturated (2024) in four years. Its harder successor, GPQA Diamond, uses PhD-level questions designed to be un-Googleable: non-experts with internet access get 34%, domain PhD holders get ~65%. By February 2026, three labs score above 91%. The remaining errors likely reflect ambiguous questions more than knowledge gaps.</p>
+
+  <h3>Medicine — The Sharpest Test of Promise vs. Reality</h3>
+
+  <p>This single pair of facts tells the whole story of where AI is: LLMs correctly identify medical conditions in <strong>94.9% of test scenarios</strong> when tested alone. But in a randomized study of 1,298 people, participants <em>using</em> an LLM identified conditions in <strong>fewer than 34.5% of cases</strong> — no better than people without LLMs at all.</p>
+
+  <div class="quote-block">
+    <div class="quote-text">"It's not enough for a large language model to simply answer medical test questions accurately. That type of evaluation doesn't tell us anything about what matters."</div>
+    <div class="quote-attr">— Nigam Shah, Chief Data Scientist, Stanford Health Care</div>
+  </div>
+
+  <p>Where LLMs <em>are</em> working in medicine: clinical documentation (reducing charting burden on doctors), medical education (generating realistic case studies for rare conditions — one NYU program uses them to simulate diagnoses residents rarely see in training), clinical trial enrollment (matching patients to studies), and radiology assist. Where they're <em>not</em> yet reliable: direct diagnosis, treatment planning, and anything where a wrong answer has immediate physical consequences.</p>
+
+  <h3>The Hallucination Problem</h3>
+  <p>When an LLM doesn't know something, it doesn't say "I don't know" — it generates a confident, plausible-sounding answer that may be completely fabricated. On questions flagged as uncertain by internal confidence scores, Gemini 3.1 Pro's factual error rate dropped from roughly 88% to 50% between model versions — real progress, but a coin flip on uncertain questions remains the reality. This is the single biggest barrier to high-stakes deployment, and the reason every AI-generated claim in medicine, law, or engineering still requires human verification.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- DEEP DIVE: REASONING -->
+<!-- ======================================= -->
+<section id="reasoning">
+  <hr class="section-break">
+  <span class="section-label">Deep Dive</span>
+  <h2>Reasoning — The Most Surprising Development</h2>
+
+  <p>The biggest surprise in AI over the past two years wasn't that models got bigger. It was that they learned to <em>think</em> — or at least, to do something that produces the same outputs as thinking.</p>
+
+  <h3>The ARC-AGI Story</h3>
+  <p>François Chollet designed ARC (Abstraction and Reasoning Corpus) specifically to test whether AI could reason about things it had never seen before — visual puzzles requiring fluid intelligence, not memorization. For four years, it worked. The best models were stuck at 0–5%.</p>
+
+  <p>Then, in December 2024, o3 scored 87.5%. Not through memorization — through iterative reasoning at test time. The model generates chains of internal thought, evaluates them, backs up when they fail, and tries new approaches. ARC-AGI-2 was designed to be even harder. Within six months, Gemini 3.1 Pro had already reached 77.1%. Humans score ~95%.</p>
+
+  <h3>What "Thinking" Actually Means, Technically</h3>
+  <p>When a "reasoning model" (o1, o3, Claude in thinking mode) tackles a problem, it doesn't just predict the next token. It generates sometimes thousands of internal tokens — exploring approaches, checking its work, reasoning through implications — before producing a response. You trade speed and cost for accuracy: a reasoning query might take 30–60 seconds and cost 10× more than a standard query, but it can solve problems that standard models fail at entirely.</p>
+
+  <div class="callout purple">
+    <span class="callout-label">The key question no one has answered</span>
+    Is this "real" reasoning or sophisticated pattern matching? The honest answer: we don't know, and the distinction may not matter practically. A system that couldn't solve novel visual puzzles at all in 2023 now solves 77% of them. Whether that constitutes "understanding" is a philosophical question; that it constitutes a useful capability is an empirical fact.
+  </div>
+
+  <h3>Math — A Case Study in Acceleration</h3>
+  <p>GPT-4o scored 9.3% on the International Mathematical Olympiad qualifier in May 2024. Four months later, o1 scored 74.4%. By late 2025, multiple models achieved 100% on AIME. The entire arc — from barely functional to solved — took about 16 months. But <strong>FrontierMath</strong> — unpublished research-level problems — sits at roughly 40%. "Can solve hard problems with known answers" and "can do math that hasn't been done before" remain very different capabilities.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- DEEP DIVE: AGENCY -->
+<!-- ======================================= -->
+<section id="agency">
+  <hr class="section-break">
+  <span class="section-label">Deep Dive</span>
+  <h2>Agency — When AI Does Things Instead of Answering</h2>
+
+  <p>The shift from "assistant" to "agent" is arguably the most consequential development of 2025–2026. An assistant answers your question. An agent takes your goal, breaks it into steps, uses tools, handles errors, and delivers a result.</p>
+
+  <h3>2023 vs. 2026 — The Same Task, Two Eras</h3>
+
+  <div class="ba-grid">
+    <div class="ba-card before">
+      <h5>2023 — The Assistant Era</h5>
+      <p>"Summarize the key points from this research paper." You copy-paste relevant sections into a chat window. The model summarizes what you gave it. If you want more, you paste more. Context limit: a few pages. You are the retrieval engine.</p>
+    </div>
+    <div class="ba-card after">
+      <h5>2026 — The Agent Era</h5>
+      <p>"Find the 5 most-cited protein folding papers from 2025, summarize their contributions, and identify which ones build on AlphaFold." The model searches the web, reads full papers, cross-references citations, and delivers a structured synthesis. 15-20 tool calls over 2-3 minutes. You define the goal; it executes.</p>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-header">Example · Computer Use</div>
+    <div class="example-body">
+      <div class="prompt">"Fill out the quarterly expense report in our internal tool using the receipts I uploaded."</div>
+      <p style="margin-top:12px;">Models with "computer use" capability can take screenshots, identify UI elements, click buttons, fill in forms, and navigate multi-step workflows — operating a computer the way a human would.</p>
+      <div class="result" style="color: var(--accent);">⚠ Still unreliable for complex multi-step UI tasks. Works for simple, well-defined workflows.</div>
+    </div>
+  </div>
+
+  <h3>The Context Window — Advertised vs. Usable</h3>
+  <p>Agency requires memory. Context windows grew from 4,000 tokens (a few paragraphs, 2022) to over 1 million tokens (an entire codebase, 2026). But advertised capacity and usable quality diverge sharply: at 1 million tokens, Claude Opus 4.6 retrieves specific information 76% of the time while Gemini 3 Pro manages only 26%. The "usable context" is often far smaller than the spec sheet.</p>
+
+  <h3>Where Agency Breaks Down</h3>
+  <p>Current agentic systems fail on <strong>long sequences of dependent steps</strong> (error rates compound — 95% success per step becomes 60% after 10 steps), <strong>ambiguous goals</strong> (they do exactly what you said, not what you meant), and <strong>recovery from unexpected states</strong> (a dialog box they didn't expect can derail an entire workflow). The SWE-bench 80% success rate is for single, self-contained tasks. Multi-hour, multi-tool workflows are far less reliable.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- BEYOND TEXT -->
+<!-- ======================================= -->
+<section id="multimodal">
+  <hr class="section-break">
+  <span class="section-label">Beyond Text</span>
+  <h2>What AI Can See, Hear, and Generate</h2>
+
+  <p>This page has focused on text and code — where capabilities are most measurable — but frontier models in February 2026 are natively multimodal. They see, hear, and increasingly generate across media types.</p>
+
+  <p><strong>Vision:</strong> Upload a photo of a rash and ask for a differential diagnosis. Photograph a math problem from a textbook and have it solved step-by-step. Share a screenshot of an error message and get debugging help with full context. Screenshot a whiteboard of architecture notes and have it converted to a structured document. Gemini leads on multimodal understanding benchmarks (MMMU-Pro); all three frontier labs support image input natively.</p>
+
+  <p><strong>Voice:</strong> GPT-4o introduced real-time voice conversation in 2024 — low-latency, emotionally expressive, interruptible. This shifted the interface from typing to talking for a subset of use cases: hands-busy workflows, accessibility, language practice, and brainstorming. Claude and Gemini followed with voice interfaces in 2025.</p>
+
+  <p><strong>Image and video generation:</strong> Distinct from LLMs but increasingly integrated with them. Text-to-image (DALL-E 3, Midjourney, Flux) is production-grade for marketing, concept art, and prototyping. Text-to-video (Sora, Veo) is emerging but not yet reliable for professional use. The quality ceiling rises monthly.</p>
+
+  <p><strong>Document understanding:</strong> Models can now read PDFs, spreadsheets, slides, and handwritten notes natively. A common workflow: upload a 200-page contract, ask "what are the non-standard termination clauses?" and get a structured answer with page references. The accuracy depends heavily on document quality and model — it works well for clean typeset documents and poorly for low-resolution scans.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- HOW IT WORKS (moved after deep dives) -->
+<!-- ======================================= -->
+<section id="how">
+  <hr class="section-break">
+  <span class="section-label">Technical Foundation</span>
+  <h2>How This Works — The Technology</h2>
+
+  <p>Now that you've seen what these systems do, here's how they do it. Every major AI model — ChatGPT, Claude, Gemini, Llama — is built on the same fundamental architecture: the <strong>transformer</strong>, invented at Google in 2017.</p>
+
+  <h3>The Core Idea</h3>
+  <p>A language model is a function that takes a sequence of words (or "tokens") and predicts the next one. That's it. The remarkable thing is that, trained at sufficient scale on enough text, this simple objective produces emergent capabilities — reasoning, translation, code generation, mathematical proof — that weren't explicitly programmed.</p>
+
+  <div class="tech-diagram">
+    <span class="label">TRAINING</span> <span class="dim">(months, billions of $)</span><br>
+    Internet text → <span class="hl">Pattern learning</span> → Base model<br>
+    <br>
+    <span class="label">ALIGNMENT</span> <span class="dim">(weeks)</span><br>
+    Base model + <span class="hl">Human feedback (RLHF)</span> → Helpful, safe model<br>
+    <br>
+    <span class="label">INFERENCE</span> <span class="dim">(milliseconds to minutes)</span><br>
+    Your prompt → Model predicts tokens → <span class="hl">Response</span><br>
+    <br>
+    <span class="label">REASONING MODE</span> <span class="dim">(since Sep 2024)</span><br>
+    Your prompt → Model generates <span class="hl">internal "thinking" tokens</span> → Better response<br>
+    <span class="dim">   (trades speed and cost for accuracy)</span>
+  </div>
+
+  <h3>Why It Seems to "Understand"</h3>
+  <p>The transformer's key innovation is the <strong>attention mechanism</strong> — it allows every word in a sequence to attend to every other word, weighted by relevance. When processing "The bank was steep along the river," attention connects "bank" to "river" rather than to "money." At scale, billions of these attention computations produce something that looks remarkably like comprehension — though whether it <em>is</em> comprehension remains an open question.</p>
+
+  <div class="callout blue">
+    <span class="callout-label">The key intuition for calibrating expectations</span>
+    LLMs learned statistical patterns across trillions of words. This makes them extraordinarily good at tasks requiring pattern recognition, synthesis, and fluent language — and surprisingly bad at tasks requiring reliable factual recall, precise counting, or grounded physical reasoning. Understanding this single distinction explains most of their strengths and failures.
+  </div>
+
+  <h3>The Five Paradigm Shifts</h3>
+  <p>Each major jump in capability traces back to one of these breakthroughs:</p>
+
+  <div class="data-table-wrap">
+    <table class="dt">
+      <thead><tr><th>Paradigm</th><th>When</th><th>What Changed</th><th>In Plain English</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Scale</strong></td><td>2020–23</td><td>More parameters + data = predictably better</td><td>A bigger brain learns more</td></tr>
+        <tr><td><strong>RLHF</strong></td><td>2022–23</td><td>Human feedback makes models usable</td><td>Training the brain to be helpful, not just smart</td></tr>
+        <tr><td><strong>Mixture of Experts</strong></td><td>2023–24</td><td>Only part of the model activates per query</td><td>A team of specialists, not one generalist</td></tr>
+        <tr><td><strong>Test-time compute</strong></td><td>2024+</td><td>Model "thinks longer" before answering</td><td>Taking 30 seconds on a test question instead of 3</td></tr>
+        <tr><td><strong>Agentic tool use</strong></td><td>2025+</td><td>Models browse, code, and act iteratively</td><td>Not just answering — doing</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The Open-Source Revolution</h3>
+  <p>In January 2024, the best open-source model trailed the best proprietary model by 8% on Chatbot Arena Elo. By February 2025, the gap was 1.7%. DeepSeek R1 — open-source, from a Chinese lab — matched frontier reasoning at roughly 90% less cost. Meta's Llama models run locally on consumer hardware. This isn't just a pricing story; it's an access story. The capabilities described on this page are increasingly available to anyone with a laptop, not just organizations with API budgets.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- WHERE IT'S CHANGING WORK -->
+<!-- ======================================= -->
+<section id="fields">
+  <hr class="section-break">
+  <span class="section-label">Real-World Impact</span>
+  <h2>Where AI Is Reshaping Specific Work</h2>
+
+  <p>Stanford HAI's 2026 predictions converge on a theme: the era of AI evangelism is giving way to an era of AI evaluation. The question has shifted from <em>can AI do this?</em> to <em>how well, at what cost, and for whom?</em></p>
+
+  <div class="field-grid">
+    <div class="field-card">
+      <h4>Software Engineering</h4>
+      <div class="works"><span class="wf-label">Working well:</span> Bug fixing, code generation, code review, test writing, documentation, "vibe coding" (natural language → working app)</div>
+      <div class="fails"><span class="wf-label">Not yet:</span> System architecture, security-critical code, large-scale refactors across teams</div>
+      <p class="note" style="margin-top:8px;">Claude Code: $2.5B run-rate. Microsoft uses Claude Code internally despite selling Copilot. 40-70% dev time reduction on standard features at early adopter companies.</p>
+    </div>
+    <div class="field-card">
+      <h4>Medicine &amp; Healthcare</h4>
+      <div class="works"><span class="wf-label">Working well:</span> Clinical documentation, medical education, patient message triage, clinical trial matching, radiology assist</div>
+      <div class="fails"><span class="wf-label">Not yet:</span> Direct diagnosis, treatment planning, anything where a wrong answer has physical consequences</div>
+      <p class="note" style="margin-top:8px;">MASAI trial: AI-supported mammography in 105,934 Swedish women. MedHELM: 120+ clinical scenarios benchmarked across 6 models.</p>
+    </div>
+    <div class="field-card">
+      <h4>Law</h4>
+      <div class="works"><span class="wf-label">Working well:</span> Contract review, legal research, case summarization, first-draft brief writing, compliance checking</div>
+      <div class="fails"><span class="wf-label">Not yet:</span> Courtroom strategy, novel legal arguments, jurisdictional nuance, factual precision without verification</div>
+      <p class="note" style="margin-top:8px;">GPT-4 passed the bar at the 90th percentile (2023). Real-world legal AI adoption focuses on document-heavy workflows, not advice.</p>
+    </div>
+    <div class="field-card">
+      <h4>Education</h4>
+      <div class="works"><span class="wf-label">Working well:</span> Personalized tutoring, problem generation, essay feedback, curriculum dev, rare-case simulation for clinical training</div>
+      <div class="fails"><span class="wf-label">Not yet:</span> Detecting student understanding vs. mimicry, pedagogical consistency across sessions, plagiarism boundaries</div>
+      <p class="note" style="margin-top:8px;">NYU uses LLMs to generate clinical cases for rare conditions residents seldom see. Shen & Tamkin (2025): "How AI Impacts Skill Formation."</p>
+    </div>
+    <div class="field-card">
+      <h4>Scientific Research</h4>
+      <div class="works"><span class="wf-label">Working well:</span> Literature review, hypothesis generation, data analysis scripting, paper summarization, code for experiments</div>
+      <div class="fails"><span class="wf-label">Not yet:</span> Experimental design requiring physical intuition, replication verification, peer review quality</div>
+      <p class="note" style="margin-top:8px;">Epoch AI: task complexity doubling every 5-7 months. But researchers warn AI use may reduce code verification rigor.</p>
+    </div>
+    <div class="field-card">
+      <h4>Writing &amp; Publishing</h4>
+      <div class="works"><span class="wf-label">Working well:</span> First drafts, editing, translation, email, marketing copy, technical documentation</div>
+      <div class="fails"><span class="wf-label">Not yet:</span> Original voice, sustained narrative quality, fact-checking its own output, cultural sensitivity</div>
+      <p class="note" style="margin-top:8px;">Book releases tripled post-LLM; average quality declined. But top-1000 monthly showed <em>higher</em> quality than pre-LLM (Reimers & Waldfogel, 2026).</p>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <span class="callout-label">The productivity paradox</span>
+    Erik Brynjolfsson argues the AI productivity takeoff is visible in US data: ~2.7% productivity growth in 2025, nearly double the prior decade's average. But Stanford's prediction for 2026: "We'll hear more companies say AI hasn't yet shown productivity increases, except in certain target areas like programming and call centers." Both can be true — AI is a J-curve technology, with concentrated gains in specific domains before broad impact.
+  </div>
+</section>
+
+<!-- ======================================= -->
+<!-- ECONOMICS -->
+<!-- ======================================= -->
+<section id="economics">
+  <hr class="section-break">
+  <span class="section-label">Economics</span>
+  <h2>The Cost of Intelligence — And Why It Matters</h2>
+
+  <p>The economic story may be more consequential than the capability story. Capabilities that exist at $100 per query are research curiosities. Capabilities at $0.001 per query reshape industries.</p>
+
+  <p>Two overlapping trends are driving prices down. First, the frontier itself got cheaper: each new model version costs less per token than the last — roughly <strong>7× cheaper at the same capability tier</strong> over three years. Second, smaller models caught up to what the frontier used to be — GPT-4o mini ($0.38/M tokens) roughly matches GPT-3.5 from 18 months prior. If you count the capability of a 2023 frontier model delivered at 2026 commodity prices, the effective decline is <strong>100× or more</strong>. These are overlapping trends, not a single curve.</p>
+
+  <div class="data-table-wrap">
+    <table class="dt">
+      <thead><tr><th>If You Need...</th><th>What It Costs (Feb 2026)</th><th>What It Cost 2 Years Ago</th></tr></thead>
+      <tbody>
+        <tr><td>GPT-3.5-level chat</td><td>Free (Llama 3.1 8B, local)</td><td>$2/M tokens</td></tr>
+        <tr><td>GPT-4-level analysis</td><td>$0.55/M (DeepSeek V3, open-source)</td><td>$30+/M tokens</td></tr>
+        <tr><td>Frontier coding (80% SWE-bench)</td><td>$8–18/M (Gemini 3.1 Pro, Opus 4.6)</td><td>Didn't exist at any price</td></tr>
+        <tr><td>Maximum reasoning (PhD science, math)</td><td>$58/M (GPT-5.2 Pro)</td><td>Didn't exist at any price</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout green">
+    <span class="callout-label">The scale of the market</span>
+    Anthropic's annualized revenue: $14 billion (Feb 2026), growing 10× per year for three consecutive years. Over 500 companies spend $1M+ annually. Eight of the Fortune 10 are customers. OpenAI's revenue: estimated $10–12 billion. The frontier AI market crossed ~$30 billion in 2025 — a market that barely existed three years ago.
+  </div>
+
+  <p>The consequence: AI capabilities that were research demos two years ago are accessible to any developer with a credit card, and many users for free. The gap between "what AI can do in a lab" and "what AI can do for you" has collapsed.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- WHAT IT CAN'T DO (restructured: 3 clusters) -->
+<!-- ======================================= -->
+<section id="cant">
+  <hr class="section-break">
+  <span class="section-label">Limitations</span>
+  <h2>What AI Still Can't Do</h2>
+
+  <p>The failures are as instructive as the successes. These aren't edge cases — they're systematic limitations that follow directly from how these systems work.</p>
+
+  <h3>It makes things up.</h3>
+  <p>When an LLM encounters something it doesn't know, it doesn't say "I don't know." It generates a confident, plausible-sounding answer that may be completely fabricated — a citation to a paper that doesn't exist, a coherent account of an event that never happened. This is called hallucination, and it's the defining limitation of the technology. On questions where models are uncertain enough to hedge, frontier systems still get it wrong roughly half the time. Closely related: they express the same confidence whether right or wrong. When humans are uncertain, we usually recognize it. LLMs cannot reliably do this. This makes them dangerous in domains where knowing the limits of your knowledge — medicine, law, engineering safety — matters more than the knowledge itself.</p>
+
+  <h3>It's brittle at the edges.</h3>
+  <p>LLMs process text as tokens, not as grounded concepts. Ask "how many r's in strawberry?" and it may get it wrong — even as it solves differential equations. Ask it to predict what happens when you push a stack of blocks, and it struggles — it learned from text, not from interacting with the physical world. Despite million-token context windows, performance degrades over extended interactions; a model that's brilliant in minute one may subtly drift by minute thirty, forgetting constraints or contradicting itself. Agentic tasks that chain many dependent steps see compounding error rates — 95% per-step success becomes 60% after ten steps.</p>
+
+  <h3>It's a tool, not a colleague.</h3>
+  <p>Trained on internet text, LLMs absorb the internet's biases — demographic, cultural, linguistic. Alignment reduces but doesn't eliminate this. More fundamentally, the Nature Medicine study is worth repeating: LLMs identified conditions at 94.9% alone, but humans <em>with</em> LLMs did no better than humans without. The bottleneck isn't the model's capability — it's the human-AI interface, the workflow design, the user's ability to evaluate AI output critically. Tools are only as good as the process around them. And right now, we're early in learning how to build those processes.</p>
+</section>
+
+<!-- ======================================= -->
+<!-- CLOSING -->
+<!-- ======================================= -->
+<section>
+  <hr class="section-break">
+  <span class="section-label">Closing</span>
+  <h2>What Remains Uncertain</h2>
+
+  <p>In February 2026, AI is extraordinary at structured tasks with clear evaluation criteria — coding, test-taking, pattern matching, text synthesis — and mediocre at tasks requiring judgment, factual reliability, physical reasoning, and sustained coherent thought over long horizons.</p>
+
+  <p>The technology behind the improvements is real: scale, human feedback, test-time compute, and agentic tool use each contributed measurable, documented gains. The capabilities are real. The economic trajectory is real.</p>
+
+  <p>What remains genuinely uncertain: whether the current rate of progress continues or plateaus. Whether productivity gains spread broadly or concentrate in software and a few other domains. How labor markets adjust — and how quickly. Whether "reasoning" constitutes understanding or the most sophisticated simulation of understanding ever built. And how to construct systems that reliably know the limits of their own knowledge — because until they can, every high-stakes application requires a human in the loop who can.</p>
+
+  <div class="quote-block">
+    <div class="quote-text">"The question is no longer 'Can AI do this?' but 'How well, at what cost, and for whom?'"</div>
+    <div class="quote-attr">— Stanford HAI, 2026 Predictions</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Last updated: February 19, 2026. All benchmark scores approximate. Self-reported lab scores noted where applicable. Pricing reflects published API rates; actual costs vary by usage pattern and reasoning-token overhead.</p>
+  <p style="margin-top:8px;">Sources: METR RCT (Jul 2025) · Stanford HAI · Nature Medicine (2025) · Artificial Analysis · LMArena / Chatbot Arena · SWE-bench · ARC Prize · Epoch AI · Reimers & Waldfogel (2026) · Brynjolfsson (2026) · Anthropic, OpenAI, Google DeepMind model cards · Reuters · Business of Apps · TechBuzz · Built In</p>
+</footer>
+
+</div>
+
+<script>
+document.querySelectorAll('.topnav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.topnav a');
+
+function updateNav() {
+  let current = '';
+  sections.forEach(s => {
+    if (s.getBoundingClientRect().top < 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    const match = a.getAttribute('href') === '#' + current;
+    a.style.color = match ? '#c44d20' : '';
+    a.style.fontWeight = match ? '700' : '';
+  });
+}
+
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
+</script>
+
+</body>
+</html>
