@@ -271,6 +271,90 @@
     border-top: 1px solid var(--border);
   }
   .chart-category-label:first-of-type { border-top: none; margin-top: 10px; }
+
+  /* --- FEEL BANDS --- */
+  .feel-band-group { margin-bottom: 28px; }
+  .feel-band-group h3 {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 12px;
+  }
+  .feel-band {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 0;
+    border-left: 3px solid transparent;
+    padding: 8px 0 8px 14px;
+    margin-bottom: 2px;
+    border-radius: 0 6px 6px 0;
+    transition: background 0.15s;
+  }
+  .feel-band:hover { background: rgba(255,255,255,0.02); }
+  .feel-band .band-range {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-bright);
+    padding-top: 1px;
+  }
+  .feel-band .band-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+  .feel-band .band-desc strong { color: var(--text); font-weight: 500; }
+  .feel-band.feel-red { border-left-color: var(--accent-rose); }
+  .feel-band.feel-amber { border-left-color: var(--accent-amber); }
+  .feel-band.feel-green { border-left-color: var(--accent-green); }
+  .feel-band.feel-blue { border-left-color: var(--accent-blue); }
+  .feel-band.feel-purple { border-left-color: var(--accent-purple); }
+  .feel-band.feel-cyan { border-left-color: var(--accent-cyan); }
+
+  /* --- PRICING TABLE --- */
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 11.5px;
+  }
+  .pricing-table thead tr {
+    border-bottom: 2px solid var(--border);
+  }
+  .pricing-table th {
+    text-align: left;
+    padding: 8px 10px;
+    color: var(--accent-amber);
+    font-weight: 600;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .pricing-table td {
+    padding: 7px 10px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+  .pricing-table td:first-child {
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .pricing-table .price-up {
+    color: var(--accent-rose);
+  }
+  .pricing-table .price-same {
+    color: var(--accent-green);
+  }
+  .pricing-table .price-down {
+    color: var(--accent-cyan);
+  }
+  .pricing-table tfoot td {
+    border-bottom: none;
+    padding-top: 10px;
+    color: var(--text-dim);
+    font-size: 10.5px;
+  }
 </style>
 </head>
 <body>
@@ -662,6 +746,322 @@
         <strong style="color: var(--text-bright);">Value shift:</strong> RTX 5080 ≈ RTX 4090, RX 9070 XT ≈ RTX 4080</p>
         <div class="real-world">→ Last gen's flagship ≈ next gen's midrange</div>
       </div>
+    </div>
+  </section>
+
+  <!-- SECTION: WHAT THESE NUMBERS FEEL LIKE -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-green);">Grounding the Numbers</div>
+      <h2 class="section-title">What These Numbers Feel Like</h2>
+    </div>
+    <p class="chart-description">Benchmarks are only useful if you can map them to experience. Below is a rough translation from abstract scores to what you'd actually feel as a user. The bands are approximate — your specific software, settings, and expectations matter — but they'll anchor the numbers from the charts above.</p>
+
+    <div class="benchmark-grid" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));">
+      <div class="bench-card" style="grid-column: 1 / -1;">
+        <h3>🎮 3DMark Time Spy (Graphics Score)</h3>
+        <div class="bench-type" style="color: var(--accent-green);">GPU Performance → Gaming Experience</div>
+        <div class="feel-band feel-red">
+          <div class="band-range">&lt; 5,000</div>
+          <div class="band-desc"><strong>Esports only.</strong> 1080p medium in lighter titles (Valorant, CS2). AAA games at 30fps or below. Cyberpunk stutters. This is a GTX 1060 / RX 580 — fine in 2017, painful now.</div>
+        </div>
+        <div class="feel-band feel-amber">
+          <div class="band-range">5,000–8,000</div>
+          <div class="band-desc"><strong>Solid 1080p.</strong> 60fps high settings in most AAA titles. Medium/high in demanding ones. You'll want DLSS or FSR. This is RTX 2060 / GTX 1080 territory.</div>
+        </div>
+        <div class="feel-band feel-green">
+          <div class="band-range">8,000–14,000</div>
+          <div class="band-desc"><strong>The sweet spot.</strong> 1080p ultra / 1440p high at 60fps. Comfortable for a 1440p 144Hz monitor with upscaling. This is RTX 3060 Ti → RTX 3070 → RTX 4060 Ti range.</div>
+        </div>
+        <div class="feel-band feel-blue">
+          <div class="band-range">14,000–22,000</div>
+          <div class="band-desc"><strong>High refresh 1440p / entry 4K.</strong> 1440p ultra at 100+ fps, 4K high at 60fps. Ray tracing becomes viable without ruining framerate. RTX 4070 → 4070 Ti Super range.</div>
+        </div>
+        <div class="feel-band feel-purple">
+          <div class="band-range">22,000–35,000</div>
+          <div class="band-desc"><strong>4K ultra territory.</strong> 60fps+ in everything at 4K, 1440p at 120+fps with RT. Diminishing returns for most people. RTX 4080 → 4090 range. Many games become CPU-bound before you hit GPU limits.</div>
+        </div>
+        <div class="feel-band feel-cyan">
+          <div class="band-range">35,000+</div>
+          <div class="band-desc"><strong>Enthusiast / 4K 120Hz.</strong> 4K at 100+ fps. You need a $1,000+ display to see the difference. RTX 5090 territory. Legitimate for VR, triple-monitor, or 8K-adjacent workloads.</div>
+        </div>
+      </div>
+
+      <div class="bench-card">
+        <h3>⚡ Geekbench 6 Single-Core</h3>
+        <div class="bench-type" style="color: var(--accent-green);">Per-Core CPU → Responsiveness</div>
+        <div class="feel-band feel-red">
+          <div class="band-range">&lt; 800</div>
+          <div class="band-desc"><strong>Noticeable lag.</strong> App switching delays, web pages hitch, IDEs feel sluggish. Budget phones and pre-2017 chips.</div>
+        </div>
+        <div class="feel-band feel-amber">
+          <div class="band-range">800–1,400</div>
+          <div class="band-desc"><strong>Functional.</strong> Daily tasks responsive, but compilation and heavy web apps show their age. 2017–2019 flagships.</div>
+        </div>
+        <div class="feel-band feel-green">
+          <div class="band-range">1,400–2,200</div>
+          <div class="band-desc"><strong>Snappy.</strong> Everything feels instant. Code compiles quickly, browser tabs don't stall. Developer workstation grade.</div>
+        </div>
+        <div class="feel-band feel-blue">
+          <div class="band-range">2,200–3,000</div>
+          <div class="band-desc"><strong>Diminishing returns.</strong> Hard to notice improvement in daily use. Benefits mainly in specific single-threaded workloads.</div>
+        </div>
+        <div class="feel-band feel-purple">
+          <div class="band-range">3,000+</div>
+          <div class="band-desc"><strong>Effectively indistinguishable.</strong> The gap between 3,000 and 3,900 is invisible outside benchmarks. Bragging rights territory.</div>
+        </div>
+      </div>
+
+      <div class="bench-card">
+        <h3>🔧 Cinebench R23 Multi-Core</h3>
+        <div class="bench-type" style="color: var(--accent-green);">All-Core CPU → Creative Workloads</div>
+        <div class="feel-band feel-red">
+          <div class="band-range">&lt; 6,000</div>
+          <div class="band-desc"><strong>Hobbyist.</strong> Video renders take ages. Exporting a 10-min 1080p edit is a coffee break. Fine for web dev, painful for creative work.</div>
+        </div>
+        <div class="feel-band feel-amber">
+          <div class="band-range">6,000–12,000</div>
+          <div class="band-desc"><strong>Capable.</strong> 1080p video editing workable, 4K possible with proxies. Photoshop fast, Blender renders overnight. Mainstream laptop territory.</div>
+        </div>
+        <div class="feel-band feel-green">
+          <div class="band-range">12,000–20,000</div>
+          <div class="band-desc"><strong>Production-ready.</strong> 4K editing smooth, exports in reasonable time. 3D rendering viable. Professional laptop / mainstream desktop.</div>
+        </div>
+        <div class="feel-band feel-blue">
+          <div class="band-range">20,000–35,000</div>
+          <div class="band-desc"><strong>Professional.</strong> Multi-stream 4K editing, Blender renders fast, After Effects previews at full res. 8–16 core desktop territory.</div>
+        </div>
+        <div class="feel-band feel-purple">
+          <div class="band-range">35,000+</div>
+          <div class="band-desc"><strong>Workstation.</strong> 8K editing, complex 3D scenes, simulation. 16–24 core flagships. Beyond this, most creative pros hit GPU or storage bottlenecks first.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-title">Where the Perception Curve Flattens</div>
+      <p>For each benchmark, there's a threshold beyond which additional performance is nearly invisible to the user. In single-core, it's around 2,000 GB6 — roughly where a 2022 flagship phone or laptop sits. In GPU gaming, it's around Time Spy 14,000 for a 1440p 60fps gamer. Once you're above the threshold for your workload, you're paying for headroom and longevity, not perceptible speed. Knowing your threshold prevents overspending.</p>
+    </div>
+  </section>
+
+  <!-- SECTION: GPU TIER PRICING OVER TIME -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-amber);">The Price of Performance</div>
+      <h2 class="section-title">GPU Tier Pricing Over Time</h2>
+    </div>
+    <p class="chart-description">Performance charts show improvement, but they don't show what you paid for it. The "midrange" price point has shifted significantly over a decade — and the separation between "enthusiast" and "halo" tiers didn't exist before 2018. The GTX 1080 Ti story is partly a pricing story.</p>
+
+    <div class="chart-wrapper" style="margin-bottom: 10px;">
+      <canvas id="gpuPricingChart"></canvas>
+      <div class="chart-footnote">NVIDIA MSRP at launch (Founders Edition or reference) · Does not reflect street pricing, shortages, or regional variation</div>
+    </div>
+
+    <div class="benchmark-grid" style="margin: 24px auto; max-width: 880px;">
+      <div class="bench-card" style="grid-column: 1 / -1;">
+        <h3>💰 NVIDIA MSRP by Tier at Launch</h3>
+        <div class="bench-type" style="color: var(--accent-amber);">Prices in USD · MSRP / Founders Edition</div>
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Gen</th>
+              <th>x60 (Budget)</th>
+              <th>x70 (Midrange)</th>
+              <th>x80 (Enthusiast)</th>
+              <th>Halo (Ti/90)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Maxwell (2014)</td>
+              <td class="price-same">GTX 960 · $199</td>
+              <td class="price-same">GTX 970 · $329</td>
+              <td>GTX 980 · $549</td>
+              <td>980 Ti · $649</td>
+            </tr>
+            <tr>
+              <td>Pascal (2016)</td>
+              <td class="price-up">GTX 1060 · $249</td>
+              <td class="price-up">GTX 1070 · $379</td>
+              <td class="price-same">GTX 1080 · $549</td>
+              <td class="price-up">1080 Ti · $699</td>
+            </tr>
+            <tr>
+              <td>Turing (2018)</td>
+              <td class="price-up">RTX 2060 · $349</td>
+              <td class="price-up">RTX 2070 · $499</td>
+              <td class="price-up">RTX 2080 · $699</td>
+              <td class="price-up">2080 Ti · $1,199</td>
+            </tr>
+            <tr>
+              <td>Ampere (2020)</td>
+              <td class="price-down">RTX 3060 · $329</td>
+              <td class="price-same">RTX 3070 · $499</td>
+              <td class="price-same">RTX 3080 · $699</td>
+              <td class="price-up">3090 · $1,499</td>
+            </tr>
+            <tr>
+              <td>Ada (2022)</td>
+              <td class="price-down">RTX 4060 · $299</td>
+              <td class="price-up">RTX 4070 · $599</td>
+              <td class="price-up">RTX 4080 · $1,199</td>
+              <td class="price-up">4090 · $1,599</td>
+            </tr>
+            <tr>
+              <td>Blackwell (2025)</td>
+              <td>RTX 5060 · $299</td>
+              <td class="price-down">RTX 5070 · $549</td>
+              <td class="price-down">RTX 5080 · $999</td>
+              <td class="price-up">5090 · $1,999</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">10-yr change: Budget +50% ($199→$299) · Midrange +67% ($329→$549) · Enthusiast +82% ($549→$999) · Halo +208% ($649→$1,999)</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-title">The Turing Tax and the Halo Schism</div>
+      <p>Before 2018, NVIDIA's tiers were spaced predictably: roughly $200–$300 between each step. Turing changed the math. The RTX 2080 Ti at $1,199 created a new "halo" tier that had never existed in the consumer GPU market, and the x80 class jumped from $549–$699 to $1,199 in a single generation (RTX 4080). Meanwhile, the budget tier barely moved — the RTX 4060 at $299 costs roughly the same as a GTX 960 did a decade ago. The GTX 1080 Ti at $699 delivered what would become $1,199 performance in the next generation. That's why it's the GOAT: it sat at the old enthusiast price while delivering what became the new halo-tier performance.</p>
+    </div>
+  </section>
+
+  <!-- SECTION: VRAM AS LONGEVITY BOTTLENECK -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-rose);">The Hidden Bottleneck</div>
+      <h2 class="section-title">VRAM: The Spec Benchmarks Don't Capture</h2>
+    </div>
+    <p class="chart-description">Time Spy measures raw rendering power, but VRAM determines how long a GPU stays viable. A GPU with enough compute but not enough VRAM will stutter, drop textures, or force lower settings years before its shader performance becomes the limiting factor. This is the #1 reason real-world GPU lifespan diverges from benchmark predictions.</p>
+
+    <div class="chart-wrapper" style="margin-bottom: 10px;">
+      <canvas id="vramChart"></canvas>
+      <div class="chart-footnote">VRAM at launch · Game demand = recommended VRAM for AAA titles at highest settings (1440p) in that year</div>
+    </div>
+
+    <div class="benchmark-grid" style="margin: 24px auto; max-width: 880px;">
+      <div class="bench-card" style="grid-column: 1 / -1;">
+        <h3>📊 VRAM at Each Tier vs. Game Demand</h3>
+        <div class="bench-type" style="color: var(--accent-rose);">GB · Midrange (x70) highlighted</div>
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Generation</th>
+              <th>x60</th>
+              <th>x70</th>
+              <th>x80</th>
+              <th>Halo</th>
+              <th style="color: var(--accent-rose);">AAA Demand</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Maxwell (2014)</td>
+              <td>2 GB</td>
+              <td>4 GB*</td>
+              <td>4 GB</td>
+              <td>6 GB</td>
+              <td>2 GB</td>
+            </tr>
+            <tr>
+              <td>Pascal (2016)</td>
+              <td>6 GB</td>
+              <td style="color: var(--accent-green);">8 GB</td>
+              <td>8 GB</td>
+              <td>11 GB</td>
+              <td>3–4 GB</td>
+            </tr>
+            <tr>
+              <td>Turing (2018)</td>
+              <td>6 GB</td>
+              <td style="color: var(--accent-green);">8 GB</td>
+              <td>8 GB</td>
+              <td>11 GB</td>
+              <td>4–6 GB</td>
+            </tr>
+            <tr>
+              <td>Ampere (2020)</td>
+              <td>12 GB</td>
+              <td style="color: var(--accent-amber);">8 GB</td>
+              <td>10 GB</td>
+              <td>24 GB</td>
+              <td>6–8 GB</td>
+            </tr>
+            <tr>
+              <td>Ada (2022)</td>
+              <td>8 GB</td>
+              <td style="color: var(--accent-green);">12 GB</td>
+              <td>16 GB</td>
+              <td>24 GB</td>
+              <td>8–10 GB</td>
+            </tr>
+            <tr>
+              <td>Blackwell (2025)</td>
+              <td>8 GB</td>
+              <td style="color: var(--accent-amber);">12 GB</td>
+              <td>16 GB</td>
+              <td>32 GB</td>
+              <td>10–12 GB</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="6">* GTX 970 had 4 GB but only 3.5 GB at full bandwidth due to memory architecture split</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-title">Why the RTX 3070 Aged Faster Than It Should Have</div>
+      <p>The RTX 3070 launched with 8 GB of VRAM — the same amount as the GTX 1070 four years earlier. Game demand crossed the 8 GB threshold around 2022, which means the 3070 hit the VRAM wall only two years into its life, despite its shader performance still being competitive. For comparison, the GTX 1080 Ti shipped with 11 GB in 2017, more than the RTX 3070 that "replaced" its performance tier three years later. That extra VRAM is a major reason the 1080 Ti aged so well. The same risk exists today: the RTX 5070 at 12 GB launched into a world where AAA games already recommend 10–12 GB at high settings. Two years from now, 12 GB could be the new 8 GB.</p>
+    </div>
+  </section>
+
+  <!-- SECTION: PROCESS NODE TIMELINE -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-purple);">Why Performance Jumps Happen</div>
+      <h2 class="section-title">Process Node: The Physics Behind the Curves</h2>
+    </div>
+    <p class="chart-description">When you see a sudden jump in performance-per-watt, it's almost always a process node shrink. When you see stagnation (Intel 2014–2020), it's being stuck on the same node. This chart tracks which manufacturing process each product category was using, explaining the "why" behind the efficiency curves above.</p>
+
+    <div class="chart-wrapper" style="margin-bottom: 10px;">
+      <canvas id="processNodeChart"></canvas>
+      <div class="chart-footnote">Effective process node in nm · Intel nodes mapped to approximate TSMC equivalents (Intel 7 ≈ TSMC 7nm, Intel 4 ≈ TSMC 5nm) · Samsung 8nm (NVIDIA Ampere) shown as 8nm</div>
+    </div>
+
+    <div class="benchmark-grid" style="margin: 24px auto; max-width: 880px;">
+      <div class="bench-card" style="grid-column: 1 / -1;">
+        <h3>🔬 Key Node Transitions & Their Impact</h3>
+        <div class="bench-type" style="color: var(--accent-purple);">Each row = a major node shrink that reshaped its category</div>
+        <div class="feel-band feel-green">
+          <div class="band-range">28nm → 16nm</div>
+          <div class="band-desc"><strong>NVIDIA Pascal (2016).</strong> The GTX 1080 doubled the 980's performance at the same power. The node shrink that made the 1080 Ti possible at $699. Biggest single-generation GPU leap in a decade.</div>
+        </div>
+        <div class="feel-band feel-blue">
+          <div class="band-range">16nm → 7nm</div>
+          <div class="band-desc"><strong>Apple A12 (2018) / AMD Ryzen 3000 (2019).</strong> Apple hit 7nm two years before anyone else in the PC space. AMD used it to finally match Intel's per-core performance after a decade of trailing. NVIDIA skipped 7nm entirely for consumer GPUs.</div>
+        </div>
+        <div class="feel-band feel-purple">
+          <div class="band-range">14nm → 14nm → 14nm</div>
+          <div class="band-desc"><strong>Intel (2014–2020).</strong> Six years on the same node. Five CPU generations (Broadwell through Comet Lake) with incremental refinements. This is why Intel's efficiency charts flatline while Apple's soar. The "14nm+++" meme era.</div>
+        </div>
+        <div class="feel-band feel-cyan">
+          <div class="band-range">7nm → 5nm → 3nm</div>
+          <div class="band-desc"><strong>Apple M1 (2020) → M3/A17 Pro (2023).</strong> Three node shrinks in three years. This is the period where phone chips started beating laptop CPUs in single-core. Each jump delivered 15–25% better efficiency, compounding into the 39× phone-vs-desktop efficiency gap.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-title">Apple Leads by ~2 Years, NVIDIA Lags by ~2 Years</div>
+      <p>Apple reached 7nm in 2018 (A12), 5nm in 2020 (A14/M1), and 3nm in 2023 (A17 Pro). NVIDIA reached roughly 7nm-equivalent density in 2022 (RTX 4000 on TSMC 4N), a full four years after Apple. This isn't because NVIDIA engineers are slower — it's because GPUs are physically larger dies, which makes cutting-edge nodes more expensive per chip and lower-yielding. A phone SoC is ~100mm². An RTX 4090 die is ~609mm². Fabbing a large die on the newest node costs dramatically more and wastes more silicon on defects. NVIDIA optimizes for cost-per-transistor, not smallest-possible-node, which is why Ampere (RTX 3000) used Samsung 8nm when Apple was already on TSMC 5nm.</p>
     </div>
   </section>
 
@@ -1514,6 +1914,166 @@ new Chart(document.getElementById('perfPerWattChart'), {
       '2023':['RTX 4060 · 115W','RTX 4070 · 200W','RTX 4090 · 450W'],
       '2025':[null,'RTX 5070 · 250W','RTX 5090 · 575W']
     }, 'pts/W')
+  }
+});
+
+// --- GPU TIER PRICING CHART ---
+new Chart(document.getElementById('gpuPricingChart'), {
+  type: 'line',
+  data: {
+    labels: ['2014','2016','2018','2020','2022','2025'],
+    datasets: [
+      { label: 'x60 (Budget)', data: [199,249,349,329,299,299],
+        borderColor: '#34d399', backgroundColor: '#34d39920', pointRadius:4, pointHoverRadius:7, borderWidth:2.5, tension:0.3 },
+      { label: 'x70 (Midrange)', data: [329,379,499,499,599,549],
+        borderColor: '#4f8ff7', backgroundColor: '#4f8ff720', pointRadius:4, pointHoverRadius:7, borderWidth:2.5, tension:0.3 },
+      { label: 'x80 (Enthusiast)', data: [549,549,699,699,1199,999],
+        borderColor: '#fb923c', backgroundColor: '#fb923c20', pointRadius:4, pointHoverRadius:7, borderWidth:2.5, tension:0.3 },
+      { label: 'Halo (Ti/90)', data: [649,699,1199,1499,1599,1999],
+        borderColor: '#a78bfa', backgroundColor: '#a78bfa20', pointRadius:4, pointHoverRadius:7, borderWidth:2.5, tension:0.3 }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:true, aspectRatio:2.0,
+    scales: {
+      x: { grid:{color:gridColor, drawBorder:false}, ticks:{font:{size:11}} },
+      y: { grid:{color:gridColor, drawBorder:false}, ticks:{font:{size:11}, callback:v=>'$'+v},
+        title:{display:true, text:'MSRP (USD)', font:{size:11, family:fontFamily}, color:tickColor} }
+    },
+    plugins: {
+      legend:{labels:{font:{size:11, family:fontFamily}, usePointStyle:true, pointStyle:'circle', padding:16}},
+      tooltip:{
+        backgroundColor:tooltipBg, titleFont:{family:fontFamily,size:12}, bodyFont:{family:fontFamily,size:11},
+        padding:12, cornerRadius:6, borderColor:'#2a3040', borderWidth:1,
+        callbacks:{
+          label: ctx => {
+            const names = {
+              0: ['GTX 960','GTX 1060','RTX 2060','RTX 3060','RTX 4060','RTX 5060'],
+              1: ['GTX 970','GTX 1070','RTX 2070','RTX 3070','RTX 4070','RTX 5070'],
+              2: ['GTX 980','GTX 1080','RTX 2080','RTX 3080','RTX 4080','RTX 5080'],
+              3: ['GTX 980 Ti','GTX 1080 Ti','RTX 2080 Ti','RTX 3090','RTX 4090','RTX 5090']
+            };
+            return names[ctx.datasetIndex][ctx.dataIndex] + ' · $' + ctx.parsed.y;
+          }
+        }
+      },
+      annotation: { annotations: {
+        turingBox: {
+          type:'box', xMin:'2018', xMax:'2022',
+          backgroundColor:'rgba(244,63,94,0.04)', borderColor:'rgba(244,63,94,0.15)', borderWidth:1,
+          label:{ display:true, content:'The Turing Price Reset', color:'#f43f5e88', font:{size:10,family:fontFamily}, position:'start' }
+        }
+      }}
+    }
+  }
+});
+
+// --- VRAM CHART ---
+new Chart(document.getElementById('vramChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2014','2016','2018','2020','2022','2025'],
+    datasets: [
+      { label: 'x70 VRAM (GB)', data: [4,8,8,8,12,12],
+        backgroundColor: '#4f8ff7aa', borderColor: '#4f8ff7', borderWidth:1, borderRadius:3, barPercentage:0.7, categoryPercentage:0.7 },
+      { label: 'x80 VRAM (GB)', data: [4,8,8,10,16,16],
+        backgroundColor: '#a78bfa88', borderColor: '#a78bfa', borderWidth:1, borderRadius:3, barPercentage:0.7, categoryPercentage:0.7 },
+      { label: 'AAA Game Demand (GB)', data: [2,3.5,5,7,9,11],
+        type: 'line', borderColor: '#f43f5e', backgroundColor: '#f43f5e20', pointRadius:5, pointHoverRadius:8,
+        borderWidth:2.5, tension:0.3, pointStyle:'triangle', fill:true }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:true, aspectRatio:2.0,
+    scales: {
+      x: { grid:{color:gridColor, drawBorder:false}, ticks:{font:{size:11}} },
+      y: { grid:{color:gridColor, drawBorder:false}, min:0, max:18,
+        ticks:{font:{size:11}, callback:v=>v+'GB'},
+        title:{display:true, text:'VRAM (GB)', font:{size:11, family:fontFamily}, color:tickColor} }
+    },
+    plugins: {
+      legend:{labels:{font:{size:11, family:fontFamily}, usePointStyle:true, padding:16}},
+      tooltip:{
+        backgroundColor:tooltipBg, titleFont:{family:fontFamily,size:12}, bodyFont:{family:fontFamily,size:11},
+        padding:12, cornerRadius:6, borderColor:'#2a3040', borderWidth:1,
+        callbacks:{
+          label: ctx => {
+            const gpuNames = {
+              0: ['GTX 970','GTX 1070','RTX 2070','RTX 3070','RTX 4070','RTX 5070'],
+              1: ['GTX 980','GTX 1080','RTX 2080','RTX 3080','RTX 4080','RTX 5080']
+            };
+            const gameExamples = ['Far Cry 4','DOOM','AC Odyssey','Cyberpunk 2077','Hogwarts Legacy','GTA VI era'];
+            if (ctx.datasetIndex <= 1) return gpuNames[ctx.datasetIndex][ctx.dataIndex] + ' · ' + ctx.parsed.y + ' GB';
+            return gameExamples[ctx.dataIndex] + ' · ~' + ctx.parsed.y + ' GB recommended';
+          }
+        }
+      },
+      annotation: { annotations: {
+        dangerZone: {
+          type:'box', xMin:'2020', xMax:'2022',
+          backgroundColor:'rgba(244,63,94,0.06)', borderColor:'rgba(244,63,94,0.2)', borderWidth:1,
+          label:{ display:true, content:'8GB hits the wall', color:'#f43f5e88', font:{size:10,family:fontFamily}, position:'start' }
+        }
+      }}
+    }
+  }
+});
+
+// --- PROCESS NODE CHART ---
+new Chart(document.getElementById('processNodeChart'), {
+  type: 'line',
+  data: {
+    labels: ['2014','2016','2018','2020','2022','2024'],
+    datasets: [
+      { label: 'Apple (Phone)', data: [20,16,7,5,3,3],
+        borderColor: '#4f8ff7', backgroundColor: '#4f8ff720', pointRadius:5, pointHoverRadius:8,
+        borderWidth:2.5, tension:0.1, pointStyle:'circle' },
+      { label: 'NVIDIA (GPU)', data: [28,16,12,8,5,5],
+        borderColor: '#34d399', backgroundColor: '#34d39920', pointRadius:5, pointHoverRadius:8,
+        borderWidth:2.5, tension:0.1, pointStyle:'rect' },
+      { label: 'AMD (CPU)', data: [28,14,12,7,5,4],
+        borderColor: '#fb923c', backgroundColor: '#fb923c20', pointRadius:5, pointHoverRadius:8,
+        borderWidth:2.5, tension:0.1, pointStyle:'triangle' },
+      { label: 'Intel (CPU)', data: [14,14,14,10,7,3],
+        borderColor: '#f43f5e', backgroundColor: '#f43f5e20', pointRadius:5, pointHoverRadius:8,
+        borderWidth:2.5, tension:0.1, borderDash:[6,3], pointStyle:'crossRot' }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:true, aspectRatio:2.0,
+    scales: {
+      x: { grid:{color:gridColor, drawBorder:false}, ticks:{font:{size:11}} },
+      y: { grid:{color:gridColor, drawBorder:false}, reverse:true, type:'logarithmic',
+        min:2, max:30,
+        ticks:{font:{size:11}, callback:v=>[3,5,7,10,14,16,20,28].includes(v)?v+'nm':''},
+        title:{display:true, text:'Process Node (nm) — lower is better', font:{size:11, family:fontFamily}, color:tickColor} }
+    },
+    plugins: {
+      legend:{labels:{font:{size:11, family:fontFamily}, usePointStyle:true, padding:16}},
+      tooltip:{
+        backgroundColor:tooltipBg, titleFont:{family:fontFamily,size:12}, bodyFont:{family:fontFamily,size:11},
+        padding:12, cornerRadius:6, borderColor:'#2a3040', borderWidth:1,
+        callbacks:{
+          label: ctx => {
+            const products = {
+              0: ['A8 (TSMC 20nm)','A10 (TSMC 16nm)','A12 (TSMC 7nm)','A14/M1 (TSMC 5nm)','A16/M2 (TSMC 3nm)','A18/M4 (TSMC 3nm)'],
+              1: ['GTX 980 (TSMC 28nm)','GTX 1080 (TSMC 16nm)','RTX 2080 (TSMC 12nm)','RTX 3080 (Samsung 8nm)','RTX 4080 (TSMC 4N)','RTX 5080 (TSMC 4N)'],
+              2: ['FX-8350 (GF 28nm)','Ryzen 1800X (GF 14nm)','Ryzen 2700X (GF 12nm)','Ryzen 5800X (TSMC 7nm)','Ryzen 7900X (TSMC 5nm)','Ryzen 9800X3D (TSMC 4nm)'],
+              3: ['i7-4770K (Intel 22→14nm)','i7-6700K (Intel 14nm)','i7-8700K (Intel 14nm)','i7-10700K (Intel 14nm→10nm)','i9-12900K (Intel 7)','i9-14900K→Arrow Lake (TSMC N3B)']
+            };
+            return products[ctx.datasetIndex][ctx.dataIndex] + ' · ' + ctx.parsed.y + 'nm';
+          }
+        }
+      },
+      annotation: { annotations: {
+        intelStuck: {
+          type:'box', xMin:'2014', xMax:'2020',
+          yMin:13, yMax:15,
+          backgroundColor:'rgba(244,63,94,0.08)', borderColor:'rgba(244,63,94,0.2)', borderWidth:1,
+          label:{ display:true, content:'Intel stuck on 14nm', color:'#f43f5e88', font:{size:9,family:fontFamily}, position:'center' }
+        }
+      }}
+    }
   }
 });
 </script>
