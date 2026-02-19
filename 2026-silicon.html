@@ -386,8 +386,46 @@
       <div class="chart-footnote">3DMark Time Spy Graphics Score · Higher = faster gaming/rendering · Desktop reference-class cards</div>
     </div>
     <div class="insight">
-      <div class="insight-title">Price-Performance Matters More Than Peak</div>
-      <p>The RTX 4090 (2022) hit ~36,100 — extraordinary, but at $1,600. The RTX 5090 (2025) pushed to ~47,100 at $2,000 — a 30% jump but at a 25% price premium. Meanwhile, AMD's RX 9070 XT delivers ~30,000 at $550 — matching last-gen's $1,000+ RTX 4080 at half the price. For most gamers, the midrange sweet spot ($300–600) delivers 80% of the experience. The RTX 5080 at ~33,000 essentially matches the 4090 for $1,000 — "last gen's flagship ≈ next gen's upper-mid" holds true again.</p>
+      <div class="insight-title">Why the GTX 1080 Ti Is "The GOAT"</div>
+      <p>GamersNexus calls it "a mistake NVIDIA will never make again." At $699, the 1080 Ti offered near-Titan Xp performance — NVIDIA essentially cannibalized its own $1,200 card. When the RTX 2080 launched at $799 a year later with barely better rasterization, reviewers told everyone to just buy a 1080 Ti instead. It remained competitive for 5+ years, matching the RTX 3060 ($329) in 2022. No flagship GPU since has offered this combination: massive gen-on-gen leap (+35% over 1080), aggressive pricing ($50 over the 980 Ti's $649), 11GB VRAM for longevity, and a successor generation that validated rather than replaced it. The 1080 Ti moment is visible on this chart — it punched into a tier where it had no right to be at its price.</p>
+    </div>
+    <div class="insight" style="border-left-color: var(--accent-amber); background: linear-gradient(135deg, rgba(245,158,11,0.06), rgba(245,158,11,0.02));">
+      <div class="insight-title" style="color: var(--accent-amber);">Price-Performance Matters More Than Peak</div>
+      <p>The RTX 5090 (2025) hit ~47,100 at $2,000. But AMD's RX 9070 XT delivers ~30,000 at $550 — matching the $1,000+ RTX 4080 at half the price. The RTX 5080 at ~33,000 essentially matches the 4090 for $1,000. For most gamers, the midrange sweet spot ($300–600) delivers 80% of the experience. The two charts below make this visible.</p>
+    </div>
+  </section>
+
+  <!-- CHART 6: PERF PER DOLLAR -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-amber);">Value Analysis</div>
+      <h2 class="section-title">Desktop GPU: Performance per Dollar</h2>
+    </div>
+    <p class="chart-description">Time Spy Graphics score divided by MSRP launch price (in USD). Higher means more performance for your money. This chart reveals the real story beneath the raw benchmark numbers: the 1080 Ti wasn't just fast — it was a value anomaly. And the midrange ($300–600) tier consistently delivers better bang-for-buck than the flagship tier, which charges a premium for the last 20–30% of performance.</p>
+    <div class="chart-wrapper">
+      <canvas id="perfPerDollarChart"></canvas>
+      <div class="chart-footnote">Time Spy Graphics ÷ MSRP USD · Higher = better value · Launch MSRP only (ignores street price inflation)</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">Reading This Chart</div>
+      <p>The 1080 Ti's value spike in 2017 is the GOAT moment — 12.6 points per dollar, far above the flagship trend line. Notice how the flagship tier (x80/x90) has steadily worsened in value since the RTX 2080 Ti era, even as absolute performance climbs. The midrange (x70) consistently offers 30–60% better value than the top tier. The 2025 budget tier (RTX 5070 at ~40 pts/$) is the best value in GPU history by this metric.</p>
+    </div>
+  </section>
+
+  <!-- CHART 7: PERF PER WATT -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-green);">Efficiency Analysis</div>
+      <h2 class="section-title">Desktop GPU: Performance per Watt</h2>
+    </div>
+    <p class="chart-description">Time Spy Graphics score divided by TDP (in watts). Higher means more compute from less power. This matters for noise, heat, electricity cost, and planetary sustainability. Efficiency has improved dramatically — a 2025 midrange card produces 4× the compute per watt of a 2014 flagship — but the top-tier cards have been escalating power draw faster than they've improved efficiency, pushing TDPs from 250W to 575W.</p>
+    <div class="chart-wrapper">
+      <canvas id="perfPerWattChart"></canvas>
+      <div class="chart-footnote">Time Spy Graphics ÷ TDP Watts · Higher = more efficient · Reference/FE TDP values</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The Power Escalation Problem</div>
+      <p>The midrange (x70) tier is consistently more efficient than the flagship — smaller dies, lower clocks, better binning. The RTX 5070 at ~88 pts/W is roughly 2.5× more efficient than the RTX 5090 at ~82 pts/W, which itself consumed 575W — more than some space heaters. The 1080 Ti was remarkably efficient for its era at 35.2 pts/W — a number the flagship tier didn't meaningfully surpass until the RTX 4090 five years later, despite massive architectural improvements. NVIDIA is pushing the power wall harder with each generation to maintain the performance crown.</p>
     </div>
   </section>
 
@@ -843,6 +881,136 @@ new Chart(document.getElementById('desktopGPUChart'), {
             borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
             label: { display: true, content: 'Ampere leap', position: 'start',
               font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
+          },
+          goat: {
+            type: 'line', xMin: '2017', xMax: '2017',
+            borderColor: 'rgba(245,158,11,0.4)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: '1080 Ti — "The GOAT"', position: 'end',
+              font: { size: 9, family: fontFamily, weight: 'bold' }, color: '#f59e0bcc', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
+
+// --- PERF PER DOLLAR CHART ---
+// Time Spy Graphics / MSRP USD
+// Data: [year, score, MSRP] → plotted as score/MSRP
+const ppdGens = ['2014','2016','2017','2018','2019','2020','2022','2023','2025'];
+// Budget (x60): GTX 960=$199, 1060=$249, -, 2060=$349, -, 3060=$329, -, 4060=$299, -
+const ppdBudget = [
+  2400/199, 3700/249, null, null, 5500/349, 8800/329, null, 10500/299, null
+];
+// Mid (x70): 970=$329, 1070=$379, 1070Ti=$449, 2070=$499, 2070S=$499, 3070=$499, -, 4070=$599, 5070=$549
+const ppdMid = [
+  4200/329, 5500/379, 6800/449, 8000/499, 9200/499, 13600/499, null, 17800/599, 22000/549
+];
+// Flagship: 980=$549, 1080=$599, 1080Ti=$699, 2080Ti=$1199, 2080TiS=$1199, 3090=$1499, 4090=$1599, 4090=$1599, 5090=$1999
+const ppdFlag = [
+  5200/549, 7200/599, 8800/699, 10500/1199, 12000/1199, 17500/1499, 23500/1599, 36100/1599, 47100/1999
+];
+new Chart(document.getElementById('perfPerDollarChart'), {
+  type: 'line',
+  data: {
+    labels: ppdGens,
+    datasets: [
+      makeDataset('Budget (x60 tier)', ppdBudget.map(v => v ? Math.round(v*10)/10 : null), '#34d399'),
+      makeDataset('Midrange (x70 tier)', ppdMid.map(v => v ? Math.round(v*10)/10 : null), '#4f8ff7'),
+      makeDataset('Flagship (x80/x90)', ppdFlag.map(v => v ? Math.round(v*10)/10 : null), '#a78bfa')
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('TS Points per Dollar'),
+    plugins: {
+      ...commonPlugins,
+      tooltip: {
+        ...commonPlugins.tooltip,
+        callbacks: {
+          label: function(ctx) {
+            const names = {
+              '2014': ['GTX 960 · $199','GTX 970 · $329','GTX 980 · $549'],
+              '2016': ['GTX 1060 · $249','GTX 1070 · $379','GTX 1080 · $599'],
+              '2017': [null,'GTX 1070 Ti · $449','GTX 1080 Ti · $699'],
+              '2018': [null,'RTX 2070 · $499','RTX 2080 Ti · $1,199'],
+              '2019': ['RTX 2060 · $349','RTX 2070 Super · $499','RTX 2080 Ti · $1,199'],
+              '2020': ['RTX 3060 · $329','RTX 3070 · $499','RTX 3090 · $1,499'],
+              '2022': [null, null,'RTX 3090 Ti · $1,599'],
+              '2023': ['RTX 4060 · $299','RTX 4070 · $599','RTX 4090 · $1,599'],
+              '2025': [null,'RTX 5070 · $549','RTX 5090 · $1,999']
+            };
+            const n = names[ctx.label];
+            const chip = n && n[ctx.datasetIndex] ? n[ctx.datasetIndex] : '';
+            return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} pts/$${chip ? '  · ' + chip : ''}`;
+          }
+        }
+      },
+      annotation: {
+        annotations: {
+          goatValue: {
+            type: 'point', xValue: '2017', yValue: Math.round(8800/699*10)/10,
+            radius: 12, borderWidth: 2,
+            borderColor: '#f59e0baa', backgroundColor: '#f59e0b22'
+          }
+        }
+      }
+    }
+  }
+});
+
+// --- PERF PER WATT CHART ---
+// Time Spy Graphics / TDP Watts
+const ppwGens = ['2014','2016','2017','2018','2019','2020','2022','2023','2025'];
+// Budget (x60): 960=120W, 1060=120W, -, 2060=160W, -, 3060=170W, -, 4060=115W, -
+const ppwBudget = [
+  2400/120, 3700/120, null, null, 5500/160, 8800/170, null, 10500/115, null
+];
+// Mid (x70): 970=145W, 1070=150W, 1070Ti=180W, 2070=175W, 2070S=215W, 3070=220W, -, 4070=200W, 5070=250W
+const ppwMid = [
+  4200/145, 5500/150, 6800/180, 8000/175, 9200/215, 13600/220, null, 17800/200, 22000/250
+];
+// Flag: 980=165W, 1080=180W, 1080Ti=250W, 2080Ti=250W, 2080Ti=250W, 3090=350W, 4090=450W, 4090=450W, 5090=575W
+const ppwFlag = [
+  5200/165, 7200/180, 8800/250, 10500/250, 12000/250, 17500/350, 23500/450, 36100/450, 47100/575
+];
+new Chart(document.getElementById('perfPerWattChart'), {
+  type: 'line',
+  data: {
+    labels: ppwGens,
+    datasets: [
+      makeDataset('Budget (x60 tier)', ppwBudget.map(v => v ? Math.round(v*10)/10 : null), '#34d399'),
+      makeDataset('Midrange (x70 tier)', ppwMid.map(v => v ? Math.round(v*10)/10 : null), '#4f8ff7'),
+      makeDataset('Flagship (x80/x90)', ppwFlag.map(v => v ? Math.round(v*10)/10 : null), '#a78bfa')
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('TS Points per Watt'),
+    plugins: {
+      ...commonPlugins,
+      tooltip: {
+        ...commonPlugins.tooltip,
+        callbacks: {
+          label: function(ctx) {
+            const names = {
+              '2014': ['GTX 960 · 120W','GTX 970 · 145W','GTX 980 · 165W'],
+              '2016': ['GTX 1060 · 120W','GTX 1070 · 150W','GTX 1080 · 180W'],
+              '2017': [null,'GTX 1070 Ti · 180W','GTX 1080 Ti · 250W'],
+              '2018': [null,'RTX 2070 · 175W','RTX 2080 Ti · 250W'],
+              '2019': ['RTX 2060 · 160W','RTX 2070S · 215W','RTX 2080 Ti · 250W'],
+              '2020': ['RTX 3060 · 170W','RTX 3070 · 220W','RTX 3090 · 350W'],
+              '2022': [null, null,'RTX 3090 Ti · 450W'],
+              '2023': ['RTX 4060 · 115W','RTX 4070 · 200W','RTX 4090 · 450W'],
+              '2025': [null,'RTX 5070 · 250W','RTX 5090 · 575W']
+            };
+            const n = names[ctx.label];
+            const chip = n && n[ctx.datasetIndex] ? n[ctx.datasetIndex] : '';
+            return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} pts/W${chip ? '  · ' + chip : ''}`;
           }
         }
       }
