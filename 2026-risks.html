@@ -3,675 +3,817 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Risk Exposure Model</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Silicon Timeline — Processor & GPU Performance Reference</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg-deep: #08090c;
-  --bg-card: #0f1117;
-  --bg-hover: #161820;
-  --bg-elevated: #1a1c26;
-  --border: #1e2030;
-  --border-focus: #2a2d42;
-  --text-primary: #e2e4ec;
-  --text-secondary: #8b8fa4;
-  --text-muted: #565a6e;
-  --red: #f0545c;
-  --red-dim: rgba(240,84,92,0.12);
-  --orange: #f0943c;
-  --orange-dim: rgba(240,148,60,0.12);
-  --yellow: #e8c84a;
-  --yellow-dim: rgba(232,200,74,0.12);
-  --green: #4ade80;
-  --green-dim: rgba(74,222,128,0.12);
-  --blue: #5b8def;
-  --blue-dim: rgba(91,141,239,0.12);
-  --purple: #a78bfa;
-  --purple-dim: rgba(167,139,250,0.12);
-  --cyan: #22d3ee;
-  --cyan-dim: rgba(34,211,238,0.12);
-  --pink: #f472b6;
-  --pink-dim: rgba(244,114,182,0.12);
-  --font-display: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-}
-html { font-size: 15px; }
-body {
-  background: var(--bg-deep); color: var(--text-primary);
-  font-family: var(--font-display); line-height: 1.55;
-  min-height: 100vh; -webkit-font-smoothing: antialiased;
-}
-.container { max-width: 1020px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  :root {
+    --bg: #0c0e12;
+    --bg-card: #13161c;
+    --bg-card-hover: #191d25;
+    --border: #1e2330;
+    --text: #c8cdd8;
+    --text-dim: #6b7280;
+    --text-bright: #e8ecf4;
+    --accent-blue: #4f8ff7;
+    --accent-green: #34d399;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --accent-purple: #a78bfa;
+    --accent-cyan: #22d3ee;
+    --accent-orange: #fb923c;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --mono: 'IBM Plex Mono', 'Menlo', monospace;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  }
 
-/* Header */
-.header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-.header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; color: #fff; margin-bottom: 0.25rem; }
-.header p { font-size: 0.8rem; color: var(--text-muted); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Guide */
-.guide-toggle {
-  display: flex; align-items: center; justify-content: space-between; width: 100%;
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
-  padding: 0.9rem 1.15rem; margin-bottom: 1.5rem; cursor: pointer;
-  font-family: var(--font-display); color: var(--text-primary); transition: border-color 0.15s;
-}
-.guide-toggle:hover { border-color: var(--border-focus); }
-.guide-toggle-left { display: flex; align-items: center; gap: 0.6rem; }
-.guide-toggle-icon {
-  width: 26px; height: 26px; border-radius: 6px; background: var(--blue-dim);
-  display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0;
-}
-.guide-toggle-label { font-size: 0.85rem; font-weight: 500; }
-.guide-toggle-hint { font-size: 0.72rem; color: var(--text-muted); }
-.guide-chevron { font-size: 0.6rem; color: var(--text-muted); transition: transform 0.2s; }
-.guide-chevron.open { transform: rotate(180deg); }
-.guide-body {
-  display: none; background: var(--bg-card); border: 1px solid var(--border); border-top: none;
-  border-radius: 0 0 10px 10px; margin-top: -1.5rem; margin-bottom: 1.5rem; padding: 0 1.25rem 1.25rem;
-}
-.guide-body.open { display: block; }
-.guide-toggle.open { border-radius: 10px 10px 0 0; margin-bottom: 0; }
-.guide-section { padding-top: 1rem; }
-.guide-section + .guide-section { border-top: 1px solid var(--border); margin-top: 1rem; }
-.guide-section-title { font-size: 0.7rem; font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.5rem; }
-.guide-section p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.65; margin-bottom: 0.5rem; }
-.guide-section p:last-child { margin-bottom: 0; }
-.guide-section strong { color: var(--text-primary); font-weight: 600; }
-.guide-section code { font-family: var(--font-mono); color: var(--blue); font-size: 0.78rem; }
-.guide-callout {
-  background: rgba(91,141,239,0.05); border-left: 3px solid var(--blue);
-  border-radius: 0 6px 6px 0; padding: 0.65rem 0.85rem; margin-top: 0.6rem;
-}
-.guide-callout p { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
-.guide-callout.warn { background: rgba(240,84,92,0.05); border-left-color: var(--red); }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* Aggregate stats */
-.agg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
-@media (max-width: 640px) { .agg-grid { grid-template-columns: repeat(2, 1fr); } }
-.stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; }
-.stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.35rem; }
-.stat-value { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; color: #fff; }
-.stat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+  /* --- HEADER --- */
+  .hero {
+    padding: 80px 40px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 60px);
+    color: var(--text-bright);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    max-width: 680px;
+    color: var(--text-dim);
+    font-size: 16px;
+    line-height: 1.8;
+  }
 
-/* Domain bar chart */
-.domain-bars { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; }
-.domain-bars h2 { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.85rem; }
-.domain-bar-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.4rem 0; }
-.domain-bar-label { font-size: 0.78rem; color: var(--text-secondary); width: 160px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.domain-bar-track { flex: 1; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
-.domain-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-.domain-bar-value { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; width: 2.5rem; text-align: right; flex-shrink: 0; }
+  /* --- LAYOUT --- */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
 
-/* Nav tabs */
-.nav-tabs { display: flex; gap: 0.3rem; margin-bottom: 1.25rem; overflow-x: auto; padding-bottom: 0.25rem; }
-.nav-tab {
-  font-family: var(--font-display); font-size: 0.75rem; font-weight: 500;
-  padding: 0.5rem 0.85rem; border-radius: 7px; border: 1px solid transparent;
-  cursor: pointer; transition: all 0.15s; background: var(--bg-card); color: var(--text-muted); white-space: nowrap; flex-shrink: 0;
-}
-.nav-tab:hover { background: var(--bg-hover); color: var(--text-secondary); }
-.nav-tab.active { border-color: rgba(91,141,239,0.3); color: var(--blue); background: var(--blue-dim); }
-.nav-tab .tab-count { font-family: var(--font-mono); font-size: 0.65rem; margin-left: 0.3rem; opacity: 0.6; }
+  /* --- BENCHMARK EXPLAINER --- */
+  .explainer-section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(24px, 3vw, 36px);
+    color: var(--text-bright);
+    margin-bottom: 24px;
+  }
+  .benchmark-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+  .bench-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .bench-card:hover {
+    background: var(--bg-card-hover);
+    border-color: #2a3040;
+  }
+  .bench-card h3 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+  }
+  .bench-card .bench-type {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-blue);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .bench-card p {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .bench-card .real-world {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--accent-amber);
+    font-family: var(--mono);
+  }
 
-/* Domain header */
-.domain-header { margin-bottom: 1rem; }
-.domain-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 0.2rem; }
-.domain-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+  /* --- CHART SECTIONS --- */
+  .chart-section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .chart-header {
+    margin-bottom: 10px;
+  }
+  .chart-description {
+    color: var(--text-dim);
+    max-width: 720px;
+    margin-bottom: 30px;
+    font-size: 14.5px;
+    line-height: 1.8;
+  }
+  .chart-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px 24px 20px;
+    position: relative;
+  }
+  .chart-wrapper canvas {
+    max-height: 380px;
+  }
+  .chart-footnote {
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    opacity: 0.7;
+  }
 
-/* Sort & filter row */
-.controls-row { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.controls-label { font-size: 0.7rem; color: var(--text-muted); margin-right: 0.15rem; }
-.ctrl-btn {
-  font-family: var(--font-display); font-size: 0.7rem; font-weight: 500;
-  padding: 0.3rem 0.6rem; border-radius: 5px; border: none; cursor: pointer;
-  transition: all 0.15s; background: transparent; color: var(--text-muted);
-}
-.ctrl-btn:hover { color: var(--text-secondary); }
-.ctrl-btn.active { background: var(--bg-elevated); color: #fff; }
-.controls-spacer { width: 1rem; }
+  /* --- INSIGHT CALLOUTS --- */
+  .insight {
+    margin-top: 24px;
+    background: linear-gradient(135deg, rgba(79, 143, 247, 0.06), rgba(52, 211, 153, 0.04));
+    border-left: 3px solid var(--accent-blue);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+  }
+  .insight-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 8px;
+  }
+  .insight p {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.75;
+  }
 
-/* Item rows */
-.item-list { display: flex; flex-direction: column; gap: 3px; }
-.item-row { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: border-color 0.15s; }
-.item-row:hover { border-color: var(--border-focus); }
-.item-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0.75rem 1rem; cursor: pointer; user-select: none; width: 100%;
-  background: none; border: none; color: inherit; font-family: inherit; text-align: left;
-}
-.item-left { display: flex; align-items: center; gap: 0.65rem; min-width: 0; flex: 1; }
-.item-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.item-info { min-width: 0; }
-.item-name { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
-.item-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
-.item-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; margin-left: 0.75rem; }
-.badge {
-  font-size: 0.6rem; font-weight: 600; padding: 0.15rem 0.4rem; border-radius: 4px; letter-spacing: 0.03em;
-}
-.badge-red { background: var(--red-dim); color: var(--red); }
-.badge-orange { background: var(--orange-dim); color: var(--orange); }
-.badge-yellow { background: var(--yellow-dim); color: var(--yellow); }
-.badge-green { background: var(--green-dim); color: var(--green); }
-.badge-blue { background: var(--blue-dim); color: var(--blue); }
-.badge-purple { background: var(--purple-dim); color: var(--purple); }
-.exposure-score { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; min-width: 2.5rem; text-align: right; }
-.score-high { color: var(--red); }
-.score-med { color: var(--yellow); }
-.score-low { color: var(--green); }
-.chevron { font-size: 0.6rem; color: var(--text-muted); transition: transform 0.2s; }
-.item-row.expanded .chevron { transform: rotate(180deg); }
-.item-detail { display: none; padding: 0 1rem 1rem; border-top: 1px solid var(--border); }
-.item-row.expanded .item-detail { display: block; }
-.detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin: 0.85rem 0; }
-@media (max-width: 500px) { .detail-grid { grid-template-columns: repeat(2, 1fr); } }
-.detail-label { font-size: 0.65rem; color: var(--text-muted); }
-.detail-val { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 500; color: var(--text-primary); }
-.detail-notes { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.5rem; }
-.detail-cascade { margin-top: 0.5rem; }
-.detail-cascade-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
-.cascade-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-.cascade-tag { font-size: 0.68rem; background: var(--bg-elevated); color: var(--text-secondary); padding: 0.2rem 0.5rem; border-radius: 4px; }
-.detail-action { margin-top: 0.6rem; padding: 0.6rem 0.75rem; background: var(--bg-elevated); border-radius: 6px; }
-.detail-action-label { font-size: 0.65rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; font-weight: 600; }
-.detail-action-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; }
-.bar-row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
-.bar-label { font-size: 0.7rem; color: var(--text-muted); width: 4.5rem; flex-shrink: 0; }
-.bar-track { flex: 1; height: 5px; background: var(--bg-elevated); border-radius: 3px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 3px; }
+  /* --- CAVEATS --- */
+  .caveats-section {
+    padding: 60px 0 80px;
+  }
+  .caveat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .caveat {
+    background: rgba(244, 63, 94, 0.04);
+    border: 1px solid rgba(244, 63, 94, 0.12);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .caveat h4 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-rose);
+    margin-bottom: 8px;
+  }
+  .caveat p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
 
-/* Cascade view */
-.cascade-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 0.75rem; }
-.cascade-panel h3 { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.7rem; }
-.cascade-scenario { padding: 0.65rem 0; }
-.cascade-scenario + .cascade-scenario { border-top: 1px solid var(--border); }
-.cascade-trigger { font-size: 0.82rem; font-weight: 600; color: var(--red); margin-bottom: 0.4rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; }
-.cascade-trigger:hover { color: #fff; }
-.cascade-chain { display: none; padding-left: 0.5rem; }
-.cascade-chain.open { display: block; }
-.cascade-step { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.3rem 0; }
-.cascade-step-time { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); width: 4.5rem; flex-shrink: 0; padding-top: 0.1rem; }
-.cascade-step-line { width: 2px; background: var(--border); flex-shrink: 0; align-self: stretch; margin: 0 0.25rem; }
-.cascade-step-content { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5; }
+  /* --- FOOTER --- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
 
-/* Actions panel */
-.actions-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; }
-.actions-panel h3 { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.7rem; color: var(--green); }
-.action-item { display: flex; gap: 0.65rem; padding: 0.6rem 0; }
-.action-item + .action-item { border-top: 1px solid var(--border); }
-.action-effort { font-family: var(--font-mono); font-size: 0.65rem; padding: 0.2rem 0.4rem; border-radius: 4px; height: fit-content; flex-shrink: 0; margin-top: 0.1rem; }
-.effort-low { background: var(--green-dim); color: var(--green); }
-.effort-med { background: var(--yellow-dim); color: var(--yellow); }
-.effort-high { background: var(--orange-dim); color: var(--orange); }
-.action-body {}
-.action-title { font-size: 0.82rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.15rem; }
-.action-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
-.action-domains { display: flex; gap: 0.25rem; margin-top: 0.3rem; }
-.action-domain-tag { font-size: 0.6rem; padding: 0.1rem 0.35rem; border-radius: 3px; background: var(--bg-elevated); color: var(--text-muted); }
-
-@media (max-width: 640px) {
-  .domain-bar-label { width: 110px; font-size: 0.72rem; }
-  .nav-tabs { gap: 0.2rem; }
-  .nav-tab { font-size: 0.7rem; padding: 0.4rem 0.65rem; }
-}
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    .hero, .container { padding-left: 20px; padding-right: 20px; }
+    .chart-wrapper { padding: 20px 12px 16px; }
+    .benchmark-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="container" id="app"></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-label">Reference Guide — 2013–2025</div>
+  <h1>The Silicon Timeline</h1>
+  <p>A visual reference for understanding processor and GPU performance across phones, laptops, and desktops. Approximate benchmark scores for iconic chips, plotted over time — with context on what the numbers actually mean.</p>
+</header>
+
+<!-- BENCHMARK EXPLAINER -->
+<div class="container">
+  <section class="explainer-section">
+    <div class="section-label">Foundation</div>
+    <h2 class="section-title">Understanding the Benchmarks</h2>
+    <p class="chart-description">Benchmarks are standardized tests that stress specific parts of a chip. No single benchmark tells the whole story — each measures something different. Here's what each one used on this page actually tests, and what it means in practice.</p>
+
+    <div class="benchmark-grid">
+      <div class="bench-card">
+        <h3>Geekbench 6 — Single-Core</h3>
+        <div class="bench-type">CPU · Used for Phones</div>
+        <p>Runs a gauntlet of real-world tasks — text compression, PDF rendering, photo editing, machine learning inference — on a single CPU core. Measures how fast one core can complete a task. This is the metric that determines how snappy your phone feels when opening apps, scrolling, or loading web pages.</p>
+        <div class="real-world">→ "How fast does one thing happen?"</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>Cinebench R23 — Multi-Core</h3>
+        <div class="bench-type">CPU · Used for Laptops & Desktops</div>
+        <p>Renders a complex 3D scene using the Cinema 4D engine across all available cores. Purely CPU-bound — no GPU involved. The multi-core score shows how well a chip handles parallelizable workloads like video encoding, code compilation, 3D rendering, and scientific simulation. Sustained performance matters here; throttling chips score worse.</p>
+        <div class="real-world">→ "How fast can it chew through heavy parallel work?"</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>Cinebench R23 — Single-Core</h3>
+        <div class="bench-type">CPU · Used for Laptops & Desktops</div>
+        <p>Same 3D rendering test but restricted to a single core. Reveals raw per-core IPC (instructions per clock) and clock speed. Critical for tasks that can't be parallelized: game logic, most application UI responsiveness, single-threaded build steps, and everyday snappiness.</p>
+        <div class="real-world">→ "How responsive does the machine feel?"</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>3DMark Time Spy — Graphics</h3>
+        <div class="bench-type">GPU · Used for Laptops & Desktops</div>
+        <p>A DirectX 12 benchmark rendering complex game-like scenes with tessellation, volumetric lighting, and particle effects. The Graphics score isolates GPU performance from CPU bottlenecks. Correlates strongly with actual gaming frame rates at 1440p. The industry's de facto GPU comparison standard.</p>
+        <div class="real-world">→ "How many frames can this GPU push in real games?"</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>What Benchmarks Miss</h3>
+        <div class="bench-type">Critical Context</div>
+        <p>Benchmarks don't capture sustained performance under thermal limits, real-world battery drain, memory bandwidth effects, driver maturity, software optimization (Apple's tight integration advantage), or workload-specific behavior. A chip that benchmarks 20% higher might feel identical in daily use or worse in a thermally constrained chassis.</p>
+        <div class="real-world">→ Numbers are directional, not absolute truth</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>The Power Envelope Problem</h3>
+        <div class="bench-type">Critical Context</div>
+        <p>A desktop chip runs at 125–253W. A laptop chip runs the same architecture at 35–55W. A phone chip runs at 4–8W. Comparing across form factors is apples-to-oranges — the phone chip achieving even 40% of the desktop score at 3% of the power is an engineering marvel. Always compare within form factor.</p>
+        <div class="real-world">→ Performance-per-watt is the real story</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHART 1: PHONE PROCESSORS -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label">Mobile Silicon</div>
+      <h2 class="section-title">Phone Processors Over Time</h2>
+    </div>
+    <p class="chart-description">Geekbench 6 single-core scores for flagship phone SoCs. Apple's A-series has maintained a consistent ~30–50% lead in single-core IPC over Qualcomm's Snapdragon, though the gap has narrowed. These scores determine how instant app launches feel, how smooth scrolling is, and how fast the camera processes photos.</p>
+    <div class="chart-wrapper">
+      <canvas id="phoneChart"></canvas>
+      <div class="chart-footnote">Geekbench 6 Single-Core · Higher = faster per-core performance · Approximate scores from retail devices</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">Key Inflection Points</div>
+      <p>The A11 Bionic (2017) was a watershed — Apple's first neural engine and a massive IPC leap that opened a multi-year gap. Qualcomm responded with custom Oryon cores in the Snapdragon 8 Elite (2024), their most competitive single-core showing in years. MediaTek's Dimensity 9300 also closed the gap significantly in 2024, making the Android ecosystem more competitive than it's been since 2016.</p>
+    </div>
+  </section>
+
+  <!-- CHART 2: LAPTOP PROCESSORS -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label">Laptop Silicon</div>
+      <h2 class="section-title">Laptop Processors Over Time</h2>
+    </div>
+    <p class="chart-description">Cinebench R23 multi-core scores for notable laptop CPUs. The laptop CPU landscape transformed in 2020–2021 when Apple's M1 and AMD's Ryzen 5000 series broke Intel's decade of incremental improvement. Intel's hybrid architecture (Alder Lake, 2022) was their response. Note: laptop scores vary significantly by chassis cooling — the same chip in a thin ultrabook vs. a thick workstation can differ 30%+.</p>
+    <div class="chart-wrapper">
+      <canvas id="laptopCPUChart"></canvas>
+      <div class="chart-footnote">Cinebench R23 Multi-Core · Higher = faster parallel workloads · Scores vary by thermal design</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The Apple Silicon Disruption</div>
+      <p>Apple's M1 (2020) didn't just compete — it redefined what a laptop chip could be. Matching or exceeding Intel's 45W H-series chips at just 10W, with no fan noise, it proved that ARM designs could dominate x86 in real workloads. The M4 Pro (2024) now trades blows with desktop-class chips while maintaining all-day battery life. Meanwhile, AMD and Intel have been in a fierce escalation, adding more cores and pushing power limits higher.</p>
+    </div>
+  </section>
+
+  <!-- CHART 3: DESKTOP PROCESSORS -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label">Desktop Silicon</div>
+      <h2 class="section-title">Desktop Processors Over Time</h2>
+    </div>
+    <p class="chart-description">Cinebench R23 multi-core scores for flagship desktop CPUs. Desktop tells a story of AMD's comeback: from irrelevance (2013–2016) to dominance (2019–present). Intel's response with hybrid P+E core architectures in 2021 reignited competition. These chips run without meaningful thermal constraints, so scores represent near-peak silicon capability.</p>
+    <div class="chart-wrapper">
+      <canvas id="desktopCPUChart"></canvas>
+      <div class="chart-footnote">Cinebench R23 Multi-Core · Higher = faster parallel workloads · Desktop TDPs range 65–253W</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The Zen Revolution</div>
+      <p>AMD's Zen architecture (Ryzen, 2017) broke Intel's stranglehold on desktop performance. The Ryzen 9 5950X (2020) was the first AMD chip to simultaneously lead in both single-core and multi-core. Intel's Alder Lake counter-attack (2021) with hybrid cores was genuinely innovative — using small efficient cores alongside big performance cores, a concept borrowed from mobile. By 2023, both companies routinely hit 35,000+ multi-core, up from ~5,500 a decade prior — a 6–7× improvement.</p>
+    </div>
+  </section>
+
+  <!-- CHART 4: LAPTOP GPU -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label">Laptop Graphics</div>
+      <h2 class="section-title">Laptop GPU Performance Over Time</h2>
+    </div>
+    <p class="chart-description">3DMark Time Spy Graphics scores for mobile GPUs. Laptop GPUs run at significantly reduced power compared to their desktop counterparts — typically 60–150W vs. 200–450W. NVIDIA dominates this space so completely that AMD mobile GPUs barely register in the market. Each generation brings roughly 20–30% improvement at the same power, with diminishing returns becoming visible in the RTX 40/50 series.</p>
+    <div class="chart-wrapper">
+      <canvas id="laptopGPUChart"></canvas>
+      <div class="chart-footnote">3DMark Time Spy Graphics Score · Higher = faster gaming/rendering · Scores vary by power limit & cooling</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The Mobile GPU Caveat</div>
+      <p>More than any other component, laptop GPU performance is hostage to the chassis. An RTX 4070 Laptop at 140W performs 40%+ better than the same chip at 80W in a thin machine. Manufacturers often use the same GPU name across wildly different power tiers. Always check the TGP (Total Graphics Power) spec — the model name alone is nearly meaningless for predicting real performance.</p>
+    </div>
+  </section>
+
+  <!-- CHART 5: DESKTOP GPU -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label">Desktop Graphics</div>
+      <h2 class="section-title">Desktop GPU Performance Over Time</h2>
+    </div>
+    <p class="chart-description">3DMark Time Spy Graphics scores for desktop GPUs, including both NVIDIA and AMD entries. Desktop GPUs are the most straightforward comparison — fixed power targets, consistent cooling, and well-understood driver stacks. The RTX 30-series (2020) was an inflection point with a massive generational leap, while the RTX 40-series (2022) and 50-series (2025) saw strong but more incremental gains.</p>
+    <div class="chart-wrapper">
+      <canvas id="desktopGPUChart"></canvas>
+      <div class="chart-footnote">3DMark Time Spy Graphics Score · Higher = faster gaming/rendering · Desktop reference-class cards</div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">Price-Performance Matters More Than Peak</div>
+      <p>The RTX 4090 (2022) hit ~36,000 — extraordinary, but at $1,600. The RTX 4070 hit ~17,800 at $600 — roughly 50% of the performance at 37% of the price. For most gamers, the midrange sweet spot ($300–500) delivers 80% of the experience. AMD's RX 7900 XTX offers competitive performance at lower prices but weaker ray tracing and AI features (DLSS vs FSR).</p>
+    </div>
+  </section>
+
+  <!-- GENERATIONAL GAINS QUICK REFERENCE -->
+  <section class="chart-section">
+    <div class="chart-header">
+      <div class="section-label" style="color: var(--accent-cyan);">Quick Reference</div>
+      <h2 class="section-title">Generational Gains at a Glance</h2>
+    </div>
+    <p class="chart-description">How much faster does each generation actually get? This table shows typical percentage improvements per generation for each category. Use this to calibrate your intuition — if someone says "30% faster," you'll know whether that's a normal generational bump or a genuine leap.</p>
+
+    <div class="benchmark-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="bench-card">
+        <h3>Phone SoCs</h3>
+        <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year single-core</div>
+        <p><strong style="color: var(--text-bright);">Typical:</strong> 10–20% per year<br>
+        <strong style="color: var(--text-bright);">Big leaps:</strong> A11 (+44%), A17 Pro (+55%), SD 8 Elite (+39%)<br>
+        <strong style="color: var(--text-bright);">Stall years:</strong> A12→A13 (~15%), SD 888→8G1 (~7%)</p>
+        <div class="real-world">→ ~2× every 4–5 years</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>Laptop CPUs</h3>
+        <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year multi-core</div>
+        <p><strong style="color: var(--text-bright);">Typical:</strong> 15–25% per year<br>
+        <strong style="color: var(--text-bright);">Big leaps:</strong> 8750H (+48% over 7700HQ), i7-12700H (+39%), M1 (perf/watt revolution)<br>
+        <strong style="color: var(--text-bright);">Stall years:</strong> 2019–2020 Intel (~5%)</p>
+        <div class="real-world">→ ~2× every 3–4 years</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>Desktop CPUs</h3>
+        <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year multi-core</div>
+        <p><strong style="color: var(--text-bright);">Typical:</strong> 15–30% per year<br>
+        <strong style="color: var(--text-bright);">Big leaps:</strong> 12900K (+60% via hybrid), 13900K (+40%)<br>
+        <strong style="color: var(--text-bright);">Stall years:</strong> 2013–2016 Intel (~5% per year, the "toothpaste era")</p>
+        <div class="real-world">→ ~7× over a decade (2013→2024)</div>
+      </div>
+
+      <div class="bench-card">
+        <h3>Desktop GPUs</h3>
+        <div class="bench-type" style="color: var(--accent-cyan);">Generational (same tier)</div>
+        <p><strong style="color: var(--text-bright);">Typical:</strong> 30–50% per generation (2 yr cycles)<br>
+        <strong style="color: var(--text-bright);">Big leaps:</strong> RTX 3070 (+48% over 2070), 4090 (+53% over 3090)<br>
+        <strong style="color: var(--text-bright);">Diminishing:</strong> RTX 40→50 series mid-range (~15–20%)</p>
+        <div class="real-world">→ Last gen's flagship ≈ next gen's midrange</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAVEATS -->
+  <section class="caveats-section">
+    <div class="section-label">Intellectual Honesty</div>
+    <h2 class="section-title">What This Page Doesn't Tell You</h2>
+    <p class="chart-description" style="margin-bottom: 0;">Benchmarks are useful directional tools but inherently incomplete. Here's what you should keep in mind when interpreting this data.</p>
+
+    <div class="caveat-grid">
+      <div class="caveat">
+        <h4>Software Optimization</h4>
+        <p>Apple's performance partly comes from controlling both hardware and software. A benchmark-inferior chip with better OS integration can feel faster in practice. Android OEMs layer skins that add overhead.</p>
+      </div>
+      <div class="caveat">
+        <h4>Sustained vs. Peak</h4>
+        <p>Many chips boost to high frequencies for seconds, then thermally throttle. Benchmarks may capture peak performance, but a 30-minute video export tells a different story — especially in thin laptops.</p>
+      </div>
+      <div class="caveat">
+        <h4>Workload Dependency</h4>
+        <p>Cinebench R23 loves many cores. Real apps like Photoshop, most games, and web browsers are largely single-threaded or use 4–6 threads at most. A 32-core monster might lose to a fast 8-core in daily use.</p>
+      </div>
+      <div class="caveat">
+        <h4>Memory & Storage</h4>
+        <p>CPU and GPU benchmarks isolate compute, but real performance depends on RAM speed, SSD throughput, and system bandwidth. A fast CPU with slow storage will still feel sluggish.</p>
+      </div>
+      <div class="caveat">
+        <h4>Generation Naming Games</h4>
+        <p>NVIDIA's "RTX 4060" laptop chip shares a name but not specs with the desktop 4060. Intel's "i7" has meant wildly different things across 15 generations. Don't compare by name — compare by benchmark.</p>
+      </div>
+      <div class="caveat">
+        <h4>AI & NPU Workloads</h4>
+        <p>Traditional benchmarks don't measure on-device AI performance (Stable Diffusion, LLM inference, live translation). NPUs and tensor cores matter increasingly but aren't captured here. This is a growing blind spot.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>Silicon Timeline — Approximate benchmark data compiled for intuition-building, not purchasing decisions · Scores rounded & sourced from public reviews · 2025</p>
+</footer>
+
 <script>
-// ─── DATA ─────────────────────────────────────────────────────────
-const DOMAINS = {
-  pe: {
-    key: 'pe', name: 'Private Equity', color: 'var(--red)', colorRaw: '#f0545c',
-    desc: 'Services you depend on that are PE-owned or vulnerable to PE acquisition. PE firms buy, load with debt, cut costs, extract value, and sell within 3–7 years — degrading the social fabric you rely on.'
+// --- SHARED CHART CONFIG ---
+const gridColor = 'rgba(255,255,255,0.04)';
+const tickColor = '#4b5563';
+const tooltipBg = '#1a1e28';
+const fontFamily = "'IBM Plex Mono', monospace";
+
+Chart.defaults.font.family = fontFamily;
+Chart.defaults.font.size = 11;
+Chart.defaults.color = tickColor;
+
+const commonScales = (yLabel) => ({
+  x: {
+    grid: { color: gridColor, drawBorder: false },
+    ticks: { color: tickColor, font: { size: 10 } }
   },
-  visa: {
-    key: 'visa', name: 'Visa & Immigration', color: 'var(--orange)', colorRaw: '#f0943c',
-    desc: 'Everything contingent on your H1-B status. Scored by how fast each dependency unravels if you lose status, portability to Canada, and recovery cost.'
+  y: {
+    grid: { color: gridColor, drawBorder: false },
+    ticks: { color: tickColor, font: { size: 10 } },
+    title: { display: true, text: yLabel, color: '#6b7280', font: { size: 11 } },
+    beginAtZero: true
+  }
+});
+
+const commonPlugins = {
+  legend: {
+    position: 'top',
+    align: 'start',
+    labels: {
+      color: '#9ca3af',
+      font: { size: 11, family: fontFamily },
+      boxWidth: 12,
+      boxHeight: 3,
+      padding: 16,
+      usePointStyle: false
+    }
   },
-  employer: {
-    key: 'employer', name: 'Employer Concentration', color: 'var(--yellow)', colorRaw: '#e8c84a',
-    desc: 'How much of your life runs through a single employer. These dependencies are correlated — they all break simultaneously in a layoff event.'
-  },
-  platform: {
-    key: 'platform', name: 'Platform Lock-in', color: 'var(--cyan)', colorRaw: '#22d3ee',
-    desc: 'Every digital platform you depend on, scored by data portability, migration effort, and what happens if the platform degrades, gets acquired, or dies.'
-  },
-  geo: {
-    key: 'geo', name: 'Geographic Fragility', color: 'var(--purple)', colorRaw: '#a78bfa',
-    desc: 'Risks tied to your physical location in Seattle — natural disasters, economic concentration, cost trajectory, and how hard it is to exit.'
-  },
-  financial: {
-    key: 'financial', name: 'Financial Counterparty', color: 'var(--green)', colorRaw: '#4ade80',
-    desc: 'Who holds your money and what are they exposed to. Protection levels, asset concentration, and correlated failure risk across financial institutions.'
-  },
-  career: {
-    key: 'career', name: 'Career Optionality', color: 'var(--blue)', colorRaw: '#5b8def',
-    desc: 'The inverse model — scoring how much durable optionality each asset gives you. Higher is better here. Low scores reveal where you\'re building fragile, non-portable career capital.'
+  tooltip: {
+    backgroundColor: tooltipBg,
+    titleFont: { family: fontFamily, size: 12 },
+    bodyFont: { family: fontFamily, size: 11 },
+    borderColor: '#2a3040',
+    borderWidth: 1,
+    padding: 12,
+    cornerRadius: 6,
+    displayColors: true,
+    boxWidth: 8,
+    boxHeight: 8
   }
 };
 
-const ITEMS = [
-  // ── PE EXPOSURE ──
-  {id:'pe-apartment',domain:'pe',name:'Apartment (rental)',category:'Housing',exposure:.86,dependency:.95,switchingCost:.85,impactSeverity:.9,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['geo-rent-trajectory','visa-lease'],notes:'Institutional landlords dominate Seattle rentals. Rent increases, deferred maintenance, fee layering are standard PE playbook. Your lease is your weakest shield.',suggestedAction:'Research community land trusts and housing cooperatives in Seattle. Build 3-month rent reserve as exit buffer.',effort:'med'},
-  {id:'pe-primary-care',domain:'pe',name:'Primary Care Provider',category:'Healthcare',exposure:.76,dependency:.8,switchingCost:.7,impactSeverity:.95,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['employer-health-insurance'],notes:'Physician practice consolidation is one of PE\'s hottest sectors. Visit times shrink, provider turnover increases. One Medical (Amazon) is the archetype.',suggestedAction:'Find an independent, physician-owned practice. Confirm they are not part of a management services organization (MSO). Keep medical records portable.',effort:'med'},
-  {id:'pe-dentist',domain:'pe',name:'Dentist',category:'Healthcare',exposure:.42,dependency:.6,switchingCost:.4,impactSeverity:.7,timeToImpact:'months',mitigationStatus:'none',cascadesTo:[],notes:'Dental Service Organizations (DSOs) are heavily PE-consolidated. Upselling unnecessary procedures is documented. Aspen Dental, Pacific Dental are PE-backed.',suggestedAction:'Switch to an independent dentist. Ask directly: "Are you part of a DSO?" Check ownership on state dental board site.',effort:'low'},
-  {id:'pe-urgent-care',domain:'pe',name:'Urgent Care / ER Staffing',category:'Healthcare',exposure:.67,dependency:.7,switchingCost:.1,impactSeverity:.95,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:[],notes:'You don\'t choose your ER. PE-backed staffing firms (TeamHealth, Envision) drove the surprise billing crisis. You\'re exposed even if the hospital isn\'t PE-owned.',suggestedAction:'Know which hospitals near you use independent staffing vs PE-backed. Carry insurance that covers out-of-network ER.',effort:'low'},
-  {id:'pe-therapy',domain:'pe',name:'Therapy / Mental Health',category:'Healthcare',exposure:.45,dependency:.7,switchingCost:.8,impactSeverity:.85,timeToImpact:'months',mitigationStatus:'none',cascadesTo:[],notes:'Mental health is a fast-growing PE target (Lifestance Health). Therapeutic relationship is deeply personal — switching cost is emotional, not logistical.',suggestedAction:'Choose a solo private-practice therapist. Verify they own their practice. Therapeutic relationships are worth paying out-of-pocket to protect.',effort:'med'},
-  {id:'pe-vet',domain:'pe',name:'Veterinarian',category:'Pet Care',exposure:.56,dependency:.7,switchingCost:.65,impactSeverity:.8,timeToImpact:'months',mitigationStatus:'none',cascadesTo:[],notes:'Vet clinics are aggressively PE-targeted. Mars (VCA, Banfield), JAB Holdings have rolled up thousands. Prices spike, vet turnover increases.',suggestedAction:'Find an independent vet. Ask: "Is this practice independently owned?" Watch for sudden name/branding changes as acquisition signals.',effort:'low'},
-  {id:'pe-gym',domain:'pe',name:'Gym / Climbing Gym',category:'Fitness & Community',exposure:.25,dependency:.6,switchingCost:.7,impactSeverity:.75,timeToImpact:'months',mitigationStatus:'none',cascadesTo:[],notes:'Climbing gyms are emerging PE targets. The community IS the product. PE raises prices and homogenizes experience. Your friend group is the real asset at risk.',suggestedAction:'Support member-owned or independent gyms. Build fitness capacity that doesn\'t require a facility (outdoor climbing, home gym backup).',effort:'low'},
-  {id:'pe-childcare',domain:'pe',name:'Childcare / Daycare',category:'Family (future)',exposure:.81,dependency:.95,switchingCost:.9,impactSeverity:.95,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['employer-dependent-care'],notes:'KinderCare is KKR-backed. Most consequential PE sector — can\'t easily switch, quality directly affects your child. Relevant within 5 years.',suggestedAction:'When the time comes: co-op daycares, nanny shares, and nonprofit childcare centers are structurally PE-resistant.',effort:'high'},
-  {id:'pe-funeral',domain:'pe',name:'Funeral Services',category:'End of Life',exposure:.18,dependency:.3,switchingCost:.1,impactSeverity:.6,timeToImpact:'years',mitigationStatus:'none',cascadesTo:[],notes:'SCI (Dignity Memorial) owns ~20% of US funeral homes. You make decisions while grieving — maximum vulnerability. Classic PE targeting.',suggestedAction:'Pre-plan with an independent funeral home or consider a funeral co-op. Document wishes now while not under emotional duress.',effort:'low'},
-  {id:'pe-learning',domain:'pe',name:'Online Learning Platform',category:'Education',exposure:.09,dependency:.3,switchingCost:.2,impactSeverity:.3,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:[],notes:'Pluralsight taken private by Vista Equity. Course quality and instructor pay are first things cut. Low dependency since alternatives are abundant.',suggestedAction:'Prefer open-source learning resources, official docs, and books over platform-locked courses.',effort:'low'},
+function makeDataset(label, data, color, dashed = false) {
+  return {
+    label,
+    data,
+    borderColor: color,
+    backgroundColor: color + '18',
+    borderWidth: 2.5,
+    pointRadius: 4,
+    pointBackgroundColor: color,
+    pointBorderColor: '#0c0e12',
+    pointBorderWidth: 2,
+    pointHoverRadius: 7,
+    tension: 0.3,
+    fill: false,
+    borderDash: dashed ? [6, 4] : [],
+    spanGaps: true
+  };
+}
 
-  // ── VISA & IMMIGRATION ──
-  {id:'visa-employment-auth',domain:'visa',name:'Employment Authorization',category:'Legal Status',exposure:.95,dependency:1.0,switchingCost:.95,impactSeverity:1.0,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['employer-income','visa-lease','visa-bank','visa-health','visa-credit'],notes:'H1-B is employer-sponsored. Lose the job, you have 60 days grace period to find new sponsorship, transfer, or leave. Everything else cascades from this.',suggestedAction:'Begin Canadian PR application (Express Entry). Maintain a list of H1-B sponsor employers. Build savings for potential transition period.',effort:'high'},
-  {id:'visa-lease',domain:'visa',name:'Lease / Housing',category:'Housing',exposure:.72,dependency:.9,switchingCost:.7,impactSeverity:.8,timeToImpact:'weeks',mitigationStatus:'none',cascadesTo:['pe-apartment'],notes:'Lease remains enforceable but you can\'t earn to pay it. Breaking lease incurs penalties. If forced to leave the US, you lose deposit, furniture, and established housing.',suggestedAction:'Avoid leases with punitive early-termination clauses. Keep a "go bag" plan: what you\'d ship, store, or abandon.',effort:'low'},
-  {id:'visa-bank',domain:'visa',name:'Bank Accounts & Financial Access',category:'Financial',exposure:.5,dependency:.8,switchingCost:.6,impactSeverity:.7,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:['financial-bank'],notes:'Accounts don\'t close immediately but become harder to manage from abroad. Wire transfers, tax reporting, and compliance create friction. Some banks close non-resident accounts.',suggestedAction:'Open a Canadian bank account now (some allow remote opening). Maintain a small international-friendly account (Wise, Schwab international).',effort:'med'},
-  {id:'visa-credit',domain:'visa',name:'Credit History',category:'Financial',exposure:.6,dependency:.6,switchingCost:.9,impactSeverity:.6,timeToImpact:'years',mitigationStatus:'none',cascadesTo:[],notes:'Your US credit history is non-portable. 10+ years of credit building vanishes if you relocate to Canada. You restart from zero.',suggestedAction:'If considering Canada: apply for Canadian credit card via cross-border programs (RBC, TD have bridging products) before you need to.',effort:'med'},
-  {id:'visa-health',domain:'visa',name:'Healthcare Coverage',category:'Healthcare',exposure:.8,dependency:.9,switchingCost:.5,impactSeverity:.9,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['employer-health-insurance'],notes:'Employer health insurance ends with employment. COBRA is expensive (~$600+/mo). Gap coverage is critical during any transition period.',suggestedAction:'Research COBRA costs for your current plan. Identify short-term health insurance options. If moving to Canada, understand provincial waiting periods (up to 3 months).',effort:'med'},
-  {id:'visa-retirement',domain:'visa',name:'Retirement Accounts (401k/IRA)',category:'Financial',exposure:.35,dependency:.4,switchingCost:.7,impactSeverity:.5,timeToImpact:'years',mitigationStatus:'partial',cascadesTo:['financial-401k'],notes:'Accounts remain accessible but tax treatment becomes complex as a non-resident. Can\'t contribute. Withdrawal penalties apply. US-Canada tax treaty helps but doesn\'t eliminate friction.',suggestedAction:'Understand cross-border tax treaty implications. Consider Roth conversions while still US-resident (tax-free withdrawals later).',effort:'med'},
-  {id:'visa-social',domain:'visa',name:'Social Network & Community',category:'Social',exposure:.65,dependency:.7,switchingCost:.9,impactSeverity:.7,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['pe-gym','career-network'],notes:'Your Seattle friend group, climbing partners, professional network — all become long-distance relationships. This is often the most underestimated loss in forced relocation.',suggestedAction:'Invest in relationships that transcend geography. Build online community presence. Maintain connections in Canada proactively.',effort:'med'},
-  {id:'visa-belongings',domain:'visa',name:'Physical Belongings & Setup',category:'Logistics',exposure:.4,dependency:.3,switchingCost:.5,impactSeverity:.4,timeToImpact:'weeks',mitigationStatus:'none',cascadesTo:[],notes:'Furniture, bike, training setup, accumulated possessions. International moving is $3-8k+. Selling everything under time pressure means accepting losses.',suggestedAction:'Maintain a mental inventory of what you\'d ship vs abandon. Keep high-value items (bike, electronics) in a state that\'s easy to pack.',effort:'low'},
+// --- CHIP NAME MAPS ---
+const phoneAppleChips = {'2013':'A7 · iPhone 5s','2014':'A8 · iPhone 6','2015':'A9 · iPhone 6s','2016':'A10 · iPhone 7','2017':'A11 · iPhone 8/X','2018':'A12 · iPhone XS','2019':'A13 · iPhone 11','2020':'A14 · iPhone 12','2021':'A15 · iPhone 13','2022':'A16 · iPhone 14 Pro','2023':'A17 Pro · iPhone 15 Pro','2024':'A18 Pro · iPhone 16 Pro'};
+const phoneSDChips = {'2013':'SD 800','2014':'SD 805','2015':'SD 810','2016':'SD 820','2017':'SD 835','2018':'SD 845','2019':'SD 855','2020':'SD 865','2021':'SD 888','2022':'SD 8 Gen 1','2023':'SD 8 Gen 2','2024':'SD 8 Elite'};
+const phoneExyChips = {'2014':'Exynos 5433','2015':'Exynos 7420','2016':'Exynos 8890','2017':'Exynos 8895','2018':'Exynos 9810','2019':'Exynos 9820','2020':'Exynos 990','2021':'Exynos 2100','2022':'Exynos 2200','2023':'Exynos 2300','2024':'Exynos 2400'};
+const phoneMTKChips = {'2019':'Dimensity 1000','2020':'Dimensity 1100','2021':'Dimensity 1200','2022':'Dimensity 9000','2023':'Dimensity 9200','2024':'Dimensity 9300'};
+const phoneChipMaps = [phoneAppleChips, phoneSDChips, phoneExyChips, phoneMTKChips];
 
-  // ── EMPLOYER CONCENTRATION ──
-  {id:'employer-income',domain:'employer',name:'Primary Income',category:'Financial',exposure:.95,dependency:1.0,switchingCost:.7,impactSeverity:1.0,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['visa-employment-auth','financial-bank','pe-apartment'],notes:'100% of income from one source. No diversification. Severance (if any) buys time but doesn\'t change the structural dependency.',suggestedAction:'Build side income streams that don\'t violate H1-B terms (investment income, royalties). Target 3-6 months expenses in liquid savings.',effort:'high'},
-  {id:'employer-health-insurance',domain:'employer',name:'Health Insurance',category:'Benefits',exposure:.85,dependency:.9,switchingCost:.6,impactSeverity:.85,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['pe-primary-care','visa-health'],notes:'Employer-sponsored health insurance ends on termination (or end of month). COBRA extends coverage but at full cost. Dental and vision go too.',suggestedAction:'Know your COBRA costs. Identify marketplace alternatives. Keep prescriptions current so you\'re not caught mid-treatment.',effort:'low'},
-  {id:'employer-visa-sponsorship',domain:'employer',name:'Visa Sponsorship',category:'Legal',exposure:.95,dependency:1.0,switchingCost:.95,impactSeverity:1.0,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['visa-employment-auth'],notes:'The employer IS the visa. This is the single highest-leverage dependency in the entire model. Everything else is downstream of this.',suggestedAction:'Canadian PR is the structural fix. Also: maintain relationships with other H1-B sponsor companies. Keep resume updated.',effort:'high'},
-  {id:'employer-401k',domain:'employer',name:'401k + Employer Match',category:'Financial',exposure:.45,dependency:.5,switchingCost:.4,impactSeverity:.5,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:['financial-401k'],notes:'Unvested match is forfeited on departure. Vested balance is yours but rolling over has tax implications. Check your vesting schedule.',suggestedAction:'Know your vesting cliff/schedule. Calculate unvested match amount. This is a hidden cost of leaving that should factor into any job-change calculus.',effort:'low'},
-  {id:'employer-rsu',domain:'employer',name:'RSU Vesting Schedule',category:'Compensation',exposure:.7,dependency:.6,switchingCost:.8,impactSeverity:.7,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:[],notes:'Unvested RSUs are forfeited. At L4, this could be $50-150k+ in unvested stock. The vesting schedule is a golden handcuff that makes leaving expensive even when you should.',suggestedAction:'Track unvested RSU value quarterly. Factor forfeited RSUs into any job-change decision. Don\'t let unvested comp prevent necessary career moves.',effort:'low'},
-  {id:'employer-network',domain:'employer',name:'Professional Network (internal)',category:'Social',exposure:.55,dependency:.6,switchingCost:.7,impactSeverity:.6,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:['career-network'],notes:'Internal network, mentors, sponsors, skip-level relationships. Some survive departure, most attenuate. L5 promotion advocacy requires internal champions.',suggestedAction:'Build external professional presence: open source contributions, blog posts, conference talks. These survive any job change.',effort:'med'},
-  {id:'employer-identity',domain:'employer',name:'Professional Identity',category:'Psychological',exposure:.5,dependency:.5,switchingCost:.6,impactSeverity:.6,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:['career-optionality'],notes:'"I\'m a Google engineer" carries status and opens doors. Losing it affects self-concept and how others perceive you. This is real but shouldn\'t be load-bearing.',suggestedAction:'Build identity around skills and craft ("I build X") rather than employer ("I work at Y"). This is psychological preparation, not just career strategy.',effort:'low'},
-  {id:'employer-tools',domain:'employer',name:'Internal Tools & Knowledge',category:'Technical',exposure:.6,dependency:.5,switchingCost:.8,impactSeverity:.4,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['career-google-skills'],notes:'Borg, Blaze, internal libraries, code search, design docs — years of accumulated institutional knowledge that is zero-transferable. Time spent mastering internal tools is not portable.',suggestedAction:'For every hour on internal tools, invest equivalent time in open-source equivalents. Kubernetes, Bazel, standard CI/CD — the portable versions.',effort:'med'},
-  {id:'employer-dependent-care',domain:'employer',name:'Dependent Care / Family Benefits',category:'Benefits',exposure:.3,dependency:.3,switchingCost:.4,impactSeverity:.5,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['pe-childcare'],notes:'Backup childcare, fertility benefits, parental leave. Increasingly valuable as you approach family-planning age. These vary wildly between employers.',suggestedAction:'Understand what you\'d lose. If planning a family within 2-3 years, factor benefit differences into any employer change decision.',effort:'low'},
+const laptopIntelChips = {'2013':'i7-4700HQ','2015':'i7-6700HQ','2017':'i7-7700HQ','2018':'i7-8750H','2019':'i7-9750H','2020':'i7-10750H','2021':'i7-11800H','2022':'i7-12700H','2023':'i7-13700H','2024':'i9-14900HX','2025':'Ultra 9 285HX'};
+const laptopAMDChips = {'2019':'R7 3750H','2020':'R7 4800H','2021':'R7 5800H','2022':'R7 6800H','2023':'R9 7845HX','2024':'R9 9955HX','2025':'R9 9955HX3D'};
+const laptopAppleChips = {'2021':'M1 (base)','2022':'M1 Pro','2023':'M2 Pro','2024':'M3 Max','2025':'M4 Pro'};
+const laptopQCChips = {'2024':'SD X Elite','2025':'SD X Elite 2'};
+const laptopChipMaps = [laptopIntelChips, laptopAMDChips, laptopAppleChips, laptopQCChips];
 
-  // ── PLATFORM LOCK-IN ──
-  {id:'platform-google-workspace',domain:'platform',name:'Google Workspace (personal)',category:'Productivity',exposure:.55,dependency:.8,switchingCost:.7,impactSeverity:.6,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:[],notes:'Gmail, Drive, Docs, Calendar, Photos. Decade+ of data. Google Takeout exists but migration is a massive project. Your email address IS your identity on many services.',suggestedAction:'Use Google Takeout annually as backup. Consider a custom domain email so your identity isn\'t tied to @gmail.com. Diversify photo backup.',effort:'med'},
-  {id:'platform-github',domain:'platform',name:'GitHub',category:'Development',exposure:.45,dependency:.7,switchingCost:.5,impactSeverity:.5,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:['career-oss'],notes:'Code, contributions graph, issues, profile. Microsoft-owned. Repos are portable (it\'s git). But contribution history, stars, followers, and CI/CD configs are not.',suggestedAction:'Mirror important repos to a self-hosted Gitea or GitLab. Your contribution graph is your public portfolio — keep it active.',effort:'low'},
-  {id:'platform-obsidian',domain:'platform',name:'Obsidian',category:'Knowledge Management',exposure:.15,dependency:.7,switchingCost:.3,impactSeverity:.5,timeToImpact:'years',mitigationStatus:'mitigated',cascadesTo:[],notes:'Local-first, Markdown files. This is how platform lock-in should work: your data is always yours. Obsidian could disappear tomorrow and your vault survives. Quartz publishing adds a layer but is also open source.',suggestedAction:'Already well-positioned. Obsidian\'s local-first model is the gold standard. Keep Quartz config version-controlled.',effort:'low'},
-  {id:'platform-zwift',domain:'platform',name:'Zwift',category:'Fitness',exposure:.12,dependency:.5,switchingCost:.5,impactSeverity:.4,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['pe-gym'],notes:'Training data, routes, social connections locked in. VC-backed, not yet profitable. Alternatives exist (RGT, TrainerRoad) but community doesn\'t transfer.',suggestedAction:'Export ride data regularly (FIT files). Use Strava as your canonical training log — it\'s the more portable layer.',effort:'low'},
-  {id:'platform-password-mgr',domain:'platform',name:'Password Manager',category:'Security',exposure:.65,dependency:.95,switchingCost:.6,impactSeverity:.9,timeToImpact:'immediate',mitigationStatus:'partial',cascadesTo:[],notes:'Single point of failure for your entire digital life. If it gets breached, acquired by a hostile entity, or changes pricing dramatically, you\'re in trouble. Export formats vary.',suggestedAction:'Use a manager with standard export (CSV/JSON). Keep an encrypted offline backup of critical passwords. Prefer open-source (Bitwarden, KeePass).',effort:'med'},
-  {id:'platform-cloud-storage',domain:'platform',name:'Cloud Storage',category:'Data',exposure:.35,dependency:.6,switchingCost:.5,impactSeverity:.5,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:[],notes:'Google Drive, iCloud, Dropbox. Data is retrievable but migration is time-consuming at scale. Pricing changes can force moves.',suggestedAction:'Follow 3-2-1 backup rule: 3 copies, 2 media types, 1 offsite. Don\'t rely on a single cloud provider for irreplaceable data.',effort:'med'},
-  {id:'platform-brokerage',domain:'platform',name:'Brokerage / Investment Platform',category:'Financial',exposure:.4,dependency:.7,switchingCost:.5,impactSeverity:.6,timeToImpact:'weeks',mitigationStatus:'partial',cascadesTo:['financial-brokerage'],notes:'ACATS transfers work but take 1-2 weeks. Tax lot history, cost basis tracking, and custom alerts don\'t always transfer cleanly. Account restrictions during transfer.',suggestedAction:'Keep brokerage statements downloaded. Understand ACATS process. Don\'t over-customize with platform-specific features.',effort:'low'},
-  {id:'platform-mobile-os',domain:'platform',name:'Mobile OS Ecosystem',category:'Hardware',exposure:.45,dependency:.8,switchingCost:.7,impactSeverity:.4,timeToImpact:'months',mitigationStatus:'none',cascadesTo:[],notes:'iOS or Android lock-in: app purchases, health data, smart home integrations, iMessage/RCS. Switching ecosystems is a multi-week disruption project.',suggestedAction:'Use cross-platform apps where possible. Export health data periodically. Avoid ecosystem-exclusive features for critical workflows.',effort:'low'},
+const deskIntelChips = {'2013':'i7-4770K','2014':'i7-4790K','2015':'i7-6700K','2016':'i7-6700K','2017':'i7-7700K','2018':'i7-8700K','2019':'i9-9900K','2020':'i9-10900K','2021':'i9-12900K','2022':'i9-12900KS','2023':'i9-13900K','2024':'i9-14900K'};
+const deskAMDChips = {'2017':'R7 1700X','2018':'R7 2700X','2019':'R7 3700X','2020':'R9 5950X','2021':'R9 5950X','2022':'R9 7950X','2023':'R9 7950X','2024':'R9 9950X'};
+const deskCPUChipMaps = [deskIntelChips, deskAMDChips];
 
-  // ── GEOGRAPHIC FRAGILITY ──
-  {id:'geo-earthquake',domain:'geo',name:'Earthquake Risk (Cascadia)',category:'Natural Disaster',exposure:.35,dependency:1.0,switchingCost:0,impactSeverity:.95,timeToImpact:'immediate',mitigationStatus:'partial',cascadesTo:['pe-apartment','visa-lease','employer-income'],notes:'Seattle sits on the Cascadia subduction zone. A magnitude 9.0 event has ~15% probability in the next 50 years. Your apartment building\'s seismic rating matters enormously. Soft-story wood frames are highest risk.',suggestedAction:'Check your building\'s construction year and seismic retrofitting status. Earthquake kit (72 hrs minimum). Renters insurance with earthquake rider.',effort:'med'},
-  {id:'geo-wildfire-smoke',domain:'geo',name:'Wildfire Smoke Exposure',category:'Environmental',exposure:.5,dependency:.8,switchingCost:.2,impactSeverity:.5,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:[],notes:'2-6 weeks of hazardous AQI annually, trending worse. Impacts outdoor training directly. Long-term health effects of chronic PM2.5 exposure are real.',suggestedAction:'Quality HEPA air purifier for apartment. P100 mask for outdoor activity. This reinforces the Zwift/indoor cycling strategy.',effort:'low'},
-  {id:'geo-rent-trajectory',domain:'geo',name:'Rent Cost Trajectory',category:'Economic',exposure:.7,dependency:.9,switchingCost:.6,impactSeverity:.7,timeToImpact:'years',mitigationStatus:'none',cascadesTo:['pe-apartment','financial-bank'],notes:'Seattle rents have grown ~5-8% annually in desirable neighborhoods. Without rent control (Washington state preempts it), there\'s no ceiling. Your rent will consume an increasing share of income unless income grows faster.',suggestedAction:'Model rent growth vs. income growth over 5 years. Identify the crossover point where Seattle becomes untenable. Having the number makes the decision easier.',effort:'low'},
-  {id:'geo-tech-concentration',domain:'geo',name:'Tech Sector Concentration',category:'Economic',exposure:.55,dependency:.7,switchingCost:.5,impactSeverity:.7,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['employer-income','pe-apartment'],notes:'Seattle\'s economy is heavily tech-dependent. A major tech downturn affects your job, your neighborhood, local services, and potentially rent (downward in a crash, but with lag). Your fortunes are correlated with your city\'s.',suggestedAction:'This is partially hedged by having Canadian citizenship as an exit valve. Career diversification into non-FAANG companies also helps.',effort:'med'},
-  {id:'geo-healthcare-capacity',domain:'geo',name:'Healthcare System Capacity',category:'Infrastructure',exposure:.3,dependency:.6,switchingCost:.2,impactSeverity:.7,timeToImpact:'months',mitigationStatus:'none',cascadesTo:['pe-primary-care','pe-urgent-care'],notes:'Seattle has good healthcare infrastructure but ER wait times have increased. PE consolidation of provider groups compounds this. In a disaster scenario, capacity is strained quickly.',suggestedAction:'Maintain a relationship with a primary care provider to reduce ER dependency. Urgent care for non-emergencies.',effort:'low'},
-  {id:'geo-political',domain:'geo',name:'Political & Regulatory Climate',category:'Governance',exposure:.2,dependency:.5,switchingCost:.3,impactSeverity:.4,timeToImpact:'years',mitigationStatus:'partial',cascadesTo:['visa-employment-auth'],notes:'Washington state is generally favorable for workers (no state income tax, relatively progressive). Federal immigration policy is the wild card — administration changes can tighten H1-B rules rapidly.',suggestedAction:'Monitor immigration policy changes actively. Join advocacy organizations. Canadian PR provides structural hedge.',effort:'low'},
-  {id:'geo-family-distance',domain:'geo',name:'Distance from Family',category:'Social',exposure:.5,dependency:.5,switchingCost:.8,impactSeverity:.6,timeToImpact:'years',mitigationStatus:'none',cascadesTo:['visa-social'],notes:'Parents in Malaysia, potential support network in Canada. Seattle is far from both. In a health emergency (yours or theirs), distance is a compounding factor.',suggestedAction:'Maintain valid travel documents. Keep emergency fund that covers last-minute international flights. Video call routines reduce emotional distance.',effort:'low'},
+function chipTooltipPlugin(chipMaps) {
+  return {
+    ...commonPlugins,
+    tooltip: {
+      ...commonPlugins.tooltip,
+      callbacks: {
+        label: function(ctx) {
+          const year = ctx.label;
+          const map = chipMaps[ctx.datasetIndex];
+          const chip = map && map[year] ? map[year] : '';
+          return `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}${chip ? '  · ' + chip : ''}`;
+        }
+      }
+    }
+  };
+}
 
-  // ── FINANCIAL COUNTERPARTY ──
-  {id:'financial-bank',domain:'financial',name:'Primary Bank Account',category:'Banking',exposure:.15,dependency:.85,switchingCost:.6,impactSeverity:.5,timeToImpact:'weeks',mitigationStatus:'mitigated',cascadesTo:[],notes:'FDIC insured up to $250k. Major banks (Chase, BofA) are systemically important — unlikely to fail without government intervention. Credit unions are structurally even safer.',suggestedAction:'Keep deposits under FDIC limits per institution. Consider a credit union for primary banking (PE-proof by design).',effort:'low'},
-  {id:'financial-brokerage',domain:'financial',name:'Brokerage Account',category:'Investments',exposure:.2,dependency:.6,switchingCost:.5,impactSeverity:.6,timeToImpact:'weeks',mitigationStatus:'mitigated',cascadesTo:[],notes:'SIPC covers up to $500k ($250k cash). Securities are held in your name — if the brokerage fails, your stocks still exist. The risk is operational disruption, not loss.',suggestedAction:'Use a major brokerage (Schwab, Fidelity, Vanguard). Understand SIPC coverage. Download statements quarterly.',effort:'low'},
-  {id:'financial-401k',domain:'financial',name:'401k / Retirement Custodian',category:'Retirement',exposure:.15,dependency:.5,switchingCost:.5,impactSeverity:.5,timeToImpact:'months',mitigationStatus:'mitigated',cascadesTo:['visa-retirement'],notes:'Employer 401k is held by a custodian (Fidelity, Vanguard, etc.). Well-regulated. The risk is more about employer match and vesting than custodian failure.',suggestedAction:'Roll over old 401ks to an IRA you control. This removes employer dependency from the equation.',effort:'low'},
-  {id:'financial-insurance',domain:'financial',name:'Insurance Carriers',category:'Insurance',exposure:.25,dependency:.6,switchingCost:.4,impactSeverity:.6,timeToImpact:'months',mitigationStatus:'partial',cascadesTo:['employer-health-insurance'],notes:'Health, renters, auto, umbrella. Regulated industry with state guarantee funds as backstop. The real risk is coverage denial and claims disputes, not carrier failure.',suggestedAction:'Document everything. Understand your policy exclusions. Keep copies of all policies offline.',effort:'low'},
-  {id:'financial-hsa',domain:'financial',name:'HSA Provider',category:'Healthcare Savings',exposure:.15,dependency:.3,switchingCost:.3,impactSeverity:.3,timeToImpact:'months',mitigationStatus:'mitigated',cascadesTo:[],notes:'HSA is yours regardless of employer. Can be transferred between providers. Triple tax advantage makes this one of the most durable financial assets you have.',suggestedAction:'Max HSA contributions annually. Invest rather than spend (pay medical costs from cash, let HSA grow). This is one of the few truly portable benefits.',effort:'low'},
-  {id:'financial-crypto',domain:'financial',name:'Crypto / Exchange Risk',category:'Digital Assets',exposure:.5,dependency:.2,switchingCost:.3,impactSeverity:.8,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:[],notes:'If you hold crypto: exchange failure (FTX), regulatory seizure, and smart contract exploits are real risks. "Not your keys, not your coins" is the relevant framework.',suggestedAction:'Self-custody via hardware wallet for any significant holdings. Don\'t leave large balances on exchanges.',effort:'med'},
-
-  // ── CAREER OPTIONALITY ──
-  {id:'career-portable-skills',domain:'career',name:'Portable Technical Skills',category:'Skills',exposure:.75,dependency:.8,switchingCost:0,impactSeverity:.8,timeToImpact:'years',mitigationStatus:'partial',cascadesTo:[],notes:'Skills in standard languages (Python, Go, TypeScript), open-source tools, system design, and ML fundamentals transfer anywhere. These are your most durable assets. Inversely scored: high = good.',suggestedAction:'Dedicate learning time to open-source, industry-standard tools. Every hour on portable skills compounds; every hour on internal tools depreciates.',effort:'med'},
-  {id:'career-google-skills',domain:'career',name:'Google-Specific Skills',category:'Skills',exposure:.25,dependency:.5,switchingCost:0,impactSeverity:.4,timeToImpact:'immediate',mitigationStatus:'none',cascadesTo:['employer-tools'],notes:'Borg, Blaze, internal protobufs, Spanner APIs, internal review processes. Valuable inside Google, worthless outside. Time invested here builds employer-specific, non-portable capital. Low score = risk.',suggestedAction:'Track ratio of internal vs. external tool usage. Shift toward portable equivalents. Use internal tools as learning to understand the open-source versions.',effort:'med'},
-  {id:'career-network',domain:'career',name:'External Professional Network',category:'Relationships',exposure:.5,dependency:.7,switchingCost:0,impactSeverity:.7,timeToImpact:'years',mitigationStatus:'partial',cascadesTo:['visa-social'],notes:'Relationships that survive any single employer: conference contacts, open-source collaborators, former colleagues now at other companies. These are your real career insurance.',suggestedAction:'Attend meetups and conferences. Maintain loose ties with former colleagues. A strong external network is worth more than any single reference.',effort:'med'},
-  {id:'career-oss',domain:'career',name:'Open Source Contributions',category:'Reputation',exposure:.35,dependency:.4,switchingCost:0,impactSeverity:.5,timeToImpact:'years',mitigationStatus:'partial',cascadesTo:['platform-github'],notes:'Public, permanent, portable. Contributions demonstrate competence independent of any employer\'s brand. Also builds network effects as others use and contribute to your work.',suggestedAction:'Contribute to projects you actually use. Quality > quantity. A well-maintained personal project beats 50 one-line PRs.',effort:'med'},
-  {id:'career-financial-runway',domain:'career',name:'Financial Runway',category:'Buffer',exposure:.5,dependency:.8,switchingCost:0,impactSeverity:.9,timeToImpact:'immediate',mitigationStatus:'partial',cascadesTo:['employer-income','visa-employment-auth'],notes:'Months of living expenses in liquid savings. This is the meta-asset that determines whether every other risk in this model is "stressful" or "catastrophic." Inversely scored: high = good.',suggestedAction:'Target 6 months Seattle living expenses (~$20-25k) in liquid savings. This buys time for job search, visa transfer, or relocation.',effort:'high'},
-  {id:'career-citizenship',domain:'career',name:'Canadian Citizenship',category:'Optionality',exposure:.85,dependency:.6,switchingCost:0,impactSeverity:.8,timeToImpact:'years',mitigationStatus:'mitigated',cascadesTo:['visa-employment-auth','geo-political'],notes:'Your single most valuable structural asset. Provides unconditional right to live and work in Canada. No employer dependency. Universal healthcare. This is the exit valve that makes every other risk in the model more manageable.',suggestedAction:'Ensure passport is current. Research Express Entry for PR if not already. Understand the pathway from citizenship to actually relocating (job market, housing, cost of living).',effort:'low'},
-  {id:'career-optionality',domain:'career',name:'Public Writing / Thought Leadership',category:'Reputation',exposure:.2,dependency:.3,switchingCost:0,impactSeverity:.4,timeToImpact:'years',mitigationStatus:'none',cascadesTo:[],notes:'Blog posts, articles, talks. Creates serendipity and inbound opportunities. Low current presence means this is an underutilized asset.',suggestedAction:'Publish regularly on topics you\'re exploring (AI tooling, spec-driven development). Obsidian → Quartz pipeline makes this low-friction.',effort:'med'},
-];
-
-// ─── CASCADE SCENARIOS ──────────────────────────────────────────
-const SCENARIOS = [
-  {
-    id: 'layoff',
-    trigger: 'Layoff from Google',
-    desc: 'Involuntary termination triggers the most damaging cascade in the model.',
-    steps: [
-      { time: 'Day 0', text: 'Income stops. RSU vesting halts. Unvested stock forfeited. Access to internal tools, network, and systems revoked.', severity: 'high' },
-      { time: 'Day 1', text: 'H1-B 60-day grace period begins. Clock is ticking to find new sponsorship, transfer visa, or leave the US.', severity: 'high' },
-      { time: 'Day 30', text: 'Health insurance coverage ends (or end of month). COBRA election window opens. Prescriptions and ongoing treatments at risk.', severity: 'high' },
-      { time: 'Day 45', text: 'Job search pressure intensifies. Visa transfer requires employer willing to sponsor. Market conditions directly affect timeline.', severity: 'high' },
-      { time: 'Day 60', text: 'Grace period expires. Without new sponsorship: must leave the US. Lease breakage, belongings, community ties — all severed under pressure.', severity: 'high' },
-      { time: 'Month 3', text: 'If relocated to Canada: rebuilding starts. No credit history, new healthcare enrollment (provincial waiting period), job search from scratch in new market.', severity: 'med' },
-      { time: 'Month 6+', text: 'Professional network attenuates. Seattle community connections fade to occasional messages. Identity reconstruction underway.', severity: 'low' },
+// --- PHONE CHART ---
+// Geekbench 6 Single-Core (approximate, from reviews and re-tests)
+const phoneYears = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
+new Chart(document.getElementById('phoneChart'), {
+  type: 'line',
+  data: {
+    labels: phoneYears,
+    datasets: [
+      makeDataset('Apple A-series', [
+        310, 510, 590, 730, 1050, 1120, 1340, 1590, 1750, 1880, 2910, 3530
+      ], '#4f8ff7'),
+      makeDataset('Snapdragon (Qualcomm)', [
+        210, 280, 310, 420, 520, 730, 810, 1020, 1170, 1250, 2050, 2850
+      ], '#f59e0b'),
+      makeDataset('Exynos (Samsung)', [
+        null, 220, 280, 400, 510, 620, 720, 880, 1090, 1280, 1950, 2350
+      ], '#a78bfa'),
+      makeDataset('Dimensity (MediaTek)', [
+        null, null, null, null, null, null, 580, 720, 860, 1020, 1850, 2500
+      ], '#34d399')
     ]
   },
-  {
-    id: 'pe-landlord',
-    trigger: 'PE Firm Acquires Your Apartment Building',
-    desc: 'Institutional buyer implements standard value-extraction playbook.',
-    steps: [
-      { time: 'Month 0', text: 'Acquisition announced. New management company takes over. Often no immediate visible changes.', severity: 'low' },
-      { time: 'Month 2', text: 'Maintenance requests slow down. New fees appear: "amenity fee," "trash valet," "package handling." Communication becomes impersonal.', severity: 'low' },
-      { time: 'Renewal', text: 'Rent increase of 10-20% at lease renewal. Take-it-or-leave-it. Moving costs and search friction make most tenants absorb it.', severity: 'med' },
-      { time: 'Year 1', text: 'Deferred maintenance becomes visible: HVAC issues, plumbing delays, common area neglect. Staff turnover as wages are cut.', severity: 'med' },
-      { time: 'Year 2+', text: 'Cumulative rent increases outpace income growth. You\'re now paying significantly more for a worse product. Switching cost (moving) is the only thing keeping you.', severity: 'high' },
-    ]
-  },
-  {
-    id: 'earthquake',
-    trigger: 'Major Cascadia Earthquake (M7.0+)',
-    desc: 'Physical infrastructure failure cascades into every other domain.',
-    steps: [
-      { time: 'Hour 0', text: 'Shaking. Building damage assessment. If soft-story wood frame, potential structural failure. Immediate safety is the only priority.', severity: 'high' },
-      { time: 'Day 1', text: 'Power, water, internet likely disrupted. Can\'t work remotely. If building is red-tagged, you\'re displaced with whatever you carried out.', severity: 'high' },
-      { time: 'Week 1', text: 'Healthcare system overwhelmed. Roads damaged. Supply chain disrupted. If apartment is uninhabitable, temporary housing scramble begins.', severity: 'high' },
-      { time: 'Month 1', text: 'Renters insurance claim filed (if you have earthquake rider — most don\'t). Google likely has business continuity but your productivity is wrecked.', severity: 'med' },
-      { time: 'Month 3+', text: 'Rebuilding timeline unclear. Some neighborhoods recover fast, others don\'t. Decision point: stay and rebuild, or use this as the trigger to relocate.', severity: 'med' },
-    ]
-  },
-  {
-    id: 'visa-policy',
-    trigger: 'H1-B Policy Tightening (Federal)',
-    desc: 'New administration restricts H1-B renewals, raises wage requirements, or eliminates grace period.',
-    steps: [
-      { time: 'Announced', text: 'Policy change announced with 60-90 day implementation timeline. Immediate uncertainty spike. Every H1-B holder reassesses.', severity: 'med' },
-      { time: 'Month 1', text: 'Employer legal team evaluates impact. Wage floor increases may require title/level changes. Some roles may no longer qualify.', severity: 'med' },
-      { time: 'Month 3', text: 'Renewal applications face new scrutiny. Denial rates increase. If your renewal is denied, you enter the departure cascade (see Layoff scenario).', severity: 'high' },
-      { time: 'Month 6', text: 'Brain drain accelerates. Canadian tech sector absorbs US H1-B refugees. Your Canadian citizenship becomes actively valuable rather than passively reassuring.', severity: 'med' },
-    ]
-  },
-  {
-    id: 'platform-breach',
-    trigger: 'Critical Platform Compromise or Shutdown',
-    desc: 'Password manager breach, Google account lockout, or major platform failure.',
-    steps: [
-      { time: 'Hour 0', text: 'Access to critical services disrupted. If password manager: every account is potentially compromised. If Google: email, calendar, docs, photos gone.', severity: 'high' },
-      { time: 'Day 1', text: 'Recovery process begins. Security reset across all affected services. Two-factor recovery codes become critical.', severity: 'high' },
-      { time: 'Week 1', text: 'Rebuilding digital identity. Changing passwords, verifying accounts, assessing data loss. Productivity near zero.', severity: 'med' },
-      { time: 'Month 1', text: 'Most services restored. Lingering issues with services tied to old credentials. Photo/file loss may be permanent if no backup existed.', severity: 'low' },
-    ]
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('Geekbench 6 SC'),
+    plugins: {
+      ...chipTooltipPlugin(phoneChipMaps),
+      annotation: {
+        annotations: {
+          neuralEngine: {
+            type: 'line', xMin: '2017', xMax: '2017',
+            borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'A11 Neural Engine', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
+          },
+          oryon: {
+            type: 'line', xMin: '2024', xMax: '2024',
+            borderColor: 'rgba(245,158,11,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Oryon cores', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#f59e0b80', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
   }
-];
+});
 
-// ─── ACTIONS ──────────────────────────────────────────────────
-const ACTIONS = [
-  { title: 'Begin Canadian PR / Express Entry process', desc: 'The single highest-leverage action. Converts a latent citizenship asset into an active immigration pathway. Removes the existential risk from the visa domain entirely.', effort: 'high', impact: 'critical', domains: ['visa','career','geo'] },
-  { title: 'Build 6-month emergency fund ($20-25k liquid)', desc: 'Financial runway transforms every risk from "catastrophic" to "stressful." It buys time for job search, visa transfer, relocation, or recovery from any scenario.', effort: 'high', impact: 'critical', domains: ['financial','employer','visa'] },
-  { title: 'Switch to independent healthcare providers', desc: 'Find physician-owned primary care, solo-practice therapist, independent dentist. Ask directly about ownership. Protect the relationships PE destroys.', effort: 'med', impact: 'high', domains: ['pe'] },
-  { title: 'Switch to a credit union for primary banking', desc: 'Credit unions are member-owned cooperatives — structurally immune to PE acquisition. NCUA insured. Usually better rates and lower fees.', effort: 'low', impact: 'med', domains: ['pe','financial'] },
-  { title: 'Open a Canadian bank account', desc: 'Pre-positions financial infrastructure in Canada before you need it. RBC and TD offer cross-border programs. Reduces friction in a relocation scenario from weeks to days.', effort: 'med', impact: 'high', domains: ['visa','financial'] },
-  { title: 'Set up cross-border credit card', desc: 'RBC and TD have programs that bridge US credit to Canadian credit. Starting this now prevents restarting credit from zero if you relocate.', effort: 'med', impact: 'med', domains: ['visa','financial'] },
-  { title: 'Export all platform data quarterly', desc: 'Google Takeout, GitHub repo mirrors, password manager export, Strava/Zwift data, photo backup. Schedule it. 2 hours per quarter prevents years of data loss.', effort: 'low', impact: 'high', domains: ['platform'] },
-  { title: 'Switch to open-source password manager (Bitwarden)', desc: 'Open-source, audited, standard export format. Removes a critical single-point-of-failure dependency on a proprietary platform.', effort: 'low', impact: 'high', domains: ['platform'] },
-  { title: 'Get earthquake renters insurance rider', desc: 'Standard renters insurance excludes earthquakes. The rider costs extra but covers displacement and personal property in the highest-impact geo scenario.', effort: 'low', impact: 'med', domains: ['geo'] },
-  { title: 'Check apartment building seismic rating', desc: '5 minutes of research that dramatically changes your risk profile. Seattle DCI has building permit records. Soft-story buildings are highest risk.', effort: 'low', impact: 'med', domains: ['geo'] },
-  { title: 'Track unvested RSU value and vesting schedule', desc: 'Know exactly what you\'d forfeit by leaving. This number should inform — not prevent — career decisions. Update quarterly.', effort: 'low', impact: 'med', domains: ['employer'] },
-  { title: 'Build external professional presence', desc: 'Blog posts (Obsidian→Quartz), open-source contributions, conference talks. Every public artifact is portable career capital that no employer can revoke.', effort: 'med', impact: 'high', domains: ['career','employer'] },
-  { title: 'Publish on AI tooling and spec-driven development', desc: 'You\'re already doing the experimentation. Writing it up positions you as a thought leader in a space that\'s rapidly growing. Compounds with L5 promotion narrative.', effort: 'med', impact: 'high', domains: ['career'] },
-  { title: 'Maintain "go bag" relocation plan', desc: 'A document listing: what you\'d ship, what you\'d sell, what you\'d abandon. Key contacts, account numbers, essential docs. Reduces panic-driven decisions in a forced move.', effort: 'low', impact: 'med', domains: ['visa','geo'] },
-  { title: 'Use custom email domain for critical accounts', desc: 'If your identity is tied to @gmail.com and you lose access, every service goes with it. A personal domain ($12/yr) makes email provider-independent.', effort: 'low', impact: 'med', domains: ['platform'] },
-  { title: 'Invest time in portable tools over internal tools', desc: 'For every hour on Borg/Blaze, spend an hour on Kubernetes/Bazel. Internal tools build employer capital; open-source builds career capital.', effort: 'med', impact: 'high', domains: ['career','employer'] },
-];
+// --- LAPTOP CPU CHART ---
+// Cinebench R23 Multi-Core
+const laptopYears = ['2013','2015','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+new Chart(document.getElementById('laptopCPUChart'), {
+  type: 'line',
+  data: {
+    labels: laptopYears,
+    datasets: [
+      makeDataset('Intel Core H-series', [
+        3500, 4000, 4800, 7100, 7200, 7600, 10200, 14200, 15200, 17500, 19000
+      ], '#4f8ff7'),
+      makeDataset('AMD Ryzen H-series', [
+        null, null, null, null, 7800, 9200, 11200, 13000, 14500, 18500, 21000
+      ], '#f43f5e'),
+      makeDataset('Apple M-series', [
+        null, null, null, null, null, null, 7760, 9650, 12400, 16300, 17500
+      ], '#a78bfa'),
+      makeDataset('Qualcomm Snapdragon X', [
+        null, null, null, null, null, null, null, null, null, 12300, 14500
+      ], '#34d399', true)
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('Cinebench R23 MC'),
+    plugins: {
+      ...chipTooltipPlugin(laptopChipMaps),
+      annotation: {
+        annotations: {
+          m1: {
+            type: 'line', xMin: '2020', xMax: '2020',
+            borderColor: 'rgba(167,139,250,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'M1 launches', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#a78bfa80', backgroundColor: 'transparent' }
+          },
+          alderLake: {
+            type: 'line', xMin: '2022', xMax: '2022',
+            borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Hybrid P+E cores', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
 
-// ─── RENDERING ────────────────────────────────────────────────
-let state = { tab: 'overview', sort: 'exposure', expanded: null, guideOpen: false, scenarioOpen: null };
+// --- DESKTOP CPU CHART ---
+// Cinebench R23 Multi-Core
+const desktopYears = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
+new Chart(document.getElementById('desktopCPUChart'), {
+  type: 'line',
+  data: {
+    labels: desktopYears,
+    datasets: [
+      makeDataset('Intel Core i7/i9', [
+        5500, 5800, 6500, 6800, 8200, 9600, 10200, 16200, 17000, 27200, 38200, 41000
+      ], '#4f8ff7'),
+      makeDataset('AMD Ryzen 7/9', [
+        null, null, null, null, 7800, 9200, 12500, 15200, 21500, 28800, 37500, 39500
+      ], '#f43f5e')
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('Cinebench R23 MC'),
+    plugins: {
+      ...chipTooltipPlugin(deskCPUChipMaps),
+      annotation: {
+        annotations: {
+          zen: {
+            type: 'line', xMin: '2017', xMax: '2017',
+            borderColor: 'rgba(244,63,94,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Zen 1 / Ryzen launch', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#f43f5e80', backgroundColor: 'transparent' }
+          },
+          alderLakeD: {
+            type: 'line', xMin: '2021', xMax: '2021',
+            borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Alder Lake hybrid', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
 
-function calcExposure(item) { return item.exposure; }
-function scoreClass(e) { return e >= 0.65 ? 'score-high' : e >= 0.4 ? 'score-med' : 'score-low'; }
-function scoreColor(e) { return e >= 0.65 ? 'var(--red)' : e >= 0.4 ? 'var(--yellow)' : 'var(--green)'; }
-function sevColor(s) { return s === 'high' ? 'var(--red)' : s === 'med' ? 'var(--yellow)' : 'var(--green)'; }
+// --- LAPTOP GPU CHART ---
+// 3DMark Time Spy Graphics
+const gpuLaptopYears = ['2014','2016','2017','2019','2020','2021','2023','2024','2025'];
+const lgpu60 = {'2014':'GTX 860M','2016':'GTX 1060','2017':'GTX 1060 MaxQ','2019':'RTX 2060','2020':'RTX 2060','2021':'RTX 3060','2023':'RTX 4060','2024':'RTX 4060','2025':'RTX 5060'};
+const lgpu70 = {'2016':'GTX 1070','2017':'GTX 1070 MaxQ','2019':'RTX 2070','2020':'RTX 2070 Super','2021':'RTX 3070','2023':'RTX 4070','2025':'RTX 5070'};
+const lgpuAMD = {'2016':'RX 480M','2017':'RX 580M','2019':'RX 5500M','2020':'RX 5600M','2021':'RX 6700M','2023':'RX 7700S','2024':'RX 7800M'};
+const laptopGPUMaps = [lgpu60, lgpu70, lgpuAMD];
+new Chart(document.getElementById('laptopGPUChart'), {
+  type: 'line',
+  data: {
+    labels: gpuLaptopYears,
+    datasets: [
+      makeDataset('NVIDIA GeForce (Laptop)', [
+        2500, 3900, 5200, 5800, 6500, 8600, 10600, 12500, 13200
+      ], '#34d399'),
+      makeDataset('NVIDIA xx70 tier (Laptop)', [
+        null, 5200, 6800, 7200, 8200, 10700, 12600, null, 14000
+      ], '#22d3ee'),
+      makeDataset('AMD Radeon (Laptop)', [
+        null, 2800, 3600, 4500, 5200, 6800, 8200, 9500, null
+      ], '#f43f5e', true)
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('3DMark Time Spy Graphics'),
+    plugins: {
+      ...chipTooltipPlugin(laptopGPUMaps),
+      annotation: {
+        annotations: {
+          rtx: {
+            type: 'line', xMin: '2019', xMax: '2019',
+            borderColor: 'rgba(52,211,153,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'RTX ray tracing era', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#34d39980', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
 
-function domainAvg(key) {
-  const items = ITEMS.filter(i => i.domain === key);
-  if (!items.length) return 0;
-  return items.reduce((a, i) => a + i.exposure, 0) / items.length;
-}
-
-function getItems() {
-  let list = state.tab === 'overview' ? [...ITEMS] : ITEMS.filter(i => i.domain === state.tab);
-  if (state.sort === 'exposure') list.sort((a, b) => b.exposure - a.exposure);
-  else if (state.sort === 'dependency') list.sort((a, b) => b.dependency - a.dependency);
-  else if (state.sort === 'switching') list.sort((a, b) => b.switchingCost - a.switchingCost);
-  else if (state.sort === 'impact') list.sort((a, b) => b.impactSeverity - a.impactSeverity);
-  return list;
-}
-
-function render() {
-  const app = document.getElementById('app');
-  const domainKeys = Object.keys(DOMAINS);
-  const totalItems = ITEMS.length;
-  const criticalCount = ITEMS.filter(i => i.exposure >= 0.65).length;
-  const highestDomain = domainKeys.reduce((a, b) => domainAvg(a) > domainAvg(b) ? a : b);
-  const avgExposure = ITEMS.reduce((a, i) => a + i.exposure, 0) / ITEMS.length;
-  const items = getItems();
-
-  app.innerHTML = `
-    <div class="header">
-      <h1>Personal Risk Exposure Model</h1>
-      <p>Unified risk model — 7 domains, ${totalItems} dependencies, cross-domain cascades</p>
-    </div>
-
-    <button class="guide-toggle ${state.guideOpen ? 'open' : ''}" id="guide-toggle">
-      <div class="guide-toggle-left">
-        <div class="guide-toggle-icon">?</div>
-        <div>
-          <div class="guide-toggle-label">How to Read This Model</div>
-          <div class="guide-toggle-hint">Framework, domains, scoring, cascades, and what to do about it</div>
-        </div>
-      </div>
-      <span class="guide-chevron ${state.guideOpen ? 'open' : ''}">▼</span>
-    </button>
-    <div class="guide-body ${state.guideOpen ? 'open' : ''}">
-      <div class="guide-section">
-        <div class="guide-section-title">What This Is</div>
-        <p>This is a <strong>unified personal risk model</strong> — a map of everything you depend on, scored by how vulnerable each dependency is and how much it matters. Most risk models focus on one domain (finances, or career, or health). This one connects them because <strong>risks cascade</strong>: a layoff doesn't just lose income — it triggers visa risk, which triggers housing risk, which triggers community loss. No single-domain model captures that.</p>
-        <p>The model is built for a specific person: a 35-year-old software engineer, Canadian citizen on an H1-B visa, renting in Seattle, no property ownership. But the framework — enumerate dependencies, score vulnerability, map cascades, triage actions — applies to anyone. Fork it and make it yours.</p>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">The Seven Domains</div>
-        <p><strong>Private Equity Exposure</strong> — services vulnerable to PE acquisition and the social value extraction that follows. <strong>Visa & Immigration</strong> — everything contingent on H1-B status and how fast each unravels. <strong>Employer Concentration</strong> — how much runs through one employer (spoiler: almost everything). <strong>Platform Lock-in</strong> — digital services scored by data portability and exit cost. <strong>Geographic Fragility</strong> — risks tied to being in Seattle specifically. <strong>Financial Counterparty</strong> — who holds your money and their failure modes. <strong>Career Optionality</strong> — the inverse model, scoring portable assets that <em>reduce</em> risk.</p>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">Scoring</div>
-        <p>Each item has an <strong>exposure score</strong> (0–100%) combining dependency, impact severity, and probability. Additionally: <strong>switching cost</strong> measures your ability to escape, and <strong>time to impact</strong> shows how fast things break. For the Career Optionality domain, scores are <em>inverted</em> — high scores mean high optionality (good), low scores mean fragile, non-portable capital (bad).</p>
-        <p>Color coding: <span style="color:var(--red)">red (65%+)</span> = critical, <span style="color:var(--yellow)">yellow (40–64%)</span> = elevated, <span style="color:var(--green)">green (&lt;40%)</span> = manageable.</p>
-      </div>
-      <div class="guide-section">
-        <div class="guide-section-title">Cascade Scenarios</div>
-        <p>The "Scenarios" tab shows how a single triggering event propagates across domains with a timeline. These are the compound risks that individual domain models miss. A layoff doesn't just lose income — it starts a 60-day countdown that can uproot your entire life.</p>
-        <div class="guide-callout warn">
-          <p><strong>The scores are estimated defaults</strong> — they reflect structural patterns, not your exact situation. To make this model accurate, fork the source and adjust the <code>ITEMS</code> array with your real providers, actual savings, and current vesting schedule. The structure is the tool; the data should be yours.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Aggregate stats -->
-    <div class="agg-grid">
-      <div class="stat-card">
-        <div class="stat-label">Dependencies Tracked</div>
-        <div class="stat-value">${totalItems}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Critical Exposures</div>
-        <div class="stat-value" style="color:var(--red)">${criticalCount}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Highest-Risk Domain</div>
-        <div class="stat-value" style="color:${DOMAINS[highestDomain].colorRaw};font-size:1.1rem">${DOMAINS[highestDomain].name}</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Avg Exposure</div>
-        <div class="stat-value" style="color:${scoreColor(avgExposure)}">${Math.round(avgExposure * 100)}%</div>
-      </div>
-    </div>
-
-    <!-- Domain bar chart -->
-    <div class="domain-bars">
-      <h2>Exposure by Domain</h2>
-      ${domainKeys.map(k => {
-        const avg = domainAvg(k);
-        const count = ITEMS.filter(i => i.domain === k).length;
-        return `<div class="domain-bar-row">
-          <div class="domain-bar-label">${DOMAINS[k].name}</div>
-          <div class="domain-bar-track">
-            <div class="domain-bar-fill" style="width:${Math.round(avg*100)}%;background:${DOMAINS[k].colorRaw}"></div>
-          </div>
-          <div class="domain-bar-value" style="color:${scoreColor(avg)}">${Math.round(avg*100)}%</div>
-        </div>`;
-      }).join('')}
-    </div>
-
-    <!-- Nav tabs -->
-    <div class="nav-tabs">
-      <button class="nav-tab ${state.tab === 'overview' ? 'active' : ''}" data-tab="overview">All<span class="tab-count">${totalItems}</span></button>
-      ${domainKeys.map(k => {
-        const c = ITEMS.filter(i => i.domain === k).length;
-        return `<button class="nav-tab ${state.tab === k ? 'active' : ''}" data-tab="${k}">${DOMAINS[k].name}<span class="tab-count">${c}</span></button>`;
-      }).join('')}
-      <button class="nav-tab ${state.tab === 'scenarios' ? 'active' : ''}" data-tab="scenarios">Scenarios</button>
-      <button class="nav-tab ${state.tab === 'actions' ? 'active' : ''}" data-tab="actions">Actions</button>
-    </div>
-
-    ${state.tab === 'scenarios' ? renderScenarios() : state.tab === 'actions' ? renderActions() : renderItems(items)}
-  `;
-
-  // Event listeners
-  document.getElementById('guide-toggle').addEventListener('click', () => { state.guideOpen = !state.guideOpen; render(); });
-  document.querySelectorAll('.nav-tab').forEach(t => t.addEventListener('click', () => { state.tab = t.dataset.tab; state.expanded = null; render(); }));
-  document.querySelectorAll('.ctrl-btn').forEach(b => b.addEventListener('click', () => { state.sort = b.dataset.sort; render(); }));
-  document.querySelectorAll('.item-header').forEach(b => b.addEventListener('click', () => {
-    const id = b.dataset.id; state.expanded = state.expanded === id ? null : id; render();
-  }));
-  document.querySelectorAll('.cascade-trigger').forEach(t => t.addEventListener('click', () => {
-    const id = t.dataset.scenario; state.scenarioOpen = state.scenarioOpen === id ? null : id; render();
-  }));
-}
-
-function renderItems(items) {
-  const domainKey = state.tab !== 'overview' && state.tab !== 'scenarios' && state.tab !== 'actions' ? state.tab : null;
-  const domainInfo = domainKey ? DOMAINS[domainKey] : null;
-
-  return `
-    ${domainInfo ? `<div class="domain-header">
-      <div class="domain-title" style="color:${domainInfo.colorRaw}">${domainInfo.name}</div>
-      <div class="domain-desc">${domainInfo.desc}</div>
-    </div>` : ''}
-
-    <div class="controls-row">
-      <span class="controls-label">Sort:</span>
-      ${[['exposure','Exposure'],['dependency','Dependency'],['impact','Impact'],['switching','Lock-in']].map(([k,l]) =>
-        `<button class="ctrl-btn ${state.sort===k?'active':''}" data-sort="${k}">${l}</button>`
-      ).join('')}
-    </div>
-
-    <div class="item-list">
-      ${items.map(item => {
-        const e = item.exposure;
-        const isExpanded = state.expanded === item.id;
-        const d = DOMAINS[item.domain];
-        const isCareer = item.domain === 'career';
-        return `<div class="item-row ${isExpanded ? 'expanded' : ''}">
-          <button class="item-header" data-id="${item.id}">
-            <div class="item-left">
-              <div class="item-dot" style="background:${d.colorRaw}"></div>
-              <div class="item-info">
-                <div class="item-name">
-                  ${item.name}
-                  ${item.mitigationStatus === 'mitigated' ? '<span class="badge badge-green">mitigated</span>' : ''}
-                  ${item.timeToImpact === 'immediate' ? '<span class="badge badge-red">immediate</span>' : ''}
-                </div>
-                <div class="item-meta">${d.name} · ${item.category}</div>
-              </div>
-            </div>
-            <div class="item-right">
-              <span class="exposure-score ${scoreClass(e)}">${Math.round(e * 100)}%</span>
-              <span class="chevron">▼</span>
-            </div>
-          </button>
-          <div class="item-detail">
-            <div class="detail-grid">
-              <div><div class="detail-label">${isCareer ? 'Optionality' : 'Exposure'}</div><div class="detail-val">${Math.round(e*100)}%</div></div>
-              <div><div class="detail-label">Dependency</div><div class="detail-val">${Math.round(item.dependency*100)}%</div></div>
-              <div><div class="detail-label">Impact Severity</div><div class="detail-val">${Math.round(item.impactSeverity*100)}%</div></div>
-              <div><div class="detail-label">Switching Cost</div><div class="detail-val">${Math.round(item.switchingCost*100)}%</div></div>
-            </div>
-            <div style="margin-bottom:0.5rem">
-              <span class="badge ${item.timeToImpact === 'immediate' ? 'badge-red' : item.timeToImpact === 'days' || item.timeToImpact === 'weeks' ? 'badge-orange' : item.timeToImpact === 'months' ? 'badge-yellow' : 'badge-green'}">Impact: ${item.timeToImpact}</span>
-              <span class="badge ${item.mitigationStatus === 'mitigated' ? 'badge-green' : item.mitigationStatus === 'partial' ? 'badge-yellow' : 'badge-red'}" style="margin-left:0.25rem">${item.mitigationStatus === 'none' ? 'unmitigated' : item.mitigationStatus}</span>
-            </div>
-            <div class="detail-notes">${item.notes}</div>
-            ${item.cascadesTo.length ? `<div class="detail-cascade">
-              <div class="detail-cascade-label">Cascades to</div>
-              <div class="cascade-tags">${item.cascadesTo.map(c => {
-                const target = ITEMS.find(i => i.id === c);
-                return target ? `<span class="cascade-tag">${target.name}</span>` : '';
-              }).join('')}</div>
-            </div>` : ''}
-            ${item.suggestedAction ? `<div class="detail-action">
-              <div class="detail-action-label">Suggested Action</div>
-              <div class="detail-action-text">${item.suggestedAction}</div>
-            </div>` : ''}
-            <div class="bar-row">
-              <span class="bar-label">Exposure</span>
-              <div class="bar-track"><div class="bar-fill" style="width:${Math.round(e*100)}%;background:${scoreColor(e)}"></div></div>
-            </div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-}
-
-function renderScenarios() {
-  return `
-    <div class="domain-header">
-      <div class="domain-title" style="color:var(--red)">Cascade Scenarios</div>
-      <div class="domain-desc">How a single triggering event propagates across domains. These are the compound risks that individual models miss. Click a scenario to expand the timeline.</div>
-    </div>
-    ${SCENARIOS.map(s => `
-      <div class="cascade-panel">
-        <div class="cascade-scenario">
-          <div class="cascade-trigger" data-scenario="${s.id}">
-            <span class="chevron" style="${state.scenarioOpen === s.id ? 'transform:rotate(180deg)' : ''}">▼</span>
-            ${s.trigger}
-          </div>
-          <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.4rem;padding-left:1rem">${s.desc}</div>
-          <div class="cascade-chain ${state.scenarioOpen === s.id ? 'open' : ''}">
-            ${s.steps.map(step => `
-              <div class="cascade-step">
-                <div class="cascade-step-time">${step.time}</div>
-                <div style="display:flex;flex-direction:column;align-items:center;padding:0 0.35rem">
-                  <div style="width:8px;height:8px;border-radius:50%;background:${sevColor(step.severity)};flex-shrink:0"></div>
-                  <div style="width:2px;flex:1;background:var(--border);margin-top:2px"></div>
-                </div>
-                <div class="cascade-step-content">${step.text}</div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      </div>
-    `).join('')}
-  `;
-}
-
-function renderActions() {
-  return `
-    <div class="domain-header">
-      <div class="domain-title" style="color:var(--green)">Action Priority Queue</div>
-      <div class="domain-desc">Highest-leverage actions across all domains, ranked by effort-to-impact ratio. Low-effort, high-impact actions first.</div>
-    </div>
-    <div class="actions-panel">
-      <h3>Priority Actions</h3>
-      ${ACTIONS.map(a => `
-        <div class="action-item">
-          <div class="action-effort ${a.effort === 'low' ? 'effort-low' : a.effort === 'med' ? 'effort-med' : 'effort-high'}">${a.effort}</div>
-          <div class="action-body">
-            <div class="action-title">${a.title}</div>
-            <div class="action-desc">${a.desc}</div>
-            <div class="action-domains">
-              ${a.domains.map(d => `<span class="action-domain-tag" style="color:${DOMAINS[d].colorRaw}">${DOMAINS[d].name}</span>`).join('')}
-            </div>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-render();
+// --- DESKTOP GPU CHART ---
+// 3DMark Time Spy Graphics
+const gpuDesktopYears = ['2014','2016','2017','2018','2019','2020','2022','2023','2025'];
+const dgpu60 = {'2014':'GTX 760','2016':'GTX 1060','2017':'GTX 1060','2018':'GTX 1060','2019':'GTX 1660 Super','2020':'RTX 3060','2022':'RTX 3060 Ti','2023':'RTX 4060','2025':'RTX 5060'};
+const dgpu70 = {'2014':'GTX 970','2016':'GTX 1070','2017':'GTX 1070 Ti','2018':'RTX 2070','2019':'RTX 2070 Super','2020':'RTX 3070','2022':'RTX 3070 Ti','2023':'RTX 4070','2025':'RTX 5070'};
+const dgpu90 = {'2014':'GTX 980','2016':'GTX 1080','2017':'GTX 1080 Ti','2018':'RTX 2080 Ti','2019':'RTX 2080 Ti','2020':'RTX 3090','2022':'RTX 3090 Ti','2023':'RTX 4090','2025':'RTX 5090'};
+const dgpuAMD = {'2014':'R9 290X','2016':'RX 480','2017':'RX Vega 64','2018':'RX Vega 64','2019':'RX 5700 XT','2020':'RX 6800 XT','2022':'RX 6950 XT','2023':'RX 7900 XTX'};
+const desktopGPUMaps = [dgpu60, dgpu70, dgpu90, dgpuAMD];
+new Chart(document.getElementById('desktopGPUChart'), {
+  type: 'line',
+  data: {
+    labels: gpuDesktopYears,
+    datasets: [
+      makeDataset('NVIDIA x60 tier', [
+        2400, 3700, 4800, 5000, 5500, 8800, 8700, 10500, 12500
+      ], '#34d399'),
+      makeDataset('NVIDIA x70 tier', [
+        4200, 5500, 6800, 8000, 9200, 13600, 17800, 18200, 22000
+      ], '#4f8ff7'),
+      makeDataset('NVIDIA x80/x90 tier', [
+        5200, 7200, 8800, 10500, 12000, 17500, 23500, 36100, 45000
+      ], '#a78bfa'),
+      makeDataset('AMD RX (competing tier)', [
+        3800, 5000, 5500, 7200, 8500, 12200, 15500, 21500, null
+      ], '#f43f5e', true)
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2.2,
+    scales: commonScales('3DMark Time Spy Graphics'),
+    plugins: {
+      ...chipTooltipPlugin(desktopGPUMaps),
+      annotation: {
+        annotations: {
+          ampere: {
+            type: 'line', xMin: '2020', xMax: '2020',
+            borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Ampere leap', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
+          }
+        }
+      }
+    }
+  }
+});
 </script>
+
 </body>
 </html>
