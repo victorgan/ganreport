@@ -242,7 +242,35 @@
     .hero, .container { padding-left: 20px; padding-right: 20px; }
     .chart-wrapper { padding: 20px 12px 16px; }
     .benchmark-grid { grid-template-columns: 1fr; }
+    .chart-pair { grid-template-columns: 1fr !important; }
   }
+
+  .chart-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .chart-pair .chart-wrapper canvas { max-height: 260px; }
+  .chart-pair-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 10px;
+  }
+  .chart-category-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent-orange);
+    margin: 30px 0 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .chart-category-label:first-of-type { border-top: none; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -395,37 +423,107 @@
     </div>
   </section>
 
-  <!-- CHART 6: PERF PER DOLLAR -->
+  <!-- EFFICIENCY DEEP DIVE -->
   <section class="chart-section">
     <div class="chart-header">
-      <div class="section-label" style="color: var(--accent-amber);">Value Analysis</div>
-      <h2 class="section-title">Desktop GPU: Performance per Dollar</h2>
+      <div class="section-label" style="color: var(--accent-amber);">Efficiency Deep Dive</div>
+      <h2 class="section-title">Performance per Dollar &amp; per Watt</h2>
     </div>
-    <p class="chart-description">Time Spy Graphics score divided by MSRP launch price (in USD). Higher means more performance for your money. This chart reveals the real story beneath the raw benchmark numbers: the 1080 Ti wasn't just fast — it was a value anomaly. And the midrange ($300–600) tier consistently delivers better bang-for-buck than the flagship tier, which charges a premium for the last 20–30% of performance.</p>
-    <div class="chart-wrapper">
-      <canvas id="perfPerDollarChart"></canvas>
-      <div class="chart-footnote">Time Spy Graphics ÷ MSRP USD · Higher = better value · Launch MSRP only (ignores street price inflation)</div>
-    </div>
-    <div class="insight">
-      <div class="insight-title">Reading This Chart</div>
-      <p>The 1080 Ti's value spike in 2017 is the GOAT moment — 12.6 points per dollar, far above the flagship trend line. Notice how the flagship tier (x80/x90) has steadily worsened in value since the RTX 2080 Ti era, even as absolute performance climbs. The midrange (x70) consistently offers 30–60% better value than the top tier. The 2025 budget tier (RTX 5070 at ~40 pts/$) is the best value in GPU history by this metric.</p>
-    </div>
-  </section>
+    <p class="chart-description">Raw benchmarks only tell half the story. These paired charts normalize performance by cost and power consumption across every category. "Per dollar" reveals where the value sweet spots are; "per watt" reveals who's actually advancing efficiency vs. just cranking up power. Higher is better on all charts. Hover for chip details.</p>
 
-  <!-- CHART 7: PERF PER WATT -->
-  <section class="chart-section">
-    <div class="chart-header">
-      <div class="section-label" style="color: var(--accent-green);">Efficiency Analysis</div>
-      <h2 class="section-title">Desktop GPU: Performance per Watt</h2>
-    </div>
-    <p class="chart-description">Time Spy Graphics score divided by TDP (in watts). Higher means more compute from less power. This matters for noise, heat, electricity cost, and planetary sustainability. Efficiency has improved dramatically — a 2025 midrange card produces 4× the compute per watt of a 2014 flagship — but the top-tier cards have been escalating power draw faster than they've improved efficiency, pushing TDPs from 250W to 575W.</p>
-    <div class="chart-wrapper">
-      <canvas id="perfPerWattChart"></canvas>
-      <div class="chart-footnote">Time Spy Graphics ÷ TDP Watts · Higher = more efficient · Reference/FE TDP values</div>
+    <!-- PHONE SoCs -->
+    <div class="chart-category-label">Phone SoCs · Geekbench 6 Single-Core</div>
+    <div class="chart-pair">
+      <div>
+        <div class="chart-pair-label">Per Dollar (GB6 SC ÷ phone launch price)</div>
+        <div class="chart-wrapper"><canvas id="phonePPD"></canvas>
+        <div class="chart-footnote">Uses flagship phone retail price · SoC is only ~10% of phone BOM</div></div>
+      </div>
+      <div>
+        <div class="chart-pair-label">Per Watt (GB6 SC ÷ SoC peak power)</div>
+        <div class="chart-wrapper"><canvas id="phonePPW"></canvas>
+        <div class="chart-footnote">Estimated peak SoC power during benchmark · Not officially published</div></div>
+      </div>
     </div>
     <div class="insight">
-      <div class="insight-title">The Power Escalation Problem</div>
-      <p>The midrange (x70) tier is consistently more efficient than the flagship — smaller dies, lower clocks, better binning. The RTX 5070 at ~88 pts/W is roughly 2.5× more efficient than the RTX 5090 at ~82 pts/W, which itself consumed 575W — more than some space heaters. The 1080 Ti was remarkably efficient for its era at 35.2 pts/W — a number the flagship tier didn't meaningfully surpass until the RTX 4090 five years later, despite massive architectural improvements. NVIDIA is pushing the power wall harder with each generation to maintain the performance crown.</p>
+      <div class="insight-title">Apple's Efficiency Dominance — Until Now</div>
+      <p>Apple delivered roughly 2× the benchmark score per watt of Snapdragon for a decade. But 2025 marks convergence: the SD 8 Elite Gen 5 nearly matches Apple's efficiency while costing $300 less (Galaxy S26 vs iPhone 17 Pro). Per-dollar, Snapdragon has been the better value since 2021 because Samsung cut prices while Apple held at $999+. Caveat: phone price includes display, camera, memory — the SoC is only ~$40–80 of the BOM, so "per dollar" here reflects whole-device value, not chip value.</p>
+    </div>
+
+    <!-- LAPTOP CPUs -->
+    <div class="chart-category-label">Laptop CPUs · Cinebench R23 Multi-Core</div>
+    <div class="chart-pair">
+      <div>
+        <div class="chart-pair-label">Per Dollar (CB R23 MC ÷ CPU tray MSRP)</div>
+        <div class="chart-wrapper"><canvas id="laptopCPUppd"></canvas>
+        <div class="chart-footnote">Intel/AMD OEM tray MSRP · Apple excluded (no standalone CPU sales)</div></div>
+      </div>
+      <div>
+        <div class="chart-pair-label">Per Watt (CB R23 MC ÷ TDP)</div>
+        <div class="chart-wrapper"><canvas id="laptopCPUppw"></canvas>
+        <div class="chart-footnote">Published TDP · Intel actual sustained power often 1.5–2× PBP</div></div>
+      </div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">Apple M-Series: The Efficiency Outlier</div>
+      <p>Apple M-series chips produce 2–3× more multi-core output per watt than Intel H-series — visible as the steep green line on the per-watt chart. AMD's H-series splits the difference. Per-dollar comparison excludes Apple because M-chips aren't sold standalone; the meaningful comparison is at the laptop level, where a $1,999 MacBook Pro outperforms a $1,200 Intel gaming laptop on sustained workloads. Intel's real TDPs are 60–95W under sustained load despite 45W PBP ratings, which inflates their per-watt numbers here.</p>
+    </div>
+
+    <!-- DESKTOP CPUs -->
+    <div class="chart-category-label">Desktop CPUs · Cinebench R23 Multi-Core</div>
+    <div class="chart-pair">
+      <div>
+        <div class="chart-pair-label">Per Dollar (CB R23 MC ÷ CPU MSRP)</div>
+        <div class="chart-wrapper"><canvas id="desktopCPUppd"></canvas>
+        <div class="chart-footnote">Launch MSRP · Flagship i9/Ryzen 9 vs mainstream i7/Ryzen 7</div></div>
+      </div>
+      <div>
+        <div class="chart-pair-label">Per Watt (CB R23 MC ÷ TDP)</div>
+        <div class="chart-wrapper"><canvas id="desktopCPUppw"></canvas>
+        <div class="chart-footnote">Published PBP/TDP · Intel 12th+ gen actual power significantly higher</div></div>
+      </div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">AMD's Value Disruption, Intel's Power Problem</div>
+      <p>AMD's Zen architecture didn't just match Intel — it demolished the value equation. The Ryzen 7 5800X at $449 offered better multi-core per dollar than Intel's $589 i9-12900K. Per-watt, AMD Ryzen holds a consistent ~30% advantage because Intel's hybrid architecture (Alder Lake, Raptor Lake) pushes actual power consumption to 200–300W despite 125W PBP ratings. The 9800X3D at $479/105W is the current efficiency champion.</p>
+    </div>
+
+    <!-- LAPTOP GPUs -->
+    <div class="chart-category-label">Laptop GPUs · 3DMark Time Spy Graphics</div>
+    <div class="chart-pair">
+      <div>
+        <div class="chart-pair-label">Per Dollar (TS ÷ desktop equivalent MSRP)</div>
+        <div class="chart-wrapper"><canvas id="laptopGPUppd"></canvas>
+        <div class="chart-footnote">Desktop equivalent MSRP as proxy · Laptop GPUs not sold standalone</div></div>
+      </div>
+      <div>
+        <div class="chart-pair-label">Per Watt (TS ÷ laptop TGP)</div>
+        <div class="chart-wrapper"><canvas id="laptopGPUppw"></canvas>
+        <div class="chart-footnote">Laptop TGP varies ±30W by chassis · Values shown are typical max configs</div></div>
+      </div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">Mobile GPUs: Efficiency Gains That Matter</div>
+      <p>Laptop GPU efficiency has improved dramatically — the RTX 4060 Laptop at 115W produces more compute per watt than any prior mobile GPU. Per-dollar (using desktop MSRP as proxy), the value trend tracks desktop closely. The RTX 30-series laptops (2020) were the inflection: NVIDIA's power management allowed laptop chips to run within 10–20% of their desktop equivalents for the first time. The 50-series pushes TGP back up to 150W+ for flagship laptops.</p>
+    </div>
+
+    <!-- DESKTOP GPUs -->
+    <div class="chart-category-label">Desktop GPUs · 3DMark Time Spy Graphics</div>
+    <div class="chart-pair">
+      <div>
+        <div class="chart-pair-label">Per Dollar (TS ÷ GPU MSRP)</div>
+        <div class="chart-wrapper"><canvas id="perfPerDollarChart"></canvas>
+        <div class="chart-footnote">Launch MSRP · 1080 Ti circled — the GOAT value anomaly</div></div>
+      </div>
+      <div>
+        <div class="chart-pair-label">Per Watt (TS ÷ TDP)</div>
+        <div class="chart-wrapper"><canvas id="perfPerWattChart"></canvas>
+        <div class="chart-footnote">Reference/FE TDP · Midrange consistently more efficient than flagship</div></div>
+      </div>
+    </div>
+    <div class="insight">
+      <div class="insight-title">The 1080 Ti Value Anomaly &amp; the Flagship Tax</div>
+      <p>The 1080 Ti's per-dollar spike in 2017 is visible: 12.6 pts/$ when the flagship trend was declining. No flagship since has matched it. The midrange (x70) consistently offers 30–60% better value per dollar AND per watt than the flagship tier. The RTX 5090 at 575W/82 pts per watt is less efficient than the RTX 4060 at 115W/91 pts per watt despite costing 7× more. The message: unless you need absolute peak performance, the midrange tier is objectively the smarter buy on both metrics.</p>
     </div>
   </section>
 
@@ -894,127 +992,296 @@ new Chart(document.getElementById('desktopGPUChart'), {
   }
 });
 
-// --- PERF PER DOLLAR CHART ---
-// Time Spy Graphics / MSRP USD
-// Data: [year, score, MSRP] → plotted as score/MSRP
-const ppdGens = ['2014','2016','2017','2018','2019','2020','2022','2023','2025'];
-// Budget (x60): GTX 960=$199, 1060=$249, -, 2060=$349, -, 3060=$329, -, 4060=$299, -
-const ppdBudget = [
-  2400/199, 3700/249, null, null, 5500/349, 8800/329, null, 10500/299, null
-];
-// Mid (x70): 970=$329, 1070=$379, 1070Ti=$449, 2070=$499, 2070S=$499, 3070=$499, -, 4070=$599, 5070=$549
-const ppdMid = [
-  4200/329, 5500/379, 6800/449, 8000/499, 9200/499, 13600/499, null, 17800/599, 22000/549
-];
-// Flagship: 980=$549, 1080=$599, 1080Ti=$699, 2080Ti=$1199, 2080TiS=$1199, 3090=$1499, 4090=$1599, 4090=$1599, 5090=$1999
-const ppdFlag = [
-  5200/549, 7200/599, 8800/699, 10500/1199, 12000/1199, 17500/1499, 23500/1599, 36100/1599, 47100/1999
-];
-new Chart(document.getElementById('perfPerDollarChart'), {
-  type: 'line',
-  data: {
-    labels: ppdGens,
-    datasets: [
-      makeDataset('Budget (x60 tier)', ppdBudget.map(v => v ? Math.round(v*10)/10 : null), '#34d399'),
-      makeDataset('Midrange (x70 tier)', ppdMid.map(v => v ? Math.round(v*10)/10 : null), '#4f8ff7'),
-      makeDataset('Flagship (x80/x90)', ppdFlag.map(v => v ? Math.round(v*10)/10 : null), '#a78bfa')
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: true,
-    aspectRatio: 2.2,
-    scales: commonScales('TS Points per Dollar'),
-    plugins: {
-      ...commonPlugins,
-      tooltip: {
-        ...commonPlugins.tooltip,
-        callbacks: {
-          label: function(ctx) {
-            const names = {
-              '2014': ['GTX 960 · $199','GTX 970 · $329','GTX 980 · $549'],
-              '2016': ['GTX 1060 · $249','GTX 1070 · $379','GTX 1080 · $599'],
-              '2017': [null,'GTX 1070 Ti · $449','GTX 1080 Ti · $699'],
-              '2018': [null,'RTX 2070 · $499','RTX 2080 Ti · $1,199'],
-              '2019': ['RTX 2060 · $349','RTX 2070 Super · $499','RTX 2080 Ti · $1,199'],
-              '2020': ['RTX 3060 · $329','RTX 3070 · $499','RTX 3090 · $1,499'],
-              '2022': [null, null,'RTX 3090 Ti · $1,599'],
-              '2023': ['RTX 4060 · $299','RTX 4070 · $599','RTX 4090 · $1,599'],
-              '2025': [null,'RTX 5070 · $549','RTX 5090 · $1,999']
-            };
-            const n = names[ctx.label];
-            const chip = n && n[ctx.datasetIndex] ? n[ctx.datasetIndex] : '';
-            return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} pts/$${chip ? '  · ' + chip : ''}`;
-          }
-        }
-      },
-      annotation: {
-        annotations: {
-          goatValue: {
-            type: 'point', xValue: '2017', yValue: Math.round(8800/699*10)/10,
-            radius: 12, borderWidth: 2,
-            borderColor: '#f59e0baa', backgroundColor: '#f59e0b22'
-          }
+// ========== EFFICIENCY DEEP DIVE ==========
+// Helper for compact efficiency charts
+const effAspect = 1.8;
+function effScales(yLabel) {
+  return {
+    x: { grid: { color: '#ffffff08' }, ticks: { color: '#94a3b8', font: { family: fontFamily, size: 9 } } },
+    y: { grid: { color: '#ffffff08' }, ticks: { color: '#94a3b8', font: { family: fontFamily, size: 9 } },
+      title: { display: true, text: yLabel, color: '#94a3b8', font: { family: fontFamily, size: 9 } } }
+  };
+}
+function effTooltip(namesMap, unit) {
+  return {
+    ...commonPlugins,
+    tooltip: {
+      ...commonPlugins.tooltip,
+      callbacks: {
+        label: function(ctx) {
+          const n = namesMap[ctx.label];
+          const chip = n && n[ctx.datasetIndex] ? n[ctx.datasetIndex] : '';
+          return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} ${unit}${chip ? '  · ' + chip : ''}`;
         }
       }
+    }
+  };
+}
+const r = (v) => v ? Math.round(v*10)/10 : null;
+
+// --- PHONE SoC: Per Dollar ---
+// GB6 SC / phone launch price. Apple=iPhone Pro, Snapdragon=Galaxy S flagship
+const phoneEffYears = ['2015','2017','2019','2021','2023','2025'];
+// Apple: A9=520/$649, A11=1100/$999, A13=1340/$999, A15=2090/$999, A17P=2890/$999, A19P=3895/$1099
+const phonePPDapple = [520/649, 1100/999, 1340/999, 2090/999, 2890/999, 3895/1099].map(r);
+// SD: 810=320/$649, 835=430/$720, 855=700/$899, 888=1100/$799, 8G2=1500/$799, 8EG5=3524/$799
+const phonePPDsd = [320/649, 430/720, 700/899, 1100/799, 1500/799, 3524/799].map(r);
+new Chart(document.getElementById('phonePPD'), {
+  type: 'line',
+  data: { labels: phoneEffYears, datasets: [
+    makeDataset('Apple A-series', phonePPDapple, '#4f8ff7'),
+    makeDataset('Snapdragon', phonePPDsd, '#f59e0b')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('GB6 SC / $'),
+    plugins: effTooltip({
+      '2015':['A9 · iPhone 6s · $649','SD 810 · Galaxy S6 · $649'],
+      '2017':['A11 · iPhone X · $999','SD 835 · Galaxy S8 · $720'],
+      '2019':['A13 · iPhone 11 Pro · $999','SD 855 · Galaxy S10 · $899'],
+      '2021':['A15 · iPhone 13 Pro · $999','SD 888 · Galaxy S21 · $799'],
+      '2023':['A17 Pro · iPhone 15 Pro · $999','SD 8 Gen 2 · Galaxy S23 · $799'],
+      '2025':['A19 Pro · iPhone 17 Pro · $1,099','SD 8 Elite G5 · Galaxy S26 · $799']
+    }, 'pts/$')
+  }
+});
+
+// --- PHONE SoC: Per Watt ---
+// GB6 SC / estimated peak SoC power
+// Apple: 3W, 3.5W, 3.5W, 4W, 4.5W, 5W
+const phonePPWapple = [520/3, 1100/3.5, 1340/3.5, 2090/4, 2890/4.5, 3895/5].map(r);
+// SD: 5W(810 hot!), 3.5W, 4.5W, 5.5W(888 hot), 5W, 5.5W
+const phonePPWsd = [320/5, 430/3.5, 700/4.5, 1100/5.5, 1500/5, 3524/5.5].map(r);
+new Chart(document.getElementById('phonePPW'), {
+  type: 'line',
+  data: { labels: phoneEffYears, datasets: [
+    makeDataset('Apple A-series', phonePPWapple, '#4f8ff7'),
+    makeDataset('Snapdragon', phonePPWsd, '#f59e0b')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('GB6 SC / Watt'),
+    plugins: effTooltip({
+      '2015':['A9 · ~3W','SD 810 · ~5W (hot!)'],
+      '2017':['A11 · ~3.5W','SD 835 · ~3.5W'],
+      '2019':['A13 · ~3.5W','SD 855 · ~4.5W'],
+      '2021':['A15 · ~4W','SD 888 · ~5.5W (hot!)'],
+      '2023':['A17 Pro · ~4.5W','SD 8 Gen 2 · ~5W'],
+      '2025':['A19 Pro · ~5W','SD 8 Elite G5 · ~5.5W']
+    }, 'pts/W')
+  }
+});
+
+// --- LAPTOP CPU: Per Dollar ---
+// CB R23 MC / CPU tray MSRP (Intel H and AMD H only — Apple not sold standalone)
+const lapCPUyears = ['2017','2019','2021','2023','2025'];
+// Intel H: 7700HQ=3800/$378, 9750H=6400/$395, 11800H=11100/$395, 13700H=14500/$430, Ultra9-285H=19000/$450
+const lapCPUppdIntel = [3800/378, 6400/395, 11100/395, 14500/430, 19000/450].map(r);
+// AMD H: 3750H=7800/$309, 5800H=12200/$350, 7945HX=21000/$549, 9955HX=21000/$549
+const lapCPUppdAMD = [null, 7800/309, 12200/350, 21000/549, 21000/549].map(r);
+new Chart(document.getElementById('laptopCPUppd'), {
+  type: 'line',
+  data: { labels: lapCPUyears, datasets: [
+    makeDataset('Intel H-series', lapCPUppdIntel, '#4f8ff7'),
+    makeDataset('AMD Ryzen H', lapCPUppdAMD, '#f472b6')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('CB R23 MC / $'),
+    plugins: effTooltip({
+      '2017':['i7-7700HQ · $378',null],
+      '2019':['i7-9750H · $395','R7 3750H · $309'],
+      '2021':['i7-11800H · $395','R7 5800H · $350'],
+      '2023':['i7-13700H · $430','R9 7945HX · $549'],
+      '2025':['Ultra 9 285H · $450','R9 9955HX · $549']
+    }, 'pts/$')
+  }
+});
+
+// --- LAPTOP CPU: Per Watt ---
+// CB R23 MC / TDP. Apple M-series included here.
+// Intel H: 45W PBP all generations
+const lapCPUppwYears = ['2017','2019','2021','2023','2025'];
+const lapCPUppwIntel = [3800/45, 6400/45, 11100/45, 14500/45, 19000/45].map(r);
+// AMD H: 35W, 45W, 55W, 55W
+const lapCPUppwAMD = [null, 7800/35, 12200/45, 21000/55, 21000/55].map(r);
+// Apple M (Pro): M1Pro=9950/30W, M2Pro=10500/30W, M3Pro=12200/30W, M4Pro=17500/30W
+const lapCPUppwApple = [null, null, 9950/30, 12200/30, 17500/30].map(r);
+new Chart(document.getElementById('laptopCPUppw'), {
+  type: 'line',
+  data: { labels: lapCPUppwYears, datasets: [
+    makeDataset('Intel H-series (45W PBP)', lapCPUppwIntel, '#4f8ff7'),
+    makeDataset('AMD Ryzen H (35–55W)', lapCPUppwAMD, '#f472b6'),
+    makeDataset('Apple M-series Pro (~30W)', lapCPUppwApple, '#34d399')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('CB R23 MC / Watt'),
+    plugins: effTooltip({
+      '2017':['i7-7700HQ · 45W',null,null],
+      '2019':['i7-9750H · 45W','R7 3750H · 35W',null],
+      '2021':['i7-11800H · 45W','R7 5800H · 45W','M1 Pro · ~30W'],
+      '2023':['i7-13700H · 45W','R9 7945HX · 55W','M3 Pro · ~30W'],
+      '2025':['Ultra 9 285H · 45W','R9 9955HX · 55W','M4 Pro · ~30W']
+    }, 'pts/W')
+  }
+});
+
+// --- DESKTOP CPU: Per Dollar ---
+// CB R23 MC / launch MSRP
+const deskCPUyears = ['2017','2019','2020','2021','2023','2025'];
+// Intel i7/i9: 8700K=10100/$359, 9900K=12600/$488, 10900K=14500/$488, 12900K=27200/$589, 13900K=39600/$589, Ultra9-285K=41000/$589
+const deskCPUppdIntel = [10100/359, 12600/488, 14500/488, 27200/589, 39600/589, 41000/589].map(r);
+// AMD: 1800X=7800/$499, 3700X=12200/$329, 5800X=14200/$449, 5950X=21400/$799, 7950X=38700/$699, 9950X=39500/$599
+const deskCPUppdAMD = [7800/499, 12200/329, 14200/449, 21400/799, 38700/699, 39500/599].map(r);
+new Chart(document.getElementById('desktopCPUppd'), {
+  type: 'line',
+  data: { labels: deskCPUyears, datasets: [
+    makeDataset('Intel i7/i9', deskCPUppdIntel, '#4f8ff7'),
+    makeDataset('AMD Ryzen 7/9', deskCPUppdAMD, '#f472b6')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('CB R23 MC / $'),
+    plugins: effTooltip({
+      '2017':['i7-8700K · $359','R7 1800X · $499'],
+      '2019':['i9-9900K · $488','R7 3700X · $329'],
+      '2020':['i9-10900K · $488','R7 5800X · $449'],
+      '2021':['i9-12900K · $589','R9 5950X · $799'],
+      '2023':['i9-13900K · $589','R9 7950X · $699'],
+      '2025':['Ultra 9 285K · $589','R9 9950X · $599']
+    }, 'pts/$')
+  }
+});
+
+// --- DESKTOP CPU: Per Watt ---
+// CB R23 MC / TDP (PBP)
+// Intel: 95W, 95W, 125W, 125W, 125W, 125W
+const deskCPUppwIntel = [10100/95, 12600/95, 14500/125, 27200/125, 39600/125, 41000/125].map(r);
+// AMD: 95W, 65W, 105W, 105W, 170W, 170W
+const deskCPUppwAMD = [7800/95, 12200/65, 14200/105, 21400/105, 38700/170, 39500/170].map(r);
+new Chart(document.getElementById('desktopCPUppw'), {
+  type: 'line',
+  data: { labels: deskCPUyears, datasets: [
+    makeDataset('Intel i7/i9 (95–125W PBP)', deskCPUppwIntel, '#4f8ff7'),
+    makeDataset('AMD Ryzen 7/9 (65–170W)', deskCPUppwAMD, '#f472b6')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('CB R23 MC / Watt'),
+    plugins: effTooltip({
+      '2017':['i7-8700K · 95W','R7 1800X · 95W'],
+      '2019':['i9-9900K · 95W','R7 3700X · 65W'],
+      '2020':['i9-10900K · 125W','R7 5800X · 105W'],
+      '2021':['i9-12900K · 125W','R9 5950X · 105W'],
+      '2023':['i9-13900K · 125W','R9 7950X · 170W'],
+      '2025':['Ultra 9 285K · 125W','R9 9950X · 170W']
+    }, 'pts/W')
+  }
+});
+
+// --- LAPTOP GPU: Per Dollar ---
+// TS Graphics / desktop equivalent MSRP (proxy — laptop GPUs not sold standalone)
+const lapGPUyears = ['2016','2018','2020','2023','2025'];
+// Mid: 1060m=4000/$249, 2060m=5800/$349, 3060m=9100/$329, 4060m=10200/$299, 5070m=16000/$549
+const lapGPUppdMid = [4000/249, 5800/349, 9100/329, 10200/299, 16000/549].map(r);
+// High: 1070m=6200/$379, 2080m=8500/$699, 3080m=12200/$699, 4070m=13200/$599, 5080m=22000/$999
+const lapGPUppdHigh = [6200/379, 8500/699, 12200/699, 13200/599, 22000/999].map(r);
+new Chart(document.getElementById('laptopGPUppd'), {
+  type: 'line',
+  data: { labels: lapGPUyears, datasets: [
+    makeDataset('Mid (x60 tier)', lapGPUppdMid, '#34d399'),
+    makeDataset('High (x70/x80 tier)', lapGPUppdHigh, '#a78bfa')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('TS / $ (desktop proxy)'),
+    plugins: effTooltip({
+      '2016':['GTX 1060m · ~$249','GTX 1070m · ~$379'],
+      '2018':['RTX 2060m · ~$349','RTX 2080m · ~$699'],
+      '2020':['RTX 3060m · ~$329','RTX 3080m · ~$699'],
+      '2023':['RTX 4060m · ~$299','RTX 4070m · ~$599'],
+      '2025':['RTX 5070m · ~$549','RTX 5080m · ~$999']
+    }, 'pts/$')
+  }
+});
+
+// --- LAPTOP GPU: Per Watt ---
+// TS Graphics / laptop TGP
+// Mid: 1060m=80W, 2060m=90W, 3060m=130W, 4060m=115W, 5070m=120W
+const lapGPUppwMid = [4000/80, 5800/90, 9100/130, 10200/115, 16000/120].map(r);
+// High: 1070m=100W, 2080m=150W, 3080m=150W, 4070m=140W, 5080m=175W
+const lapGPUppwHigh = [6200/100, 8500/150, 12200/150, 13200/140, 22000/175].map(r);
+new Chart(document.getElementById('laptopGPUppw'), {
+  type: 'line',
+  data: { labels: lapGPUyears, datasets: [
+    makeDataset('Mid (x60 tier)', lapGPUppwMid, '#34d399'),
+    makeDataset('High (x70/x80 tier)', lapGPUppwHigh, '#a78bfa')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('TS / Watt'),
+    plugins: effTooltip({
+      '2016':['GTX 1060m · 80W','GTX 1070m · 100W'],
+      '2018':['RTX 2060m · 90W','RTX 2080m · 150W'],
+      '2020':['RTX 3060m · 130W','RTX 3080m · 150W'],
+      '2023':['RTX 4060m · 115W','RTX 4070m · 140W'],
+      '2025':['RTX 5070m · 120W','RTX 5080m · 175W']
+    }, 'pts/W')
+  }
+});
+
+// --- DESKTOP GPU: Per Dollar ---
+const ppdGens = ['2014','2016','2017','2018','2019','2020','2022','2023','2025'];
+const ppdBudget = [2400/199, 3700/249, null, null, 5500/349, 8800/329, null, 10500/299, null].map(r);
+const ppdMid = [4200/329, 5500/379, 6800/449, 8000/499, 9200/499, 13600/499, null, 17800/599, 22000/549].map(r);
+const ppdFlag = [5200/549, 7200/599, 8800/699, 10500/1199, 12000/1199, 17500/1499, 23500/1599, 36100/1599, 47100/1999].map(r);
+new Chart(document.getElementById('perfPerDollarChart'), {
+  type: 'line',
+  data: { labels: ppdGens, datasets: [
+    makeDataset('Budget (x60)', ppdBudget, '#34d399'),
+    makeDataset('Mid (x70)', ppdMid, '#4f8ff7'),
+    makeDataset('Flagship (x80/90)', ppdFlag, '#a78bfa')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('TS / $'),
+    plugins: {
+      ...effTooltip({
+        '2014':['GTX 960 · $199','GTX 970 · $329','GTX 980 · $549'],
+        '2016':['GTX 1060 · $249','GTX 1070 · $379','GTX 1080 · $599'],
+        '2017':[null,'GTX 1070Ti · $449','GTX 1080Ti · $699'],
+        '2018':[null,'RTX 2070 · $499','RTX 2080Ti · $1,199'],
+        '2019':['RTX 2060 · $349','RTX 2070S · $499','RTX 2080Ti · $1,199'],
+        '2020':['RTX 3060 · $329','RTX 3070 · $499','RTX 3090 · $1,499'],
+        '2022':[null,null,'RTX 3090Ti · $1,599'],
+        '2023':['RTX 4060 · $299','RTX 4070 · $599','RTX 4090 · $1,599'],
+        '2025':[null,'RTX 5070 · $549','RTX 5090 · $1,999']
+      }, 'pts/$'),
+      annotation: { annotations: { goatValue: {
+        type:'point', xValue:'2017', yValue:r(8800/699),
+        radius:10, borderWidth:2, borderColor:'#f59e0baa', backgroundColor:'#f59e0b22'
+      }}}
     }
   }
 });
 
-// --- PERF PER WATT CHART ---
-// Time Spy Graphics / TDP Watts
+// --- DESKTOP GPU: Per Watt ---
 const ppwGens = ['2014','2016','2017','2018','2019','2020','2022','2023','2025'];
-// Budget (x60): 960=120W, 1060=120W, -, 2060=160W, -, 3060=170W, -, 4060=115W, -
-const ppwBudget = [
-  2400/120, 3700/120, null, null, 5500/160, 8800/170, null, 10500/115, null
-];
-// Mid (x70): 970=145W, 1070=150W, 1070Ti=180W, 2070=175W, 2070S=215W, 3070=220W, -, 4070=200W, 5070=250W
-const ppwMid = [
-  4200/145, 5500/150, 6800/180, 8000/175, 9200/215, 13600/220, null, 17800/200, 22000/250
-];
-// Flag: 980=165W, 1080=180W, 1080Ti=250W, 2080Ti=250W, 2080Ti=250W, 3090=350W, 4090=450W, 4090=450W, 5090=575W
-const ppwFlag = [
-  5200/165, 7200/180, 8800/250, 10500/250, 12000/250, 17500/350, 23500/450, 36100/450, 47100/575
-];
+const ppwBudget = [2400/120, 3700/120, null, null, 5500/160, 8800/170, null, 10500/115, null].map(r);
+const ppwMid = [4200/145, 5500/150, 6800/180, 8000/175, 9200/215, 13600/220, null, 17800/200, 22000/250].map(r);
+const ppwFlag = [5200/165, 7200/180, 8800/250, 10500/250, 12000/250, 17500/350, 23500/450, 36100/450, 47100/575].map(r);
 new Chart(document.getElementById('perfPerWattChart'), {
   type: 'line',
-  data: {
-    labels: ppwGens,
-    datasets: [
-      makeDataset('Budget (x60 tier)', ppwBudget.map(v => v ? Math.round(v*10)/10 : null), '#34d399'),
-      makeDataset('Midrange (x70 tier)', ppwMid.map(v => v ? Math.round(v*10)/10 : null), '#4f8ff7'),
-      makeDataset('Flagship (x80/x90)', ppwFlag.map(v => v ? Math.round(v*10)/10 : null), '#a78bfa')
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: true,
-    aspectRatio: 2.2,
-    scales: commonScales('TS Points per Watt'),
-    plugins: {
-      ...commonPlugins,
-      tooltip: {
-        ...commonPlugins.tooltip,
-        callbacks: {
-          label: function(ctx) {
-            const names = {
-              '2014': ['GTX 960 · 120W','GTX 970 · 145W','GTX 980 · 165W'],
-              '2016': ['GTX 1060 · 120W','GTX 1070 · 150W','GTX 1080 · 180W'],
-              '2017': [null,'GTX 1070 Ti · 180W','GTX 1080 Ti · 250W'],
-              '2018': [null,'RTX 2070 · 175W','RTX 2080 Ti · 250W'],
-              '2019': ['RTX 2060 · 160W','RTX 2070S · 215W','RTX 2080 Ti · 250W'],
-              '2020': ['RTX 3060 · 170W','RTX 3070 · 220W','RTX 3090 · 350W'],
-              '2022': [null, null,'RTX 3090 Ti · 450W'],
-              '2023': ['RTX 4060 · 115W','RTX 4070 · 200W','RTX 4090 · 450W'],
-              '2025': [null,'RTX 5070 · 250W','RTX 5090 · 575W']
-            };
-            const n = names[ctx.label];
-            const chip = n && n[ctx.datasetIndex] ? n[ctx.datasetIndex] : '';
-            return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} pts/W${chip ? '  · ' + chip : ''}`;
-          }
-        }
-      }
-    }
+  data: { labels: ppwGens, datasets: [
+    makeDataset('Budget (x60)', ppwBudget, '#34d399'),
+    makeDataset('Mid (x70)', ppwMid, '#4f8ff7'),
+    makeDataset('Flagship (x80/90)', ppwFlag, '#a78bfa')
+  ]},
+  options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
+    scales: effScales('TS / Watt'),
+    plugins: effTooltip({
+      '2014':['GTX 960 · 120W','GTX 970 · 145W','GTX 980 · 165W'],
+      '2016':['GTX 1060 · 120W','GTX 1070 · 150W','GTX 1080 · 180W'],
+      '2017':[null,'GTX 1070Ti · 180W','GTX 1080Ti · 250W'],
+      '2018':[null,'RTX 2070 · 175W','RTX 2080Ti · 250W'],
+      '2019':['RTX 2060 · 160W','RTX 2070S · 215W','RTX 2080Ti · 250W'],
+      '2020':['RTX 3060 · 170W','RTX 3070 · 220W','RTX 3090 · 350W'],
+      '2022':[null,null,'RTX 3090Ti · 450W'],
+      '2023':['RTX 4060 · 115W','RTX 4070 · 200W','RTX 4090 · 450W'],
+      '2025':[null,'RTX 5070 · 250W','RTX 5090 · 575W']
+    }, 'pts/W')
   }
 });
 </script>
