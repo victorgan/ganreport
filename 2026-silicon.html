@@ -251,7 +251,7 @@
 <header class="hero">
   <div class="hero-label">Reference Guide — 2013–2025</div>
   <h1>The Silicon Timeline</h1>
-  <p>A visual reference for understanding processor and GPU performance across phones, laptops, and desktops. Approximate benchmark scores for iconic chips, plotted over time — with context on what the numbers actually mean.</p>
+  <p>A visual reference for understanding processor and GPU performance across phones, laptops, and desktops. Approximate benchmark scores for iconic chips plotted over time — with context on what the numbers actually mean, which benchmarks matter, and what the charts don't cover (tablets, consoles, servers, integrated GPUs, AI accelerators).</p>
 </header>
 
 <!-- BENCHMARK EXPLAINER -->
@@ -312,14 +312,14 @@
       <div class="section-label">Mobile Silicon</div>
       <h2 class="section-title">Phone Processors Over Time</h2>
     </div>
-    <p class="chart-description">Geekbench 6 single-core scores for flagship phone SoCs. Apple's A-series has maintained a consistent ~30–50% lead in single-core IPC over Qualcomm's Snapdragon, though the gap has narrowed. These scores determine how instant app launches feel, how smooth scrolling is, and how fast the camera processes photos.</p>
+    <p class="chart-description">Geekbench 6 single-core scores for flagship phone SoCs. Apple's A-series maintained a consistent ~30–50% lead in single-core IPC over Qualcomm for years, but 2025 marks a historic convergence: the Snapdragon 8 Elite Gen 5, Apple A19 Pro, and MediaTek Dimensity 9500 all cluster between 3,500–3,900 — the closest three-way race in mobile silicon history.</p>
     <div class="chart-wrapper">
       <canvas id="phoneChart"></canvas>
       <div class="chart-footnote">Geekbench 6 Single-Core · Higher = faster per-core performance · Approximate scores from retail devices</div>
     </div>
     <div class="insight">
       <div class="insight-title">Key Inflection Points</div>
-      <p>The A11 Bionic (2017) was a watershed — Apple's first neural engine and a massive IPC leap that opened a multi-year gap. Qualcomm responded with custom Oryon cores in the Snapdragon 8 Elite (2024), their most competitive single-core showing in years. MediaTek's Dimensity 9300 also closed the gap significantly in 2024, making the Android ecosystem more competitive than it's been since 2016.</p>
+      <p>The A11 Bionic (2017) was a watershed — Apple's first neural engine and a massive IPC leap that opened a multi-year gap. Qualcomm responded with custom Oryon cores in the Snapdragon 8 Elite (2024), their most competitive single-core showing in years. By 2025, the race has fundamentally changed: Apple's A19 Pro (3,895), Qualcomm's SD 8 Elite Gen 5 (3,524), and MediaTek's Dimensity 9500 (3,635) are all within ~10% of each other in single-core. The era of Apple's unquestioned mobile CPU dominance may be ending — though Apple still leads in performance-per-watt by a significant margin.</p>
     </div>
   </section>
 
@@ -336,7 +336,7 @@
     </div>
     <div class="insight">
       <div class="insight-title">The Apple Silicon Disruption</div>
-      <p>Apple's M1 (2020) didn't just compete — it redefined what a laptop chip could be. Matching or exceeding Intel's 45W H-series chips at just 10W, with no fan noise, it proved that ARM designs could dominate x86 in real workloads. The M4 Pro (2024) now trades blows with desktop-class chips while maintaining all-day battery life. Meanwhile, AMD and Intel have been in a fierce escalation, adding more cores and pushing power limits higher.</p>
+      <p>Apple's M1 (2020) didn't just compete — it redefined what a laptop chip could be. Matching or exceeding Intel's 45W H-series chips at just 10W, it proved that ARM designs could dominate x86 in real workloads. Intel's Lunar Lake (Core Ultra 200V, late 2024) was a philosophical pivot: instead of chasing multi-core maximums, Intel built a 17W chip with class-leading single-core performance and battery life — sacrificing raw throughput (only 4P+4E cores) to compete with Apple on efficiency. It shows as a single dot on this chart because its ~8,200 multi-core score looks modest next to H-series chips, but that misses the point: it's doing it at a third of the power. Meanwhile Qualcomm's Snapdragon X Elite proved ARM can work on Windows, and the X2 Elite (2025) continues closing the gap.</p>
     </div>
   </section>
 
@@ -380,14 +380,14 @@
       <div class="section-label">Desktop Graphics</div>
       <h2 class="section-title">Desktop GPU Performance Over Time</h2>
     </div>
-    <p class="chart-description">3DMark Time Spy Graphics scores for desktop GPUs, including both NVIDIA and AMD entries. Desktop GPUs are the most straightforward comparison — fixed power targets, consistent cooling, and well-understood driver stacks. The RTX 30-series (2020) was an inflection point with a massive generational leap, while the RTX 40-series (2022) and 50-series (2025) saw strong but more incremental gains.</p>
+    <p class="chart-description">3DMark Time Spy Graphics scores for desktop GPUs, including both NVIDIA and AMD entries. Desktop GPUs are the most straightforward comparison — fixed power targets, consistent cooling, and well-understood driver stacks. The RTX 30-series (2020) was an inflection point with a massive generational leap. The RTX 5090 (2025) hit ~47,100 — the largest absolute score ever recorded in Time Spy — while AMD's RX 9070 XT offered remarkable value at ~30,000 for $550.</p>
     <div class="chart-wrapper">
       <canvas id="desktopGPUChart"></canvas>
       <div class="chart-footnote">3DMark Time Spy Graphics Score · Higher = faster gaming/rendering · Desktop reference-class cards</div>
     </div>
     <div class="insight">
       <div class="insight-title">Price-Performance Matters More Than Peak</div>
-      <p>The RTX 4090 (2022) hit ~36,000 — extraordinary, but at $1,600. The RTX 4070 hit ~17,800 at $600 — roughly 50% of the performance at 37% of the price. For most gamers, the midrange sweet spot ($300–500) delivers 80% of the experience. AMD's RX 7900 XTX offers competitive performance at lower prices but weaker ray tracing and AI features (DLSS vs FSR).</p>
+      <p>The RTX 4090 (2022) hit ~36,100 — extraordinary, but at $1,600. The RTX 5090 (2025) pushed to ~47,100 at $2,000 — a 30% jump but at a 25% price premium. Meanwhile, AMD's RX 9070 XT delivers ~30,000 at $550 — matching last-gen's $1,000+ RTX 4080 at half the price. For most gamers, the midrange sweet spot ($300–600) delivers 80% of the experience. The RTX 5080 at ~33,000 essentially matches the 4090 for $1,000 — "last gen's flagship ≈ next gen's upper-mid" holds true again.</p>
     </div>
   </section>
 
@@ -405,7 +405,7 @@
         <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year single-core</div>
         <p><strong style="color: var(--text-bright);">Typical:</strong> 10–20% per year<br>
         <strong style="color: var(--text-bright);">Big leaps:</strong> A11 (+44%), A17 Pro (+55%), SD 8 Elite (+39%)<br>
-        <strong style="color: var(--text-bright);">Stall years:</strong> A12→A13 (~15%), SD 888→8G1 (~7%)</p>
+        <strong style="color: var(--text-bright);">2025:</strong> Convergence year — Apple, Qualcomm, MediaTek all within 10%</p>
         <div class="real-world">→ ~2× every 4–5 years</div>
       </div>
 
@@ -431,8 +431,8 @@
         <h3>Desktop GPUs</h3>
         <div class="bench-type" style="color: var(--accent-cyan);">Generational (same tier)</div>
         <p><strong style="color: var(--text-bright);">Typical:</strong> 30–50% per generation (2 yr cycles)<br>
-        <strong style="color: var(--text-bright);">Big leaps:</strong> RTX 3070 (+48% over 2070), 4090 (+53% over 3090)<br>
-        <strong style="color: var(--text-bright);">Diminishing:</strong> RTX 40→50 series mid-range (~15–20%)</p>
+        <strong style="color: var(--text-bright);">Big leaps:</strong> RTX 3070 (+48% over 2070), 5090 (+30% over 4090)<br>
+        <strong style="color: var(--text-bright);">Value shift:</strong> RTX 5080 ≈ RTX 4090, RX 9070 XT ≈ RTX 4080</p>
         <div class="real-world">→ Last gen's flagship ≈ next gen's midrange</div>
       </div>
     </div>
@@ -442,7 +442,7 @@
   <section class="caveats-section">
     <div class="section-label">Intellectual Honesty</div>
     <h2 class="section-title">What This Page Doesn't Tell You</h2>
-    <p class="chart-description" style="margin-bottom: 0;">Benchmarks are useful directional tools but inherently incomplete. Here's what you should keep in mind when interpreting this data.</p>
+    <p class="chart-description" style="margin-bottom: 0;">Benchmarks are useful directional tools but inherently incomplete. Here's what you should keep in mind when interpreting this data — and what entire categories of silicon this page deliberately omits.</p>
 
     <div class="caveat-grid">
       <div class="caveat">
@@ -468,6 +468,22 @@
       <div class="caveat">
         <h4>AI & NPU Workloads</h4>
         <p>Traditional benchmarks don't measure on-device AI performance (Stable Diffusion, LLM inference, live translation). NPUs and tensor cores matter increasingly but aren't captured here. This is a growing blind spot.</p>
+      </div>
+      <div class="caveat">
+        <h4>Tablets & iPad Pro</h4>
+        <p>iPad Pro uses the same M-series chips as MacBooks — an M4 iPad Pro benchmarks identically to an M4 MacBook Air. Android tablets use phone SoCs. Tablets aren't shown separately because they share silicon with other categories.</p>
+      </div>
+      <div class="caveat">
+        <h4>Game Consoles</h4>
+        <p>PS5 and Xbox Series X use custom AMD APUs (~2020 Zen 2 + RDNA 2). The Switch 2 uses a custom NVIDIA Tegra. Console chips are heavily optimized for their fixed software stack — direct benchmark comparison with PC hardware is misleading. A PS5's "equivalent" PC GPU varies from RTX 2070 to RTX 3060 depending on the game.</p>
+      </div>
+      <div class="caveat">
+        <h4>Server & Workstation CPUs</h4>
+        <p>AMD EPYC, Intel Xeon, AWS Graviton, and Apple M Ultra chips live in a different performance universe — 64–128 cores, 300W+ TDPs, and enterprise pricing. Not covered here because the benchmarks and buying criteria are fundamentally different.</p>
+      </div>
+      <div class="caveat">
+        <h4>Integrated GPUs</h4>
+        <p>Most laptops ship without discrete GPUs. AMD's Radeon 780M/890M, Intel's Arc 140V (Lunar Lake), and Apple's M-series GPU are the actual graphics most people use. Integrated GPU performance has improved dramatically — a 2024 iGPU can match a 2018 discrete GPU — but isn't charted here.</p>
       </div>
     </div>
   </section>
@@ -548,17 +564,18 @@ function makeDataset(label, data, color, dashed = false) {
 }
 
 // --- CHIP NAME MAPS ---
-const phoneAppleChips = {'2013':'A7 · iPhone 5s','2014':'A8 · iPhone 6','2015':'A9 · iPhone 6s','2016':'A10 · iPhone 7','2017':'A11 · iPhone 8/X','2018':'A12 · iPhone XS','2019':'A13 · iPhone 11','2020':'A14 · iPhone 12','2021':'A15 · iPhone 13','2022':'A16 · iPhone 14 Pro','2023':'A17 Pro · iPhone 15 Pro','2024':'A18 Pro · iPhone 16 Pro'};
-const phoneSDChips = {'2013':'SD 800','2014':'SD 805','2015':'SD 810','2016':'SD 820','2017':'SD 835','2018':'SD 845','2019':'SD 855','2020':'SD 865','2021':'SD 888','2022':'SD 8 Gen 1','2023':'SD 8 Gen 2','2024':'SD 8 Elite'};
-const phoneExyChips = {'2014':'Exynos 5433','2015':'Exynos 7420','2016':'Exynos 8890','2017':'Exynos 8895','2018':'Exynos 9810','2019':'Exynos 9820','2020':'Exynos 990','2021':'Exynos 2100','2022':'Exynos 2200','2023':'Exynos 2300','2024':'Exynos 2400'};
-const phoneMTKChips = {'2019':'Dimensity 1000','2020':'Dimensity 1100','2021':'Dimensity 1200','2022':'Dimensity 9000','2023':'Dimensity 9200','2024':'Dimensity 9300'};
+const phoneAppleChips = {'2013':'A7 · iPhone 5s','2014':'A8 · iPhone 6','2015':'A9 · iPhone 6s','2016':'A10 · iPhone 7','2017':'A11 · iPhone 8/X','2018':'A12 · iPhone XS','2019':'A13 · iPhone 11','2020':'A14 · iPhone 12','2021':'A15 · iPhone 13','2022':'A16 · iPhone 14 Pro','2023':'A17 Pro · iPhone 15 Pro','2024':'A18 Pro · iPhone 16 Pro','2025':'A19 Pro · iPhone 17 Pro'};
+const phoneSDChips = {'2013':'SD 800','2014':'SD 805','2015':'SD 810','2016':'SD 820','2017':'SD 835','2018':'SD 845','2019':'SD 855','2020':'SD 865','2021':'SD 888','2022':'SD 8 Gen 1','2023':'SD 8 Gen 2','2024':'SD 8 Elite','2025':'SD 8 Elite Gen 5'};
+const phoneExyChips = {'2014':'Exynos 5433','2015':'Exynos 7420','2016':'Exynos 8890','2017':'Exynos 8895','2018':'Exynos 9810','2019':'Exynos 9820','2020':'Exynos 990','2021':'Exynos 2100','2022':'Exynos 2200','2023':'Exynos 2300','2024':'Exynos 2400','2025':'Exynos 2500'};
+const phoneMTKChips = {'2019':'Dimensity 1000','2020':'Dimensity 1100','2021':'Dimensity 1200','2022':'Dimensity 9000','2023':'Dimensity 9200','2024':'Dimensity 9300','2025':'Dimensity 9500'};
 const phoneChipMaps = [phoneAppleChips, phoneSDChips, phoneExyChips, phoneMTKChips];
 
 const laptopIntelChips = {'2013':'i7-4700HQ','2015':'i7-6700HQ','2017':'i7-7700HQ','2018':'i7-8750H','2019':'i7-9750H','2020':'i7-10750H','2021':'i7-11800H','2022':'i7-12700H','2023':'i7-13700H','2024':'i9-14900HX','2025':'Ultra 9 285HX'};
 const laptopAMDChips = {'2019':'R7 3750H','2020':'R7 4800H','2021':'R7 5800H','2022':'R7 6800H','2023':'R9 7845HX','2024':'R9 9955HX','2025':'R9 9955HX3D'};
-const laptopAppleChips = {'2021':'M1 (base)','2022':'M1 Pro','2023':'M2 Pro','2024':'M3 Max','2025':'M4 Pro'};
-const laptopQCChips = {'2024':'SD X Elite','2025':'SD X Elite 2'};
-const laptopChipMaps = [laptopIntelChips, laptopAMDChips, laptopAppleChips, laptopQCChips];
+const laptopAppleChips = {'2021':'M1 (base)','2022':'M1 Pro','2023':'M2 Pro','2024':'M4 Pro','2025':'M4 Max'};
+const laptopQCChips = {'2024':'SD X Elite','2025':'SD X2 Elite'};
+const laptopLunarChips = {'2024':'Core Ultra 7 258V (Lunar Lake)'};
+const laptopChipMaps = [laptopIntelChips, laptopAMDChips, laptopAppleChips, laptopQCChips, laptopLunarChips];
 
 const deskIntelChips = {'2013':'i7-4770K','2014':'i7-4790K','2015':'i7-6700K','2016':'i7-6700K','2017':'i7-7700K','2018':'i7-8700K','2019':'i9-9900K','2020':'i9-10900K','2021':'i9-12900K','2022':'i9-12900KS','2023':'i9-13900K','2024':'i9-14900K'};
 const deskAMDChips = {'2017':'R7 1700X','2018':'R7 2700X','2019':'R7 3700X','2020':'R9 5950X','2021':'R9 5950X','2022':'R9 7950X','2023':'R9 7950X','2024':'R9 9950X'};
@@ -583,23 +600,23 @@ function chipTooltipPlugin(chipMaps) {
 
 // --- PHONE CHART ---
 // Geekbench 6 Single-Core (approximate, from reviews and re-tests)
-const phoneYears = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'];
+const phoneYears = ['2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
 new Chart(document.getElementById('phoneChart'), {
   type: 'line',
   data: {
     labels: phoneYears,
     datasets: [
       makeDataset('Apple A-series', [
-        310, 510, 590, 730, 1050, 1120, 1340, 1590, 1750, 1880, 2910, 3530
+        310, 510, 590, 730, 1050, 1120, 1340, 1590, 1750, 1880, 2910, 3530, 3895
       ], '#4f8ff7'),
       makeDataset('Snapdragon (Qualcomm)', [
-        210, 280, 310, 420, 520, 730, 810, 1020, 1170, 1250, 2050, 2850
+        210, 280, 310, 420, 520, 730, 810, 1020, 1170, 1250, 2050, 2850, 3524
       ], '#f59e0b'),
       makeDataset('Exynos (Samsung)', [
-        null, 220, 280, 400, 510, 620, 720, 880, 1090, 1280, 1950, 2350
+        null, 220, 280, 400, 510, 620, 720, 880, 1090, 1280, 1950, 2350, 2650
       ], '#a78bfa'),
       makeDataset('Dimensity (MediaTek)', [
-        null, null, null, null, null, null, 580, 720, 860, 1020, 1850, 2500
+        null, null, null, null, null, null, 580, 720, 860, 1020, 1850, 2500, 3635
       ], '#34d399')
     ]
   },
@@ -623,6 +640,12 @@ new Chart(document.getElementById('phoneChart'), {
             borderColor: 'rgba(245,158,11,0.25)', borderWidth: 1, borderDash: [4,4],
             label: { display: true, content: 'Oryon cores', position: 'start',
               font: { size: 9, family: fontFamily }, color: '#f59e0b80', backgroundColor: 'transparent' }
+          },
+          convergence: {
+            type: 'line', xMin: '2025', xMax: '2025',
+            borderColor: 'rgba(52,211,153,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Three-way convergence', position: 'start',
+              font: { size: 9, family: fontFamily }, color: '#34d39980', backgroundColor: 'transparent' }
           }
         }
       }
@@ -644,12 +667,15 @@ new Chart(document.getElementById('laptopCPUChart'), {
       makeDataset('AMD Ryzen H-series', [
         null, null, null, null, 7800, 9200, 11200, 13000, 14500, 18500, 21000
       ], '#f43f5e'),
-      makeDataset('Apple M-series', [
+      makeDataset('Apple M-series (Pro/Max)', [
         null, null, null, null, null, null, 7760, 9650, 12400, 16300, 17500
       ], '#a78bfa'),
       makeDataset('Qualcomm Snapdragon X', [
         null, null, null, null, null, null, null, null, null, 12300, 14500
-      ], '#34d399', true)
+      ], '#34d399', true),
+      makeDataset('Intel Lunar Lake (thin · 17W)', [
+        null, null, null, null, null, null, null, null, null, 8200, null
+      ], '#22d3ee', true)
     ]
   },
   options: {
@@ -672,6 +698,12 @@ new Chart(document.getElementById('laptopCPUChart'), {
             borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
             label: { display: true, content: 'Hybrid P+E cores', position: 'start',
               font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
+          },
+          lunarLake: {
+            type: 'line', xMin: '2024', xMax: '2024',
+            borderColor: 'rgba(34,211,238,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'Lunar Lake · efficiency era', position: 'end',
+              font: { size: 9, family: fontFamily }, color: '#22d3ee80', backgroundColor: 'transparent' }
           }
         }
       }
@@ -727,19 +759,23 @@ new Chart(document.getElementById('desktopCPUChart'), {
 const gpuLaptopYears = ['2014','2016','2017','2019','2020','2021','2023','2024','2025'];
 const lgpu60 = {'2014':'GTX 860M','2016':'GTX 1060','2017':'GTX 1060 MaxQ','2019':'RTX 2060','2020':'RTX 2060','2021':'RTX 3060','2023':'RTX 4060','2024':'RTX 4060','2025':'RTX 5060'};
 const lgpu70 = {'2016':'GTX 1070','2017':'GTX 1070 MaxQ','2019':'RTX 2070','2020':'RTX 2070 Super','2021':'RTX 3070','2023':'RTX 4070','2025':'RTX 5070'};
+const lgpuHigh = {'2021':'RTX 3080','2023':'RTX 4080','2025':'RTX 5080/5090'};
 const lgpuAMD = {'2016':'RX 480M','2017':'RX 580M','2019':'RX 5500M','2020':'RX 5600M','2021':'RX 6700M','2023':'RX 7700S','2024':'RX 7800M'};
-const laptopGPUMaps = [lgpu60, lgpu70, lgpuAMD];
+const laptopGPUMaps = [lgpu60, lgpu70, lgpuHigh, lgpuAMD];
 new Chart(document.getElementById('laptopGPUChart'), {
   type: 'line',
   data: {
     labels: gpuLaptopYears,
     datasets: [
-      makeDataset('NVIDIA GeForce (Laptop)', [
+      makeDataset('NVIDIA xx60 tier (Laptop)', [
         2500, 3900, 5200, 5800, 6500, 8600, 10600, 12500, 13200
       ], '#34d399'),
       makeDataset('NVIDIA xx70 tier (Laptop)', [
-        null, 5200, 6800, 7200, 8200, 10700, 12600, null, 14000
+        null, 5200, 6800, 7200, 8200, 10700, 12600, null, 16000
       ], '#22d3ee'),
+      makeDataset('NVIDIA xx80/90 (Laptop)', [
+        null, null, null, null, null, 12500, 18300, null, 22000
+      ], '#a78bfa'),
       makeDataset('AMD Radeon (Laptop)', [
         null, 2800, 3600, 4500, 5200, 6800, 8200, 9500, null
       ], '#f43f5e', true)
@@ -772,7 +808,7 @@ const gpuDesktopYears = ['2014','2016','2017','2018','2019','2020','2022','2023'
 const dgpu60 = {'2014':'GTX 760','2016':'GTX 1060','2017':'GTX 1060','2018':'GTX 1060','2019':'GTX 1660 Super','2020':'RTX 3060','2022':'RTX 3060 Ti','2023':'RTX 4060','2025':'RTX 5060'};
 const dgpu70 = {'2014':'GTX 970','2016':'GTX 1070','2017':'GTX 1070 Ti','2018':'RTX 2070','2019':'RTX 2070 Super','2020':'RTX 3070','2022':'RTX 3070 Ti','2023':'RTX 4070','2025':'RTX 5070'};
 const dgpu90 = {'2014':'GTX 980','2016':'GTX 1080','2017':'GTX 1080 Ti','2018':'RTX 2080 Ti','2019':'RTX 2080 Ti','2020':'RTX 3090','2022':'RTX 3090 Ti','2023':'RTX 4090','2025':'RTX 5090'};
-const dgpuAMD = {'2014':'R9 290X','2016':'RX 480','2017':'RX Vega 64','2018':'RX Vega 64','2019':'RX 5700 XT','2020':'RX 6800 XT','2022':'RX 6950 XT','2023':'RX 7900 XTX'};
+const dgpuAMD = {'2014':'R9 290X','2016':'RX 480','2017':'RX Vega 64','2018':'RX Vega 64','2019':'RX 5700 XT','2020':'RX 6800 XT','2022':'RX 6950 XT','2023':'RX 7900 XTX','2025':'RX 9070 XT'};
 const desktopGPUMaps = [dgpu60, dgpu70, dgpu90, dgpuAMD];
 new Chart(document.getElementById('desktopGPUChart'), {
   type: 'line',
@@ -780,16 +816,16 @@ new Chart(document.getElementById('desktopGPUChart'), {
     labels: gpuDesktopYears,
     datasets: [
       makeDataset('NVIDIA x60 tier', [
-        2400, 3700, 4800, 5000, 5500, 8800, 8700, 10500, 12500
+        2400, 3700, 4800, 5000, 5500, 8800, 8700, 10500, null
       ], '#34d399'),
       makeDataset('NVIDIA x70 tier', [
         4200, 5500, 6800, 8000, 9200, 13600, 17800, 18200, 22000
       ], '#4f8ff7'),
       makeDataset('NVIDIA x80/x90 tier', [
-        5200, 7200, 8800, 10500, 12000, 17500, 23500, 36100, 45000
+        5200, 7200, 8800, 10500, 12000, 17500, 23500, 36100, 47100
       ], '#a78bfa'),
       makeDataset('AMD RX (competing tier)', [
-        3800, 5000, 5500, 7200, 8500, 12200, 15500, 21500, null
+        3800, 5000, 5500, 7200, 8500, 12200, 15500, 21500, 30000
       ], '#f43f5e', true)
     ]
   },
