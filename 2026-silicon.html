@@ -299,15 +299,15 @@
 
       <div class="bench-card">
         <h3>Cinebench R23 — Multi-Core</h3>
-        <div class="bench-type">CPU · Used for Laptops & Desktops</div>
-        <p>Renders a complex 3D scene using the Cinema 4D engine across all available cores. Purely CPU-bound — no GPU involved. The multi-core score shows how well a chip handles parallelizable workloads like video encoding, code compilation, 3D rendering, and scientific simulation. Sustained performance matters here; throttling chips score worse.</p>
+        <div class="bench-type">CPU · Used for Desktops</div>
+        <p>Renders a complex 3D scene using the Cinema 4D engine across all available cores. Purely CPU-bound — no GPU involved. The multi-core score shows how well a chip handles parallelizable workloads like video encoding, code compilation, 3D rendering, and scientific simulation. Best for desktops where thermal constraints are minimal and sustained all-core loads are common.</p>
         <div class="real-world">→ "How fast can it chew through heavy parallel work?"</div>
       </div>
 
       <div class="bench-card">
         <h3>Cinebench R23 — Single-Core</h3>
         <div class="bench-type">CPU · Used for Laptops & Desktops</div>
-        <p>Same 3D rendering test but restricted to a single core. Reveals raw per-core IPC (instructions per clock) and clock speed. Critical for tasks that can't be parallelized: game logic, most application UI responsiveness, single-threaded build steps, and everyday snappiness.</p>
+        <p>Same 3D rendering test but restricted to a single core. Reveals raw per-core IPC (instructions per clock) and clock speed. Critical for tasks that can't be parallelized: game logic, most application UI responsiveness, single-threaded build steps, and everyday snappiness. Used for laptops because most laptop workloads are lightly threaded and multi-core scores are chassis-dependent.</p>
         <div class="real-world">→ "How responsive does the machine feel?"</div>
       </div>
 
@@ -357,14 +357,14 @@
       <div class="section-label">Laptop Silicon</div>
       <h2 class="section-title">Laptop Processors Over Time</h2>
     </div>
-    <p class="chart-description">Cinebench R23 multi-core scores for notable laptop CPUs. The laptop CPU landscape transformed in 2020–2021 when Apple's M1 and AMD's Ryzen 5000 series broke Intel's decade of incremental improvement. Intel's hybrid architecture (Alder Lake, 2022) was their response. Note: laptop scores vary significantly by chassis cooling — the same chip in a thin ultrabook vs. a thick workstation can differ 30%+.</p>
+    <p class="chart-description">Cinebench R23 single-core scores for notable laptop CPUs. Single-core better represents the actual laptop experience — most tasks (browsing, Office, IDE responsiveness, game logic) are lightly threaded. Multi-core matters for video editing and compilation, but those workloads are also limited by laptop thermals. Single-core reveals a different story: Intel was never as far behind as multi-core charts suggest, and Lunar Lake goes from "weak" to "competitive" when you measure what laptops actually do.</p>
     <div class="chart-wrapper">
       <canvas id="laptopCPUChart"></canvas>
-      <div class="chart-footnote">Cinebench R23 Multi-Core · Higher = faster parallel workloads · Scores vary by thermal design</div>
+      <div class="chart-footnote">Cinebench R23 Single-Core · Higher = faster per-core IPC · Measures responsiveness, not parallel throughput</div>
     </div>
     <div class="insight">
-      <div class="insight-title">The Apple Silicon Disruption</div>
-      <p>Apple's M1 (2020) didn't just compete — it redefined what a laptop chip could be. Matching or exceeding Intel's 45W H-series chips at just 10W, it proved that ARM designs could dominate x86 in real workloads. Intel's Lunar Lake (Core Ultra 200V, late 2024) was a philosophical pivot: instead of chasing multi-core maximums, Intel built a 17W chip with class-leading single-core performance and battery life — sacrificing raw throughput (only 4P+4E cores) to compete with Apple on efficiency. It shows as a single dot on this chart because its ~8,200 multi-core score looks modest next to H-series chips, but that misses the point: it's doing it at a third of the power. Meanwhile Qualcomm's Snapdragon X Elite proved ARM can work on Windows, and the X2 Elite (2025) continues closing the gap.</p>
+      <div class="insight-title">Why Single-Core Changes the Laptop Story</div>
+      <p>Multi-core charts make Apple look revolutionary and Lunar Lake look terrible. Single-core tells a more nuanced story. Intel's high clock speeds kept it per-core competitive even through the Skylake stagnation years (2015–2019). Apple's M1 (2020) was impressive at ~1500 SC from 10W — but Intel's i7-11800H matched it at 45W the same year. The real revelation is Lunar Lake: its ~1800 single-core at 17W makes it the efficiency champion — 106 pts/W, nearly 3× Intel's own H-series. By 2024–2025, all four ecosystems (Intel H, AMD, Apple, Qualcomm) converged to within ~15% in single-core, making efficiency and battery life the actual differentiators.</p>
     </div>
   </section>
 
@@ -451,22 +451,22 @@
     </div>
 
     <!-- LAPTOP CPUs -->
-    <div class="chart-category-label">Laptop CPUs · Cinebench R23 Multi-Core</div>
+    <div class="chart-category-label">Laptop CPUs · Cinebench R23 Single-Core</div>
     <div class="chart-pair">
       <div>
-        <div class="chart-pair-label">Per Dollar (CB R23 MC ÷ CPU tray MSRP)</div>
+        <div class="chart-pair-label">Per Dollar (CB R23 SC ÷ CPU tray MSRP)</div>
         <div class="chart-wrapper"><canvas id="laptopCPUppd"></canvas>
         <div class="chart-footnote">Intel/AMD OEM tray MSRP · Apple excluded (no standalone CPU sales)</div></div>
       </div>
       <div>
-        <div class="chart-pair-label">Per Watt (CB R23 MC ÷ TDP)</div>
+        <div class="chart-pair-label">Per Watt (CB R23 SC ÷ TDP)</div>
         <div class="chart-wrapper"><canvas id="laptopCPUppw"></canvas>
-        <div class="chart-footnote">Published TDP · Intel actual sustained power often 1.5–2× PBP</div></div>
+        <div class="chart-footnote">Published TDP/PBP · Lunar Lake at 17W is the efficiency outlier</div></div>
       </div>
     </div>
     <div class="insight">
-      <div class="insight-title">Apple M-Series: The Efficiency Outlier</div>
-      <p>Apple M-series chips produce 2–3× more multi-core output per watt than Intel H-series — visible as the steep green line on the per-watt chart. AMD's H-series splits the difference. Per-dollar comparison excludes Apple because M-chips aren't sold standalone; the meaningful comparison is at the laptop level, where a $1,999 MacBook Pro outperforms a $1,200 Intel gaming laptop on sustained workloads. Intel's real TDPs are 60–95W under sustained load despite 45W PBP ratings, which inflates their per-watt numbers here.</p>
+      <div class="insight-title">Lunar Lake: The Efficiency Revelation</div>
+      <p>Switching to single-core per watt completely reshuffles the leaderboard. Lunar Lake at ~1800 SC / 17W = 106 pts/W is nearly 3× Intel's own H-series (1870 / 45W = 42 pts/W) and even beats Apple's M4 Pro (~1920 / 30W = 64 pts/W). This is Intel's most efficient core design ever. Apple still leads in absolute single-core performance, but the gap is closing fast — all four platforms converged to within 15% by 2025 while differing dramatically in power consumption.</p>
     </div>
 
     <!-- DESKTOP CPUs -->
@@ -547,11 +547,11 @@
 
       <div class="bench-card">
         <h3>Laptop CPUs</h3>
-        <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year multi-core</div>
-        <p><strong style="color: var(--text-bright);">Typical:</strong> 15–25% per year<br>
-        <strong style="color: var(--text-bright);">Big leaps:</strong> 8750H (+48% over 7700HQ), i7-12700H (+39%), M1 (perf/watt revolution)<br>
-        <strong style="color: var(--text-bright);">Stall years:</strong> 2019–2020 Intel (~5%)</p>
-        <div class="real-world">→ ~2× every 3–4 years</div>
+        <div class="bench-type" style="color: var(--accent-cyan);">Year-over-year single-core</div>
+        <p><strong style="color: var(--text-bright);">Typical:</strong> 8–15% per year<br>
+        <strong style="color: var(--text-bright);">Big leaps:</strong> i7-11800H (+20%), i7-12700H (+21%), Alder Lake hybrid design<br>
+        <strong style="color: var(--text-bright);">Stall years:</strong> 2017–2019 Intel (~2% SC gains)</p>
+        <div class="real-world">→ ~2× every 6–7 years (SC improves slower than MC)</div>
       </div>
 
       <div class="bench-card">
@@ -790,7 +790,7 @@ new Chart(document.getElementById('phoneChart'), {
 });
 
 // --- LAPTOP CPU CHART ---
-// Cinebench R23 Multi-Core
+// Cinebench R23 Single-Core
 const laptopYears = ['2013','2015','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
 new Chart(document.getElementById('laptopCPUChart'), {
   type: 'line',
@@ -798,19 +798,19 @@ new Chart(document.getElementById('laptopCPUChart'), {
     labels: laptopYears,
     datasets: [
       makeDataset('Intel Core H-series', [
-        3500, 4000, 4800, 7100, 7200, 7600, 10200, 14200, 15200, 17500, 19000
+        820, 890, 920, 1090, 1100, 1250, 1500, 1810, 1870, 2050, 2200
       ], '#4f8ff7'),
       makeDataset('AMD Ryzen H-series', [
-        null, null, null, null, 7800, 9200, 11200, 13000, 14500, 18500, 21000
+        null, null, null, null, 1000, 1210, 1400, 1500, 1900, 2050, 2100
       ], '#f43f5e'),
       makeDataset('Apple M-series (Pro/Max)', [
-        null, null, null, null, null, null, 7760, 9650, 12400, 16300, 17500
+        null, null, null, null, null, null, 1500, 1540, 1600, 1920, 2000
       ], '#a78bfa'),
       makeDataset('Qualcomm Snapdragon X', [
-        null, null, null, null, null, null, null, null, null, 12300, 14500
+        null, null, null, null, null, null, null, null, null, 1600, 1750
       ], '#34d399', true),
       makeDataset('Intel Lunar Lake (thin · 17W)', [
-        null, null, null, null, null, null, null, null, null, 8200, null
+        null, null, null, null, null, null, null, null, null, 1800, null
       ], '#22d3ee', true)
     ]
   },
@@ -818,28 +818,22 @@ new Chart(document.getElementById('laptopCPUChart'), {
     responsive: true,
     maintainAspectRatio: true,
     aspectRatio: 2.2,
-    scales: commonScales('Cinebench R23 MC'),
+    scales: commonScales('Cinebench R23 SC'),
     plugins: {
       ...chipTooltipPlugin(laptopChipMaps),
       annotation: {
         annotations: {
-          m1: {
-            type: 'line', xMin: '2020', xMax: '2020',
-            borderColor: 'rgba(167,139,250,0.25)', borderWidth: 1, borderDash: [4,4],
-            label: { display: true, content: 'M1 launches', position: 'start',
-              font: { size: 9, family: fontFamily }, color: '#a78bfa80', backgroundColor: 'transparent' }
+          skylakeStall: {
+            type: 'line', xMin: '2017', xMax: '2019',
+            borderColor: 'rgba(79,143,247,0.15)', borderWidth: 8,
+            label: { display: true, content: 'Skylake stagnation', position: 'center',
+              font: { size: 9, family: fontFamily }, color: '#4f8ff740', backgroundColor: 'transparent' }
           },
-          alderLake: {
-            type: 'line', xMin: '2022', xMax: '2022',
-            borderColor: 'rgba(79,143,247,0.25)', borderWidth: 1, borderDash: [4,4],
-            label: { display: true, content: 'Hybrid P+E cores', position: 'start',
-              font: { size: 9, family: fontFamily }, color: '#4f8ff780', backgroundColor: 'transparent' }
-          },
-          lunarLake: {
+          convergence: {
             type: 'line', xMin: '2024', xMax: '2024',
-            borderColor: 'rgba(34,211,238,0.25)', borderWidth: 1, borderDash: [4,4],
-            label: { display: true, content: 'Lunar Lake · efficiency era', position: 'end',
-              font: { size: 9, family: fontFamily }, color: '#22d3ee80', backgroundColor: 'transparent' }
+            borderColor: 'rgba(245,158,11,0.25)', borderWidth: 1, borderDash: [4,4],
+            label: { display: true, content: 'SC convergence (~15%)', position: 'end',
+              font: { size: 9, family: fontFamily }, color: '#f59e0b80', backgroundColor: 'transparent' }
           }
         }
       }
@@ -1071,12 +1065,12 @@ new Chart(document.getElementById('phonePPW'), {
 });
 
 // --- LAPTOP CPU: Per Dollar ---
-// CB R23 MC / CPU tray MSRP (Intel H and AMD H only — Apple not sold standalone)
+// CB R23 SC / CPU tray MSRP (Intel H and AMD H only — Apple not sold standalone)
 const lapCPUyears = ['2017','2019','2021','2023','2025'];
-// Intel H: 7700HQ=3800/$378, 9750H=6400/$395, 11800H=11100/$395, 13700H=14500/$430, Ultra9-285H=19000/$450
-const lapCPUppdIntel = [3800/378, 6400/395, 11100/395, 14500/430, 19000/450].map(r);
-// AMD H: 3750H=7800/$309, 5800H=12200/$350, 7945HX=21000/$549, 9955HX=21000/$549
-const lapCPUppdAMD = [null, 7800/309, 12200/350, 21000/549, 21000/549].map(r);
+// Intel H: 7700HQ=920/$378, 9750H=1100/$395, 11800H=1500/$395, 13700H=1870/$430, Ultra9-285HX=2200/$450
+const lapCPUppdIntel = [920/378, 1100/395, 1500/395, 1870/430, 2200/450].map(r);
+// AMD H: 3750H=1000/$309, 5800H=1400/$350, 7845HX=1900/$549, 9955HX=2100/$549
+const lapCPUppdAMD = [null, 1000/309, 1400/350, 1900/549, 2100/549].map(r);
 new Chart(document.getElementById('laptopCPUppd'), {
   type: 'line',
   data: { labels: lapCPUyears, datasets: [
@@ -1084,41 +1078,45 @@ new Chart(document.getElementById('laptopCPUppd'), {
     makeDataset('AMD Ryzen H', lapCPUppdAMD, '#f472b6')
   ]},
   options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
-    scales: effScales('CB R23 MC / $'),
+    scales: effScales('CB R23 SC / $'),
     plugins: effTooltip({
       '2017':['i7-7700HQ · $378',null],
       '2019':['i7-9750H · $395','R7 3750H · $309'],
       '2021':['i7-11800H · $395','R7 5800H · $350'],
-      '2023':['i7-13700H · $430','R9 7945HX · $549'],
-      '2025':['Ultra 9 285H · $450','R9 9955HX · $549']
+      '2023':['i7-13700H · $430','R9 7845HX · $549'],
+      '2025':['Ultra 9 285HX · $450','R9 9955HX · $549']
     }, 'pts/$')
   }
 });
 
 // --- LAPTOP CPU: Per Watt ---
-// CB R23 MC / TDP. Apple M-series included here.
+// CB R23 SC / TDP. Apple + Lunar Lake included — this is where the story is.
+const lapCPUppwYears = ['2017','2019','2021','2023','2024','2025'];
 // Intel H: 45W PBP all generations
-const lapCPUppwYears = ['2017','2019','2021','2023','2025'];
-const lapCPUppwIntel = [3800/45, 6400/45, 11100/45, 14500/45, 19000/45].map(r);
+const lapCPUppwIntel = [920/45, 1100/45, 1500/45, 1870/45, 2050/45, 2200/45].map(r);
 // AMD H: 35W, 45W, 55W, 55W
-const lapCPUppwAMD = [null, 7800/35, 12200/45, 21000/55, 21000/55].map(r);
-// Apple M (Pro): M1Pro=9950/30W, M2Pro=10500/30W, M3Pro=12200/30W, M4Pro=17500/30W
-const lapCPUppwApple = [null, null, 9950/30, 12200/30, 17500/30].map(r);
+const lapCPUppwAMD = [null, 1000/35, 1400/45, 1900/55, 2050/55, 2100/55].map(r);
+// Apple M (Pro): M1=1500/10W, M1Pro=1540/30W, M2Pro=1600/30W, M4Pro=1920/30W, M4Max=2000/30W
+const lapCPUppwApple = [null, null, 1500/10, 1600/30, 1920/30, 2000/30].map(r);
+// Lunar Lake: 1800/17W = 106 pts/W
+const lapCPUppwLunar = [null, null, null, null, 1800/17, null].map(r);
 new Chart(document.getElementById('laptopCPUppw'), {
   type: 'line',
   data: { labels: lapCPUppwYears, datasets: [
-    makeDataset('Intel H-series (45W PBP)', lapCPUppwIntel, '#4f8ff7'),
+    makeDataset('Intel H-series (45W)', lapCPUppwIntel, '#4f8ff7'),
     makeDataset('AMD Ryzen H (35–55W)', lapCPUppwAMD, '#f472b6'),
-    makeDataset('Apple M-series Pro (~30W)', lapCPUppwApple, '#34d399')
+    makeDataset('Apple M-series (~10–30W)', lapCPUppwApple, '#34d399'),
+    makeDataset('Lunar Lake (17W)', lapCPUppwLunar, '#22d3ee', true)
   ]},
   options: { responsive:true, maintainAspectRatio:true, aspectRatio:effAspect,
-    scales: effScales('CB R23 MC / Watt'),
+    scales: effScales('CB R23 SC / Watt'),
     plugins: effTooltip({
-      '2017':['i7-7700HQ · 45W',null,null],
-      '2019':['i7-9750H · 45W','R7 3750H · 35W',null],
-      '2021':['i7-11800H · 45W','R7 5800H · 45W','M1 Pro · ~30W'],
-      '2023':['i7-13700H · 45W','R9 7945HX · 55W','M3 Pro · ~30W'],
-      '2025':['Ultra 9 285H · 45W','R9 9955HX · 55W','M4 Pro · ~30W']
+      '2017':['i7-7700HQ · 45W',null,null,null],
+      '2019':['i7-9750H · 45W','R7 3750H · 35W',null,null],
+      '2021':['i7-11800H · 45W','R7 5800H · 45W','M1 base · 10W',null],
+      '2023':['i7-13700H · 45W','R9 7845HX · 55W','M2 Pro · 30W',null],
+      '2024':['i9-14900HX · 45W','R9 9955HX · 55W','M4 Pro · 30W','Core Ultra 7 258V · 17W'],
+      '2025':['Ultra 9 285HX · 45W','R9 9955HX3D · 55W','M4 Max · 30W',null]
     }, 'pts/W')
   }
 });
