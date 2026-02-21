@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Healthspan Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF6;
+    --bg-card: #F2F1EB;
+    --bg-dark: #1C1C1C;
+    --text: #1a1a1a;
+    --text-secondary: #5a5a5a;
+    --text-muted: #8a8a8a;
+    --accent: #2B6B5E;
+    --accent-light: #E8F0EE;
+    --amber: #C4842D;
+    --amber-light: #FDF5EB;
+    --red: #9B3D3D;
+    --red-light: #F5EAEA;
+    --border: #E0DFD8;
+    --serif: 'Source Serif 4', 'Georgia', serif;
+    --display: 'DM Serif Display', 'Georgia', serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+scroll-behavior: smooth;
+font-size: 17px;
+}
+
+body {
+font-family: var(–serif);
+color: var(–text);
+background: var(–bg);
+line-height: 1.72;
+-webkit-font-smoothing: antialiased;
+}
+
+/* === NAV === */
+nav {
+position: sticky;
+top: 0;
+z-index: 100;
+background: rgba(250, 250, 246, 0.92);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border-bottom: 1px solid var(–border);
+padding: 0 2rem;
+}
+nav .nav-inner {
+max-width: 900px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+gap: 0;
+overflow-x: auto;
+scrollbar-width: none;
+-ms-overflow-style: none;
+}
+nav .nav-inner::-webkit-scrollbar { display: none; }
+nav a {
+font-family: var(–sans);
+font-size: 0.76rem;
+font-weight: 500;
+letter-spacing: 0.04em;
+text-transform: uppercase;
+color: var(–text-muted);
+text-decoration: none;
+padding: 0.9rem 1rem;
+white-space: nowrap;
+transition: color 0.2s;
+}
+nav a:hover { color: var(–accent); }
+
+/* === MAIN LAYOUT === */
+.container {
+max-width: 740px;
+margin: 0 auto;
+padding: 0 1.5rem;
+}
+
+/* === HEADER === */
+.header {
+padding: 5rem 0 2rem;
+text-align: center;
+}
+.header h1 {
+font-family: var(–display);
+font-size: 3.2rem;
+font-weight: 400;
+line-height: 1.15;
+margin-bottom: 0.6rem;
+letter-spacing: -0.01em;
+}
+.header .subtitle {
+font-family: var(–serif);
+font-style: italic;
+font-size: 1.1rem;
+color: var(–text-secondary);
+max-width: 520px;
+margin: 0 auto;
+line-height: 1.6;
+}
+.header .dateline {
+font-family: var(–sans);
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–text-muted);
+margin-top: 1.8rem;
+}
+
+/* === DASHBOARD === */
+.dashboard {
+margin: 2rem 0 3.5rem;
+}
+.dashboard-label {
+font-family: var(–sans);
+font-size: 0.72rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: var(–accent);
+margin-bottom: 1rem;
+}
+.questions-grid {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 1rem;
+}
+.q-card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 1.4rem 1.2rem;
+}
+.q-card .q-label {
+font-family: var(–sans);
+font-size: 0.72rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+margin-bottom: 0.6rem;
+}
+.q-card:nth-child(1) .q-label { color: var(–accent); }
+.q-card:nth-child(2) .q-label { color: var(–red); }
+.q-card:nth-child(3) .q-label { color: var(–amber); }
+.q-card p {
+font-family: var(–serif);
+font-size: 0.88rem;
+line-height: 1.55;
+color: var(–text-secondary);
+}
+
+/* === SECTION STYLES === */
+.section {
+padding: 3rem 0;
+}
+.section + .section {
+border-top: 1px solid var(–border);
+}
+
+h2 {
+font-family: var(–display);
+font-size: 2rem;
+font-weight: 400;
+margin-bottom: 0.4rem;
+line-height: 1.2;
+}
+h2 .section-number {
+font-family: var(–sans);
+font-size: 0.7rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: var(–text-muted);
+display: block;
+margin-bottom: 0.5rem;
+}
+
+h3 {
+font-family: var(–sans);
+font-size: 0.82rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: var(–text-secondary);
+margin: 2.5rem 0 0.8rem;
+}
+
+p {
+margin-bottom: 1.1rem;
+}
+
+/* === CALLOUT === */
+.callout {
+background: var(–bg-card);
+border-left: 3px solid var(–accent);
+padding: 1.3rem 1.5rem;
+margin: 1.8rem 0;
+border-radius: 0 4px 4px 0;
+}
+.callout p {
+font-style: italic;
+margin-bottom: 0;
+color: var(–text-secondary);
+font-size: 0.95rem;
+}
+.callout.amber { border-left-color: var(–amber); background: var(–amber-light); }
+.callout.red { border-left-color: var(–red); background: var(–red-light); }
+
+/* === EVIDENCE MARKERS === */
+.ev {
+font-family: var(–sans);
+font-size: 0.65rem;
+font-weight: 600;
+vertical-align: super;
+margin-left: 2px;
+cursor: help;
+}
+.ev-causal { color: var(–accent); }
+.ev-corr { color: var(–amber); }
+.ev-inf { color: var(–text-muted); }
+
+/* === VIZ: COLUMNS === */
+.viz-container {
+margin: 2rem 0;
+text-align: center;
+}
+.viz-container svg {
+max-width: 100%;
+height: auto;
+}
+.viz-caption {
+font-family: var(–sans);
+font-size: 0.78rem;
+color: var(–text-muted);
+margin-top: 0.8rem;
+font-style: italic;
+}
+.viz-toggle {
+display: flex;
+justify-content: center;
+gap: 0.5rem;
+margin-bottom: 1rem;
+}
+.viz-toggle button {
+font-family: var(–sans);
+font-size: 0.72rem;
+font-weight: 500;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+padding: 0.5rem 1rem;
+border: 1px solid var(–border);
+border-radius: 4px;
+background: var(–bg);
+color: var(–text-secondary);
+cursor: pointer;
+transition: all 0.2s;
+}
+.viz-toggle button.active {
+background: var(–accent);
+color: white;
+border-color: var(–accent);
+}
+
+/* === TABLES === */
+table {
+width: 100%;
+border-collapse: collapse;
+margin: 1.5rem 0;
+font-size: 0.9rem;
+}
+thead th {
+font-family: var(–sans);
+font-size: 0.72rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+color: var(–text-muted);
+text-align: left;
+padding: 0.6rem 0.8rem;
+border-bottom: 2px solid var(–border);
+}
+td {
+padding: 0.7rem 0.8rem;
+border-bottom: 1px solid var(–border);
+vertical-align: top;
+line-height: 1.5;
+}
+tr:last-child td { border-bottom: none; }
+td:first-child {
+font-family: var(–sans);
+font-weight: 500;
+font-size: 0.85rem;
+white-space: nowrap;
+}
+
+/* === DETAILS/COLLAPSIBLE === */
+details {
+border: 1px solid var(–border);
+border-radius: 6px;
+margin: 1.5rem 0;
+background: var(–bg);
+}
+details[open] {
+background: white;
+}
+summary {
+font-family: var(–sans);
+font-size: 0.9rem;
+font-weight: 500;
+padding: 1rem 1.3rem;
+cursor: pointer;
+list-style: none;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+color: var(–text);
+transition: color 0.2s;
+}
+summary::-webkit-details-marker { display: none; }
+summary::before {
+content: ‘▸’;
+font-size: 0.8rem;
+color: var(–text-muted);
+transition: transform 0.2s;
+}
+details[open] summary::before {
+transform: rotate(90deg);
+}
+summary:hover { color: var(–accent); }
+.details-body {
+padding: 0 1.3rem 1.3rem;
+}
+.details-body p:last-child {
+margin-bottom: 0;
+}
+
+/* === DOMAIN ITEMS === */
+.domain-item {
+margin-bottom: 1.8rem;
+}
+.domain-item .domain-title {
+font-family: var(–sans);
+font-weight: 600;
+font-size: 0.88rem;
+color: var(–text);
+margin-bottom: 0.3rem;
+}
+.domain-item p {
+font-size: 0.92rem;
+color: var(–text-secondary);
+}
+
+/* === TWO COL PLAYBOOK === */
+.playbook-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 2rem;
+margin: 1.5rem 0;
+}
+.playbook-col h3 {
+margin-top: 0;
+}
+.play-item {
+margin-bottom: 1.2rem;
+}
+.play-item .play-title {
+font-family: var(–sans);
+font-weight: 600;
+font-size: 0.82rem;
+color: var(–text);
+margin-bottom: 0.2rem;
+}
+.play-item p {
+font-size: 0.85rem;
+color: var(–text-secondary);
+margin-bottom: 0;
+line-height: 1.55;
+}
+
+/* === CAUSAL LOOPS === */
+.loops-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1.5rem;
+margin: 1.5rem 0;
+}
+.loop-card {
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 1.3rem;
+text-align: center;
+}
+.loop-card.death { border-color: #d4a0a0; background: #fdfafa; }
+.loop-card.virtue { border-color: #a0c4b8; background: #fafdfb; }
+.loop-card .loop-label {
+font-family: var(–sans);
+font-size: 0.7rem;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+margin-bottom: 0.8rem;
+}
+.loop-card.death .loop-label { color: var(–red); }
+.loop-card.virtue .loop-label { color: var(–accent); }
+
+/* === LEGEND === */
+.evidence-legend {
+font-family: var(–sans);
+font-size: 0.75rem;
+color: var(–text-muted);
+margin: 2rem 0 1rem;
+display: flex;
+gap: 1.5rem;
+flex-wrap: wrap;
+}
+.evidence-legend span {
+display: flex;
+align-items: center;
+gap: 0.3rem;
+}
+
+/* === CLOSING === */
+.closing {
+padding: 3rem 0 5rem;
+border-top: 1px solid var(–border);
+}
+.closing blockquote {
+font-style: italic;
+color: var(–text-secondary);
+font-size: 1.05rem;
+line-height: 1.65;
+margin: 1.2rem 0;
+padding-left: 1.2rem;
+border-left: 2px solid var(–border);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 700px) {
+html { font-size: 16px; }
+.header { padding: 3.5rem 0 1.5rem; }
+.header h1 { font-size: 2.2rem; }
+.questions-grid { grid-template-columns: 1fr; }
+.playbook-grid { grid-template-columns: 1fr; }
+.loops-grid { grid-template-columns: 1fr; }
+nav a { padding: 0.8rem 0.7rem; font-size: 0.7rem; }
+h2 { font-size: 1.6rem; }
+}
+
+/* === HORIZONTAL RULE === */
+hr {
+border: none;
+border-top: 1px solid var(–border);
+margin: 3rem 0;
+}
+
+/* SVG text styling */
+.svg-label {
+font-family: ‘DM Sans’, sans-serif;
+font-size: 11px;
+fill: #5a5a5a;
+}
+.svg-label-bold {
+font-family: ‘DM Sans’, sans-serif;
+font-weight: 600;
+font-size: 11px;
+}
+.svg-title {
+font-family: ‘DM Sans’, sans-serif;
+font-weight: 600;
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#case-study">The Case Study</a>
+    <a href="#framework">Framework</a>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#playbook">Playbook</a>
+    <a href="#limits">Limitations</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ HEADER ============ -->
+
+<header class="header">
+  <h1>The Healthspan Portfolio</h1>
+  <p class="subtitle">A framework for someone who's already doing the basics — and wants to know what actually matters at the margins</p>
+  <p class="dateline">February 2026</p>
+</header>
+
+<!-- ============ DASHBOARD ============ -->
+
+<section class="dashboard" id="dashboard">
+  <p class="dashboard-label">Quarterly Review — The Three Questions</p>
+  <div class="questions-grid">
+    <div class="q-card">
+      <p class="q-label">Weakest Link</p>
+      <p>Which domain is most underinvested right now, relative to where it should be?</p>
+    </div>
+    <div class="q-card">
+      <p class="q-label">Tail Risk</p>
+      <p>What low-probability event would cascade into healthspan destruction?</p>
+    </div>
+    <div class="q-card">
+      <p class="q-label">Over-indexed</p>
+      <p>What am I doing because it's comfortable, not because it's the highest marginal return?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HERO VIZ: COLUMNS ============ -->
+
+<section class="section" style="padding-top: 0;">
+  <div class="viz-toggle">
+    <button class="active" onclick="showColumns('imbalanced')">Imbalanced</button>
+    <button onclick="showColumns('balanced')">Balanced</button>
+  </div>
+  <div class="viz-container">
+    <svg id="columns-viz" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Beam -->
+      <rect id="beam" x="30" y="30" width="640" height="12" rx="3" fill="#1C1C1C" opacity="0.85">
+        <animate attributeName="y" from="30" to="30" dur="0.01s" fill="freeze"/>
+      </rect>
+
+```
+  <!-- Column labels and bars - imbalanced state -->
+  <g id="cols-imbalanced">
+    <!-- Cardio -->
+    <rect x="50" y="62" width="60" height="220" rx="3" fill="#2B6B5E" opacity="0.8"/>
+    <text x="80" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Cardio-</text>
+    <text x="80" y="312" text-anchor="middle" class="svg-label" font-size="9.5">respiratory</text>
+
+    <!-- Strength -->
+    <rect x="135" y="72" width="60" height="210" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="165" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Strength</text>
+    <text x="165" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Stability</text>
+
+    <!-- Metabolic -->
+    <rect x="220" y="82" width="60" height="200" rx="3" fill="#2B6B5E" opacity="0.7"/>
+    <text x="250" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Metabolic</text>
+    <text x="250" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Sleep</text>
+
+    <!-- Social — THE SHORT ONE -->
+    <rect x="305" y="172" width="60" height="110" rx="3" fill="#C4842D" opacity="0.85"/>
+    <text x="335" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Social</text>
+    <text x="335" y="312" text-anchor="middle" class="svg-label" font-size="9.5">Infrastructure</text>
+
+    <!-- Cognitive -->
+    <rect x="390" y="92" width="60" height="190" rx="3" fill="#2B6B5E" opacity="0.65"/>
+    <text x="420" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Cognitive</text>
+    <text x="420" y="312" text-anchor="middle" class="svg-label" font-size="9.5">Challenge</text>
+
+    <!-- Emotional -->
+    <rect x="475" y="102" width="60" height="180" rx="3" fill="#2B6B5E" opacity="0.6"/>
+    <text x="505" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Regulation</text>
+    <text x="505" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Purpose</text>
+
+    <!-- Identity -->
+    <rect x="560" y="92" width="60" height="190" rx="3" fill="#2B6B5E" opacity="0.65"/>
+    <text x="590" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Identity</text>
+    <text x="590" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Optionality</text>
+
+    <!-- Sag line showing beam follows shortest -->
+    <line x1="30" y1="160" x2="670" y2="160" stroke="#C4842D" stroke-width="1" stroke-dasharray="5,5" opacity="0.6"/>
+    <text x="685" y="164" class="svg-label" font-size="9" fill="#C4842D" font-style="italic">effective ceiling</text>
+
+    <!-- Beam is tilted/sagging to social -->
+    <polygon points="30,42 335,160 670,42 670,50 335,168 30,50" fill="#1C1C1C" opacity="0.12"/>
+    <rect x="30" y="36" width="640" height="10" rx="3" fill="none" stroke="#1C1C1C" stroke-width="1" opacity="0"/>
+  </g>
+
+  <!-- Balanced state (hidden by default) -->
+  <g id="cols-balanced" style="display:none">
+    <rect x="50" y="92" width="60" height="190" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="80" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Cardio-</text>
+    <text x="80" y="312" text-anchor="middle" class="svg-label" font-size="9.5">respiratory</text>
+
+    <rect x="135" y="97" width="60" height="185" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="165" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Strength</text>
+    <text x="165" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Stability</text>
+
+    <rect x="220" y="92" width="60" height="190" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="250" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Metabolic</text>
+    <text x="250" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Sleep</text>
+
+    <rect x="305" y="100" width="60" height="182" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="335" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Social</text>
+    <text x="335" y="312" text-anchor="middle" class="svg-label" font-size="9.5">Infrastructure</text>
+
+    <rect x="390" y="95" width="60" height="187" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="420" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Cognitive</text>
+    <text x="420" y="312" text-anchor="middle" class="svg-label" font-size="9.5">Challenge</text>
+
+    <rect x="475" y="98" width="60" height="184" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="505" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Regulation</text>
+    <text x="505" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Purpose</text>
+
+    <rect x="560" y="94" width="60" height="188" rx="3" fill="#2B6B5E" opacity="0.75"/>
+    <text x="590" y="300" text-anchor="middle" class="svg-label" font-size="9.5">Identity</text>
+    <text x="590" y="312" text-anchor="middle" class="svg-label" font-size="9.5">& Optionality</text>
+
+    <!-- Level beam -->
+    <line x1="30" y1="82" x2="670" y2="82" stroke="#2B6B5E" stroke-width="1" stroke-dasharray="5,5" opacity="0.4"/>
+    <text x="685" y="86" class="svg-label" font-size="9" fill="#2B6B5E" font-style="italic">effective ceiling</text>
+  </g>
+</svg>
+```
+
+  </div>
+  <p class="viz-caption">Your effective healthspan is determined by your shortest column, not your tallest. Marginal returns are highest on your weakest domain.</p>
+</section>
+
+<script>
+function showColumns(state) {
+  const imb = document.getElementById('cols-imbalanced');
+  const bal = document.getElementById('cols-balanced');
+  const buttons = document.querySelectorAll('.viz-toggle button');
+  if (state === 'imbalanced') {
+    imb.style.display = '';
+    bal.style.display = 'none';
+    buttons[0].classList.add('active');
+    buttons[1].classList.remove('active');
+  } else {
+    imb.style.display = 'none';
+    bal.style.display = '';
+    buttons[1].classList.add('active');
+    buttons[0].classList.remove('active');
+  }
+}
+</script>
+
+<!-- ============ SECTION: CASE STUDY ============ -->
+
+<section class="section" id="case-study">
+  <h2>
+    <span class="section-number">The Case Study</span>
+    The Woman at the Party
+  </h2>
+
+  <p>She was 80 years old. A teacher who went back to law school at 35. She travels extensively, enrolls in classes at the University of Washington, reads the news daily. Her stated purpose in life: staying healthy long enough to see her grandkids graduate college.</p>
+
+  <p>She wasn't optimistic. She wasn't pessimistic. She said times are tough, then said that in the 1960s everyone was dodging the draft and Kennedy got murdered, then King. She looked you in the eye, made jokes, talked about herself without apology, then asked real questions about your life. Her mindset wasn't a philosophy — it was a practiced way of being in the world.</p>
+
+  <div class="callout">
+    <p>She didn't have a healthspan strategy. She had a life that happened to be structured in ways that produce long healthspans. The highest-leverage move isn't adding more interventions — it's designing your life so the things you naturally do every day are the things that keep you alive and sharp.</p>
+  </div>
+
+  <h3>What She Had — And What It Maps To</h3>
+
+  <table>
+    <thead>
+      <tr><th>Trait</th><th>Portfolio Domain</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Purpose anchored in grandkids</td>
+        <td>Forward-looking, concrete purpose. Not a mission statement — a reason to wake up that keeps extending. Drives every health behavior as an expression of love rather than discipline.</td>
+      </tr>
+      <tr>
+        <td>UW classes at 80</td>
+        <td>Cognitive challenge through genuine novelty. Not puzzles or routine — unfamiliar material that forces new neural pathway formation. Also a social context generator.</td>
+      </tr>
+      <tr>
+        <td>"Kennedy got shot" framing</td>
+        <td>Emotional regulation through historical perspective. Contextualizing stress rather than catastrophizing it — a built-in cortisol dampener. Not optimism; calibration.</td>
+      </tr>
+      <tr>
+        <td>Eye contact, jokes, real questions</td>
+        <td>Social infrastructure. Active connection-building that also functions as demanding cognitive exercise — reading people, adjusting, tracking multiple threads.</td>
+      </tr>
+      <tr>
+        <td>Teacher → lawyer at 35</td>
+        <td>Identity diversification. Comfort being a beginner. Multiple independent pillars so no single loss collapses the whole structure.</td>
+      </tr>
+      <tr>
+        <td>Health as expression of love</td>
+        <td>All physical and metabolic domains. Exercise because you love someone, not because you "should." Intrinsic motivation that doesn't decay.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ SECTION: FRAMEWORK ============ -->
+
+<section class="section" id="framework">
+  <h2>
+    <span class="section-number">The Framework</span>
+    How Things Break — And How They Compound
+  </h2>
+
+  <h3>The Controllable Slice</h3>
+
+  <div class="callout amber">
+    <p>Roughly half of healthspan variance is behavioral and social — the things you can actually influence. The rest is genetics (~25%), environment (~15%), and stochastic luck (~10%). If you're already resourced, fit, and healthy at 35, you've likely won the genetic and environmental draws. Everything on this page is about maximizing the controllable half.</p>
+  </div>
+
+  <p>This matters for calibration. If you do everything right, you're shifting odds on roughly 50% of the outcome. The remaining edge is real but bounded. The framework below isn't a guarantee — it's a way to maximize what you can control while being honest about what you can't.</p>
+
+  <h3>The Cascade Insight</h3>
+
+  <p>Healthspan doesn't fail through neglect of a single domain. It fails through <em>cascades</em> — one failing domain pulling others down in a feedback loop. Bad sleep tanks your training. A toxic relationship wrecks your sleep. Loss of purpose triggers social withdrawal. The hierarchy framing ("get Tier 1 right, then Tier 2") is wrong because it implies these are independent layers. They're a tightly coupled system where any node can trigger collapse.</p>
+
+  <p>Conversely, virtuous cycles compound. A novel skill generates social context, which builds cognitive reserve, which improves emotional regulation, which strengthens relationships, which supports better sleep, which fuels everything else.</p>
+
+  <div class="loops-grid">
+    <div class="loop-card death">
+      <p class="loop-label">The Death Spiral</p>
+      <svg viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg">
+        <!-- Nodes -->
+        <rect x="80" y="5" width="120" height="30" rx="15" fill="#9B3D3D" opacity="0.15" stroke="#9B3D3D" stroke-width="1"/>
+        <text x="140" y="25" text-anchor="middle" class="svg-label-bold" fill="#9B3D3D" font-size="10.5">Draining Person</text>
+
+```
+    <rect x="175" y="65" width="100" height="30" rx="15" fill="#9B3D3D" opacity="0.1" stroke="#9B3D3D" stroke-width="1"/>
+    <text x="225" y="85" text-anchor="middle" class="svg-label-bold" fill="#9B3D3D" font-size="10.5">Sleep Breaks</text>
+
+    <rect x="175" y="125" width="100" height="30" rx="15" fill="#9B3D3D" opacity="0.1" stroke="#9B3D3D" stroke-width="1"/>
+    <text x="225" y="145" text-anchor="middle" class="svg-label-bold" fill="#9B3D3D" font-size="10.5">Training Drops</text>
+
+    <rect x="80" y="185" width="120" height="30" rx="15" fill="#9B3D3D" opacity="0.1" stroke="#9B3D3D" stroke-width="1"/>
+    <text x="140" y="205" text-anchor="middle" class="svg-label-bold" fill="#9B3D3D" font-size="10.5">Purpose Erodes</text>
+
+    <rect x="5" y="125" width="120" height="30" rx="15" fill="#9B3D3D" opacity="0.1" stroke="#9B3D3D" stroke-width="1"/>
+    <text x="65" y="145" text-anchor="middle" class="svg-label-bold" fill="#9B3D3D" font-size="10.5">Social Withdrawal</text>
+
+    <!-- Arrows -->
+    <path d="M175,30 Q200,50 195,65" stroke="#9B3D3D" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+    <path d="M235,95 Q240,110 235,125" stroke="#9B3D3D" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+    <path d="M195,155 Q175,170 170,185" stroke="#9B3D3D" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+    <path d="M100,185 Q75,170 75,155" stroke="#9B3D3D" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+    <path d="M55,125 Q50,70 85,35" stroke="#9B3D3D" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+
+    <defs>
+      <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#9B3D3D"/>
+      </marker>
+    </defs>
+  </svg>
+</div>
+
+<div class="loop-card virtue">
+  <p class="loop-label">The Virtuous Cycle</p>
+  <svg viewBox="0 0 280 230" xmlns="http://www.w3.org/2000/svg">
+    <!-- Nodes -->
+    <rect x="80" y="5" width="120" height="30" rx="15" fill="#2B6B5E" opacity="0.15" stroke="#2B6B5E" stroke-width="1"/>
+    <text x="140" y="25" text-anchor="middle" class="svg-label-bold" fill="#2B6B5E" font-size="10.5">Novel Skill</text>
+
+    <rect x="175" y="65" width="110" height="30" rx="15" fill="#2B6B5E" opacity="0.1" stroke="#2B6B5E" stroke-width="1"/>
+    <text x="230" y="85" text-anchor="middle" class="svg-label-bold" fill="#2B6B5E" font-size="10.5">New Social Ties</text>
+
+    <rect x="170" y="125" width="110" height="30" rx="15" fill="#2B6B5E" opacity="0.1" stroke="#2B6B5E" stroke-width="1"/>
+    <text x="225" y="145" text-anchor="middle" class="svg-label-bold" fill="#2B6B5E" font-size="10.5">Cognitive Reserve</text>
+
+    <rect x="75" y="185" width="130" height="30" rx="15" fill="#2B6B5E" opacity="0.1" stroke="#2B6B5E" stroke-width="1"/>
+    <text x="140" y="205" text-anchor="middle" class="svg-label-bold" fill="#2B6B5E" font-size="10.5">Emotional Regulation</text>
+
+    <rect x="5" y="125" width="130" height="30" rx="15" fill="#2B6B5E" opacity="0.1" stroke="#2B6B5E" stroke-width="1"/>
+    <text x="70" y="145" text-anchor="middle" class="svg-label-bold" fill="#2B6B5E" font-size="10.5">Better Relationships</text>
+
+    <!-- Arrows -->
+    <path d="M180,30 Q205,50 200,65" stroke="#2B6B5E" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+    <path d="M240,95 Q240,110 235,125" stroke="#2B6B5E" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+    <path d="M195,155 Q175,170 170,185" stroke="#2B6B5E" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+    <path d="M100,185 Q80,170 80,155" stroke="#2B6B5E" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+    <path d="M55,125 Q50,70 85,35" stroke="#2B6B5E" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+
+    <defs>
+      <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#2B6B5E"/>
+      </marker>
+    </defs>
+  </svg>
+</div>
+```
+
+  </div>
+
+  <h3>The Negativity Asymmetry</h3>
+
+  <p>One draining person doesn't just subtract from wellbeing — they compromise your ability to execute everything else. Baumeister's review across domains found negative events carry 2–5× the psychological impact of equivalently positive ones.<span class="ev ev-causal" title="Causal / strong experimental evidence">◆</span> Gottman's couples research: stable relationships require a 5:1 ratio of positive to negative interactions.<span class="ev ev-corr" title="Strong correlational — extrapolated beyond couples">◇</span> When you're around someone hostile or chronically draining, cortisol rises, your prefrontal cortex partially shuts down, and the effects persist for hours through rumination.<span class="ev ev-causal" title="Well-established neuroscience">◆</span></p>
+
+  <p>The reframe: removing noise isn't the negative play that precedes the positive work. Removing noise <em>is</em> the positive intervention. You don't hear the music by turning the volume up — you hear it by removing the distortion.</p>
+
+  <p>But "remove draining people" is a luxury available to the resourced. The draining person may be a spouse, a parent, a coworker at a job you need. The more honest framing: manage your <em>exposure</em> to interpersonal stress — removal when possible, boundaries when not, recovery buffers around unavoidable interactions, and a rising ratio of chosen-to-default social time.</p>
+
+  <table>
+    <thead>
+      <tr><th>Type</th><th>Pattern</th><th>Response</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Actively hostile</td><td>Obvious and rare. Most adults learn to avoid.</td><td>Remove</td></tr>
+      <tr><td>Energy vampires</td><td>Always in crisis. Trigger empathy, not alarm. The dangerous ones.</td><td>Boundaries</td></tr>
+      <tr><td>Fine but not right</td><td>Neutral-to-draining. Pure opportunity cost.</td><td>Deprioritize</td></tr>
+      <tr><td>Context-dependent</td><td>Great in one setting, toxic in another.</td><td>Contain</td></tr>
+    </tbody>
+  </table>
+
+  <div class="evidence-legend">
+    <span><span class="ev ev-causal">◆</span> Causal / RCT evidence</span>
+    <span><span class="ev ev-corr">◇</span> Strong correlational</span>
+    <span><span class="ev ev-inf">○</span> Plausible inference</span>
+  </div>
+</section>
+
+<!-- ============ SECTION: PORTFOLIO / SHIFTING ALLOCATION ============ -->
+
+<section class="section" id="portfolio">
+  <h2>
+    <span class="section-number">The Portfolio</span>
+    What Changes Over Time
+  </h2>
+
+  <p>The optimal allocation of time and attention across healthspan domains shifts dramatically with age. At 35 with strong fitness already in place, the highest-ROI investments are social infrastructure, identity diversification, and financial optionality — because these have the longest compounding runways and become exponentially harder to build later. The physical work is maintenance and refinement, not construction.</p>
+
+  <div class="viz-container">
+    <svg viewBox="0 0 700 370" xmlns="http://www.w3.org/2000/svg">
+      <!-- Title -->
+      <text x="350" y="20" text-anchor="middle" class="svg-title" fill="#5a5a5a">Relative Importance of Each Domain Over Time</text>
+
+```
+  <!-- Y axis -->
+  <line x1="60" y1="40" x2="60" y2="290" stroke="#E0DFD8" stroke-width="1"/>
+
+  <!-- X axis -->
+  <line x1="60" y1="290" x2="660" y2="290" stroke="#E0DFD8" stroke-width="1"/>
+
+  <!-- Age labels -->
+  <text x="60" y="308" text-anchor="middle" class="svg-label" font-size="10">30</text>
+  <text x="180" y="308" text-anchor="middle" class="svg-label" font-size="10">40</text>
+  <text x="300" y="308" text-anchor="middle" class="svg-label" font-size="10">50</text>
+  <text x="420" y="308" text-anchor="middle" class="svg-label" font-size="10">60</text>
+  <text x="540" y="308" text-anchor="middle" class="svg-label" font-size="10">70</text>
+  <text x="660" y="308" text-anchor="middle" class="svg-label" font-size="10">80+</text>
+
+  <!-- "You are here" marker at 35 -->
+  <line x1="90" y1="36" x2="90" y2="294" stroke="#C4842D" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="90" y="326" text-anchor="middle" font-size="10" fill="#C4842D" font-family="DM Sans, sans-serif" font-weight="600">YOU ARE HERE</text>
+  <circle cx="90" cy="330" r="0" fill="#C4842D"/>
+
+  <!-- Stacked area bands (approximated as polygons) -->
+  <!-- Band 1 (bottom): Physical Capacity - teal dark -->
+  <polygon points="60,290 60,170 90,165 180,175 300,190 420,205 540,215 660,220 660,290" fill="#2B6B5E" opacity="0.7"/>
+
+  <!-- Band 2: Metabolic Vigilance - teal medium -->
+  <polygon points="60,170 60,135 90,130 180,125 300,120 420,115 540,115 660,118 660,220 540,215 420,205 300,190 180,175 90,165" fill="#3D8B7A" opacity="0.55"/>
+
+  <!-- Band 3: Social Infrastructure - amber -->
+  <polygon points="60,135 60,100 90,95 180,92 300,88 420,78 540,70 660,60 660,118 540,115 420,115 300,120 180,125 90,130" fill="#C4842D" opacity="0.5"/>
+
+  <!-- Band 4: Cognitive Challenge - teal light -->
+  <polygon points="60,100 60,72 90,68 180,65 300,60 420,55 540,50 660,42 660,60 540,70 420,78 300,88 180,92 90,95" fill="#6DB3A2" opacity="0.45"/>
+
+  <!-- Band 5 (top): Stability & Medical - gray -->
+  <polygon points="60,72 60,40 90,40 180,40 300,40 420,40 540,40 660,40 660,42 540,50 420,55 300,60 180,65 90,68" fill="#8a8a8a" opacity="0.35"/>
+
+  <!-- Legend -->
+  <rect x="60" y="340" width="12" height="12" rx="2" fill="#2B6B5E" opacity="0.7"/>
+  <text x="78" y="350" class="svg-label" font-size="10">Physical Capacity</text>
+
+  <rect x="195" y="340" width="12" height="12" rx="2" fill="#3D8B7A" opacity="0.55"/>
+  <text x="213" y="350" class="svg-label" font-size="10">Metabolic Vigilance</text>
+
+  <rect x="345" y="340" width="12" height="12" rx="2" fill="#C4842D" opacity="0.5"/>
+  <text x="363" y="350" class="svg-label" font-size="10">Social Infrastructure</text>
+
+  <rect x="490" y="340" width="12" height="12" rx="2" fill="#6DB3A2" opacity="0.45"/>
+  <text x="508" y="350" class="svg-label" font-size="10">Cognitive Challenge</text>
+
+  <rect x="620" y="340" width="12" height="12" rx="2" fill="#8a8a8a" opacity="0.35"/>
+  <text x="638" y="350" class="svg-label" font-size="10">Stability & Medical</text>
+</svg>
+```
+
+  </div>
+  <p class="viz-caption">The allocation that's optimal at 35 is wrong at 60. Social infrastructure stays critical throughout; stability and medical screening become dominant after 55. Build the infrastructure for future phases now.</p>
+
+  <p>Key reading of this chart for someone at 35: physical capacity investment is high but <em>maintenance-mode</em> if you're already fit. The fastest-growing bands from your current position are social infrastructure (which compounds slowly and is hard to build later) and stability/medical (which feels irrelevant now but prevents the catastrophic events — falls, undetected conditions — that destroy healthspan after 60).</p>
+
+  <p>The bands don't represent time spent — they represent <em>relative impact on healthspan outcomes</em>. You'll still spend more hours training at 35 than doing stability work. But the marginal hour of stability work may return more expected healthspan than the marginal hour of Zone 2 if your aerobic base is already solid.</p>
+</section>
+
+<!-- ============ SECTION: PLAYBOOK ============ -->
+
+<section class="section" id="playbook">
+  <h2>
+    <span class="section-number">The Playbook</span>
+    The Frontier, Not the Basics
+  </h2>
+
+  <p>This section skips what you already know and practice. It starts where your current knowledge and behavior <em>end</em>.</p>
+
+  <!-- DEEP CUT: Frontier details per domain -->
+
+  <details>
+    <summary>VO₂ Max Past the 75th Percentile</summary>
+    <div class="details-body">
+      <p>The mortality curve doesn't flatten at the 75th percentile — it stays steep. Moving from the 75th to 95th percentile in cardiorespiratory fitness has nearly as much mortality benefit as moving from the 25th to 50th.<span class="ev ev-causal" title="Large cohort studies, strong causal inference">◆</span> This is counterintuitive: most health interventions show diminishing returns at the high end. VO2 max doesn't, at least not until elite levels.</p>
+      <p>Implication: don't plateau. Your Zwift base and half marathon running are strong Zone 2 foundations. The marginal gain at your level comes from dedicated VO2 max intervals — 3-5 minute efforts at 90-95% of max heart rate, 1-2 sessions per week on top of your Zone 2 volume. Get tested annually to track the actual number, not just perceived fitness.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Strength Past Baseline</summary>
+    <div class="details-body">
+      <p>Lifting 4× weekly puts you well past baseline. The frontier markers that predict functional independence at 80: grip strength (strongest single predictor among strength measures<span class="ev ev-corr">◇</span>), single-leg capacity (step-ups, pistol progressions — tests the neurological and muscular systems that prevent falls), and loaded carry endurance (farmer's walks, sandbag carries — the real-world test of whether you can function under physical load). Dead hang time is an underrated proxy for shoulder health and grip combined.</p>
+      <p>The specific risk for someone pursuing aesthetic goals alongside longevity: don't neglect posterior chain and rotational work in favor of mirror muscles. The V-taper goal is compatible with longevity training, but only if the shoulder and lat work doesn't come at the expense of hip, ankle, and thoracic spine mobility.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Sleep When Already Sleeping 7–8 Hours</summary>
+    <div class="details-body">
+      <p>Total sleep time is necessary but insufficient. At your level, the frontier is <em>sleep architecture</em> — specifically deep sleep percentage and REM distribution.<span class="ev ev-causal" title="Well-established sleep physiology">◆</span> Deep sleep is when growth hormone pulses drive tissue repair and the glymphatic system clears amyloid beta from the brain. REM consolidates procedural and emotional memory.</p>
+      <p>HRV via a wearable (Whoop, Oura, Apple Watch) gives you a recovery proxy that captures sleep quality, not just quantity. The single highest-impact lever most fit people miss: alcohol's selective destruction of deep sleep. Even 1-2 drinks eliminates most deep sleep in the first half of the night while appearing to leave total sleep hours intact. You look like you slept; your brain didn't recover.</p>
+      <p>The a-ha: sleep is when your training adaptations actually happen. Optimizing training volume without optimizing sleep architecture is like writing code and never compiling it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Metabolic Health When Already Lean</summary>
+    <div class="details-body">
+      <p>Being lean doesn't mean metabolically optimal. Continuous glucose monitors have revealed that many fit, lean people ride a post-meal glucose roller coaster they don't know about.<span class="ev ev-causal">◆</span> A 2-week CGM trial costs ~$150 and gives you a baseline glucose map — which foods spike you, what your overnight patterns look like, how training timing affects glucose clearance.</p>
+      <p>ApoB particle count is a better cardiovascular risk marker than standard LDL cholesterol.<span class="ev ev-causal">◆</span> Most standard panels don't include it — you have to request it. For someone at 35 with resources, this plus a coronary artery calcium (CAC) score establishes a cardiovascular baseline that becomes enormously valuable longitudinally. hsCRP tracks systemic inflammation — the slow, silent driver that's upstream of almost every age-related disease.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Social Infrastructure When Already Social</summary>
+    <div class="details-body">
+      <p>Having friends isn't the same as having social infrastructure. Infrastructure means: recurring communities with natural attendance cadence, weak ties that expose you to novel information, and bridge positions in your social network that give you access to diverse clusters.<span class="ev ev-corr">◇</span></p>
+      <p>Your endurance sports communities are gold here — long group rides and running groups self-select for disciplined, emotionally stable, delayed-gratification-capable people. You've pre-filtered for quality humans without evaluating anyone individually. The environment did it for you. Every training partner you make now is a potential training partner at 60.</p>
+      <p>The gap: at least one recurring social commitment that isn't fitness or tech. A class, a dinner series, a language exchange. Something that self-selects for people you wouldn't otherwise meet. And consider becoming the organizer of something — one recurring event you host. This gives you curation power over who's in the room, which is the highest-leverage social position.<span class="ev ev-inf" title="Plausible inference from network science">○</span></p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Cognitive Challenge When Already Intellectually Active</summary>
+    <div class="details-body">
+      <p>Novelty matters more than volume. Doing more of what you already do (coding, system design, knowledge management) builds expertise but not cognitive reserve. Reserve comes from forcing your brain into genuinely unfamiliar territory — domains where you're a beginner.<span class="ev ev-corr" title="Cognitive reserve research — correlational, possible reverse causation">◇</span></p>
+      <p>Korean is the optimal fit for you specifically. It's cognitively demanding (new writing system, SOV grammar, honorific system that forces social cognition), culturally aligned with your existing interests, has infinite depth, generates social surface area, and is age-compatible. Even 15 minutes a day starts the compound curve. The point isn't fluency — it's that you're building a vehicle for cognitive challenge, social connection, and cultural engagement that scales across 50 years.</p>
+      <p>Important caveat: the cognitive reserve research is correlational. People who take classes at 80 may be taking classes <em>because</em> they're cognitively healthy, not the other way around. The arrow might run backwards. But the plausible mechanism (neuroplasticity through novelty) is well-supported, and the downside risk of learning a language is... you learn a language.</p>
+    </div>
+  </details>
+
+  <hr>
+
+  <h3>The Moves at 35 With Resources</h3>
+  <p>Calibrated for someone with ~$3M, high fitness base, systematic disposition, tech career at a major company.</p>
+
+  <div class="playbook-grid">
+    <div class="playbook-col">
+      <h3>First-Order Moves</h3>
+
+```
+  <div class="play-item">
+    <p class="play-title">Comprehensive health baseline</p>
+    <p>DEXA scan, VO2 max test, full lipid panel with ApoB, coronary calcium score, CGM trial (2 weeks), periodontal assessment. Cost: ~$2-3K. Value: establishes the longitudinal dataset you'll query for 50 years.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">Stability work: 10 min, 3×/week</p>
+    <p>Turkish get-ups, single-leg work, proprioceptive challenges. The highest-ROI-per-minute intervention you're probably skipping. Protects against the single catastrophic event — the fall, the torn ACL — that starts a cascade.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">VO2 max intervals</p>
+    <p>1-2 dedicated sessions per week on top of Zone 2 base. 3-5 min efforts at 90-95% max HR. The mortality curve stays steep past the 75th percentile — this is one domain where more returns more, even at your level.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">Sleep architecture audit</p>
+    <p>Track HRV and sleep stages via wearable. Audit alcohol's impact on deep sleep. Optimize temperature, timing, consistency. This is where your training adaptations actually compound.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">Begin Korean (or equivalent deep skill)</p>
+    <p>15 min/day starts the compound curve. The point isn't fluency by next year — it's building the vehicle for cognitive challenge and social connection that scales across decades.</p>
+  </div>
+</div>
+
+<div class="playbook-col">
+  <h3>Strategic-Positional Plays</h3>
+
+  <div class="play-item">
+    <p class="play-title">Become the organizer</p>
+    <p>Host one recurring event. A dinner, a group ride series, a monthly gathering. This gives you curation power over your social environment and creates an identity that transfers across every life context.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">One non-fitness, non-tech community</p>
+    <p>A language exchange, a class, a volunteer role. Self-selects for people outside your current circles. The social infrastructure that's hardest to build after 50 is the part that doesn't depend on your career or your sport.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">Financial architecture for optionality</p>
+    <p>At $3M and Google comp, the goal isn't more accumulation — it's deliberate structuring for future flexibility. The ability at 50 to take 6 months off, change careers, or cover any intervention without stress is a healthspan intervention.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">Career design for cognitive variety</p>
+    <p>L5 is a fine goal; the deeper question is whether your work at 45 forces you to learn. AI tool advocacy sits at the ideal intersection — technical depth, social influence, rapidly changing landscape. Optimize for the challenge, not just the level.</p>
+  </div>
+
+  <div class="play-item">
+    <p class="play-title">Identity pillar audit</p>
+    <p>Engineer, cyclist, runner, lifter, gamer, manhwa reader, knowledge-management builder. That's strong. What's missing? A creative/generative pursuit? A mentoring role? A community leadership position? Each independent pillar is insurance against future shocks.</p>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ============ SECTION: LIMITATIONS ============ -->
+
+<section class="section" id="limits">
+  <h2>
+    <span class="section-number">Limitations</span>
+    What This Gets Wrong
+  </h2>
+
+  <div class="domain-item">
+    <p class="domain-title">The illusion of control</p>
+    <p>~50% of healthspan variance is outside your behavior. An honest framework would have a Tier 0: be born with favorable genetics, into a stable socioeconomic position, in a country with functional healthcare. You can't optimize your way past an ApoE4 allele or a family history of early-onset cancer. This page assumes you drew well on the uncontrollable half. Many people didn't.</p>
+  </div>
+
+  <div class="domain-item">
+    <p class="domain-title">Survivorship bias</p>
+    <p>We met the woman at 80 and she was thriving. We don't know the people who did everything on this list and got pancreatic cancer at 58. We don't know what her 30s and 40s looked like — what she struggled with, what she got wrong, what nearly broke her. She's a proof of concept, not a guarantee.</p>
+  </div>
+
+  <div class="domain-item">
+    <p class="domain-title">The optimization trap</p>
+    <p>If your Obsidian health dashboard becomes a source of anxiety rather than clarity, it's net negative. If tracking biomarkers becomes the activity instead of the tool, you've lost the plot. The woman at the party wasn't running a personal research study. She was <em>living</em>. The dashboard is a compass, not a destination.</p>
+  </div>
+
+  <div class="domain-item">
+    <p class="domain-title">The transactional social trap</p>
+    <p>"Build social infrastructure" can curdle into "network strategically." People sense this instantly and it backfires. The woman at the party was genuinely <em>interested</em> in other people. That can't be systematized. If your social strategy feels like a strategy, it's already failing.</p>
+  </div>
+
+  <div class="domain-item">
+    <p class="domain-title">Zero-sum tradeoffs are real</p>
+    <p>Every hour of Korean study comes from somewhere — training, sleep, social time, rest. Every draining person you cut might have been a professional bridge. Every optimization in one domain slightly depletes another. The portfolio framing helps you see the tradeoffs. It doesn't resolve them. Only you can decide what to trade.</p>
+  </div>
+
+  <div class="domain-item">
+    <p class="domain-title">Reverse causation in cognitive reserve</p>
+    <p>People who take classes at 80 may do so <em>because</em> they're cognitively healthy, not the other way around. The correlational evidence for cognitive challenge is suggestive but not causal. The mechanism is plausible; the effect size is uncertain.</p>
+  </div>
+
+  <div class="domain-item">
+    <p class="domain-title">This will be outdated</p>
+    <p>Longevity science is moving fast. GLP-1 agonists, senolytics, rapamycin analogs, AI-driven diagnostics — interventions that don't exist in this framework may dominate it in a decade. Build the system to absorb new information, not to be a fixed doctrine. The quarterly review at the top of this page is more important than anything below it.</p>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+
+<section class="closing">
+  <blockquote>We met her at 80. We don't know who she was at 35 — what she struggled with, what she got wrong, what nearly broke her. She's not a blueprint. She's a proof of concept that it's possible to arrive at 80 sharp, connected, and purposeful.</blockquote>
+
+  <blockquote>The framework on this page won't guarantee that. But it might shift the odds on the half of the variance you actually control.</blockquote>
+
+  <p style="margin-top: 2rem; text-align: center; color: var(--text-muted); font-family: var(--sans); font-size: 0.8rem;">Revisit the three questions at the top every quarter. That's the whole system.</p>
+
+  <p style="margin-top: 3rem; text-align: center; color: var(--text-muted); font-family: var(--sans); font-size: 0.72rem;">
+    February 2026. Evidence quality: <span class="ev ev-causal">◆</span> Causal/RCT&ensp; <span class="ev ev-corr">◇</span> Strong correlational&ensp; <span class="ev ev-inf">○</span> Plausible inference.<br>
+    Built from a conversation with an 80-year-old at a party, and everything that followed.
+  </p>
+</section>
+
+</div><!-- .container -->
+
+</body>
+</html>
