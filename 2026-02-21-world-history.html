@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A History of Everything — Human Civilization, 300,000 BC to 2026</title>
+<style>
+:root {
+  --bg:#111113; --surface:#1a1a1d; --border:#2a2a2e;
+  --text:#b8b8bf; --bright:#e8e8ed; --dim:#6e6e78; --faint:#3a3a40;
+  --gold:#d4a843; --gold-bg:#2a2210;
+  --red:#d4504a; --red-bg:#2a1515;
+  --blue:#4a90d9; --blue-bg:#152233;
+  --green:#4aad6e; --green-bg:#152a1d;
+  --teal:#4aaaa0; --teal-bg:#152a28;
+  --orange:#d48a43; --orange-bg:#2a1f10;
+  --purple:#9a6dd7; --purple-bg:#1f1530;
+  --crimson:#c95555; --crimson-bg:#2a1515;
+  --mono:ui-monospace,'Cascadia Mono','SF Mono',Consolas,monospace;
+  --serif:Georgia,'Times New Roman',Times,serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16.5px;line-height:1.78;-webkit-font-smoothing:antialiased}
+
+/* Nav */
+nav{position:sticky;top:0;z-index:100;background:rgba(17,17,19,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(–border)}
+.nav-inner{max-width:740px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:16px;height:46px;overflow-x:auto;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-brand{font-family:var(–mono);font-weight:700;font-size:13px;color:var(–bright);flex-shrink:0;letter-spacing:.5px}
+nav a{color:var(–dim);text-decoration:none;font-size:12.5px;white-space:nowrap;transition:color .15s}
+nav a:hover{color:var(–bright)}
+
+/* Layout */
+.wrap{max-width:740px;margin:0 auto;padding:0 28px}
+section{padding:56px 0}
+hr{border:none;border-top:1px solid var(–border);margin:0}
+
+/* Type */
+.overline{font-family:var(–mono);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:var(–dim);margin-bottom:14px}
+h1{font-family:var(–serif);font-size:clamp(30px,5vw,46px);font-weight:400;color:var(–bright);line-height:1.18;margin-bottom:18px;letter-spacing:-.3px}
+h2{font-family:var(–serif);font-size:clamp(23px,3.5vw,32px);font-weight:400;color:var(–bright);line-height:1.25;margin-bottom:20px;letter-spacing:-.2px}
+h3{font-size:17px;font-weight:600;color:var(–bright);margin:36px 0 12px;line-height:1.4}
+.lead{font-size:18px;color:var(–dim);line-height:1.65;max-width:620px}
+p{margin-bottom:16px}
+p:last-child{margin-bottom:0}
+strong{color:var(–bright);font-weight:600}
+em{font-style:italic}
+
+/* Callout */
+.callout{background:var(–surface);border-radius:0 8px 8px 0;border-left:3px solid var(–gold);padding:22px 26px;margin:30px 0}
+.callout.green{border-left-color:var(–green)}.callout.blue{border-left-color:var(–blue)}
+.callout.red{border-left-color:var(–red)}.callout.teal{border-left-color:var(–teal)}
+.callout.orange{border-left-color:var(–orange)}.callout.purple{border-left-color:var(–purple)}
+.ct{font-family:var(–mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.callout .ct{color:var(–gold)}.callout.green .ct{color:var(–green)}
+.callout.blue .ct{color:var(–blue)}.callout.red .ct{color:var(–red)}
+.callout.teal .ct{color:var(–teal)}.callout.orange .ct{color:var(–orange)}
+.callout.purple .ct{color:var(–purple)}
+.callout p{font-size:15px;line-height:1.7}
+
+/* Stats */
+.stats-row{display:flex;gap:1px;margin:32px 0;background:var(–border);border-radius:10px;overflow:hidden}
+.stats-row .stat{flex:1;background:var(–surface);padding:22px 16px;text-align:center;min-width:0}
+.stat-num{font-family:var(–mono);font-size:clamp(20px,3vw,30px);font-weight:700;line-height:1.2}
+.stat-label{font-size:11px;color:var(–dim);margin-top:4px;line-height:1.3}
+
+/* Timeline */
+.timeline{position:relative;padding-left:30px;margin:36px 0}
+.timeline::before{content:’’;position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(–border)}
+.tl-item{position:relative;padding-bottom:28px}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:-30px;top:6px;width:16px;height:16px;border-radius:50%;border:3px solid var(–bg)}
+.tl-dot.gold{background:var(–gold)}.tl-dot.blue{background:var(–blue)}
+.tl-dot.green{background:var(–green)}.tl-dot.red{background:var(–red)}
+.tl-dot.teal{background:var(–teal)}.tl-dot.orange{background:var(–orange)}
+.tl-dot.purple{background:var(–purple)}.tl-dot.crimson{background:var(–crimson)}
+.tl-year{font-family:var(–mono);font-size:13px;color:var(–dim)}
+.tl-head{font-weight:600;color:var(–bright)}
+.tl-body{font-size:14.5px;color:var(–dim);margin-top:3px;line-height:1.6}
+
+/* Bars */
+.bar-section{margin:28px 0}
+.bar-legend{display:flex;gap:14px;margin-bottom:14px;font-size:12px;color:var(–dim);flex-wrap:wrap}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:middle;margin-right:4px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.bar-label{width:75px;text-align:right;flex-shrink:0;font-family:var(–mono);font-size:12px;color:var(–dim)}
+.bar-track{flex:1;height:20px;background:rgba(255,255,255,.03);border-radius:4px;overflow:hidden;display:flex}
+.bar-fill{height:100%;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;min-width:1px}
+
+/* Stacked bar */
+.stacked-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.stacked-label{width:65px;text-align:right;flex-shrink:0;font-family:var(–mono);font-size:12px;color:var(–dim)}
+.stacked-track{flex:1;height:26px;background:rgba(255,255,255,.03);border-radius:4px;overflow:hidden;display:flex}
+.stacked-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;overflow:hidden;min-width:1px}
+
+/* SVG map */
+.map-container{background:var(–surface);border:1px solid var(–border);border-radius:10px;padding:16px;margin:28px 0;overflow-x:auto}
+.map-container svg{display:block;margin:0 auto}
+.map-container svg text{font-family:var(–sans);fill:var(–dim);font-size:10px}
+
+/* Table */
+table{width:100%;border-collapse:collapse;margin:26px 0}
+thead th{text-align:left;padding:10px 12px;font-family:var(–mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(–dim);border-bottom:2px solid var(–border)}
+td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.035);font-size:14.5px;vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.015)}
+
+/* Quote */
+blockquote{border-left:3px solid var(–faint);padding:2px 0 2px 22px;margin:30px 0}
+blockquote p{font-family:var(–serif);font-size:18px;font-style:italic;color:var(–bright);line-height:1.55;margin-bottom:8px}
+blockquote cite{font-family:var(–sans);font-size:13px;color:var(–dim);font-style:normal}
+
+/* Pop number */
+.pop-viz{display:flex;flex-direction:column;gap:4px;margin:24px 0}
+.pop-row{display:flex;align-items:center;gap:10px}
+.pop-label{width:75px;text-align:right;font-family:var(–mono);font-size:11px;color:var(–dim);flex-shrink:0}
+.pop-bar{height:18px;border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:600;color:#fff;transition:width .3s}
+
+.footer{text-align:center;padding:52px 28px;font-size:12px;color:var(–faint);font-family:var(–mono);line-height:1.9}
+</style>
+
+</head>
+<body>
+
+<nav>
+<div class="nav-inner">
+  <span class="nav-brand">HISTORY</span>
+  <a href="#arc">The Arc</a>
+  <a href="#deep">Deep Time</a>
+  <a href="#agri">Agriculture</a>
+  <a href="#civ">First Civilizations</a>
+  <a href="#classical">Classical</a>
+  <a href="#medieval">Medieval</a>
+  <a href="#divergence">Great Divergence</a>
+  <a href="#industrial">Industrial</a>
+  <a href="#wars">World Wars</a>
+  <a href="#modern">Modern</a>
+  <a href="#view">Long View</a>
+</div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+
+<section style="padding-top:72px;padding-bottom:48px;">
+<div class="wrap">
+  <div class="overline">300,000 BC — 2026 AD</div>
+  <h1>A History of Everything</h1>
+  <p class="lead">Human history is the story of increasing connection — between people, ideas, and places — punctuated by catastrophes that accelerated change. This is a guide to the whole thing, organized by the moments that structurally changed what it meant to be human.</p>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ THE ARC ═══════ -->
+
+<section id="arc">
+<div class="wrap">
+  <div class="overline">The 1,000-Foot View</div>
+  <h2>When Humans Learned To…</h2>
+
+  <p>For 290,000 of the last 300,000 years, nothing much happened. Small bands of hunter-gatherers lived, migrated, and died. Then, in a geological instant, everything changed — agriculture, cities, writing, empires, industry, nuclear weapons, the internet — all of it compressed into the last 3% of our species' existence. The timeline below maps the structural breaks: the moments after which the world could never return to what it was before.</p>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot gold"></div><span class="tl-year">~300,000 BC</span> <span class="tl-head">Homo sapiens appears in Africa</span><div class="tl-body">Not yet "modern" in behavior — no art, no complex tools. Anatomically human, cognitively still evolving. For 230,000 years, we were one of several human species. Neanderthals in Europe had bigger brains.</div></div>
+
+```
+<div class="tl-item"><div class="tl-dot gold"></div><span class="tl-year">~70,000 BC</span> <span class="tl-head">…think abstractly</span><div class="tl-body">The "Cognitive Revolution." Something changed — genetics, language, or both — and Homo sapiens began making art, jewelry, and complex tools. We started burying our dead with grave goods, implying belief in an afterlife. This is when we became <em>us</em>. Every other human species went extinct within 30,000 years.</div></div>
+
+<div class="tl-item"><div class="tl-dot gold"></div><span class="tl-year">~60,000 BC</span> <span class="tl-head">…leave Africa</span><div class="tl-body">Small bands crossed into the Arabian Peninsula, then spread in every direction. Australia reached by ~50,000 BC (requiring ocean crossings). Europe by ~45,000 BC. The Americas by ~15,000 BC via a land bridge during the Ice Age. By 10,000 BC, humans inhabited every continent except Antarctica.</div></div>
+
+<div class="tl-item"><div class="tl-dot green"></div><span class="tl-year">~10,000 BC</span> <span class="tl-head">…farm</span><div class="tl-body">The single most consequential change in human history. Independently invented in at least 7 places: the Fertile Crescent (wheat, barley), China (rice, millet), Mesoamerica (maize), the Andes (potatoes), New Guinea (taro), the Sahel (sorghum), and the eastern United States (sunflowers). Agriculture made cities possible, but it also brought disease, inequality, famine, and war. Hunter-gatherers were healthier, worked fewer hours, and had more varied diets. We traded freedom for scale.</div></div>
+
+<div class="tl-item"><div class="tl-dot blue"></div><span class="tl-year">~3,500 BC</span> <span class="tl-head">…write</span><div class="tl-body">Cuneiform in Sumer, initially for accounting: "14 sheep delivered to the temple." Within centuries, humans used it for literature (the Epic of Gilgamesh), law (Code of Hammurabi), and history. Writing made culture cumulative — knowledge no longer died with its holder. Egypt, the Indus Valley, and China developed writing independently.</div></div>
+
+<div class="tl-item"><div class="tl-dot blue"></div><span class="tl-year">~3,100 BC</span> <span class="tl-head">…build cities and states</span><div class="tl-body">Uruk (Mesopotamia) reached 40,000 people — the largest settlement on Earth. Egypt unified under one pharaoh. The Indus Valley civilization built Mohenjo-daro with grid streets and indoor plumbing. For the first time, humans organized beyond kinship: strangers cooperated at scale through shared myths, laws, and hierarchies.</div></div>
+
+<div class="tl-item"><div class="tl-dot orange"></div><span class="tl-year">~1,200 BC</span> <span class="tl-head">…collapse and recover (Bronze Age Collapse)</span><div class="tl-body">Every major civilization in the eastern Mediterranean fell within 50 years — Mycenaean Greece, the Hittite Empire, New Kingdom Egypt, the Ugarit trade network. Cause debated: drought, invasion ("Sea Peoples"), systems fragility, or all three. The collapse ended the Bronze Age and ushered in the Iron Age. Iron, cheaper and more abundant than bronze, democratized warfare and tools.</div></div>
+
+<div class="tl-item"><div class="tl-dot purple"></div><span class="tl-year">~800–200 BC</span> <span class="tl-head">…question the meaning of existence</span><div class="tl-body">The Axial Age. In an extraordinary coincidence across four unconnected regions, humanity's foundational thinkers all emerged within a few centuries: Buddha and Mahavira in India, Confucius and Laozi in China, Zoroaster in Persia, the Hebrew prophets in Israel, and Socrates, Plato, and Aristotle in Greece. Every major world religion and philosophical tradition traces back to this window. No one knows why it happened simultaneously.</div></div>
+
+<div class="tl-item"><div class="tl-dot crimson"></div><span class="tl-year">221 BC</span> <span class="tl-head">…unify a continent under one government</span><div class="tl-body">Qin Shi Huang unified China. Standardized weights, measures, currency, and writing across a territory of 40 million people. China would remain the world's largest, most administratively sophisticated state for the next 2,000 years. The Roman Empire, at its peak under Trajan (117 AD), governed a comparable population but never achieved China's bureaucratic cohesion.</div></div>
+
+<div class="tl-item"><div class="tl-dot teal"></div><span class="tl-year">~1 AD</span> <span class="tl-head">…connect across continents</span><div class="tl-body">The Silk Road linked Rome to Han China. For the first time, goods, ideas, and diseases flowed across Eurasia. Roman gold bought Chinese silk. Indian Buddhism reached Central Asia, then China, then Japan. The same trade routes later carried the Black Death. Connection always carries risk.</div></div>
+
+<div class="tl-item"><div class="tl-dot purple"></div><span class="tl-year">~30–632 AD</span> <span class="tl-head">…believe in universal religions</span><div class="tl-body">Christianity and Islam spread the idea that one truth applied to all people, everywhere. Christianity became Rome's state religion (380 AD). Islam unified Arabia, then conquered from Spain to Central Asia within a century of Muhammad's death (632 AD). These religions created the first truly global cultural networks — and the first frameworks for universal human rights and universal warfare.</div></div>
+
+<div class="tl-item"><div class="tl-dot crimson"></div><span class="tl-year">476 AD</span> <span class="tl-head">…lose what they built (Fall of Western Rome)</span><div class="tl-body">Western Europe fragmented into warring kingdoms. Literacy collapsed. Cities shrank. Trade networks broke. Europe entered what it later called the "Dark Ages" — a self-flattering term that ignored the thriving civilizations in China, India, Persia, and the Islamic world. For the next 800 years, Europe was a backwater.</div></div>
+
+<div class="tl-item"><div class="tl-dot green"></div><span class="tl-year">750–1258</span> <span class="tl-head">…advance science systematically (Islamic Golden Age)</span><div class="tl-body">The Abbasid Caliphate translated Greek, Persian, and Indian texts into Arabic, then built on them. Algebra (al-Khwarizmi). Optics (Ibn al-Haytham). Medicine (Ibn Sina's Canon — the standard European medical textbook for 500 years). Astronomy, chemistry, philosophy. Baghdad's House of Wisdom was the world's intellectual center. This knowledge later reached Europe and catalyzed the Renaissance.</div></div>
+
+<div class="tl-item"><div class="tl-dot crimson"></div><span class="tl-year">960–1279</span> <span class="tl-head">…almost industrialize (Song Dynasty China)</span><div class="tl-body">The Song Dynasty produced blast furnaces, moveable type printing, gunpowder, the magnetic compass, paper money, and a market economy. Iron production reached 125,000 tons per year — a level England wouldn't match until 1796. China had every ingredient for an industrial revolution 700 years early. It didn't happen. Why is one of history's great unanswered questions.</div></div>
+
+<div class="tl-item"><div class="tl-dot red"></div><span class="tl-year">1206–1368</span> <span class="tl-head">…connect Eurasia by force (Mongol Empire)</span><div class="tl-body">Genghis Khan and his successors created the largest contiguous land empire in history — from Korea to Hungary. Estimated deaths: 40 million (roughly 10% of the world's population). But the Mongol Peace (Pax Mongolica) also created the safest trade route in history across Central Asia. Marco Polo, gunpowder reaching Europe, and the spread of the Black Death all traveled Mongol roads.</div></div>
+
+<div class="tl-item"><div class="tl-dot red"></div><span class="tl-year">1347–1353</span> <span class="tl-head">…survive a civilizational plague (Black Death)</span><div class="tl-body">Killed 30–60% of Europe's population. Also devastated the Middle East, Central Asia, and North Africa. In Europe, the sudden labor shortage raised wages, weakened feudalism, and created conditions for the Renaissance. The Black Death didn't just kill people — it restructured European society.</div></div>
+
+<div class="tl-item"><div class="tl-dot blue"></div><span class="tl-year">~1440</span> <span class="tl-head">…mass-produce ideas (Gutenberg's printing press)</span><div class="tl-body">China had moveable type since ~1040. Gutenberg's innovation was combining it with a screw press and oil-based ink to enable mass production. Result: the cost of books fell 80% in 50 years. The Reformation, Scientific Revolution, and Enlightenment all followed. Luther's theses went viral because they could be printed. The printing press was the internet of the 15th century.</div></div>
+
+<div class="tl-item"><div class="tl-dot teal"></div><span class="tl-year">1492</span> <span class="tl-head">…connect all continents (Columbian Exchange)</span><div class="tl-body">Columbus didn't "discover" America — 100 million people already lived there. What he triggered was the Columbian Exchange: the transfer of crops, animals, diseases, and people between hemispheres. Potatoes and maize fed European population booms. European diseases — smallpox, measles, influenza — killed 90% of indigenous Americans within a century. The most consequential ecological event since the Ice Age.</div></div>
+
+<div class="tl-item"><div class="tl-dot purple"></div><span class="tl-year">1687</span> <span class="tl-head">…explain the universe with math (Newton's Principia)</span><div class="tl-body">The Scientific Revolution's capstone. Newton showed that the same laws governing a falling apple governed planetary motion. This wasn't just physics — it was a new way of thinking: the universe is knowable, and the tool for knowing it is mathematics. Within 300 years, this worldview produced vaccines, electricity, nuclear power, and artificial intelligence.</div></div>
+
+<div class="tl-item"><div class="tl-dot orange"></div><span class="tl-year">~1760–1840</span> <span class="tl-head">…replace muscle with machines (Industrial Revolution)</span><div class="tl-body">Started in Britain with textile mills and steam engines. For the first time in history, economic output grew faster than population. But the initial decades were brutal: child labor, 16-hour days, urban squalor. Real wages for British workers didn't consistently rise until the 1840s — 80 years after it began. The Industrial Revolution made the average person poorer before it made them richer.</div></div>
+
+<div class="tl-item"><div class="tl-dot red"></div><span class="tl-year">1914–1945</span> <span class="tl-head">…industrialize killing</span><div class="tl-body">World War I: 20 million dead. World War II: 70–85 million dead, including 6 million in the Holocaust. The atomic bombs at Hiroshima and Nagasaki introduced the possibility of human extinction for the first time. These 31 years destroyed Europe's global dominance and created the world order that exists today — the UN, NATO, the IMF, and the US-Soviet rivalry.</div></div>
+
+<div class="tl-item"><div class="tl-dot green"></div><span class="tl-year">1945–1991</span> <span class="tl-head">…decolonize and nearly self-destruct</span><div class="tl-body">70+ nations gained independence. India (1947), most of Africa (1960s), Vietnam (1975). The Cold War produced the Cuban Missile Crisis (1962) — the closest humanity came to nuclear annihilation. It also produced the space race, the moon landing (1969), and the internet (ARPANET, 1969). The Soviet Union collapsed in 1991. The American century began.</div></div>
+
+<div class="tl-item"><div class="tl-dot blue"></div><span class="tl-year">1991–2007</span> <span class="tl-head">…connect every mind on Earth</span><div class="tl-body">The World Wide Web (1991). Google (1998). Wikipedia (2001). Facebook (2004). iPhone (2007). In 16 years, humanity went from "most people have never made a phone call" to "most people carry the internet in their pocket." More transformative than the printing press, and it happened 100× faster.</div></div>
+
+<div class="tl-item"><div class="tl-dot gold"></div><span class="tl-year">2020–2026</span> <span class="tl-head">…build machines that reason</span><div class="tl-body">GPT-3 wrote coherent text (2020). ChatGPT made AI conversational (2022). By 2026, AI fixes 80% of real software bugs, scores 94% on PhD-level science, and runs autonomously for hours. We don't yet know if this is the printing press or the atomic bomb. Possibly both.</div></div>
+```
+
+  </div>
+
+  <div class="callout">
+    <div class="ct">The uncomfortable summary</div>
+    <p>If you compressed Earth's history into 24 hours, modern humans appear at 23:59:56. Agriculture was invented at 23:59:59.4. Everything since the pyramids fits in the last 0.2 seconds. The Industrial Revolution, both World Wars, the internet, and AI all happened in the final 0.01 seconds. We are an extraordinarily recent, extraordinarily fast-moving species living on borrowed geological time.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ DEEP TIME ═══════ -->
+
+<section id="deep">
+<div class="wrap">
+  <div class="overline">300,000 BC — 10,000 BC</div>
+  <h2>Deep Time — The 97% Nobody Talks About</h2>
+
+  <p>For 290,000 years — 97% of our species' existence — humans lived in small nomadic bands of 20–150 people. No agriculture, no cities, no writing, no metal. This isn't the prologue to "real" history. It <em>is</em> history. The human brain you're using right now was shaped entirely by this period, not by the last 10,000 years of civilization.</p>
+
+  <h3>Out of Africa</h3>
+  <p>All living humans descend from a population that lived in East Africa around 70,000 years ago. Small groups left, probably following coastlines, and within 50,000 years had colonized every habitable landmass on Earth. This required crossing open ocean to reach Australia (~50,000 BC), surviving Ice Age Siberia, and walking across Beringia into the Americas (~15,000 BC).</p>
+
+  <!-- Migration map -->
+
+  <div class="map-container">
+    <svg viewBox="0 0 800 400" width="100%" style="max-width:800px;">
+      <!-- Simplified continents -->
+      <g opacity="0.15" fill="var(--bright)">
+        <!-- Africa -->
+        <path d="M340 150 L370 140 L400 145 L415 170 L420 210 L415 260 L400 300 L380 320 L360 310 L345 280 L335 230 L330 190 Z"/>
+        <!-- Europe -->
+        <path d="M340 80 L370 70 L400 75 L420 85 L410 110 L395 130 L370 135 L345 130 L330 115 L335 95 Z"/>
+        <!-- Asia -->
+        <path d="M420 60 L500 45 L580 50 L650 70 L680 100 L670 140 L640 170 L600 180 L550 170 L500 155 L460 140 L430 120 L420 95 Z"/>
+        <!-- India -->
+        <path d="M500 160 L530 155 L545 180 L530 220 L510 235 L495 215 L490 185 Z"/>
+        <!-- SE Asia -->
+        <path d="M580 180 L620 170 L650 190 L640 220 L610 230 L585 215 Z"/>
+        <!-- Australia -->
+        <path d="M610 280 L670 270 L700 290 L695 330 L660 345 L625 335 L610 310 Z"/>
+        <!-- N America -->
+        <path d="M60 60 L150 50 L210 70 L230 110 L210 150 L170 180 L130 175 L90 150 L60 120 L50 90 Z"/>
+        <!-- S America -->
+        <path d="M150 200 L190 190 L210 220 L200 280 L180 330 L160 350 L145 330 L135 280 L130 240 Z"/>
+      </g>
+      <!-- Migration arrows -->
+      <defs>
+        <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="var(--gold)" opacity="0.8"/></marker>
+      </defs>
+      <!-- Africa to Arabia -->
+      <path d="M390 170 Q410 155 430 140" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.7"/>
+      <text x="405" y="148" fill="var(--gold)" font-size="9" font-family="var(--mono)">~60,000 BC</text>
+      <!-- To Europe -->
+      <path d="M400 138 Q390 115 380 100" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.6"/>
+      <text x="365" y="105" fill="var(--gold)" font-size="9" font-family="var(--mono)">~45,000 BC</text>
+      <!-- Across Asia -->
+      <path d="M440 130 Q500 110 570 90" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.6"/>
+      <text x="505" y="100" fill="var(--gold)" font-size="9" font-family="var(--mono)">~50,000 BC</text>
+      <!-- To India -->
+      <path d="M460 145 Q485 165 505 180" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5"/>
+      <!-- To SE Asia -->
+      <path d="M560 155 Q580 170 600 185" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5"/>
+      <!-- To Australia (ocean crossing!) -->
+      <path d="M620 220 Q630 250 635 275" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5" stroke-dasharray="4,3"/>
+      <text x="645" y="260" fill="var(--gold)" font-size="9" font-family="var(--mono)">~50,000 BC</text>
+      <text x="645" y="272" fill="var(--dim)" font-size="8" font-family="var(--mono)">ocean crossing</text>
+      <!-- To Americas via Beringia -->
+      <path d="M650 65 Q680 45 700 40 Q720 38 740 42" stroke="var(--gold)" stroke-width="2" fill="none" opacity="0.4"/>
+      <path d="M740 42 Q20 42 70 65" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.4" stroke-dasharray="4,3"/>
+      <text x="690" y="35" fill="var(--gold)" font-size="9" font-family="var(--mono)">~15,000 BC</text>
+      <!-- Down Americas -->
+      <path d="M130 160 Q155 185 165 210" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.35"/>
+      <text x="132" y="198" fill="var(--gold)" font-size="9" font-family="var(--mono)">~13,000 BC</text>
+      <!-- Origin dot -->
+      <circle cx="370" cy="180" r="5" fill="var(--gold)"/>
+      <text x="375" y="195" fill="var(--bright)" font-size="10" font-weight="600">Origin</text>
+      <text x="375" y="207" fill="var(--dim)" font-size="9">East Africa</text>
+    </svg>
+  </div>
+
+  <p>The migration to Australia is arguably the most impressive human achievement before agriculture. It required building watercraft capable of open-ocean crossings — the oldest evidence of seafaring by any species. The people who colonized Australia 50,000 years ago made a technological leap that Europeans didn't replicate until the Age of Exploration.</p>
+
+  <div class="callout red">
+    <div class="ct">What happened to the other humans?</div>
+    <p>When Homo sapiens left Africa, at least four other human species were alive: Neanderthals (Europe), Denisovans (Asia), Homo floresiensis (Indonesia), and Homo luzonensis (Philippines). All went extinct within 30,000 years of sustained contact with us. Most non-African humans carry 1–4% Neanderthal DNA — evidence of interbreeding before extinction. Whether we out-competed, out-bred, or killed them is unknown. Probably all three.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ AGRICULTURE ═══════ -->
+
+<section id="agri">
+<div class="wrap">
+  <div class="overline">~10,000 BC — ~3,000 BC</div>
+  <h2>The Agricultural Revolution — History's Biggest Trade</h2>
+
+  <p>Agriculture was independently invented at least seven times on four continents. This wasn't a "discovery" — it was a slow, irreversible trap. Early farming was <em>worse</em> than hunting and gathering: more labor, less nutrition variety, more disease (from living near animals), and the beginning of social hierarchy. But farming supported more people per acre, so farming populations grew, displaced foragers, and couldn't go back.</p>
+
+  <h3>The seven independent origins</h3>
+  <table>
+    <thead><tr><th>Region</th><th>When</th><th>Key Crops</th><th>Animals</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fertile Crescent</strong></td><td>~10,000 BC</td><td>Wheat, barley, lentils</td><td>Sheep, goats, cattle</td></tr>
+      <tr><td><strong>China (Yangtze)</strong></td><td>~8,000 BC</td><td>Rice</td><td>Pigs, silkworms</td></tr>
+      <tr><td><strong>China (Yellow River)</strong></td><td>~7,500 BC</td><td>Millet</td><td>Pigs</td></tr>
+      <tr><td><strong>Mesoamerica</strong></td><td>~7,000 BC</td><td>Maize, squash, beans</td><td>None significant</td></tr>
+      <tr><td><strong>Andes / Amazonia</strong></td><td>~8,000 BC</td><td>Potatoes, quinoa, manioc</td><td>Llamas, alpacas</td></tr>
+      <tr><td><strong>New Guinea</strong></td><td>~7,000 BC</td><td>Taro, yams, bananas</td><td>None</td></tr>
+      <tr><td><strong>West Africa (Sahel)</strong></td><td>~5,000 BC</td><td>Sorghum, pearl millet</td><td>Guinea fowl</td></tr>
+    </tbody>
+  </table>
+
+  <p>Geography determined destiny. Jared Diamond's thesis: Eurasia's east-west axis meant crops and animals could spread across similar climates (wheat from the Fertile Crescent to China). The Americas' north-south axis meant crops had to cross climate zones — maize from Mexico couldn't easily reach the Andes. This head start compounded over millennia.</p>
+
+  <div class="callout">
+    <div class="ct">The animal lottery</div>
+    <p>Of the 148 large land mammals on Earth, only 14 were ever domesticated. Eurasia got 13 of them — horses, cattle, sheep, goats, pigs. The Americas got llamas and alpacas (useful but not rideable, not milkable). Sub-Saharan Africa got zero. No horses meant no cavalry, no plows, no carts. This wasn't a failure of intelligence — it was a failure of available biology. The consequences echoed for 10,000 years.</p>
+  </div>
+
+  <h3>What agriculture caused</h3>
+  <p>Surplus food enabled specialization: farmers, priests, soldiers, scribes, kings. It also enabled <strong>inequality</strong> — the first permanent class systems, slavery, and patriarchy all emerged with agriculture. Skeletons from early farming communities are shorter, more disease-ridden, and show more signs of malnutrition than hunter-gatherer skeletons from the same regions. The average human didn't recover the health and stature of pre-agricultural life until the 20th century.</p>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ FIRST CIVILIZATIONS ═══════ -->
+
+<section id="civ">
+<div class="wrap">
+  <div class="overline">~3,500 BC — ~500 BC</div>
+  <h2>The First Civilizations — Rivers Made Empires</h2>
+
+  <p>Every early civilization formed along a river. Not because humans liked water, but because rivers provided the three things farming required: <strong>irrigation</strong> (reliable water), <strong>flood-deposited soil</strong> (natural fertilizer), and <strong>transport</strong> (trade). The pattern was universal: river → surplus food → population growth → cities → writing → states.</p>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" style="color:var(--gold)">~3,500 BC</div><div class="stat-label">Mesopotamia<br>Tigris & Euphrates</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--gold)">~3,100 BC</div><div class="stat-label">Egypt<br>Nile</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--gold)">~2,600 BC</div><div class="stat-label">Indus Valley<br>Indus & Ghaggar</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--gold)">~1,600 BC</div><div class="stat-label">Shang China<br>Yellow River</div></div>
+  </div>
+
+  <p><strong>Mesopotamia</strong> (modern Iraq) gets called "the cradle of civilization" — first writing, first cities, first law code, first empire (Akkadian, ~2334 BC). But Sumer wasn't the only origin. <strong>Egypt</strong> unified under one pharaoh around 3,100 BC and maintained remarkable continuity for 3,000 years — longer than the Roman Empire, Islam, and the entire modern era combined. The <strong>Indus Valley</strong> civilization was larger in area than Mesopotamia and Egypt combined, with sophisticated urban planning (grid streets, sewage systems), but its writing remains undeciphered. <strong>Shang China</strong> developed independently, with bronze work among the finest ever produced.</p>
+
+  <p>Notably absent from this list: <strong>Mesoamerica</strong>. The Olmec civilization (1500 BC) developed independently in the Americas — pyramids, writing, complex calendars, sophisticated astronomy — without any contact with the Old World. The Maya later built cities of 100,000+ people in tropical jungle, with mathematics that independently invented the concept of zero.</p>
+
+  <h3>The Bronze Age — and its collapse</h3>
+  <p>Bronze (copper + tin) created the first international trade network. Tin was rare — the nearest source to Mesopotamia was Afghanistan or Britain. This forced long-distance trade, diplomacy, and interdependence among civilizations. For 2,000 years, a web of trade connected Egypt, Mesopotamia, the Hittites, Mycenaean Greece, and the Levant.</p>
+
+  <p>Then, around <strong>1,200 BC</strong>, the entire system collapsed within a single generation. Cities burned. Trade stopped. Writing vanished in some regions. The causes remain debated — drought, invasions by "Sea Peoples," earthquake swarms, supply chain failures — but the best explanation is <strong>systems complexity</strong>: the civilizations were so interconnected that the failure of one cascaded through all the others. It's the first known example of systemic collapse, and its lessons about fragile interdependence remain relevant.</p>
+
+  <div class="callout blue">
+    <div class="ct">The upside of collapse</div>
+    <p>The Bronze Age Collapse ended the old empires but enabled new ones. Iron — harder than bronze and far more abundant — became the dominant metal. Iron didn't require the rare tin that made bronze expensive. Tools and weapons became cheaper and more widely available. The collapse killed the old aristocratic monopoly on metal. The new Iron Age civilizations — Assyria, Persia, classical Greece, early Rome — were built on more widely distributed technology and power.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ CLASSICAL ═══════ -->
+
+<section id="classical">
+<div class="wrap">
+  <div class="overline">~500 BC — ~500 AD</div>
+  <h2>The Classical World — Empires and Ideas</h2>
+
+  <p>The classical period produced the ideas, religions, and political structures that still shape the world. Four vast empires existed simultaneously around 0 AD — Rome, Parthia (Persia), the Kushan Empire (Central/South Asia), and Han China — connected by the Silk Road, collectively governing roughly 70% of the world's population.</p>
+
+  <h3>The Axial Age — humanity's philosophical explosion</h3>
+  <p>Between roughly 800 and 200 BC, in four unconnected regions, humans independently produced the philosophical and religious foundations of every major civilization. <strong>India</strong> produced the Upanishads, Buddha, Mahavira (Jainism). <strong>China</strong> produced Confucius, Laozi (Taoism), Mozi, Sun Tzu. <strong>Persia</strong> produced Zoroaster (the first major monotheism). <strong>Greece</strong> produced Socrates, Plato, Aristotle, Herodotus, Thucydides. <strong>Israel</strong> produced the Hebrew prophets and the Torah. Why this happened simultaneously across unconnected civilizations remains one of history's deepest mysteries. The leading theory: growing city sizes created the cognitive conditions for abstract thought about morality, governance, and the nature of reality.</p>
+
+  <h3>Four empires, one connected world</h3>
+
+  <p><strong>Rome</strong> (27 BC – 476 AD West / 1453 AD East) built roads, aqueducts, law, and governance structures that Europe still uses. At its peak, it governed 70 million people from Britain to Mesopotamia. Its lasting contribution wasn't military — it was administrative: legal codes, citizenship, and infrastructure that made strangers into compatriots.</p>
+
+  <p><strong>Han China</strong> (206 BC – 220 AD) rivaled Rome in population and exceeded it in bureaucratic sophistication. The civil service examination — selecting officials by merit rather than birth — was a Chinese invention that wouldn't reach Europe for 1,800 years. Paper (105 AD), the seismograph, and the first magnetic compasses were Han innovations.</p>
+
+  <p><strong>Maurya/Gupta India</strong> produced the decimal number system (including zero), Ayurvedic medicine, advanced metallurgy (the iron pillar of Delhi, 1,600 years old, barely rusted), and Sanskrit literature. The Gupta period (320–550 AD) is called India's "Golden Age" — Aryabhata calculated the Earth's circumference to 99.8% accuracy in the 5th century.</p>
+
+  <p><strong>Persia</strong> (Achaemenid, then Parthian, then Sassanid) was the bridge between East and West. Zoroastrian concepts — heaven, hell, judgment day, a cosmic battle between good and evil — directly influenced Judaism, Christianity, and Islam. Persian administrative systems were adopted by every empire that conquered them, from Alexander to the Abbasids.</p>
+
+  <div class="callout">
+    <div class="ct">The GDP reality check</div>
+    <p>In 1 AD, <strong>India</strong> produced roughly 33% of world GDP, <strong>China</strong> 26%, and the <strong>Roman Empire</strong> about 21%. These three economies together accounted for 80% of the world's output. This basic distribution — Asia dominant, Europe secondary — held for the next 1,800 years. The European dominance of the 19th–20th century was a 200-year anomaly, not the historical norm.</p>
+  </div>
+
+  <!-- GDP share chart across history -->
+
+  <h3>Share of world GDP across 2,000 years</h3>
+  <div class="bar-legend">
+    <span><span class="swatch" style="background:var(--crimson)"></span>China</span>
+    <span><span class="swatch" style="background:var(--orange)"></span>India</span>
+    <span><span class="swatch" style="background:var(--blue)"></span>Europe</span>
+    <span><span class="swatch" style="background:var(--teal)"></span>Middle East</span>
+    <span><span class="swatch" style="background:var(--dim)"></span>Rest of world</span>
+  </div>
+  <div>
+    <div class="stacked-row"><div class="stacked-label">1 AD</div><div class="stacked-track"><div class="stacked-seg" style="width:26%;background:var(--crimson)">China 26%</div><div class="stacked-seg" style="width:33%;background:var(--orange)">India 33%</div><div class="stacked-seg" style="width:21%;background:var(--blue)">Europe 21%</div><div class="stacked-seg" style="width:6%;background:var(--teal)"></div><div class="stacked-seg" style="width:14%;background:var(--faint)"></div></div></div>
+    <div class="stacked-row"><div class="stacked-label">1000</div><div class="stacked-track"><div class="stacked-seg" style="width:22%;background:var(--crimson)">China 22%</div><div class="stacked-seg" style="width:28%;background:var(--orange)">India 28%</div><div class="stacked-seg" style="width:9%;background:var(--blue)">Eur 9%</div><div class="stacked-seg" style="width:17%;background:var(--teal)">Islamic 17%</div><div class="stacked-seg" style="width:24%;background:var(--faint)"></div></div></div>
+    <div class="stacked-row"><div class="stacked-label">1500</div><div class="stacked-track"><div class="stacked-seg" style="width:25%;background:var(--crimson)">China 25%</div><div class="stacked-seg" style="width:24%;background:var(--orange)">India 24%</div><div class="stacked-seg" style="width:18%;background:var(--blue)">Eur 18%</div><div class="stacked-seg" style="width:8%;background:var(--teal)"></div><div class="stacked-seg" style="width:25%;background:var(--faint)"></div></div></div>
+    <div class="stacked-row"><div class="stacked-label">1820</div><div class="stacked-track"><div class="stacked-seg" style="width:33%;background:var(--crimson)">China 33%</div><div class="stacked-seg" style="width:16%;background:var(--orange)">India 16%</div><div class="stacked-seg" style="width:24%;background:var(--blue)">Eur 24%</div><div class="stacked-seg" style="width:4%;background:var(--teal)"></div><div class="stacked-seg" style="width:23%;background:var(--faint)"></div></div></div>
+    <div class="stacked-row"><div class="stacked-label">1900</div><div class="stacked-track"><div class="stacked-seg" style="width:11%;background:var(--crimson)">Chn 11%</div><div class="stacked-seg" style="width:9%;background:var(--orange)">Ind 9%</div><div class="stacked-seg" style="width:34%;background:var(--blue)">Europe 34%</div><div class="stacked-seg" style="width:16%;background:var(--blue);opacity:.6">US 16%</div><div class="stacked-seg" style="width:30%;background:var(--faint)"></div></div></div>
+    <div class="stacked-row"><div class="stacked-label">1950</div><div class="stacked-track"><div class="stacked-seg" style="width:5%;background:var(--crimson)"></div><div class="stacked-seg" style="width:4%;background:var(--orange)"></div><div class="stacked-seg" style="width:26%;background:var(--blue)">Europe 26%</div><div class="stacked-seg" style="width:27%;background:var(--blue);opacity:.6">US 27%</div><div class="stacked-seg" style="width:38%;background:var(--faint)"></div></div></div>
+    <div class="stacked-row"><div class="stacked-label">2026</div><div class="stacked-track"><div class="stacked-seg" style="width:18%;background:var(--crimson)">China 18%</div><div class="stacked-seg" style="width:8%;background:var(--orange)">Ind 8%</div><div class="stacked-seg" style="width:15%;background:var(--blue)">EU 15%</div><div class="stacked-seg" style="width:25%;background:var(--blue);opacity:.6">US 25%</div><div class="stacked-seg" style="width:34%;background:var(--faint)"></div></div></div>
+  </div>
+  <p style="font-size:13px;color:var(--dim);margin-top:8px;">Source: Angus Maddison / Maddison Project (historical estimates). 2026 figures from World Bank/IMF (nominal GDP). Shares are approximate — historical GDP estimates are inherently uncertain, but the directional story is clear: Asia dominated until ~1800, Europe/US dominated 1850–2000, and the balance is shifting back.</p>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ MEDIEVAL ═══════ -->
+
+<section id="medieval">
+<div class="wrap">
+  <div class="overline">~500 — ~1500 AD</div>
+  <h2>The Medieval World — Not What You Think</h2>
+
+  <p>The Western narrative calls these the "Dark Ages." That's true for Europe — and <em>only</em> for Europe. While European literacy collapsed and cities shrank, the rest of the world experienced some of its greatest achievements.</p>
+
+  <h3>The Islamic Golden Age (750–1258)</h3>
+  <p>The Abbasid Caliphate, centered in Baghdad, created the most advanced intellectual culture on Earth. The House of Wisdom translated Greek, Persian, Indian, and Chinese texts into Arabic, then <em>improved on them</em>. <strong>Al-Khwarizmi</strong> invented algebra (the word itself is Arabic: al-jabr). <strong>Ibn al-Haytham</strong> founded modern optics and the scientific method — experimental verification of hypotheses — 600 years before Francis Bacon. <strong>Ibn Sina's</strong> (Avicenna) medical encyclopedia was the standard textbook in European universities until the 1700s. When Europeans later "rediscovered" Greek philosophy, they were reading Arabic translations.</p>
+
+  <h3>Song Dynasty China (960–1279)</h3>
+  <p>The most technologically advanced civilization of the medieval period, and a strong candidate for the most advanced pre-modern civilization ever. The Song produced: <strong>moveable type printing</strong> (~1040, 400 years before Gutenberg), <strong>gunpowder weapons</strong>, <strong>the magnetic compass</strong> for navigation, <strong>paper money</strong>, <strong>blast furnaces</strong> producing 125,000 tons of iron per year, a <strong>market economy</strong> with private enterprise, and cities of over 1 million people (Hangzhou was probably the world's largest city). Song China had every ingredient for an industrial revolution. That it didn't happen — possibly due to Mongol invasion, Confucian bureaucratic conservatism, or abundant cheap labor removing the incentive for mechanization — is one of history's great counterfactuals.</p>
+
+  <h3>Other medieval powerhouses</h3>
+  <p><strong>The Byzantine Empire</strong> (Eastern Rome) preserved Roman law, Greek learning, and Christian theology for 1,000 years after Western Rome fell. Constantinople was the world's largest city for centuries. <strong>The Mali Empire</strong> in West Africa controlled trans-Saharan gold trade; Mansa Musa's pilgrimage to Mecca (1324) was so lavish it crashed gold prices in Egypt for a decade. <strong>The Khmer Empire</strong> built Angkor Wat — the largest religious monument ever constructed. <strong>The Viking/Norse expansion</strong> (800–1100) reached Iceland, Greenland, and briefly North America, 500 years before Columbus.</p>
+
+  <h3>The Mongol cataclysm — and its paradox</h3>
+  <p>Genghis Khan (1162–1227) and his successors built the largest contiguous land empire in history. The Mongol conquests killed an estimated <strong>40 million people</strong> — roughly 10% of the world's population at the time. Baghdad was sacked in 1258, ending the Abbasid Caliphate and the Islamic Golden Age. Entire regions were depopulated.</p>
+
+  <p>But the Mongol Empire also created the <strong>Pax Mongolica</strong> — the safest overland trade route Eurasia had ever known. A merchant could travel from Korea to Hungary under Mongol protection. This facilitated the greatest exchange of goods, ideas, and technologies between East and West before the Age of Exploration. It also, fatally, facilitated the exchange of <em>diseases</em>.</p>
+
+  <h3>The Black Death (1347–1353)</h3>
+  <p>Yersinia pestis traveled Mongol trade routes from Central Asia to the Black Sea, then to Europe on merchant ships. It killed <strong>30–60% of Europe's population</strong> — roughly 25 million people. It also devastated the Middle East and North Africa. In Europe, the sudden labor shortage raised wages by 50–100%, fatally weakened feudalism, and contributed to the Renaissance by creating the economic conditions for a prosperous middle class. The Black Death didn't just kill people — it <em>restructured European society</em> in ways that are still visible today.</p>
+
+  <div class="callout red">
+    <div class="ct">Europe's "Dark Ages" in context</div>
+    <p>Between 500 and 1000 AD, the most sophisticated civilizations on Earth were the <strong>Tang Dynasty</strong> (China), the <strong>Abbasid Caliphate</strong> (Middle East), and <strong>Gupta/Chola India</strong>. European kingdoms were, by every measurable standard — literacy, urbanization, technology, trade volume, artistic production — less advanced than all three. The idea that Europe was the center of world history during this period is a product of European historians writing their own story. The center was Baghdad, Chang'an, and the Indian Ocean trade network.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ GREAT DIVERGENCE ═══════ -->
+
+<section id="divergence">
+<div class="wrap">
+  <div class="overline">~1400 — ~1800</div>
+  <h2>The Great Divergence — How Europe Pulled Ahead</h2>
+
+  <p>In 1400, Europe was a second-tier civilization by global standards. By 1800, it dominated the world. This transformation — the "Great Divergence" — is the most debated question in economic history. There is no single answer, but several factors compounded.</p>
+
+  <h3>The printing press (1440)</h3>
+  <p>China had moveable type since ~1040. Korea refined it with metal type in the 1230s. Gutenberg's innovation was combining moveable type with a screw press and oil-based ink, enabling mass production for alphabetic languages. The result was explosive: the cost of books fell 80% in 50 years. By 1500, 20 million volumes had been printed in Europe. The Reformation, the Scientific Revolution, and the Enlightenment were all, fundamentally, <em>printing press phenomena</em> — ideas that could spread because they could be copied at scale.</p>
+
+  <h3>The Columbian Exchange (1492–)</h3>
+  <p>Columbus's voyages connected two hemispheres that had been separated for 12,000 years. The exchange was asymmetric and devastating. <strong>From the Americas:</strong> potatoes, maize, tomatoes, tobacco, chocolate, rubber. Potatoes alone are estimated to have increased European population by 25% between 1700 and 1900. <strong>From Eurasia:</strong> horses, cattle, wheat, sugar, and diseases. <strong>Smallpox, measles, and influenza killed approximately 90% of the indigenous population of the Americas</strong> — an estimated 56 million people by 1600. Most died before ever seeing a European. This was the largest demographic catastrophe in human history.</p>
+
+  <div class="callout red">
+    <div class="ct">The scale of the Columbian Exchange death toll</div>
+    <p>Pre-Columbian estimates for the population of the Americas range from 50–100 million. By 1600, fewer than 10 million remained. This die-off was so massive that it caused a measurable drop in global CO2 levels — reforestation of abandoned agricultural land pulled enough carbon from the atmosphere to contribute to the Little Ice Age. A genocide so large it changed the climate.</p>
+  </div>
+
+  <h3>The Scientific Revolution (1543–1687)</h3>
+  <p>Copernicus (heliocentric model, 1543). Galileo (telescope, experimental method, 1609). Kepler (planetary motion, 1619). Harvey (blood circulation, 1628). Newton (universal gravitation, calculus, 1687). In 150 years, European thinkers developed a fundamentally new way of understanding reality: observe, hypothesize, test, mathematize. This method was cumulative — each discovery built on the last — and gave Europe a compounding advantage in technology that the rest of the world couldn't match.</p>
+
+  <p>Why Europe and not China, the Islamic world, or India? No consensus exists. Candidates include: Europe's political fragmentation (competition between states drove innovation), the Reformation (which weakened Church control over inquiry), New World silver (which funded exploration and trade), geographical luck (Atlantic access to the Americas), and institutional developments (patent law, joint-stock companies, property rights). Most historians believe it was a combination of all of these, none sufficient alone.</p>
+
+  <h3>Colonialism and the slave trade</h3>
+  <p>Europe's rise was not purely intellectual. It was funded by extraction. The Atlantic slave trade (1500–1900) forcibly transported <strong>12.5 million Africans</strong> to the Americas. Sugar, tobacco, and cotton plantations — worked by enslaved people — generated enormous wealth that flowed back to Europe and was reinvested in industry, infrastructure, and military power. Colonialism systematically deindustrialized colonized regions: India's share of world manufacturing output fell from 25% in 1750 to 2% by 1900, as British policy destroyed Indian textile production to create captive markets for British goods.</p>
+
+  <div class="callout">
+    <div class="ct">Why it's called the "Great Divergence"</div>
+    <p>In 1750, living standards in the richest parts of China, India, and Europe were roughly comparable. By 1900, British GDP per capita was <strong>10× China's</strong>. This wasn't because Asia declined — it's because Europe (and later the US) grew explosively while Asia stagnated under colonial extraction and internal crises. The gap peaked around 1950 and has been closing since, but the Great Divergence still shapes global inequality today.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ INDUSTRIAL ═══════ -->
+
+<section id="industrial">
+<div class="wrap">
+  <div class="overline">~1760 — 1914</div>
+  <h2>The Industrial Revolution — Everything Changes</h2>
+
+  <p>For all of human history until 1750, the world economy grew at roughly 0.1% per year. After the Industrial Revolution, it grew at 2–3%. This single inflection point — visible as a hockey stick in every chart of GDP, population, energy use, or life expectancy — is the most important economic event in human history.</p>
+
+  <h3>World population — the hockey stick</h3>
+  <div class="pop-viz">
+    <div class="pop-row"><div class="pop-label">10,000 BC</div><div class="pop-bar" style="width:1%;background:var(--gold);">5M</div></div>
+    <div class="pop-row"><div class="pop-label">1 AD</div><div class="pop-bar" style="width:3.7%;background:var(--gold);">300M</div></div>
+    <div class="pop-row"><div class="pop-label">1000</div><div class="pop-bar" style="width:3.8%;background:var(--gold);">310M</div></div>
+    <div class="pop-row"><div class="pop-label">1500</div><div class="pop-bar" style="width:6.1%;background:var(--gold);">500M</div></div>
+    <div class="pop-row"><div class="pop-label">1800</div><div class="pop-bar" style="width:12.2%;background:var(--orange);">1B</div></div>
+    <div class="pop-row"><div class="pop-label">1900</div><div class="pop-bar" style="width:19.5%;background:var(--orange);">1.6B</div></div>
+    <div class="pop-row"><div class="pop-label">1950</div><div class="pop-bar" style="width:30.5%;background:var(--crimson);">2.5B</div></div>
+    <div class="pop-row"><div class="pop-label">2000</div><div class="pop-bar" style="width:73.2%;background:var(--crimson);">6B</div></div>
+    <div class="pop-row"><div class="pop-label">2026</div><div class="pop-bar" style="width:100%;background:var(--red);">8.2B</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--dim);">World population was essentially flat for 1,000 years (1 AD–1000 AD). It took all of human history to reach 1 billion (1800). Then 125 years to reach 2 billion. Then 33 years to reach 3 billion. Then 12 years each for 4, 5, and 6 billion. Growth is now slowing — the global fertility rate has fallen from 5 children per woman in 1960 to 2.3 in 2026.</p>
+
+  <h3>What actually happened</h3>
+  <p>The Industrial Revolution started in <strong>Britain</strong> (1760s) with textile mills and steam engines, for reasons that historians still debate: cheap coal, expensive labor (incentivizing mechanization), stable property rights, colonial markets, and the Scientific Revolution's intellectual legacy all contributed. It spread to Belgium, France, Germany, and the United States by the mid-1800s.</p>
+
+  <p>The human cost was enormous. Early industrial workers — including children as young as 5 — worked 14–16 hour days in unsafe conditions. British urban life expectancy in the 1840s was <strong>lower</strong> than it had been in the 1700s. Real wages for British workers didn't consistently rise above pre-industrial levels until the 1840s — 80 years after the revolution began. The Industrial Revolution made the average person poorer before it made them richer.</p>
+
+  <h3>The second industrial revolution (1870–1914)</h3>
+  <p>Electricity, steel, chemicals, petroleum, the telephone, the automobile. If the first revolution replaced muscle with steam, the second replaced darkness with light. By 1914, the industrialized world was unrecognizably different from 1800: railroads, telegraphs, photography, mass literacy, indoor plumbing, anesthesia. Life expectancy in industrialized countries rose from ~35 to ~50.</p>
+
+  <p>This period also produced <strong>modern imperialism</strong>. In 1800, Europeans controlled ~35% of the world's land surface. By 1914, they controlled ~84%. The technology gap between industrialized and non-industrialized societies — machine guns, steamships, quinine (enabling survival in tropical climates) — made conquest devastatingly easy.</p>
+
+  <div class="callout orange">
+    <div class="ct">The abolition of slavery</div>
+    <p>Britain abolished the slave trade in 1807 and slavery in 1833. The US followed in 1865 after a civil war that killed 620,000. Brazil was last in the Americas (1888). But abolition didn't end forced labor — colonial systems of indentured servitude, forced labor, and economic extraction continued well into the 20th century. The legacy of slavery and colonialism remains the primary driver of global wealth inequality today.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ WORLD WARS ═══════ -->
+
+<section id="wars">
+<div class="wrap">
+  <div class="overline">1914 — 1991</div>
+  <h2>The World Wars, Cold War & Decolonization</h2>
+
+  <p>The 77 years from 1914 to 1991 contained the most violent, transformative, and consequential events in human history. Two world wars killed over 100 million people. Nuclear weapons introduced the possibility of extinction. The colonial empires that had ruled most of humanity for centuries were dismantled. The US and Soviet Union divided the world into ideological blocs. And it ended with the Soviet collapse, the internet, and the beginning of the current era.</p>
+
+  <h3>World War I (1914–1918)</h3>
+  <p><strong>20 million dead.</strong> Triggered by the assassination of Archduke Franz Ferdinand, but caused by imperial rivalry, alliance systems, and nationalism. Introduced industrialized warfare: machine guns, poison gas, tanks, aircraft. The Ottoman, Austro-Hungarian, Russian, and German empires all collapsed. The Treaty of Versailles imposed punitive conditions on Germany that directly contributed to World War II. The war also produced the Russian Revolution (1917) — the first communist state, which shaped the rest of the century.</p>
+
+  <h3>World War II (1939–1945)</h3>
+  <p><strong>70–85 million dead</strong> — the deadliest conflict in human history. The <strong>Holocaust</strong> murdered 6 million Jews and millions of others in systematic, industrialized genocide. The <strong>Eastern Front</strong> killed 27 million Soviets — more than any other nation. Japan's conquests in Asia killed 15–20 million Chinese civilians. The war ended with the <strong>atomic bombs</strong> on Hiroshima and Nagasaki (August 1945) — the first and only use of nuclear weapons in war. For the first time, humanity possessed the power to destroy itself.</p>
+
+  <p>The post-war settlement created the institutions that still govern the world: the <strong>United Nations</strong> (1945), the <strong>Universal Declaration of Human Rights</strong> (1948), the <strong>Bretton Woods system</strong> (IMF, World Bank), <strong>NATO</strong> (1949), and the <strong>European integration project</strong> that became the EU.</p>
+
+  <h3>Decolonization (1945–1975)</h3>
+  <p>The European empires, weakened by two world wars, rapidly lost their colonies. <strong>India</strong> gained independence in 1947 (Partition killed 1–2 million and displaced 15 million). Most of <strong>Africa</strong> decolonized in the 1960s — 17 African nations gained independence in 1960 alone ("The Year of Africa"). <strong>Vietnam</strong> fought France (1946–54) then the US (1955–75). The colonial era ended, but its borders, institutions, and inequalities persist: most of the world's poorest countries are former colonies with borders drawn by European diplomats who had never visited them.</p>
+
+  <h3>The Cold War (1947–1991)</h3>
+  <p>The US (capitalist, democratic) and USSR (communist, authoritarian) divided the world into spheres of influence without directly fighting each other. The <strong>Cuban Missile Crisis</strong> (October 1962) — 13 days during which nuclear war was avoided by margins that still terrify historians — was the closest humanity came to extinction. The Cold War produced the <strong>space race</strong> (moon landing, 1969), the <strong>arms race</strong> (peak: ~70,000 nuclear warheads), and proxy wars in Korea, Vietnam, Afghanistan, Angola, and dozens of other countries.</p>
+
+  <p>It ended with the <strong>fall of the Berlin Wall</strong> (1989) and the <strong>dissolution of the Soviet Union</strong> (1991). Francis Fukuyama declared "the end of history" — liberal democracy had won. History disagreed.</p>
+
+  <div class="callout purple">
+    <div class="ct">The 20th century in three numbers</div>
+    <p><strong>100 million:</strong> people killed by war, genocide, and political violence. <strong>4.5 billion:</strong> population increase (1.6B in 1900 → 6.1B in 2000). <strong>25×:</strong> increase in global GDP. The 20th century was simultaneously the most destructive and most productive century in human history. The same industrial civilization that built gas chambers built vaccines, penicillin, and the Green Revolution that prevented billions of deaths from famine.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ MODERN ═══════ -->
+
+<section id="modern">
+<div class="wrap">
+  <div class="overline">1991 — 2026</div>
+  <h2>The Digital Age — 35 Years That Changed Everything</h2>
+
+  <p>The pace of transformation in the last 35 years has no historical parallel. In 1991, there were no websites. In 2026, 5.5 billion people use the internet and AI systems score 94% on PhD-level science exams. The compression of change is itself the story.</p>
+
+  <h3>The internet era (1991–2007)</h3>
+  <p>The <strong>World Wide Web</strong> (1991, Tim Berners-Lee) made the internet accessible. <strong>Amazon</strong> (1994) and <strong>Google</strong> (1998) commercialized it. <strong>Wikipedia</strong> (2001) demonstrated that mass collaboration could produce knowledge at a scale no institution could match. <strong>Facebook</strong> (2004) created the social internet. The <strong>iPhone</strong> (2007) put the internet in everyone's pocket. In 16 years, humanity went from "most people have never used a computer" to "most people carry one."</p>
+
+  <h3>The smartphone era (2007–2022)</h3>
+  <p>Smartphones reached 6.9 billion subscriptions by 2023 — more people have smartphones than have bank accounts or toilets. Social media reshaped politics (Arab Spring 2011, Myanmar genocide 2017, January 6 2021), commerce (e-commerce, gig economy), culture (TikTok, streaming), and psychology (attention economy, misinformation). <strong>China's rise</strong> accelerated: GDP grew from $1.2 trillion (2000) to $18 trillion (2023), lifting 800 million people out of poverty — the largest economic transformation in history.</p>
+
+  <h3>COVID-19 (2020–2023)</h3>
+  <p><strong>7 million confirmed deaths</strong> (actual toll likely 15–20 million). The pandemic demonstrated both the fragility and resilience of global systems: supply chains broke, economies contracted by ~3.5% globally, and remote work transformed labor markets permanently. It also produced the <strong>fastest vaccine development in history</strong> — mRNA vaccines went from sequence to Emergency Use Authorization in 11 months, a process that previously took 10–15 years.</p>
+
+  <h3>The AI revolution (2020–2026)</h3>
+  <p>GPT-3 (2020) wrote coherent text. ChatGPT (November 2022) made AI conversational — 100 million users in 2 months. By February 2026, frontier AI models fix 80% of real software bugs, score 94% on PhD-level science, solve competition mathematics, and chain tools autonomously for hours. The AI market crossed $30 billion in 2025. Whether this is the printing press of our era — amplifying human capability — or something more disruptive remains the defining question of the moment.</p>
+
+  <div class="callout teal">
+    <div class="ct">The great convergence — a quiet miracle</div>
+    <p>Between 1990 and 2020, the share of the world population living in extreme poverty fell from <strong>36% to under 9%</strong>. Global child mortality halved. Literacy rose from 76% to 87%. Life expectancy increased from 64 to 73 years. These are the largest improvements in material human welfare in history, and they happened during the lifetime of everyone reading this. The story of the last 30 years isn't just technology — it's the billions of people who gained access to food, medicine, education, and information for the first time.</p>
+  </div>
+</div>
+</section>
+<hr>
+
+<!-- ═══════ LONG VIEW ═══════ -->
+
+<section id="view">
+<div class="wrap">
+  <div class="overline">Closing</div>
+  <h2>The Long View</h2>
+
+  <p>Here is what 300,000 years of human history tells us, compressed to its essential patterns:</p>
+
+  <p><strong>Connection drives progress — and risk.</strong> The Silk Road, the printing press, the Columbian Exchange, the telegraph, the internet. Every major leap in human capability came from connecting previously isolated people, ideas, or resources. Every major catastrophe — the Black Death, colonial genocide, COVID-19 — traveled the same networks. The tradeoff between connection and vulnerability is the recurring theme of history.</p>
+
+  <p><strong>Geography is destiny — until technology overrides it.</strong> Rivers determined where civilizations arose. Eurasia's east-west axis gave it domesticable animals and shareable crops. Atlantic access gave Europe the Americas. But steam, electricity, and the internet have progressively eroded geography's power. The next chapter will be determined by who builds the best AI, not who has the best farmland.</p>
+
+  <p><strong>Dominance is temporary.</strong> China was the world's largest economy for 18 of the last 20 centuries. The Roman Empire lasted a millennium. The British Empire spanned a globe. Each seemed permanent; none was. European global dominance lasted roughly 200 years (1750–1950) — a blip in the context of 10,000 years of civilization. The current American century may prove similarly brief.</p>
+
+  <p><strong>Catastrophes restructure, they don't destroy.</strong> The Bronze Age Collapse gave us the Iron Age. The Black Death ended feudalism. The World Wars created the UN and decolonization. COVID-19 accelerated remote work and mRNA technology. The worst moments in human history consistently produced structural improvements — at unforgivable human cost.</p>
+
+  <p><strong>Progress is real but uneven.</strong> A person born today, anywhere on Earth, has a higher life expectancy, more access to knowledge, and more political rights than at any previous point in history. This is true even accounting for climate change, inequality, and authoritarian backsliding. But progress is not inevitable — it requires institutions, cooperation, and the continued choice to build rather than destroy.</p>
+
+  <blockquote>
+    <p>The arc of history is long, and it doesn't bend toward anything. It goes where we push it.</p>
+  </blockquote>
+</div>
+</section>
+
+<div class="footer">
+  Data sources: Maddison Project (historical GDP) · UN Population Division · Our World in Data ·<br>
+  Jared Diamond, <em>Guns, Germs, and Steel</em> · Yuval Noah Harari, <em>Sapiens</em> · Peter Frankopan, <em>The Silk Roads</em> ·<br>
+  Kenneth Pomeranz, <em>The Great Divergence</em> · William McNeill, <em>Plagues and Peoples</em><br><br>
+  Zero external dependencies · Renders identically anywhere<br>
+  Last updated: February 21, 2026
+</div>
+
+</body>
+</html>
