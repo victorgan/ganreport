@@ -99,7 +99,7 @@ em{font-style:italic}
 /* SVG map */
 .map-container{background:var(–surface);border:1px solid var(–border);border-radius:10px;padding:16px;margin:28px 0;overflow-x:auto}
 .map-container svg{display:block;margin:0 auto}
-.map-container svg text{font-family:var(–sans);fill:var(–dim);font-size:10px}
+.map-container svg text{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif;fill:#6e6e78;font-size:10px}
 
 /* Table */
 table{width:100%;border-collapse:collapse;margin:26px 0}
@@ -239,7 +239,7 @@ blockquote cite{font-family:var(–sans);font-size:13px;color:var(–dim);font-s
   <div class="map-container">
     <svg viewBox="0 0 800 400" width="100%" style="max-width:800px;">
       <!-- Simplified continents -->
-      <g opacity="0.15" fill="var(--bright)">
+      <g opacity="0.15" fill="#e8e8ed">
         <!-- Africa -->
         <path d="M340 150 L370 140 L400 145 L415 170 L420 210 L415 260 L400 300 L380 320 L360 310 L345 280 L335 230 L330 190 Z"/>
         <!-- Europe -->
@@ -259,36 +259,36 @@ blockquote cite{font-family:var(–sans);font-size:13px;color:var(–dim);font-s
       </g>
       <!-- Migration arrows -->
       <defs>
-        <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="var(--gold)" opacity="0.8"/></marker>
+        <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#d4a843" opacity="0.8"/></marker>
       </defs>
       <!-- Africa to Arabia -->
-      <path d="M390 170 Q410 155 430 140" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.7"/>
-      <text x="405" y="148" fill="var(--gold)" font-size="9" font-family="var(--mono)">~60,000 BC</text>
+      <path d="M390 170 Q410 155 430 140" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.7"/>
+      <text x="405" y="148" fill="#d4a843" font-size="9" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">~60,000 BC</text>
       <!-- To Europe -->
-      <path d="M400 138 Q390 115 380 100" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.6"/>
-      <text x="365" y="105" fill="var(--gold)" font-size="9" font-family="var(--mono)">~45,000 BC</text>
+      <path d="M400 138 Q390 115 380 100" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.6"/>
+      <text x="365" y="105" fill="#d4a843" font-size="9" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">~45,000 BC</text>
       <!-- Across Asia -->
-      <path d="M440 130 Q500 110 570 90" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.6"/>
-      <text x="505" y="100" fill="var(--gold)" font-size="9" font-family="var(--mono)">~50,000 BC</text>
+      <path d="M440 130 Q500 110 570 90" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.6"/>
+      <text x="505" y="100" fill="#d4a843" font-size="9" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">~50,000 BC</text>
       <!-- To India -->
-      <path d="M460 145 Q485 165 505 180" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5"/>
+      <path d="M460 145 Q485 165 505 180" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5"/>
       <!-- To SE Asia -->
-      <path d="M560 155 Q580 170 600 185" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5"/>
+      <path d="M560 155 Q580 170 600 185" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5"/>
       <!-- To Australia (ocean crossing!) -->
-      <path d="M620 220 Q630 250 635 275" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5" stroke-dasharray="4,3"/>
-      <text x="645" y="260" fill="var(--gold)" font-size="9" font-family="var(--mono)">~50,000 BC</text>
-      <text x="645" y="272" fill="var(--dim)" font-size="8" font-family="var(--mono)">ocean crossing</text>
+      <path d="M620 220 Q630 250 635 275" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.5" stroke-dasharray="4,3"/>
+      <text x="645" y="260" fill="#d4a843" font-size="9" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">~50,000 BC</text>
+      <text x="645" y="272" fill="#6e6e78" font-size="8" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">ocean crossing</text>
       <!-- To Americas via Beringia -->
-      <path d="M650 65 Q680 45 700 40 Q720 38 740 42" stroke="var(--gold)" stroke-width="2" fill="none" opacity="0.4"/>
-      <path d="M740 42 Q20 42 70 65" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.4" stroke-dasharray="4,3"/>
-      <text x="690" y="35" fill="var(--gold)" font-size="9" font-family="var(--mono)">~15,000 BC</text>
+      <path d="M650 65 Q680 45 700 40 Q720 38 740 42" stroke="#d4a843" stroke-width="2" fill="none" opacity="0.4"/>
+      <path d="M740 42 Q20 42 70 65" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.4" stroke-dasharray="4,3"/>
+      <text x="690" y="35" fill="#d4a843" font-size="9" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">~15,000 BC</text>
       <!-- Down Americas -->
-      <path d="M130 160 Q155 185 165 210" stroke="var(--gold)" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.35"/>
-      <text x="132" y="198" fill="var(--gold)" font-size="9" font-family="var(--mono)">~13,000 BC</text>
+      <path d="M130 160 Q155 185 165 210" stroke="#d4a843" stroke-width="2" fill="none" marker-end="url(#ah)" opacity="0.35"/>
+      <text x="132" y="198" fill="#d4a843" font-size="9" font-family="ui-monospace,Cascadia Mono,SF Mono,Consolas,monospace">~13,000 BC</text>
       <!-- Origin dot -->
-      <circle cx="370" cy="180" r="5" fill="var(--gold)"/>
-      <text x="375" y="195" fill="var(--bright)" font-size="10" font-weight="600">Origin</text>
-      <text x="375" y="207" fill="var(--dim)" font-size="9">East Africa</text>
+      <circle cx="370" cy="180" r="5" fill="#d4a843"/>
+      <text x="375" y="195" fill="#e8e8ed" font-size="10" font-weight="600">Origin</text>
+      <text x="375" y="207" fill="#6e6e78" font-size="9">East Africa</text>
     </svg>
   </div>
 
