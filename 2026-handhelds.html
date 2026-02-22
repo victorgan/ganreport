@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html lang="en" style="background:#050505;color:#ddd;">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="color-scheme" content="dark"><title>Handheld Gaming Guide</title><style>*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;background:#050505!important}
+body{background:#050505!important;color:#d4d4d4!important;font-family:'Avenir Next','Avenir',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;font-weight:400}
+::selection{background:#2dd4a8;color:#000}
+.m{font-family:'SF Mono','Menlo','Cascadia Code','Consolas','Courier New',monospace}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,5,5,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid #1a1a1a;padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nl{display:flex;gap:1.5rem;list-style:none}
+.nl a{color:#666;text-decoration:none;font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;transition:color .2s}
+.nl a:hover{color:#ccc}
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.divider{height:1px;background:#1a1a1a;max-width:1100px;margin:0 auto}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.gfill{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem}
+.gfill-sm{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.cm{display:grid;gap:1px;background:#1a1a1a;border:1px solid #1a1a1a;border-radius:8px;overflow:hidden}
+.cr{display:grid;grid-template-columns:130px 90px 1fr;background:#050505}
+.tg{display:flex;flex-wrap:wrap;gap:.5rem}
+.fb{background:#0a0a0a;border:1px solid #1a1a1a;color:#888;font-family:'SF Mono','Menlo','Consolas',monospace;font-size:.7rem;padding:.4rem .8rem;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:.05em}
+.fb.on{border-color:#2dd4a8;color:#2dd4a8;background:rgba(45,212,168,.12)}
+.ql{list-style:none;counter-reset:q}
+.ql li{counter-increment:q;padding:.6rem 0;border-bottom:1px solid #1a1a1a;display:flex;align-items:baseline;gap:.75rem;font-size:.9rem;color:#d4d4d4}
+.ql li:last-child{border-bottom:none}
+.ql li::before{content:counter(q);font-family:'SF Mono','Menlo','Consolas',monospace;font-size:.65rem;color:#444;min-width:1rem}
+@media(max-width:768px){
+.g2,.g3{grid-template-columns:1fr}
+.gfill,.gfill-sm{grid-template-columns:1fr}
+.nl{display:none}
+section{padding:3rem 1.25rem}
+.cr{grid-template-columns:100px 80px 1fr}
+.hero-modes{grid-template-columns:1fr 1fr!important}
+.hero-devices{grid-template-columns:1fr!important}
+.hero-plus{display:none!important}
+}</style></head>
+<body style="background:#050505!important;color:#d4d4d4!important;">
+<nav><div class="m" style="font-size:.8rem;font-weight:700;color:#2dd4a8;letter-spacing:.05em;">&#9654; HANDHELD GUIDE</div><ul class="nl"><li><a href="#devices">Devices</a></li><li><a href="#map">Systems</a></li><li><a href="#categories">Browse</a></li><li><a href="#streaming">Streaming</a></li><li><a href="#canon">Retro Canon</a></li><li><a href="#start">Start Here</a></li></ul></nav>
+<header style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem 3rem;background:#050505;">
+<h1 style="font-size:clamp(2.5rem,7vw,4.5rem);font-weight:800;line-height:1.08;letter-spacing:-.03em;color:#e8e8e8;margin-bottom:1rem;">Handheld Gaming Guide</h1>
+<p style="font-size:1rem;color:#777;max-width:540px;margin-bottom:3.5rem;font-weight:300;">What to play on the <span style="color:#f0a830;">AYN Odin 3</span> and <span style="color:#2dd4a8;">Retroid Pocket Classic</span>, filtered for games that are actually worth the time.</p>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#1a1a1a;border:1px solid #1a1a1a;border-radius:10px;overflow:hidden;max-width:800px;width:100%;margin-bottom:3.5rem;" class="hero-modes">
+<div style="background:#050505;padding:1.25rem;text-align:center;"><div style="font-size:1.2rem;margin-bottom:.4rem;">&#9201;</div><div style="font-size:.8rem;font-weight:600;color:#e8e8e8;margin-bottom:.2rem;">Has an ending</div><div style="font-size:.65rem;color:#555;line-height:1.4;">Not optimized for daily active users</div></div>
+<div style="background:#050505;padding:1.25rem;text-align:center;"><div style="font-size:1.2rem;margin-bottom:.4rem;">&#129504;</div><div style="font-size:.8rem;font-weight:600;color:#e8e8e8;margin-bottom:.2rem;">Teaches something</div><div style="font-size:.65rem;color:#555;line-height:1.4;">Leaves a skill or perspective, not a craving</div></div>
+<div style="background:#050505;padding:1.25rem;text-align:center;"><div style="font-size:1.2rem;margin-bottom:.4rem;">&#128682;</div><div style="font-size:.8rem;font-weight:600;color:#e8e8e8;margin-bottom:.2rem;">Clean session boundaries</div><div style="font-size:.65rem;color:#555;line-height:1.4;">No daily logins, no expiring passes</div></div>
+<div style="background:#050505;padding:1.25rem;text-align:center;"><div style="font-size:1.2rem;margin-bottom:.4rem;">&#127919;</div><div style="font-size:.8rem;font-weight:600;color:#e8e8e8;margin-bottom:.2rem;">No monetization tricks</div><div style="font-size:.65rem;color:#555;line-height:1.4;">No energy systems, gacha, or loot boxes</div></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr auto 1fr;gap:2rem;align-items:center;max-width:840px;width:100%;" class="hero-devices">
+<div style="background:#0a0a0a;border:1px solid #1a8a6e;border-radius:12px;padding:1.5rem;text-align:left;"><div style="font-weight:700;font-size:1.1rem;color:#2dd4a8;margin-bottom:.15rem;">Retroid Pocket Classic</div><div class="m" style="font-size:.65rem;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;">Emulation only</div><div style="font-size:.78rem;color:#555;line-height:1.8;"><strong style="color:#888;">Screen:</strong> 3.92" AMOLED 31:27<br><strong style="color:#888;">Chip:</strong> Snapdragon G1 Gen 2<br><strong style="color:#888;">Price:</strong> $119&ndash;129<br><strong style="color:#888;">Plays:</strong> GB/C, NES, SNES, Genesis, PS1<br><strong style="color:#888;">Best for:</strong> 2D sprites, d-pad games, bedside use</div></div>
+<div style="font-size:2rem;font-weight:200;color:#333;" class="hero-plus">+</div>
+<div style="background:#0a0a0a;border:1px solid #a87420;border-radius:12px;padding:1.5rem;text-align:left;"><div style="font-weight:700;font-size:1.1rem;color:#f0a830;margin-bottom:.15rem;">AYN Odin 3</div><div class="m" style="font-size:.65rem;color:#666;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;">Emulation + Android + PC streaming</div><div style="font-size:.78rem;color:#555;line-height:1.8;"><strong style="color:#888;">Screen:</strong> 6" AMOLED 16:9 120Hz<br><strong style="color:#888;">Chip:</strong> Snapdragon 8 Elite<br><strong style="color:#888;">Price:</strong> $329&ndash;519<br><strong style="color:#888;">Best for:</strong> 3D emulation, native Android games, Moonlight streaming</div></div>
+</div></header>
+<section id="devices" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">Odin 3 Play Modes</div><h2 style="font-size:1.8rem;font-weight:800;letter-spacing:-.02em;color:#e8e8e8;margin-bottom:.4rem;">Three ways to use it</h2><p style="color:#777;margin-bottom:2.5rem;max-width:600px;font-weight:300;font-size:.95rem;">The Classic handles 2D retro. The Odin 3 covers everything else across three play modes.</p><div class="g3">
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;border-top:3px solid #f0a830;"><div class="m" style="font-size:.65rem;color:#f0a830;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;">Mode 1 &mdash; Emulation</div><div style="font-weight:600;color:#e8e8e8;margin-bottom:.4rem;">N64 through Wii</div><div style="font-size:.8rem;color:#666;line-height:1.5;">N64, Dreamcast, PSP, PS2, GameCube, Wii, DS. Dolphin and AetherSX2 widescreen hacks take advantage of the 16:9 panel.</div></div>
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;border-top:3px solid #4ade80;"><div class="m" style="font-size:.65rem;color:#4ade80;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;">Mode 2 &mdash; Native Android</div><div style="font-weight:600;color:#e8e8e8;margin-bottom:.4rem;">PC indie ports</div><div style="font-size:.8rem;color:#666;line-height:1.5;">Into the Breach, Slay the Spire, Celeste, Hades, Balatro, FTL all have Android versions. No latency, works offline.</div></div>
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;border-top:3px solid #60a5fa;"><div class="m" style="font-size:.65rem;color:#60a5fa;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;">Mode 3 &mdash; PC Streaming</div><div style="font-weight:600;color:#e8e8e8;margin-bottom:.4rem;">Sunshine + Moonlight</div><div style="font-size:.8rem;color:#666;line-height:1.5;">Stream your PC library over WiFi. Touchscreen acts as mouse. Turn-based and point-and-click genres work well since latency doesn't matter much.</div></div>
+</div></section><div class="divider"></div>
+<section id="map" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">01 &mdash; Console &rarr; Device</div><h2 style="font-size:1.8rem;font-weight:800;margin-bottom:.4rem;color:#e8e8e8;">Console mapping</h2><p style="color:#777;margin-bottom:2.5rem;max-width:600px;font-weight:300;font-size:.95rem;">3D polygon games scale to any aspect ratio, so sticks and processing power matter more than screen shape.</p><div class="cm" id="console-map"></div></section><div class="divider"></div>
+<section id="categories" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">02 &mdash; Browse by Mood</div><h2 style="font-size:1.8rem;font-weight:800;margin-bottom:.4rem;color:#e8e8e8;">Games by category</h2><p style="color:#777;margin-bottom:2.5rem;max-width:600px;font-weight:300;font-size:.95rem;">Retro, modern, and streamed games organized by session type. Mode badges show where each runs.</p><div class="gfill" id="cat-grid"></div></section><div class="divider"></div>
+<section id="streaming" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">03 &mdash; PC Streaming</div><h2 style="font-size:1.8rem;font-weight:800;margin-bottom:.4rem;color:#e8e8e8;">Moonlight streaming picks</h2><p style="color:#777;margin-bottom:2.5rem;max-width:600px;font-weight:300;font-size:.95rem;">Sunshine on PC, Moonlight on Odin 3. Turn-based and mouse-driven games stream well because 30ms of latency doesn't affect gameplay.</p><div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;"><div id="stream-games" class="gfill-sm"></div></div>
+<div class="g2"><div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;"><div style="font-weight:600;color:#e8e8e8;margin-bottom:.5rem;">Setup tip</div><div style="font-size:.85rem;color:#777;line-height:1.6;">Make a dedicated &ldquo;handheld&rdquo; shelf in Steam or a Playnite collection so you're not scrolling your full library on a 6&Prime; screen.</div></div><div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;"><div style="font-weight:600;color:#e8e8e8;margin-bottom:.5rem;">Dual-option games</div><div style="font-size:.85rem;color:#777;line-height:1.6;">Slay the Spire, Into the Breach, and Balatro have both native Android and PC versions. Use native for travel, stream at home if you want save sync.</div></div></div></section><div class="divider"></div>
+<section id="canon" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">04 &mdash; Retro Tier List</div><h2 style="font-size:1.8rem;font-weight:800;margin-bottom:.4rem;color:#e8e8e8;">Retro tier list</h2><p style="color:#777;margin-bottom:1.5rem;font-weight:300;font-size:.95rem;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#2dd4a8;vertical-align:middle;"></span> Classic <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f0a830;vertical-align:middle;margin-left:.75rem;"></span> Odin 3</p><div style="display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap;"><button class="fb on" onclick="filterG('all',this)">All</button><button class="fb" onclick="filterG('classic',this)">Classic</button><button class="fb" onclick="filterG('odin',this)">Odin 3</button></div><div id="tier-s" style="margin-bottom:2rem;"></div><div id="tier-a" style="margin-bottom:2rem;"></div><div id="tier-b" style="margin-bottom:2rem;"></div></section><div class="divider"></div>
+<section id="2p" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">05 &mdash; Multiplayer</div><h2 style="font-size:1.8rem;font-weight:800;margin-bottom:.4rem;color:#e8e8e8;">Two-player options</h2><p style="color:#777;margin-bottom:2.5rem;font-weight:300;font-size:.95rem;">Different setups for playing with another person, from passing one device to docking the Odin 3 to a TV.</p><div class="gfill-sm" id="mp-grid"></div></section><div class="divider"></div>
+<section id="start" style="background:#050505;"><div class="m" style="font-size:.65rem;text-transform:uppercase;letter-spacing:.3em;color:#444;margin-bottom:.75rem;">06 &mdash; Start Here</div><h2 style="font-size:1.8rem;font-weight:800;margin-bottom:.4rem;color:#e8e8e8;">First games to install</h2><p style="color:#777;margin-bottom:2.5rem;font-weight:300;font-size:.95rem;">Five picks per device covering different categories and play modes.</p><div class="g2">
+<div style="border:1px solid #1a8a6e;border-radius:10px;padding:2rem;background:linear-gradient(135deg,rgba(45,212,168,.03),#050505);"><div style="font-weight:800;font-size:1.15rem;color:#2dd4a8;margin-bottom:.15rem;">Retroid Pocket Classic</div><div class="m" style="font-size:.7rem;color:#444;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.25rem;">D-pad &middot; 2D &middot; Bed &middot; Pocket</div><ul class="ql"><li style="color:#d4d4d4;"><strong>Chrono Trigger</strong> <span class="m" style="font-size:.6rem;color:#555;text-transform:uppercase;">SNES</span></li><li style="color:#d4d4d4;"><strong>Super Metroid</strong> <span class="m" style="font-size:.6rem;color:#555;text-transform:uppercase;">SNES</span></li><li style="color:#d4d4d4;"><strong>Castlevania: SotN</strong> <span class="m" style="font-size:.6rem;color:#555;text-transform:uppercase;">PS1</span></li><li style="color:#d4d4d4;"><strong>Advance Wars</strong> <span class="m" style="font-size:.6rem;color:#555;text-transform:uppercase;">GBA</span></li><li style="color:#d4d4d4;"><strong>Pokemon Crystal</strong> <span class="m" style="font-size:.6rem;color:#555;text-transform:uppercase;">GBC</span></li></ul></div>
+<div style="border:1px solid #a87420;border-radius:10px;padding:2rem;background:linear-gradient(135deg,rgba(240,168,48,.03),#050505);"><div style="font-weight:800;font-size:1.15rem;color:#f0a830;margin-bottom:.15rem;">AYN Odin 3</div><div class="m" style="font-size:.7rem;color:#444;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.25rem;">Emulate &middot; Native &middot; Stream</div><ul class="ql"><li style="color:#d4d4d4;"><strong>Into the Breach</strong> <span class="m" style="font-size:.6rem;color:#4ade80;text-transform:uppercase;">Native Android</span></li><li style="color:#d4d4d4;"><strong>Persona 4</strong> <span class="m" style="font-size:.6rem;color:#f0a830;text-transform:uppercase;">PS2 emulation</span></li><li style="color:#d4d4d4;"><strong>Celeste</strong> <span class="m" style="font-size:.6rem;color:#4ade80;text-transform:uppercase;">Native Android</span></li><li style="color:#d4d4d4;"><strong>Wind Waker</strong> <span class="m" style="font-size:.6rem;color:#f0a830;text-transform:uppercase;">GCN emulation</span></li><li style="color:#d4d4d4;"><strong>Return of the Obra Dinn</strong> <span class="m" style="font-size:.6rem;color:#60a5fa;text-transform:uppercase;">PC stream</span></li></ul></div></div></section>
+<div style="max-width:640px;margin:0 auto;padding:2rem 2rem 1rem;text-align:center;"><p style="font-size:.8rem;color:#444;line-height:1.6;font-style:italic;">Even good games can become avoidance mechanisms. A session that replaces doomscrolling is fine; one that replaces sleep three nights running is not. Games with endings and no monetization pressure are the safest bet.</p></div>
+<footer style="text-align:center;padding:2rem;font-size:.7rem;color:#333;font-family:'SF Mono','Menlo','Consolas',monospace;border-top:1px solid #1a1a1a;max-width:1100px;margin:0 auto;">Built from conversation with Claude &middot; February 2026</footer>
+<script>
+
+var T=’#2dd4a8’,A=’#f0a830’,G=’#4ade80’,B=’#60a5fa’;
+var consoles=[
+[‘Game Boy / GBC’,‘Classic’,T,‘AMOLED makes pixel art look great at this screen size’],
+[‘GBA’,‘Classic’,T,‘31:27 is close to 3:2, letterboxing barely visible’],
+[‘NES’,‘Classic’,T,‘D-pad games on a small sharp screen’],
+[‘SNES’,‘Classic’,T,‘Best match for this device \u2014 peak 2D sprite era’],
+[‘Genesis’,‘Classic’,T,‘6-button Classic 6 layout matches the Genesis/Saturn pad’],
+[‘Saturn’,‘Classic’,T,‘Classic 6 is widely considered a portable Saturn’],
+[‘PS1 (2D/RPG)’,‘Classic’,T,‘D-pad is fine for RPGs and 2D, save states work well bedside’],
+[‘PS1 (3D)’,‘Odin 3’,A,‘3D polygons scale to 16:9, analog sticks help’],
+[‘N64’,‘Odin 3’,A,‘Requires analog stick’],
+[‘Dreamcast’,‘Odin 3’,A,‘Requires analog stick, 3D scales to 16:9’],
+[‘PSP’,‘Odin 3’,A,‘Native 16:9 fills the Odin 3 screen exactly’],
+[‘PS2’,‘Odin 3’,A,‘Needs power and dual sticks, widescreen hacks work well’],
+[‘GameCube’,‘Odin 3’,A,‘Dolphin widescreen hacks are mature’],
+[‘Wii’,‘Odin 3’,A,‘Native 16:9, needs gyro and processing power’],
+[‘DS’,‘Odin 3’,A,‘Odin 3 touchscreen handles the second DS screen’]
+];
+var cmHTML=’<div class="cr" style="background:#0a0a0a;"><div style="padding:.6rem .8rem;font-family:\'SF Mono\',Consolas,monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#444;">Console</div><div style="padding:.6rem .8rem;font-family:\'SF Mono\',Consolas,monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#444;">Device</div><div style="padding:.6rem .8rem;font-family:\'SF Mono\',Consolas,monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:#444;">Why</div></div>’;
+consoles.forEach(function(c){var bc=c[2]===T?‘rgba(45,212,168,.12)’:‘rgba(240,168,48,.12)’;var bbc=c[2]===T?’#1a8a6e’:’#a87420’;cmHTML+=’<div class="cr" style="background:#050505;"><div style="padding:.6rem .8rem;font-size:.82rem;color:#d4d4d4;font-weight:600;display:flex;align-items:center;">’+c[0]+’</div><div style="padding:.6rem .8rem;display:flex;align-items:center;"><span style="font-family:\'SF Mono\',Consolas,monospace;font-size:.6rem;font-weight:700;padding:.15rem .45rem;border-radius:4px;background:'+bc+';color:'+c[2]+';border:1px solid '+bbc+';text-transform:uppercase;">’+c[1]+’</span></div><div style="padding:.6rem .8rem;font-size:.78rem;color:#666;display:flex;align-items:center;">’+c[3]+’</div></div>’;});
+document.getElementById(‘console-map’).innerHTML=cmHTML;
+
+var cats=[
+{icon:’\u26A1’,title:‘Pick Up & Play’,desc:‘5\u201315 min sessions, no context needed.’,games:[
+{n:‘Into the Breach’,t:‘Native Android’,c:G,w:‘Perfect-information tactics puzzles, 15-min missions’},
+{n:‘Tetris’,t:‘GB’,c:T,w:‘No explanation needed’},
+{n:‘Mega Man X’,t:‘SNES’,c:T,w:‘Tight action-platformer levels, about 10 min each’},
+{n:‘Balatro’,t:‘Native Android’,c:G,w:‘Poker roguelike built around expected value and combo synergy’},
+{n:‘Slay the Spire’,t:‘Native Android’,c:G,w:‘Deckbuilder where every card choice involves risk assessment’},
+{n:‘Lumines’,t:‘PSP’,c:A,w:‘Rhythm-puzzle game, reliable flow-state generator’},
+{n:‘Crazy Taxi’,t:‘DC’,c:A,w:‘Arcade driving, 3\u20135 min rounds’},
+{n:‘WarioWare’,t:‘GBA’,c:T,w:‘5-second micro-games in rapid succession’},
+{n:‘Chess (Lichess)’,t:‘Native Android’,c:G,w:‘Puzzles and correspondence games fit handheld well’},
+{n:‘FTL’,t:‘Native Android’,c:G,w:‘Spaceship roguelike about resource allocation under pressure’},
+{n:‘Dicey Dungeons’,t:‘Native Android’,c:G,w:‘Dice-based roguelike, about 20-min runs’},
+{n:‘Sonic 3 & Knuckles’,t:‘Genesis’,c:T,w:‘Zone-based platformer, each zone is a self-contained session’},
+{n:‘Puzzle Bobble’,t:‘Arcade’,c:T,w:‘Bubble-matching puzzle game’},
+{n:‘Dr. Mario’,t:‘NES’,c:T,w:‘Color-matching puzzle game’}
+]},
+{icon:’\uD83D\uDCD6’,title:‘Slow Burn Epics’,desc:‘20\u201380 hour RPGs. Play 20 min a night with save states.’,games:[
+{n:‘Chrono Trigger’,t:‘SNES’,c:T,w:‘Well-paced JRPG with multiple endings, about 20\u201325 hours’},
+{n:‘Disco Elysium’,t:‘PC Stream’,c:B,w:‘Dialogue-heavy RPG that reads like a novel, more comfortable on couch than at desk’},
+{n:‘Persona 4’,t:‘PS2’,c:A,w:‘80-hour social sim and dungeon crawler’},
+{n:‘FF Tactics: War of the Lions’,t:‘PSP’,c:A,w:‘Deep tactical RPG with a job system, PSP version is definitive’},
+{n:‘Final Fantasy VI’,t:‘SNES’,c:T,w:‘Large ensemble cast JRPG, 35\u201340 hours’},
+{n:‘Xenogears’,t:‘PS1’,c:T,w:‘Mecha RPG with heavy philosophical themes, 60+ hours’},
+{n:‘Outer Wilds’,t:‘Native / Stream’,c:G,w:‘Exploration game driven by curiosity, 22-min time loops’},
+{n:‘Final Fantasy VII’,t:‘PS1’,c:T,w:‘The PS1 RPG that defined the genre for a generation’},
+{n:‘Kingdom Hearts’,t:‘PS2’,c:A,w:‘Action RPG, about 30 hours’},
+{n:‘Suikoden II’,t:‘PS1’,c:T,w:‘Political RPG with 108 recruitable characters’},
+{n:‘Civilization VI’,t:‘PC Stream’,c:B,w:‘Turn-based 4X strategy, streaming latency is irrelevant’},
+{n:‘EarthBound’,t:‘SNES’,c:T,w:‘Offbeat JRPG set in suburban America, about 25 hours’},
+{n:‘FFX’,t:‘PS2’,c:A,w:‘Linear JRPG, about 40 hours, strong character writing’},
+{n:‘Pokemon Emerald’,t:‘GBA’,c:T,w:‘Best of the GBA-era Pokemon games’}
+]},
+{icon:’\uD83C\uDF19’,title:‘Comfort Games’,desc:‘Low-stress, good for winding down before sleep.’,games:[
+{n:‘Baba Is You’,t:‘Native Android’,c:G,w:‘Rule-rewriting logic puzzles at a relaxed pace’},
+{n:‘Pokemon Crystal’,t:‘GBC’,c:T,w:‘Pokemon with a day/night cycle, cozy loop’},
+{n:‘Kirby Super Star’,t:‘SNES’,c:T,w:‘Accessible platformer, hard to lose’},
+{n:“Yoshi’s Island”,t:‘SNES’,c:T,w:‘Hand-drawn art style platformer’},
+{n:‘Animal Crossing’,t:‘GCN’,c:A,w:‘The original life sim with a real-time clock’},
+{n:‘Katamari Damacy’,t:‘PS2’,c:A,w:‘Roll objects into a ball that scales up absurdly’},
+{n:‘LocoRoco’,t:‘PSP’,c:A,w:‘Tilt-based platformer with a good soundtrack’},
+{n:“Link’s Awakening”,t:‘GB’,c:T,w:‘Small-scale Zelda on a self-contained island’},
+{n:‘Harvest Moon FoMT’,t:‘GBA’,c:T,w:‘Farm sim with daily routines’},
+{n:‘Wario Land 3’,t:‘GBC’,c:T,w:“Exploration platformer where you can’t die”}
+]},
+{icon:’\uD83D\uDC80’,title:‘Challenge Runs’,desc:‘Skill-based games that reward repeated attempts.’,games:[
+{n:‘Celeste’,t:‘Native Android’,c:G,w:‘Precision platformer with an assist mode and a narrative about anxiety’},
+{n:‘Hades’,t:‘Native Android’,c:G,w:‘Action roguelike where the story advances through repeated runs’},
+{n:‘Super Metroid’,t:‘SNES’,c:T,w:‘Exploration-action game, widely speedrun’},
+{n:‘F-Zero GX’,t:‘GCN’,c:A,w:‘Very difficult racing game that demands track memorization’},
+{n:‘Devil May Cry 3’,t:‘PS2’,c:A,w:‘Style-ranked combat with deep mechanical depth’},
+{n:‘Mega Man X’,t:‘SNES’,c:T,w:‘Action-platformer with a well-tuned difficulty curve’},
+{n:‘Contra’,t:‘NES’,c:T,w:‘Two-button run-and-gun, short but demanding’},
+{n:‘Ninja Gaiden’,t:‘NES’,c:T,w:‘Precision action-platformer’},
+{n:‘Metroid Fusion’,t:‘GBA’,c:T,w:‘More directed than other Metroids, good tension throughout’},
+{n:‘Gunstar Heroes’,t:‘Genesis’,c:T,w:‘Treasure-developed run-and-gun with inventive bosses’},
+{n:‘God of War’,t:‘PS2’,c:A,w:‘Action game with large-scale set pieces’}
+]},
+{icon:’\uD83D\uDC8E’,title:‘Hidden Gems & Investigation’,desc:‘Lesser-known games and deductive reasoning titles.’,games:[
+{n:‘Return of the Obra Dinn’,t:‘PC Stream’,c:B,w:‘Deduce the fates of 60 crew members from frozen moments. Touchscreen works as mouse.’},
+{n:‘Ghost Trick’,t:‘DS’,c:A,w:‘Puzzle game with a cause-and-effect mechanic and strong narrative’},
+{n:‘Ace Attorney series’,t:‘DS’,c:A,w:‘Visual novel / courtroom logic game, several entries available’},
+{n:‘Vagrant Story’,t:‘PS1’,c:T,w:‘Dungeon-crawling RPG with a weapon-crafting system’},
+{n:‘Advance Wars’,t:‘GBA’,c:T,w:‘Turn-based tactics with perfect information, widely underplayed’},
+{n:‘Drill Dozer’,t:‘GBA’,c:T,w:‘Rumble-based platformer, unique even for GBA’},
+{n:‘Mischief Makers’,t:‘N64’,c:A,w:‘Grab-and-throw platformer by Treasure’},
+{n:‘Panzer Dragoon Saga’,t:‘Saturn’,c:T,w:‘RPG/rail-shooter hybrid, only released on Saturn’},
+{n:‘Skies of Arcadia’,t:‘DC’,c:A,w:‘Airship-based JRPG with exploration focus’},
+{n:‘Power Stone 2’,t:‘DC’,c:A,w:‘3D arena brawler with environmental interaction’},
+{n:‘Ninja Five-O’,t:‘GBA’,c:T,w:‘Grappling-hook action game, small print run’}
+]},
+{icon:’\uD83E\uDDE9’,title:‘Systems & Strategy’,desc:‘Optimization, planning, and systems thinking.’,games:[
+{n:‘Factorio’,t:‘PC Stream’,c:B,w:‘Factory logistics game, touch input works for planning phases’},
+{n:‘Zachtronics (Opus Magnum, etc.)’,t:‘PC Stream’,c:B,w:‘Programming puzzles that use actual computational concepts’},
+{n:‘Fire Emblem’,t:‘GBA’,c:T,w:‘Tactics RPG with permadeath’},
+{n:‘FF Tactics Advance’,t:‘GBA’,c:T,w:‘Tactical RPG with a deep job system’},
+{n:‘Advance Wars’,t:‘GBA’,c:T,w:‘Perfect-information turn-based tactics’},
+{n:‘Into the Breach’,t:‘Native Android’,c:G,w:‘Turn-based tactics with complete information, short missions’},
+{n:‘Picross DS’,t:‘DS’,c:A,w:‘Nonogram logic puzzles, good for short sessions’},
+{n:‘Golden Sun’,t:‘GBA’,c:T,w:‘JRPG with environmental puzzles and a djinn system’}
+]}
+];
+function hexToR(h){return parseInt(h.slice(1,3),16)}function hexToG(h){return parseInt(h.slice(3,5),16)}function hexToB(h){return parseInt(h.slice(5,7),16)}
+function tag(g){return ‘<span style="font-family:\'SF Mono\',Consolas,monospace;font-size:.58rem;padding:.12rem .4rem;border-radius:3px;background:rgba('+hexToR(g.c)+','+hexToG(g.c)+','+hexToB(g.c)+',.12);color:'+g.c+';border:1px solid rgba('+hexToR(g.c)+','+hexToG(g.c)+','+hexToB(g.c)+',.3);text-transform:uppercase;white-space:nowrap;">’+g.t+’</span>’;}
+function gameCard(g){return ‘<div style="background:#0c0c0c;border:1px solid #1a1a1a;border-radius:6px;padding:.65rem .8rem;display:flex;flex-direction:column;gap:.3rem;"><div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;"><span style="font-size:.85rem;font-weight:600;color:#d4d4d4;">’+g.n+’</span>’+tag(g)+’</div><div style="font-size:.75rem;color:#555;line-height:1.4;">’+g.w+’</div></div>’;}
+document.getElementById(‘cat-grid’).innerHTML=cats.map(function(c){return ‘<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:10px;padding:1.5rem;"><div style="font-size:1.3rem;margin-bottom:.6rem;">’+c.icon+’</div><div style="font-weight:700;font-size:1.05rem;color:#e8e8e8;margin-bottom:.2rem;">’+c.title+’</div><div style="font-size:.8rem;color:#666;margin-bottom:1rem;line-height:1.4;">’+c.desc+’</div><div style="display:grid;gap:.4rem;">’+c.games.map(gameCard).join(’’)+’</div></div>’;}).join(’’);
+
+var streamGames=[
+{n:‘Return of the Obra Dinn’,g:‘Deductive investigation’,w:‘Mouse-driven, touchscreen solves the controller problem. 60 crew members to identify.’,touch:‘Yes’},
+{n:‘Disco Elysium’,g:‘Narrative RPG’,w:‘Dialogue-heavy, reading on a handheld is more comfortable than at a desk.’,touch:‘Yes’},
+{n:‘Zachtronics (Opus Magnum, Shenzhen I/O)’,g:‘Programming puzzles’,w:‘Mouse precision handled through Moonlight touch input.’,touch:‘Yes’},
+{n:‘Factorio / Shapez 2’,g:‘Systems optimization’,w:‘Planning phases work with touch. Not great for precise belt placement.’,touch:‘Partial’},
+{n:‘Civilization VI / VII’,g:‘4X strategy’,w:‘Turn-based, so streaming latency is a non-issue.’,touch:‘Yes’},
+{n:‘Outer Wilds’,g:‘Exploration’,w:‘PC version for better performance and visual fidelity.’,touch:‘Controller’}
+];
+document.getElementById(‘stream-games’).innerHTML=streamGames.map(function(s){return ‘<div style="background:#0c0c0c;border:1px solid #1a1a1a;border-radius:6px;padding:.75rem .9rem;"><div style="font-weight:600;color:#d4d4d4;margin-bottom:.15rem;font-size:.9rem;">’+s.n+’</div><div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.3rem;"><span style="font-family:\'SF Mono\',Consolas,monospace;font-size:.58rem;color:#60a5fa;text-transform:uppercase;">’+s.g+’</span><span style="font-family:\'SF Mono\',Consolas,monospace;font-size:.55rem;color:#444;">Touch: ‘+s.touch+’</span></div><div style="font-size:.75rem;color:#555;line-height:1.4;">’+s.w+’</div></div>’;}).join(’’);
+
+var tiers={s:{label:‘S TIER’,bg:‘rgba(251,191,36,.1)’,bc:‘rgba(251,191,36,.22)’,fc:’#fbbf24’,games:[{n:‘Chrono Trigger’,s:‘SNES’,d:‘classic’},{n:‘A Link to the Past’,s:‘SNES’,d:‘classic’},{n:‘Super Metroid’,s:‘SNES’,d:‘classic’},{n:‘Final Fantasy VI’,s:‘SNES’,d:‘classic’},{n:‘Super Mario World’,s:‘SNES’,d:‘classic’},{n:‘Castlevania: SotN’,s:‘PS1’,d:‘classic’},{n:‘Final Fantasy VII’,s:‘PS1’,d:‘classic’},{n:‘Pokemon Gold/Silver’,s:‘GBC’,d:‘classic’},{n:‘Metal Gear Solid’,s:‘PS1’,d:‘odin’},{n:‘Ocarina of Time’,s:‘N64’,d:‘odin’},{n:‘Metroid Prime’,s:‘GCN’,d:‘odin’},{n:‘Wind Waker’,s:‘GCN’,d:‘odin’},{n:‘Persona 4’,s:‘PS2’,d:‘odin’},{n:‘Shadow of the Colossus’,s:‘PS2’,d:‘odin’},{n:‘Resident Evil 4’,s:‘GCN’,d:‘odin’}]},a:{label:‘A TIER’,bg:‘rgba(167,139,250,.1)’,bc:‘rgba(167,139,250,.22)’,fc:’#a78bfa’,games:[{n:‘EarthBound’,s:‘SNES’,d:‘classic’},{n:‘Mega Man X’,s:‘SNES’,d:‘classic’},{n:‘Final Fantasy IX’,s:‘PS1’,d:‘classic’},{n:‘Xenogears’,s:‘PS1’,d:‘classic’},{n:‘Suikoden II’,s:‘PS1’,d:‘classic’},{n:‘Vagrant Story’,s:‘PS1’,d:‘classic’},{n:‘Fire Emblem’,s:‘GBA’,d:‘classic’},{n:‘Metroid Fusion’,s:‘GBA’,d:‘classic’},{n:‘Advance Wars’,s:‘GBA’,d:‘classic’},{n:‘Aria of Sorrow’,s:‘GBA’,d:‘classic’},{n:“Link’s Awakening”,s:‘GB’,d:‘classic’},{n:‘Super Mario Bros 3’,s:‘NES’,d:‘classic’},{n:‘Mega Man 2’,s:‘NES’,d:‘classic’},{n:‘Sonic 3 & Knuckles’,s:‘Genesis’,d:‘classic’},{n:‘Streets of Rage 2’,s:‘Genesis’,d:‘classic’},{n:‘Panzer Dragoon Saga’,s:‘Saturn’,d:‘classic’},{n:‘Pokemon Emerald’,s:‘GBA’,d:‘classic’},{n:‘FFX’,s:‘PS2’,d:‘odin’},{n:‘Metal Gear Solid 3’,s:‘PS2’,d:‘odin’},{n:‘Persona 3’,s:‘PS2’,d:‘odin’},{n:‘Kingdom Hearts’,s:‘PS2’,d:‘odin’},{n:‘God of War’,s:‘PS2’,d:‘odin’},{n:‘Devil May Cry 3’,s:‘PS2’,d:‘odin’},{n:“Majora’s Mask”,s:‘N64’,d:‘odin’},{n:‘Paper Mario TTYD’,s:‘GCN’,d:‘odin’},{n:‘F-Zero GX’,s:‘GCN’,d:‘odin’},{n:‘Soul Calibur’,s:‘DC’,d:‘odin’},{n:‘Shenmue’,s:‘DC’,d:‘odin’},{n:‘Crisis Core’,s:‘PSP’,d:‘odin’}]},b:{label:‘B TIER’,bg:‘rgba(96,165,250,.1)’,bc:‘rgba(96,165,250,.22)’,fc:’#60a5fa’,games:[{n:‘Golden Sun’,s:‘GBA’,d:‘classic’},{n:‘Minish Cap’,s:‘GBA’,d:‘classic’},{n:‘FF Tactics Advance’,s:‘GBA’,d:‘classic’},{n:‘Chrono Cross’,s:‘PS1’,d:‘classic’},{n:‘Resident Evil 2’,s:‘PS1’,d:‘classic’},{n:‘FFVIII’,s:‘PS1’,d:‘classic’},{n:‘DK Country’,s:‘SNES’,d:‘classic’},{n:‘Secret of Mana’,s:‘SNES’,d:‘classic’},{n:‘Tetris’,s:‘GB’,d:‘classic’},{n:‘Pokemon Red/Blue’,s:‘GB’,d:‘classic’},{n:‘Gunstar Heroes’,s:‘Genesis’,d:‘classic’},{n:‘Phantasy Star IV’,s:‘Genesis’,d:‘classic’},{n:‘Shining Force II’,s:‘Genesis’,d:‘classic’},{n:‘Contra’,s:‘NES’,d:‘classic’},{n:‘Castlevania’,s:‘NES’,d:‘classic’},{n:‘Radiant Silvergun’,s:‘Saturn’,d:‘classic’},{n:‘Guardian Heroes’,s:‘Saturn’,d:‘classic’},{n:‘Mario 64’,s:‘N64’,d:‘odin’},{n:‘Paper Mario’,s:‘N64’,d:‘odin’},{n:‘Star Fox 64’,s:‘N64’,d:‘odin’},{n:‘Smash Bros’,s:‘N64’,d:‘odin’},{n:‘Okami’,s:‘PS2’,d:‘odin’},{n:‘Ratchet & Clank’,s:‘PS2’,d:‘odin’},{n:‘Jak & Daxter’,s:‘PS2’,d:‘odin’},{n:‘ICO’,s:‘PS2’,d:‘odin’},{n:‘Eternal Darkness’,s:‘GCN’,d:‘odin’},{n:‘Tales of Symphonia’,s:‘GCN’,d:‘odin’},{n:‘Jet Set Radio’,s:‘DC’,d:‘odin’},{n:‘Crazy Taxi’,s:‘DC’,d:‘odin’},{n:‘Power Stone’,s:‘DC’,d:‘odin’},{n:‘MvC 2’,s:‘DC’,d:‘odin’},{n:‘MH Freedom Unite’,s:‘PSP’,d:‘odin’},{n:‘Persona 3 Portable’,s:‘PSP’,d:‘odin’},{n:‘GoW: Chains of Olympus’,s:‘PSP’,d:‘odin’}]}};
+
+function tierChip(g){var col=g.d===‘classic’?T:A;return ‘<div class="gc" data-device="'+g.d+'" style="background:#0a0a0a;border:1px solid #1a1a1a;padding:.35rem .65rem;border-radius:5px;font-size:.8rem;display:inline-flex;align-items:center;gap:.45rem;color:#d4d4d4;"><span style="width:6px;height:6px;border-radius:50%;background:'+col+';flex-shrink:0;"></span>’+g.n+’ <span style="font-family:\'SF Mono\',Consolas,monospace;font-size:.52rem;color:#444;text-transform:uppercase;">’+g.s+’</span></div>’;}
+function renderTier(id,t){document.getElementById(id).innerHTML=’<div style="font-family:\'SF Mono\',Consolas,monospace;font-weight:700;font-size:.75rem;padding:.35rem .7rem;border-radius:4px;display:inline-block;margin-bottom:.8rem;background:'+t.bg+';color:'+t.fc+';border:1px solid '+t.bc+';">’+t.label+’</div><div class="tg">’+t.games.map(tierChip).join(’’)+’</div>’;}
+renderTier(‘tier-s’,tiers.s);renderTier(‘tier-a’,tiers.a);renderTier(‘tier-b’,tiers.b);
+function filterG(d,btn){document.querySelectorAll(’.fb’).forEach(function(b){b.classList.remove(‘on’);b.style.borderColor=’#1a1a1a’;b.style.color=’#888’;b.style.background=’#0a0a0a’;});btn.classList.add(‘on’);btn.style.borderColor=T;btn.style.color=T;btn.style.background=‘rgba(45,212,168,.12)’;document.querySelectorAll(’.gc’).forEach(function(c){c.style.display=(d===‘all’||c.getAttribute(‘data-device’)===d)?‘inline-flex’:‘none’;});}
+
+function mpTag(g){return ‘<span style="font-size:.68rem;padding:.2rem .45rem;background:#050505;border:1px solid #1a1a1a;border-radius:4px;color:#666;font-family:\'SF Mono\',Consolas,monospace;">’+g+’</span>’;}
+var mp=[
+{t:‘Pass & Play’,h:‘One device, take turns’,d:‘Works with any turn-based or alternating game.’,g:[‘Worms (GBA)’,‘Advance Wars’,‘Tetris (vs)’,‘Dr. Mario’,‘Puyo Puyo’,‘NBA Jam’,‘Fire Emblem’,‘Puzzle Bobble’],bc:’#1a1a1a’,tc:’#d4d4d4’},
+{t:‘Co-Pilot RPGs’,h:‘One device, shared decisions’,d:‘Each person controls different party members.’,g:[‘Chrono Trigger’,‘FF VI’,‘Fire Emblem’,‘Pokemon’,‘Golden Sun’,‘FF Tactics Advance’],bc:’#1a1a1a’,tc:’#d4d4d4’},
+{t:‘Odin 3 + TV’,h:‘USB-C to TV, 2 Bluetooth controllers’,d:‘Dock the Odin 3 and pair two controllers for local multiplayer.’,g:[‘Smash Bros (N64)’,‘Mario Kart 64’,‘Bomberman’,‘Streets of Rage 2’,‘NBA Jam’,‘GoldenEye’,‘Street Fighter II’,‘Contra III’,‘Secret of Mana’,‘Smash Melee’,‘Power Stone 2’,‘Soul Calibur’],bc:’#a87420’,tc:’#f0a830’},
+{t:‘NetPlay’,h:‘Two handhelds, RetroArch WiFi’,d:‘Both devices need the same ROM, core, and RetroArch build. Takes some setup.’,g:[‘Contra’,‘Streets of Rage 2’,‘Bomberman’,‘Street Fighter II’,‘TMNT IV’],bc:’#1a1a1a’,tc:’#d4d4d4’}
+];
+document.getElementById(‘mp-grid’).innerHTML=mp.map(function(m){return ‘<div style="background:#0a0a0a;border:1px solid '+m.bc+';border-radius:10px;padding:1.5rem;"><div style="font-weight:700;color:'+m.tc+';margin-bottom:.2rem;">’+m.t+’</div><div style="font-size:.72rem;color:#444;font-family:\'SF Mono\',Consolas,monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem;">’+m.h+’</div><div style="font-size:.82rem;color:#666;margin-bottom:.6rem;">’+m.d+’</div><div style="display:flex;flex-wrap:wrap;gap:.3rem;">’+m.g.map(mpTag).join(’’)+’</div></div>’;}).join(’’);
+
+</script>
+</body>
+</html>
