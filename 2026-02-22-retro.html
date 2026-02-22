@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Devices. Every System. — Retro Gaming Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #000000;
+  --bg-card: #0a0a0a;
+  --bg-card-hover: #111111;
+  --border: #1a1a1a;
+  --border-light: #222;
+  --text: #e8e8e8;
+  --text-dim: #888;
+  --text-muted: #555;
+  --teal: #2dd4a8;
+  --teal-dim: #1a8a6e;
+  --teal-glow: rgba(45, 212, 168, 0.15);
+  --amber: #f0a830;
+  --amber-dim: #a87420;
+  --amber-glow: rgba(240, 168, 48, 0.15);
+  --purple: #a78bfa;
+  --purple-dim: #7c5cbf;
+  --red: #f87171;
+  --green: #4ade80;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'Outfit', sans-serif;
+}
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: var(–font-body);
+font-weight: 400;
+line-height: 1.6;
+-webkit-font-smoothing: antialiased;
+}
+
+::selection {
+background: var(–teal);
+color: var(–bg);
+}
+
+/* ===== NAV ===== */
+nav {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 100;
+background: rgba(0,0,0,0.85);
+backdrop-filter: blur(20px);
+border-bottom: 1px solid var(–border);
+padding: 0 2rem;
+height: 52px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.nav-logo {
+font-family: var(–font-mono);
+font-size: 0.8rem;
+font-weight: 700;
+color: var(–teal);
+letter-spacing: 0.05em;
+}
+
+.nav-links {
+display: flex;
+gap: 1.5rem;
+list-style: none;
+}
+
+.nav-links a {
+color: var(–text-dim);
+text-decoration: none;
+font-size: 0.75rem;
+font-weight: 500;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(–text); }
+
+/* ===== HERO ===== */
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 6rem 2rem 4rem;
+position: relative;
+overflow: hidden;
+}
+
+.hero::before {
+content: ‘’;
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 600px;
+height: 600px;
+background: radial-gradient(circle, var(–teal-glow) 0%, transparent 70%);
+pointer-events: none;
+}
+
+.hero-eyebrow {
+font-family: var(–font-mono);
+font-size: 0.7rem;
+text-transform: uppercase;
+letter-spacing: 0.3em;
+color: var(–teal);
+margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+font-size: clamp(2.5rem, 8vw, 5.5rem);
+font-weight: 900;
+line-height: 1.05;
+letter-spacing: -0.03em;
+margin-bottom: 1.5rem;
+}
+
+.hero h1 .accent-teal { color: var(–teal); }
+.hero h1 .accent-amber { color: var(–amber); }
+
+.hero-sub {
+font-size: 1.1rem;
+color: var(–text-dim);
+max-width: 520px;
+margin-bottom: 3rem;
+font-weight: 300;
+}
+
+.hero-devices {
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+gap: 2rem;
+align-items: center;
+max-width: 800px;
+width: 100%;
+}
+
+.device-card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 1.5rem;
+text-align: left;
+}
+
+.device-card.odin { border-color: var(–amber-dim); }
+.device-card.classic { border-color: var(–teal-dim); }
+
+.device-name {
+font-weight: 700;
+font-size: 1.1rem;
+margin-bottom: 0.25rem;
+}
+
+.device-card.odin .device-name { color: var(–amber); }
+.device-card.classic .device-name { color: var(–teal); }
+
+.device-role {
+font-size: 0.75rem;
+color: var(–text-dim);
+font-family: var(–font-mono);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-bottom: 0.75rem;
+}
+
+.device-specs {
+font-size: 0.8rem;
+color: var(–text-muted);
+line-height: 1.8;
+}
+
+.device-specs strong { color: var(–text-dim); }
+
+.hero-plus {
+font-size: 2rem;
+font-weight: 200;
+color: var(–text-muted);
+}
+
+/* ===== SECTIONS ===== */
+section {
+padding: 5rem 2rem;
+max-width: 1100px;
+margin: 0 auto;
+}
+
+.section-label {
+font-family: var(–font-mono);
+font-size: 0.65rem;
+text-transform: uppercase;
+letter-spacing: 0.3em;
+color: var(–text-muted);
+margin-bottom: 0.75rem;
+}
+
+section > h2 {
+font-size: 2rem;
+font-weight: 800;
+letter-spacing: -0.02em;
+margin-bottom: 0.5rem;
+}
+
+section > .section-desc {
+color: var(–text-dim);
+margin-bottom: 2.5rem;
+max-width: 600px;
+font-weight: 300;
+}
+
+/* ===== CONSOLE MAP ===== */
+.console-map {
+display: grid;
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+border-radius: 8px;
+overflow: hidden;
+}
+
+.console-row {
+display: grid;
+grid-template-columns: 140px 100px 1fr;
+background: var(–bg);
+cursor: pointer;
+transition: background 0.15s;
+}
+
+.console-row:hover { background: var(–bg-card-hover); }
+
+.console-row.header {
+background: var(–bg-card);
+cursor: default;
+}
+
+.console-row.header > div {
+font-family: var(–font-mono);
+font-size: 0.65rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: var(–text-muted);
+padding: 0.75rem 1rem;
+}
+
+.console-cell {
+padding: 0.75rem 1rem;
+font-size: 0.85rem;
+display: flex;
+align-items: center;
+}
+
+.console-name {
+font-weight: 600;
+}
+
+.device-badge {
+font-family: var(–font-mono);
+font-size: 0.65rem;
+font-weight: 700;
+padding: 0.2rem 0.5rem;
+border-radius: 4px;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+
+.badge-classic {
+background: var(–teal-glow);
+color: var(–teal);
+border: 1px solid var(–teal-dim);
+}
+
+.badge-odin {
+background: var(–amber-glow);
+color: var(–amber);
+border: 1px solid var(–amber-dim);
+}
+
+.console-why {
+color: var(–text-dim);
+font-size: 0.8rem;
+}
+
+/* ===== TIER LIST ===== */
+.tier-filters {
+display: flex;
+gap: 0.5rem;
+margin-bottom: 2rem;
+flex-wrap: wrap;
+}
+
+.filter-btn {
+background: var(–bg-card);
+border: 1px solid var(–border);
+color: var(–text-dim);
+font-family: var(–font-mono);
+font-size: 0.7rem;
+padding: 0.4rem 0.8rem;
+border-radius: 6px;
+cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+transition: all 0.15s;
+}
+
+.filter-btn:hover { border-color: var(–text-muted); color: var(–text); }
+.filter-btn.active { border-color: var(–teal); color: var(–teal); background: var(–teal-glow); }
+.filter-btn.active-amber { border-color: var(–amber); color: var(–amber); background: var(–amber-glow); }
+
+.tier-section { margin-bottom: 2.5rem; }
+
+.tier-label {
+font-family: var(–font-mono);
+font-weight: 700;
+font-size: 0.8rem;
+padding: 0.4rem 0.75rem;
+border-radius: 4px;
+display: inline-block;
+margin-bottom: 1rem;
+letter-spacing: 0.05em;
+}
+
+.tier-s { background: #fbbf2420; color: #fbbf24; border: 1px solid #fbbf2440; }
+.tier-a { background: #a78bfa20; color: #a78bfa; border: 1px solid #a78bfa40; }
+.tier-b { background: #60a5fa20; color: #60a5fa; border: 1px solid #60a5fa40; }
+
+.tier-games {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
+}
+
+.game-chip {
+background: var(–bg-card);
+border: 1px solid var(–border);
+padding: 0.4rem 0.7rem;
+border-radius: 6px;
+font-size: 0.8rem;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.15s;
+cursor: default;
+}
+
+.game-chip:hover { border-color: var(–border-light); background: var(–bg-card-hover); }
+
+.game-chip .system-tag {
+font-family: var(–font-mono);
+font-size: 0.55rem;
+color: var(–text-muted);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+
+.game-chip .device-dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+
+.dot-classic { background: var(–teal); }
+.dot-odin { background: var(–amber); }
+.dot-either { background: linear-gradient(135deg, var(–teal), var(–amber)); }
+
+/* ===== CATEGORIES ===== */
+.category-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+gap: 1.5rem;
+}
+
+.category-card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 1.5rem;
+transition: border-color 0.2s;
+}
+
+.category-card:hover { border-color: var(–border-light); }
+
+.cat-icon {
+font-size: 1.5rem;
+margin-bottom: 0.75rem;
+}
+
+.cat-title {
+font-weight: 700;
+font-size: 1.1rem;
+margin-bottom: 0.25rem;
+}
+
+.cat-desc {
+font-size: 0.8rem;
+color: var(–text-dim);
+margin-bottom: 1rem;
+line-height: 1.5;
+}
+
+.cat-games {
+display: flex;
+flex-wrap: wrap;
+gap: 0.35rem;
+}
+
+.cat-game {
+font-size: 0.7rem;
+padding: 0.25rem 0.5rem;
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: 4px;
+color: var(–text-dim);
+font-family: var(–font-mono);
+}
+
+.cat-device-note {
+margin-top: 1rem;
+padding-top: 0.75rem;
+border-top: 1px solid var(–border);
+font-size: 0.7rem;
+color: var(–text-muted);
+font-family: var(–font-mono);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+}
+
+.cat-device-note .teal { color: var(–teal); }
+.cat-device-note .amber { color: var(–amber); }
+
+/* ===== 2P SECTION ===== */
+.twop-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+gap: 1.5rem;
+}
+
+.twop-card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 1.5rem;
+}
+
+.twop-title {
+font-weight: 700;
+margin-bottom: 0.25rem;
+}
+
+.twop-how {
+font-size: 0.75rem;
+color: var(–text-muted);
+font-family: var(–font-mono);
+text-transform: uppercase;
+letter-spacing: 0.05em;
+margin-bottom: 0.75rem;
+}
+
+.twop-desc {
+font-size: 0.85rem;
+color: var(–text-dim);
+margin-bottom: 0.75rem;
+}
+
+.twop-games-list {
+display: flex;
+flex-wrap: wrap;
+gap: 0.35rem;
+}
+
+/* ===== QUICK REF ===== */
+.quick-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 2rem;
+}
+
+.quick-card {
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 2rem;
+}
+
+.quick-card.classic-card { border-color: var(–teal-dim); background: linear-gradient(135deg, rgba(45,212,168,0.03), transparent); }
+.quick-card.odin-card { border-color: var(–amber-dim); background: linear-gradient(135deg, rgba(240,168,48,0.03), transparent); }
+
+.quick-device {
+font-weight: 800;
+font-size: 1.2rem;
+margin-bottom: 0.25rem;
+}
+
+.quick-card.classic-card .quick-device { color: var(–teal); }
+.quick-card.odin-card .quick-device { color: var(–amber); }
+
+.quick-tagline {
+font-size: 0.75rem;
+color: var(–text-muted);
+font-family: var(–font-mono);
+text-transform: uppercase;
+letter-spacing: 0.08em;
+margin-bottom: 1.5rem;
+}
+
+.quick-list {
+list-style: none;
+counter-reset: quick;
+}
+
+.quick-list li {
+counter-increment: quick;
+padding: 0.6rem 0;
+border-bottom: 1px solid var(–border);
+display: flex;
+align-items: baseline;
+gap: 0.75rem;
+font-size: 0.9rem;
+}
+
+.quick-list li:last-child { border-bottom: none; }
+
+.quick-list li::before {
+content: counter(quick);
+font-family: var(–font-mono);
+font-size: 0.65rem;
+color: var(–text-muted);
+min-width: 1rem;
+}
+
+.quick-list .q-system {
+font-family: var(–font-mono);
+font-size: 0.6rem;
+color: var(–text-muted);
+text-transform: uppercase;
+}
+
+/* ===== FOOTER ===== */
+footer {
+text-align: center;
+padding: 3rem 2rem;
+font-size: 0.7rem;
+color: var(–text-muted);
+font-family: var(–font-mono);
+border-top: 1px solid var(–border);
+max-width: 1100px;
+margin: 0 auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+.hero-devices {
+grid-template-columns: 1fr;
+gap: 1rem;
+}
+.hero-plus { display: none; }
+.console-row {
+grid-template-columns: 110px 80px 1fr;
+}
+.quick-grid {
+grid-template-columns: 1fr;
+}
+.nav-links { display: none; }
+section { padding: 3rem 1.25rem; }
+.category-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(–bg); }
+::-webkit-scrollbar-thumb { background: var(–border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(–text-muted); }
+
+/* ===== DIVIDER ===== */
+.section-divider {
+height: 1px;
+background: var(–border);
+max-width: 1100px;
+margin: 0 auto;
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav>
+  <div class="nav-logo">▸ 2-DEVICE GUIDE</div>
+  <ul class="nav-links">
+    <li><a href="#map">Console Map</a></li>
+    <li><a href="#tiers">Tier List</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#2p">2 Player</a></li>
+    <li><a href="#start">Start Here</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+
+<header class="hero">
+  <h1>Retro Gaming Guide</h1>
+  <p class="hero-sub">What to play on the <span class="accent-amber">AYN Odin 3</span> and <span class="accent-teal">Retroid Pocket Classic</span></p>
+
+  <div class="hero-devices">
+    <div class="device-card odin">
+      <div class="device-name">AYN Odin 3</div>
+      <div class="device-role">The Powerhouse</div>
+      <div class="device-specs">
+        <strong>Screen:</strong> 6" AMOLED 16:9 120Hz<br>
+        <strong>Chip:</strong> Snapdragon 8 Elite<br>
+        <strong>Price:</strong> $329–519<br>
+        <strong>Plays:</strong> PSP, PS2, GCN, Wii, Switch, PS3<br>
+        <strong>Best for:</strong> 3D games, sticks, long sessions
+      </div>
+    </div>
+
+```
+<div class="hero-plus">+</div>
+
+<div class="device-card classic">
+  <div class="device-name">Retroid Pocket Classic</div>
+  <div class="device-role">The Soul</div>
+  <div class="device-specs">
+    <strong>Screen:</strong> 3.92" AMOLED 31:27<br>
+    <strong>Chip:</strong> Snapdragon G1 Gen 2<br>
+    <strong>Price:</strong> $119–129<br>
+    <strong>Plays:</strong> GB/C, NES, SNES, Genesis, PS1<br>
+    <strong>Best for:</strong> 2D sprites, d-pad, bed/pocket
+  </div>
+</div>
+```
+
+  </div>
+</header>
+
+<div class="section-divider"></div>
+
+<!-- CONSOLE MAP -->
+
+<section id="map">
+  <div class="section-label">01 — Console → Device</div>
+  <h2>Which device plays what</h2>
+  <p class="section-desc">Every system mapped to its ideal handheld. 3D polygon games scale cleanly to any ratio — sticks and power matter more than aspect ratio matching.</p>
+
+  <div class="console-map">
+    <div class="console-row header">
+      <div>Console</div>
+      <div>Device</div>
+      <div>Why</div>
+    </div>
+
+```
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">Game Boy / GBC</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">AMOLED makes pixel art pop, perfect form factor match</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">GBA</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">31:27 close enough to 3:2 — letterboxing invisible at handheld size</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">NES</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">D-pad games, gorgeous screen, simple controls</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">SNES</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">The device's sweet spot — peak 2D sprite era</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">Genesis</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">6-button Classic 6 layout matches the Genesis/Saturn pad</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">Saturn</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">Classic 6 is the community's "portable Saturn"</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">PS1 (2D/RPG)</span></div>
+  <div class="console-cell"><span class="device-badge badge-classic">Classic</span></div>
+  <div class="console-cell console-why">D-pad sufficient for RPGs and 2D. Save states = bedside bliss</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">PS1 (3D)</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">3D polygons scale cleanly to 16:9. Sticks matter more</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">N64</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">Analog stick required. Unusable on Classic</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">Dreamcast</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">Stick required. 3D scales cleanly to 16:9</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">PSP</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">Native 16:9 — fills the whole Odin screen</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">PS2</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">Needs power + sticks. Widescreen hacks make 16:9 ideal</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">GameCube</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">Dolphin widescreen hacks are mature. Looks better than native</div>
+</div>
+
+<div class="console-row">
+  <div class="console-cell"><span class="console-name">Wii</span></div>
+  <div class="console-cell"><span class="device-badge badge-odin">Odin 3</span></div>
+  <div class="console-cell console-why">Native 16:9, needs gyro + power</div>
+</div>
+```
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TIER LIST -->
+
+<section id="tiers">
+  <div class="section-label">02 — Tier List</div>
+  <h2>The canon</h2>
+  <p class="section-desc">Every game worth playing, ranked. <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);vertical-align:middle;margin:0 2px;"></span> = Classic &nbsp; <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);vertical-align:middle;margin:0 2px;"></span> = Odin 3</p>
+
+  <div class="tier-filters">
+    <button class="filter-btn active" onclick="filterGames('all', this)">All</button>
+    <button class="filter-btn" onclick="filterGames('classic', this)">Classic Only</button>
+    <button class="filter-btn" onclick="filterGames('odin', this)">Odin 3 Only</button>
+  </div>
+
+  <!-- S Tier -->
+
+  <div class="tier-section">
+    <div class="tier-label tier-s">S TIER — Play these if you play nothing else</div>
+    <div class="tier-games" id="tier-s">
+      <!-- Classic games -->
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Chrono Trigger <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>A Link to the Past <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Super Metroid <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Final Fantasy VI <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Super Mario World <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Castlevania: SotN <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Final Fantasy VII <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Pokémon Gold/Silver <span class="system-tag">GBC</span></div>
+      <!-- Odin games -->
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Metal Gear Solid <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Ocarina of Time <span class="system-tag">N64</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Metroid Prime <span class="system-tag">GCN</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Wind Waker <span class="system-tag">GCN</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Persona 4 <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Shadow of the Colossus <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Resident Evil 4 <span class="system-tag">GCN</span></div>
+    </div>
+  </div>
+
+  <!-- A Tier -->
+
+  <div class="tier-section">
+    <div class="tier-label tier-a">A TIER — Exceptional, strong cases for best-in-genre</div>
+    <div class="tier-games" id="tier-a">
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>EarthBound <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Mega Man X <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Final Fantasy IX <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Xenogears <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Suikoden II <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Vagrant Story <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Fire Emblem <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Metroid Fusion <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Advance Wars <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Castlevania: Aria of Sorrow <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Link's Awakening <span class="system-tag">GB</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Super Mario Bros 3 <span class="system-tag">NES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Mega Man 2 <span class="system-tag">NES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Sonic 3 & Knuckles <span class="system-tag">Genesis</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Streets of Rage 2 <span class="system-tag">Genesis</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Panzer Dragoon Saga <span class="system-tag">Saturn</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Pokémon Emerald <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>FFX <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Metal Gear Solid 3 <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Persona 3 <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Kingdom Hearts <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>God of War <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Devil May Cry 3 <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Majora's Mask <span class="system-tag">N64</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Paper Mario TTYD <span class="system-tag">GCN</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>F-Zero GX <span class="system-tag">GCN</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Soul Calibur <span class="system-tag">DC</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Shenmue <span class="system-tag">DC</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Crisis Core <span class="system-tag">PSP</span></div>
+    </div>
+  </div>
+
+  <!-- B Tier -->
+
+  <div class="tier-section">
+    <div class="tier-label tier-b">B TIER — Great games, beloved for good reason</div>
+    <div class="tier-games" id="tier-b">
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Golden Sun <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Minish Cap <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>FF Tactics Advance <span class="system-tag">GBA</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Chrono Cross <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Resident Evil 2 <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>FFVIII <span class="system-tag">PS1</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>DK Country <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Secret of Mana <span class="system-tag">SNES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Tetris <span class="system-tag">GB</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Pokémon Red/Blue <span class="system-tag">GB</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Gunstar Heroes <span class="system-tag">Genesis</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Phantasy Star IV <span class="system-tag">Genesis</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Castlevania Bloodlines <span class="system-tag">Genesis</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Shining Force II <span class="system-tag">Genesis</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Contra <span class="system-tag">NES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Castlevania <span class="system-tag">NES</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Radiant Silvergun <span class="system-tag">Saturn</span></div>
+      <div class="game-chip" data-device="classic"><div class="device-dot dot-classic"></div>Guardian Heroes <span class="system-tag">Saturn</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Mario 64 <span class="system-tag">N64</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Paper Mario <span class="system-tag">N64</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Star Fox 64 <span class="system-tag">N64</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Smash Bros <span class="system-tag">N64</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Okami <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Ratchet & Clank <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Jak & Daxter <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>ICO <span class="system-tag">PS2</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Eternal Darkness <span class="system-tag">GCN</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Tales of Symphonia <span class="system-tag">GCN</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Jet Set Radio <span class="system-tag">DC</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Crazy Taxi <span class="system-tag">DC</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Power Stone <span class="system-tag">DC</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>MvC 2 <span class="system-tag">DC</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>MH Freedom Unite <span class="system-tag">PSP</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>Persona 3 Portable <span class="system-tag">PSP</span></div>
+      <div class="game-chip" data-device="odin"><div class="device-dot dot-odin"></div>GoW: Chains of Olympus <span class="system-tag">PSP</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CATEGORIES -->
+
+<section id="categories">
+  <div class="section-label">03 — Game Categories</div>
+  <h2>How do you want to play?</h2>
+  <p class="section-desc">Different moods, different games. Find what fits.</p>
+
+  <div class="category-grid">
+
+```
+<!-- Pick Up & Play -->
+<div class="category-card">
+  <div class="cat-icon">⚡</div>
+  <div class="cat-title">Pick Up & Play</div>
+  <div class="cat-desc">5–15 minute sessions. Zero context needed. Jump in, play a level or run, put it down. Perfect for the Classic in your pocket.</div>
+  <div class="cat-games">
+    <span class="cat-game">Tetris</span>
+    <span class="cat-game">Mega Man 2</span>
+    <span class="cat-game">Mega Man X</span>
+    <span class="cat-game">Sonic 2</span>
+    <span class="cat-game">Sonic 3&K</span>
+    <span class="cat-game">Super Punch-Out</span>
+    <span class="cat-game">Puzzle Bobble</span>
+    <span class="cat-game">OutRun</span>
+    <span class="cat-game">Pac-Man CE</span>
+    <span class="cat-game">WarioWare</span>
+    <span class="cat-game">Columns</span>
+    <span class="cat-game">Galaga</span>
+    <span class="cat-game">R-Type</span>
+    <span class="cat-game">Gradius III</span>
+    <span class="cat-game">Puyo Puyo</span>
+    <span class="cat-game">Dr. Mario</span>
+    <span class="cat-game">Patapon</span>
+    <span class="cat-game">Lumines</span>
+    <span class="cat-game">Tony Hawk 2</span>
+    <span class="cat-game">Crazy Taxi</span>
+  </div>
+  <div class="cat-device-note"><span class="teal">● Classic</span> for arcade/2D — <span class="amber">● Odin</span> for Patapon, Lumines, Tony Hawk, Crazy Taxi</div>
+</div>
+
+<!-- Slow Burn Epics -->
+<div class="category-card">
+  <div class="cat-icon">📖</div>
+  <div class="cat-title">Slow Burn Epics</div>
+  <div class="cat-desc">30–80 hour RPGs. The reason to own a handheld for bedside gaming. Save state culture — play 20 minutes a night for months.</div>
+  <div class="cat-games">
+    <span class="cat-game">Chrono Trigger</span>
+    <span class="cat-game">FF VI</span>
+    <span class="cat-game">FF VII</span>
+    <span class="cat-game">FF IX</span>
+    <span class="cat-game">Xenogears</span>
+    <span class="cat-game">Suikoden II</span>
+    <span class="cat-game">Persona 3</span>
+    <span class="cat-game">Persona 4</span>
+    <span class="cat-game">EarthBound</span>
+    <span class="cat-game">Golden Sun</span>
+    <span class="cat-game">Fire Emblem</span>
+    <span class="cat-game">FFX</span>
+    <span class="cat-game">FF Tactics Advance</span>
+    <span class="cat-game">Pokémon Emerald</span>
+    <span class="cat-game">Vagrant Story</span>
+    <span class="cat-game">Kingdom Hearts</span>
+  </div>
+  <div class="cat-device-note"><span class="teal">● Classic</span> for SNES/PS1/GBA RPGs — <span class="amber">● Odin</span> for PS2/PSP RPGs</div>
+</div>
+
+<!-- Comfort Games -->
+<div class="category-card">
+  <div class="cat-icon">🌙</div>
+  <div class="cat-title">Comfort Games</div>
+  <div class="cat-desc">Low-stress, play-before-sleep, cozy vibes. No fail states, no pressure, just warmth.</div>
+  <div class="cat-games">
+    <span class="cat-game">Kirby Super Star</span>
+    <span class="cat-game">Yoshi's Island</span>
+    <span class="cat-game">Harvest Moon FoMT</span>
+    <span class="cat-game">Animal Crossing GCN</span>
+    <span class="cat-game">Katamari Damacy</span>
+    <span class="cat-game">LocoRoco</span>
+    <span class="cat-game">Kirby's Adventure</span>
+    <span class="cat-game">Pokémon Crystal</span>
+    <span class="cat-game">Mario & Luigi SS</span>
+    <span class="cat-game">Link's Awakening</span>
+    <span class="cat-game">Wario Land 3</span>
+    <span class="cat-game">Klonoa</span>
+  </div>
+  <div class="cat-device-note"><span class="teal">● Classic</span> for most — <span class="amber">● Odin</span> for Animal Crossing, Katamari, LocoRoco</div>
+</div>
+
+<!-- Challenge Runs -->
+<div class="category-card">
+  <div class="cat-icon">💀</div>
+  <div class="cat-title">Challenge Runs</div>
+  <div class="cat-desc">Skill-based mastery. "One more try." Flow-state inducing, controller-gripping, deeply rewarding.</div>
+  <div class="cat-games">
+    <span class="cat-game">Super Metroid</span>
+    <span class="cat-game">Mega Man X</span>
+    <span class="cat-game">Contra</span>
+    <span class="cat-game">Castlevania III</span>
+    <span class="cat-game">Ninja Gaiden</span>
+    <span class="cat-game">Ghosts 'n Goblins</span>
+    <span class="cat-game">F-Zero GX</span>
+    <span class="cat-game">Devil May Cry 3</span>
+    <span class="cat-game">God of War</span>
+    <span class="cat-game">Metroid Fusion</span>
+    <span class="cat-game">Metroid Zero Mission</span>
+    <span class="cat-game">Gunstar Heroes</span>
+    <span class="cat-game">Castlevania: SotN</span>
+    <span class="cat-game">R-Type III</span>
+  </div>
+  <div class="cat-device-note"><span class="teal">● Classic</span> for 2D action — <span class="amber">● Odin</span> for F-Zero, DMC3, GoW</div>
+</div>
+
+<!-- Hidden Gems -->
+<div class="category-card">
+  <div class="cat-icon">💎</div>
+  <div class="cat-title">Hidden Gems</div>
+  <div class="cat-desc">Lesser-known games worth discovering. The ones retro nerds gatekeep. Go in blind.</div>
+  <div class="cat-games">
+    <span class="cat-game">Vagrant Story</span>
+    <span class="cat-game">Guardian Heroes</span>
+    <span class="cat-game">Radiant Silvergun</span>
+    <span class="cat-game">Advance Wars</span>
+    <span class="cat-game">Drill Dozer</span>
+    <span class="cat-game">Astro Boy: Omega Factor</span>
+    <span class="cat-game">Mischief Makers</span>
+    <span class="cat-game">Tomba!</span>
+    <span class="cat-game">Panzer Dragoon Saga</span>
+    <span class="cat-game">Dragon Force</span>
+    <span class="cat-game">Skies of Arcadia</span>
+    <span class="cat-game">Wario Land 4</span>
+    <span class="cat-game">Ninja Five-O</span>
+    <span class="cat-game">Shining Force II</span>
+    <span class="cat-game">Power Stone 2</span>
+  </div>
+  <div class="cat-device-note"><span class="teal">● Classic</span> for GBA/Saturn/Genesis gems — <span class="amber">● Odin</span> for DC/N64 gems</div>
+</div>
+
+<!-- First Timers -->
+<div class="category-card">
+  <div class="cat-icon">🗺️</div>
+  <div class="cat-title">New to Retro?</div>
+  <div class="cat-desc">Never played retro games? These hold up best for modern sensibilities. No nostalgia required — they're just great games.</div>
+  <div class="cat-games">
+    <span class="cat-game">Chrono Trigger</span>
+    <span class="cat-game">A Link to the Past</span>
+    <span class="cat-game">Castlevania: SotN</span>
+    <span class="cat-game">Super Mario World</span>
+    <span class="cat-game">Metroid Fusion</span>
+    <span class="cat-game">Advance Wars</span>
+    <span class="cat-game">Persona 4</span>
+    <span class="cat-game">Resident Evil 4</span>
+    <span class="cat-game">Metroid Prime</span>
+    <span class="cat-game">Fire Emblem</span>
+  </div>
+  <div class="cat-device-note">Start with <span class="teal">Chrono Trigger on Classic</span> or <span class="amber">Persona 4 on Odin</span></div>
+</div>
+```
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- 2P SECTION -->
+
+<section id="2p">
+  <div class="section-label">04 — Multiplayer</div>
+  <h2>Two-player options</h2>
+  <p class="section-desc">Ways to play with someone else, from sharing one handheld to docking the Odin 3 to a TV.</p>
+
+  <div class="twop-grid">
+
+```
+<div class="twop-card">
+  <div class="twop-title">Pass & Play</div>
+  <div class="twop-how">One device, take turns</div>
+  <div class="twop-desc">Hand the device back and forth. Works best with turn-based or alternating games. The Classic is perfect for this.</div>
+  <div class="twop-games-list">
+    <span class="cat-game">Worms (GBA)</span>
+    <span class="cat-game">Advance Wars</span>
+    <span class="cat-game">Tetris (vs mode)</span>
+    <span class="cat-game">Dr. Mario</span>
+    <span class="cat-game">Puyo Puyo</span>
+    <span class="cat-game">NBA Jam</span>
+    <span class="cat-game">Fire Emblem</span>
+    <span class="cat-game">Puzzle Bobble</span>
+  </div>
+</div>
+
+<div class="twop-card">
+  <div class="twop-title">Co-Pilot RPGs</div>
+  <div class="twop-how">One device, shared decisions</div>
+  <div class="twop-desc">Not official 2P — but RPGs with party management become social when each person "owns" characters. Build, strategize, debate together.</div>
+  <div class="twop-games-list">
+    <span class="cat-game">Chrono Trigger</span>
+    <span class="cat-game">FF VI</span>
+    <span class="cat-game">Fire Emblem</span>
+    <span class="cat-game">Pokémon</span>
+    <span class="cat-game">Golden Sun</span>
+    <span class="cat-game">FF Tactics Advance</span>
+  </div>
+</div>
+
+<div class="twop-card">
+  <div class="twop-title">Shared Controls</div>
+  <div class="twop-how">Odin 3, two people, one device</div>
+  <div class="twop-desc">Split the Odin's controls — one person on d-pad + L, the other on face buttons + R. Only works for simple 2-button games.</div>
+  <div class="twop-games-list">
+    <span class="cat-game">Ice Climber (NES)</span>
+    <span class="cat-game">Balloon Fight (NES)</span>
+    <span class="cat-game">Mario Bros (NES)</span>
+    <span class="cat-game">Double Dragon</span>
+  </div>
+</div>
+
+<div class="twop-card" style="border-color: var(--amber-dim);">
+  <div class="twop-title" style="color:var(--amber);">Odin 3 + TV Night</div>
+  <div class="twop-how">Dock to TV via USB-C, pair 2 BT controllers</div>
+  <div class="twop-desc">The best multiplayer option. Turns the Odin 3 into a proper retro console. Suddenly the entire co-op/vs library opens up.</div>
+  <div class="twop-games-list">
+    <span class="cat-game">Smash Bros (N64)</span>
+    <span class="cat-game">Mario Kart 64</span>
+    <span class="cat-game">Bomberman</span>
+    <span class="cat-game">Streets of Rage 2</span>
+    <span class="cat-game">NBA Jam</span>
+    <span class="cat-game">GoldenEye</span>
+    <span class="cat-game">Street Fighter II</span>
+    <span class="cat-game">Contra III</span>
+    <span class="cat-game">Gunstar Heroes</span>
+    <span class="cat-game">Secret of Mana</span>
+    <span class="cat-game">Mario Kart DD</span>
+    <span class="cat-game">Smash Bros Melee</span>
+    <span class="cat-game">Power Stone 2</span>
+    <span class="cat-game">Soul Calibur</span>
+  </div>
+</div>
+
+<div class="twop-card">
+  <div class="twop-title">NetPlay (Two Handhelds)</div>
+  <div class="twop-how">Odin 3 ↔ Classic via RetroArch over WiFi</div>
+  <div class="twop-desc">Each person gets their own device and screen. Works for 8/16-bit games. Setup is fiddly — same ROM, same core version, same RetroArch build. Desyncs happen. Fun as a novelty, not a daily driver.</div>
+  <div class="twop-games-list">
+    <span class="cat-game">Contra</span>
+    <span class="cat-game">Streets of Rage 2</span>
+    <span class="cat-game">Bomberman</span>
+    <span class="cat-game">Street Fighter II</span>
+    <span class="cat-game">TMNT IV</span>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- QUICK REFERENCE -->
+
+<section id="start">
+  <div class="section-label">05 — Start Here</div>
+  <h2>First 5 games on each device</h2>
+  <p class="section-desc">Just got your devices? Load these first. One from each category to get the full range of what each device does best.</p>
+
+  <div class="quick-grid">
+    <div class="quick-card classic-card">
+      <div class="quick-device">Retroid Pocket Classic</div>
+      <div class="quick-tagline">D-pad · 2D · Bed · Pocket</div>
+      <ul class="quick-list">
+        <li><strong>Chrono Trigger</strong> <span class="q-system">SNES — Slow Burn Epic</span></li>
+        <li><strong>Super Metroid</strong> <span class="q-system">SNES — Challenge Run</span></li>
+        <li><strong>Castlevania: SotN</strong> <span class="q-system">PS1 — Hidden Gem feel, S-Tier game</span></li>
+        <li><strong>Mega Man X</strong> <span class="q-system">SNES — Pick Up & Play</span></li>
+        <li><strong>Pokémon Crystal</strong> <span class="q-system">GBC — Comfort Game</span></li>
+      </ul>
+    </div>
+
+```
+<div class="quick-card odin-card">
+  <div class="quick-device">AYN Odin 3</div>
+  <div class="quick-tagline">Sticks · 3D · Power · Sessions</div>
+  <ul class="quick-list">
+    <li><strong>Persona 4</strong> <span class="q-system">PS2 — Slow Burn Epic</span></li>
+    <li><strong>Metroid Prime</strong> <span class="q-system">GCN — Masterpiece, needs sticks</span></li>
+    <li><strong>Wind Waker</strong> <span class="q-system">GCN — Widescreen hack, gorgeous</span></li>
+    <li><strong>Crisis Core</strong> <span class="q-system">PSP — Native 16:9, fills the screen</span></li>
+    <li><strong>Crazy Taxi</strong> <span class="q-system">DC — Pick Up & Play</span></li>
+  </ul>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <p>Built from a conversation with Claude · February 2026</p>
+  <p style="margin-top: 0.5rem;">AYN Odin 3 ($329) + Retroid Pocket Classic ($129) = $458 · Two devices · Every system</p>
+</footer>
+
+<script>
+function filterGames(device, btn) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Filter game chips
+  document.querySelectorAll('.game-chip').forEach(chip => {
+    const chipDevice = chip.dataset.device;
+    if (device === 'all') {
+      chip.style.display = 'inline-flex';
+    } else if (chipDevice === device) {
+      chip.style.display = 'inline-flex';
+    } else {
+      chip.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
