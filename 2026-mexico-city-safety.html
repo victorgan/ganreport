@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CDMX Travel Risk Matrix — March 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0a0c10;
@@ -24,6 +23,9 @@
     --red: #ef4444;
     --red-dim: #dc262633;
     --cyan: #06b6d4;
+    --mono: 'SF Mono', 'Cascadia Code', 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    --display: Georgia, 'Times New Roman', 'Palatino Linotype', serif;
   }
 
 - { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +33,7 @@
 body {
 background: var(–bg);
 color: var(–text);
-font-family: ‘DM Mono’, monospace;
+font-family: var(–mono);
 font-size: 13px;
 line-height: 1.55;
 -webkit-font-smoothing: antialiased;
@@ -43,7 +45,6 @@ margin: 0 auto;
 padding: 32px 24px;
 }
 
-/* ── HEADER ── */
 header {
 display: flex;
 justify-content: space-between;
@@ -56,7 +57,7 @@ gap: 16px;
 }
 
 .header-left h1 {
-font-family: ‘Instrument Serif’, serif;
+font-family: var(–display);
 font-size: 42px;
 font-weight: 400;
 letter-spacing: -1.5px;
@@ -96,7 +97,7 @@ border-radius: 6px;
 font-size: 14px;
 font-weight: 600;
 color: var(–green);
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 }
 
 .verdict-badge .dot {
@@ -117,7 +118,6 @@ color: var(–text-dim);
 letter-spacing: 0.5px;
 }
 
-/* ── ALERT BANNER ── */
 .alert-banner {
 background: linear-gradient(135deg, #f9731610, #ef444410);
 border: 1px solid #f9731633;
@@ -129,11 +129,7 @@ align-items: flex-start;
 gap: 12px;
 }
 
-.alert-banner .alert-icon {
-font-size: 18px;
-flex-shrink: 0;
-margin-top: 1px;
-}
+.alert-banner .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
 
 .alert-banner .alert-text {
 font-size: 12px;
@@ -141,11 +137,8 @@ color: var(–orange);
 line-height: 1.5;
 }
 
-.alert-banner .alert-text strong {
-color: var(–red);
-}
+.alert-banner .alert-text strong { color: var(–red); }
 
-/* ── GRID LAYOUT ── */
 .grid {
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;
@@ -155,7 +148,6 @@ gap: 16px;
 .grid-full { grid-column: 1 / -1; }
 .grid-2 { grid-column: span 2; }
 
-/* ── CARDS ── */
 .card {
 background: var(–surface);
 border: 1px solid var(–border);
@@ -173,7 +165,7 @@ border-bottom: 1px solid var(–border);
 }
 
 .card-title {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-size: 13px;
 font-weight: 600;
 text-transform: uppercase;
@@ -190,14 +182,10 @@ text-transform: uppercase;
 letter-spacing: 0.5px;
 }
 
-/* ── RISK MATRIX TABLE ── */
-.risk-table {
-width: 100%;
-border-collapse: collapse;
-}
+.risk-table { width: 100%; border-collapse: collapse; }
 
 .risk-table th {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-size: 10px;
 text-transform: uppercase;
 letter-spacing: 1px;
@@ -218,36 +206,17 @@ font-size: 12px;
 .risk-table tr:last-child td { border-bottom: none; }
 
 .risk-event {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-weight: 600;
 font-size: 12.5px;
 color: var(–text);
 }
 
-.risk-sub {
-color: var(–text-dim);
-font-size: 11px;
-margin-top: 2px;
-}
+.risk-sub { color: var(–text-dim); font-size: 11px; margin-top: 2px; }
 
-.prob-bar {
-display: flex;
-align-items: center;
-gap: 8px;
-}
-
-.prob-fill {
-height: 6px;
-border-radius: 3px;
-min-width: 8px;
-}
-
-.prob-label {
-font-family: ‘Space Grotesk’, sans-serif;
-font-weight: 700;
-font-size: 13px;
-min-width: 42px;
-}
+.prob-bar { display: flex; align-items: center; gap: 8px; }
+.prob-fill { height: 6px; border-radius: 3px; min-width: 8px; }
+.prob-label { font-family: var(–sans); font-weight: 700; font-size: 13px; min-width: 42px; }
 
 .severity-tag {
 display: inline-block;
@@ -264,27 +233,14 @@ letter-spacing: 0.5px;
 .s-high { background: var(–orange-dim); color: var(–orange); }
 .s-crit { background: var(–red-dim); color: var(–red); }
 
-.mitigation {
-font-size: 11px;
-color: var(–text-dim);
-line-height: 1.5;
-}
+.mitigation { font-size: 11px; color: var(–text-dim); line-height: 1.5; }
+.mitigation strong { color: var(–cyan); font-weight: 500; }
 
-.mitigation strong {
-color: var(–cyan);
-font-weight: 500;
-}
+.mitigate-yes { color: var(–green); font-size: 11px; }
+.mitigate-accept { color: var(–yellow); font-size: 11px; }
+.mitigate-monitor { color: var(–orange); font-size: 11px; }
 
-.mitigate-yes { color: var(–green); }
-.mitigate-accept { color: var(–yellow); }
-.mitigate-monitor { color: var(–orange); }
-
-/* ── POLANCO SECTION ── */
-.polanco-stats {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 10px;
-}
+.polanco-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
 .stat-box {
 background: var(–surface-2);
@@ -294,7 +250,7 @@ text-align: center;
 }
 
 .stat-box .stat-value {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-size: 22px;
 font-weight: 700;
 color: var(–text);
@@ -316,12 +272,7 @@ margin-top: 4px;
 font-style: italic;
 }
 
-/* ── DECISION FRAMEWORK ── */
-.decision-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 12px;
-}
+.decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 .decision-box {
 background: var(–surface-2);
@@ -336,7 +287,7 @@ border-left: 3px solid;
 .decision-box.prep { border-color: var(–cyan); }
 
 .decision-box h4 {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-size: 12px;
 font-weight: 600;
 margin-bottom: 6px;
@@ -349,26 +300,16 @@ letter-spacing: 0.5px;
 .decision-box.avoid h4 { color: var(–red); }
 .decision-box.prep h4 { color: var(–cyan); }
 
-.decision-box p {
-font-size: 11.5px;
-color: var(–text-dim);
-line-height: 1.5;
-}
+.decision-box p { font-size: 11.5px; color: var(–text-dim); line-height: 1.5; }
 
-/* ── COMPARISON BAR ── */
-.compare-row {
-display: flex;
-align-items: center;
-gap: 10px;
-margin-bottom: 8px;
-}
+.compare-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 
 .compare-label {
 font-size: 11px;
 color: var(–text-dim);
 min-width: 100px;
 text-align: right;
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 }
 
 .compare-bar-track {
@@ -377,24 +318,18 @@ height: 10px;
 background: var(–surface-2);
 border-radius: 5px;
 overflow: hidden;
-position: relative;
 }
 
-.compare-bar-fill {
-height: 100%;
-border-radius: 5px;
-transition: width 0.6s ease;
-}
+.compare-bar-fill { height: 100%; border-radius: 5px; }
 
 .compare-value {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-size: 11px;
 font-weight: 600;
 min-width: 50px;
 color: var(–text);
 }
 
-/* ── TIMELINE ── */
 .timeline-item {
 display: flex;
 gap: 12px;
@@ -406,7 +341,7 @@ border-bottom: 1px solid #ffffff06;
 .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
 
 .timeline-date {
-font-family: ‘Space Grotesk’, sans-serif;
+font-family: var(–sans);
 font-size: 10px;
 color: var(–text-dim);
 min-width: 56px;
@@ -414,18 +349,9 @@ text-transform: uppercase;
 padding-top: 1px;
 }
 
-.timeline-content {
-font-size: 12px;
-line-height: 1.5;
-color: var(–text);
-}
+.timeline-content { font-size: 12px; line-height: 1.5; color: var(–text); }
+.timeline-content .highlight { color: var(–orange); font-weight: 500; }
 
-.timeline-content .highlight {
-color: var(–orange);
-font-weight: 500;
-}
-
-/* ── CHECKLIST ── */
 .checklist-item {
 display: flex;
 gap: 8px;
@@ -450,7 +376,6 @@ margin-top: 1px;
 .check-do { background: var(–green-dim); color: var(–green); }
 .check-dont { background: var(–red-dim); color: var(–red); }
 
-/* ── BOTTOM LINE ── */
 .bottom-line {
 background: linear-gradient(135deg, #3b82f610, #06b6d410);
 border: 1px solid #3b82f633;
@@ -461,7 +386,7 @@ text-align: center;
 }
 
 .bottom-line h3 {
-font-family: ‘Instrument Serif’, serif;
+font-family: var(–display);
 font-size: 24px;
 font-weight: 400;
 color: var(–text);
@@ -485,7 +410,6 @@ letter-spacing: 0.5px;
 text-transform: uppercase;
 }
 
-/* ── RESPONSIVENESS ── */
 @media (max-width: 960px) {
 .grid { grid-template-columns: 1fr; }
 .grid-2 { grid-column: span 1; }
@@ -499,35 +423,29 @@ text-transform: uppercase;
 <body>
 <div class="container">
 
-  <!-- ═══ HEADER ═══ -->
-
   <header>
     <div class="header-left">
       <h1>CDMX <em>Risk Matrix</em></h1>
-      <div class="subtitle">Travel Intelligence Brief — Polanco Focus — March 2026</div>
+      <div class="subtitle">Travel Intelligence Brief &#8212; Polanco Focus &#8212; March 2026</div>
     </div>
     <div class="header-right">
-      <div class="verdict-badge"><span class="dot"></span> GO — with preparation</div>
-      <div class="advisory-tag">U.S. State Dept: Level 2 · Exercise Increased Caution</div>
+      <div class="verdict-badge"><span class="dot"></span> GO &#8212; with preparation</div>
+      <div class="advisory-tag">U.S. State Dept: Level 2 &#183; Exercise Increased Caution</div>
       <div class="advisory-tag">Ranked 34th / 39 safest cities for US travelers (BH Travel)</div>
     </div>
   </header>
 
-  <!-- ═══ ALERT BANNER ═══ -->
-
   <div class="alert-banner">
-    <span class="alert-icon">⚠</span>
+    <span class="alert-icon">&#9888;</span>
     <div class="alert-text">
-      <strong>ACTIVE SITUATION — Feb 22, 2026:</strong> CJNG leader "El Mencho" killed in Jalisco military op. Retaliatory violence erupted in 20+ states — mainly Jalisco, Guadalajara, Puerto Vallarta. CDMX flights continued normally. Mexico City was not a target zone. Situation stabilizing but a CJNG power vacuum creates elevated uncertainty for 3–6 months. Monitor weekly.
+      <strong>ACTIVE SITUATION &#8212; Feb 22, 2026:</strong> CJNG leader "El Mencho" killed in Jalisco military op. Retaliatory violence erupted in 20+ states &#8212; mainly Jalisco, Guadalajara, Puerto Vallarta. CDMX flights continued normally. Mexico City was not a target zone. Situation stabilizing but a CJNG power vacuum creates elevated uncertainty for 3&#8211;6 months. Monitor weekly.
     </div>
   </div>
-
-  <!-- ═══ MAIN RISK MATRIX ═══ -->
 
   <div class="grid">
     <div class="card grid-full">
       <div class="card-header">
-        <span class="card-title">Event Probability × Impact Matrix — 1 Week in Polanco, March 2026</span>
+        <span class="card-title">Event Probability x Impact Matrix &#8212; 1 Week in Polanco, March 2026</span>
         <span class="card-badge" style="background: var(--green-dim); color: var(--green);">Your specific scenario</span>
       </div>
       <table class="risk-table">
@@ -554,8 +472,8 @@ text-transform: uppercase;
               </div>
             </td>
             <td><span class="severity-tag s-low">Low</span></td>
-            <td class="mitigation">Lose phone or wallet. $200–$800 replacement cost. Temporary loss of navigation/comms. No physical harm.</td>
-            <td><span class="mitigate-yes">✓ YES — easy</span></td>
+            <td class="mitigation">Lose phone or wallet. $200-$800 replacement cost. Temporary loss of navigation/comms. No physical harm.</td>
+            <td><span class="mitigate-yes">&#10003; YES &#8212; easy</span></td>
             <td class="mitigation"><strong>Crossbody bag</strong>, don't walk with phone out, use Apple Watch for maps, indoor ATMs only.</td>
           </tr>
           <tr>
@@ -570,9 +488,9 @@ text-transform: uppercase;
               </div>
             </td>
             <td><span class="severity-tag s-med">Med</span></td>
-            <td class="mitigation">1–3 days of discomfort. Lose trip days. Unlikely to be serious if you hydrate. Rarely requires hospital.</td>
-            <td><span class="mitigate-yes">✓ YES — easy</span></td>
-            <td class="mitigation"><strong>Bottled water only</strong>. Avoid raw produce at market stalls. Eat at busy taquerías (high turnover = fresh). Carry Imodium + electrolytes.</td>
+            <td class="mitigation">1-3 days of discomfort. Lose trip days. Unlikely to be serious if you hydrate. Rarely requires hospital.</td>
+            <td><span class="mitigate-yes">&#10003; YES &#8212; easy</span></td>
+            <td class="mitigation"><strong>Bottled water only</strong>. Avoid raw produce at market stalls. Eat at busy taquerias (high turnover = fresh). Carry Imodium + electrolytes.</td>
           </tr>
           <tr>
             <td>
@@ -586,8 +504,8 @@ text-transform: uppercase;
               </div>
             </td>
             <td><span class="severity-tag s-low">Low</span></td>
-            <td class="mitigation">Lose $10–50. Possible unsafe route. Very rarely escalates beyond financial loss in Polanco.</td>
-            <td><span class="mitigate-yes">✓ YES — easy</span></td>
+            <td class="mitigation">Lose $10-50. Possible unsafe route. Very rarely escalates beyond financial loss in Polanco.</td>
+            <td><span class="mitigate-yes">&#10003; YES &#8212; easy</span></td>
             <td class="mitigation"><strong>Uber/DiDi only</strong>. Verify plate + driver photo. Never hail street taxis. Share trip with contact.</td>
           </tr>
           <tr>
@@ -601,8 +519,8 @@ text-transform: uppercase;
                 <span class="prob-label" style="color: var(--cyan);">~3%</span>
               </div>
             </td>
-            <td><span class="severity-tag s-med">Med→High</span></td>
-            <td class="mitigation">Likely just alarming if M5–6. M7+ (very rare): building damage, ~60s early warning system. Polanco is on firmer ground (transition zone), not soft lakebed — lower amplification risk.</td>
+            <td><span class="severity-tag s-med">Med&#8594;High</span></td>
+            <td class="mitigation">Likely just alarming if M5-6. M7+ (very rare): building damage, ~60s early warning system. Polanco is on firmer ground (transition zone), not soft lakebed &#8212; lower amplification risk.</td>
             <td><span class="mitigate-accept">~ ACCEPT</span></td>
             <td class="mitigation"><strong>Know exit routes</strong>. Download SASSLA (seismic alert app). Stay in post-1985 code buildings. Polanco's geology is favorable.</td>
           </tr>
@@ -618,8 +536,8 @@ text-transform: uppercase;
               </div>
             </td>
             <td><span class="severity-tag s-med">Med</span></td>
-            <td class="mitigation">Flight cancellations/delays. Shelter-in-place for hours. CDMX was NOT targeted Feb 22 — violence concentrated in Jalisco/Pacific coast. Tourists are "bad for business" for cartels.</td>
-            <td><span class="mitigate-monitor">◉ MONITOR</span></td>
+            <td class="mitigation">Flight cancellations/delays. Shelter-in-place for hours. CDMX was NOT targeted Feb 22 &#8212; violence concentrated in Jalisco/Pacific coast. Tourists are "bad for business" for cartels.</td>
+            <td><span class="mitigate-monitor">&#9673; MONITOR</span></td>
             <td class="mitigation"><strong>Enroll in STEP</strong> (Smart Traveler). Buy flexible tickets. Travel insurance with evacuation. Check news 48h before departure.</td>
           </tr>
           <tr>
@@ -634,8 +552,8 @@ text-transform: uppercase;
               </div>
             </td>
             <td><span class="severity-tag s-high">High</span></td>
-            <td class="mitigation">Physical harm risk. Financial loss $100–$2000. Express kidnapping: forced ATM withdrawals. Extremely rare in Polanco — mainly affects Tepito, Doctores, Iztapalapa.</td>
-            <td><span class="mitigate-yes">✓ YES</span></td>
+            <td class="mitigation">Physical harm risk. Financial loss $100-$2000. Express kidnapping: forced ATM withdrawals. Extremely rare in Polanco &#8212; mainly affects Tepito, Doctores, Iztapalapa.</td>
+            <td><span class="mitigate-yes">&#10003; YES</span></td>
             <td class="mitigation"><strong>Stay in Polanco/Roma/Condesa</strong>. No flashy jewelry. Uber after dark. Never resist if confronted. Carry a "decoy wallet" with small bills.</td>
           </tr>
           <tr>
@@ -666,8 +584,8 @@ text-transform: uppercase;
               </div>
             </td>
             <td><span class="severity-tag s-crit">Crit</span></td>
-            <td class="mitigation">Life-threatening. Extended captivity. Ransom demands. Virtually unheard of for tourists in Polanco — targets are typically business figures or cartel-adjacent individuals.</td>
-            <td><span class="mitigate-yes">✓ YES</span></td>
+            <td class="mitigation">Life-threatening. Extended captivity. Ransom demands. Virtually unheard of for tourists in Polanco &#8212; targets are typically business figures or cartel-adjacent individuals.</td>
+            <td><span class="mitigate-yes">&#10003; YES</span></td>
             <td class="mitigation"><strong>Don't display wealth</strong>. Don't discuss finances with strangers. Low profile. This risk is essentially zero for a prepared tourist in Polanco.</td>
           </tr>
         </tbody>
@@ -675,51 +593,45 @@ text-transform: uppercase;
     </div>
   </div>
 
-  <!-- ═══ SECOND ROW: POLANCO + CONTEXT + COMPARISON ═══ -->
-
   <div class="grid" style="margin-top: 16px;">
+    <div class="card grid-2">
+      <div class="card-header">
+        <span class="card-title">Polanco &#8212; Neighborhood Profile</span>
+        <span class="card-badge" style="background: var(--green-dim); color: var(--green);">Safest tier</span>
+      </div>
+      <div class="polanco-stats">
+        <div class="stat-box">
+          <div class="stat-value" style="color: var(--green);">Top 3</div>
+          <div class="stat-label">Safest CDMX Barrio</div>
+          <div class="stat-context">w/ Condesa, Lomas</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">24/7</div>
+          <div class="stat-label">Police Patrols</div>
+          <div class="stat-context">Private + public security</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">~2.1</div>
+          <div class="stat-label">Homicide / 100k</div>
+          <div class="stat-context">vs 7.9 CDMX avg</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" style="color: var(--cyan);">Firm</div>
+          <div class="stat-label">Subsoil Type</div>
+          <div class="stat-context">Transition zone, not lakebed</div>
+        </div>
+      </div>
+      <div style="margin-top: 14px; font-size: 12px; color: var(--text-dim); line-height: 1.6;">
+        Often called the "Beverly Hills of Mexico City." Avenida Presidente Masaryk hosts Gucci, Chanel, Louis Vuitton. Museo Soumaya, Chapultepec Park (2x Central Park), Lincoln Park all walkable. Heavy private security presence from luxury retail + embassies + corporate offices. Nighttime feels safe due to well-lit streets, restaurant traffic, and continuous foot patrols. The primary risk is petty theft from moto-ladrones (motorbike phone snatchers) on peripheral streets &#8212; not in the core commercial zone.
+      </div>
+    </div>
 
 ```
-<!-- POLANCO DEEP DIVE -->
-<div class="card grid-2">
-  <div class="card-header">
-    <span class="card-title">Polanco — Neighborhood Profile</span>
-    <span class="card-badge" style="background: var(--green-dim); color: var(--green);">Safest tier</span>
-  </div>
-  <div class="polanco-stats">
-    <div class="stat-box">
-      <div class="stat-value" style="color: var(--green);">Top 3</div>
-      <div class="stat-label">Safest CDMX Barrio</div>
-      <div class="stat-context">w/ Condesa, Lomas</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value">24/7</div>
-      <div class="stat-label">Police Patrols</div>
-      <div class="stat-context">Private + public security</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value">~2.1</div>
-      <div class="stat-label">Homicide / 100k</div>
-      <div class="stat-context">vs 7.9 CDMX avg</div>
-    </div>
-    <div class="stat-box">
-      <div class="stat-value" style="color: var(--cyan);">Firm</div>
-      <div class="stat-label">Subsoil Type</div>
-      <div class="stat-context">Transition zone, not lakebed</div>
-    </div>
-  </div>
-  <div style="margin-top: 14px; font-size: 12px; color: var(--text-dim); line-height: 1.6;">
-    Often called the "Beverly Hills of Mexico City." Avenida Presidente Masaryk hosts Gucci, Chanel, Louis Vuitton. Museo Soumaya, Chapultepec Park (2× Central Park), Lincoln Park all walkable. Heavy private security presence from luxury retail + embassies + corporate offices. Nighttime feels safe due to well-lit streets, restaurant traffic, and continuous foot patrols. The primary risk is petty theft from moto-ladrones (motorbike phone snatchers) on peripheral streets — not in the core commercial zone.
-  </div>
-</div>
-
-<!-- HOMICIDE RATE COMPARISON -->
 <div class="card">
   <div class="card-header">
     <span class="card-title">Homicide Rate Context</span>
     <span class="card-badge" style="background: var(--surface-2); color: var(--text-dim);">Per 100k / yr</span>
   </div>
-
   <div class="compare-row">
     <span class="compare-label">Polanco</span>
     <div class="compare-bar-track"><div class="compare-bar-fill" style="width:7%; background: var(--green);"></div></div>
@@ -755,101 +667,87 @@ text-transform: uppercase;
     <div class="compare-bar-track"><div class="compare-bar-fill" style="width:100%; background: var(--red);"></div></div>
     <span class="compare-value" style="color: var(--red);">~70</span>
   </div>
-
   <div style="margin-top: 12px; font-size: 11px; color: var(--text-dim); line-height: 1.5;">
-    Key insight: CDMX ≠ Mexico. Polanco's rate is comparable to wealthy US neighborhoods. The hyper-local nature of safety in CDMX cannot be overstated — your neighborhood choice determines ~80% of your risk profile.
+    Key insight: CDMX does not equal Mexico. Polanco's rate is comparable to wealthy US neighborhoods. The hyper-local nature of safety in CDMX cannot be overstated &#8212; your neighborhood choice determines ~80% of your risk profile.
   </div>
 </div>
 ```
 
   </div>
-
-  <!-- ═══ THIRD ROW: TIMELINE + DO/DON'T + DECISION ═══ -->
 
   <div class="grid" style="margin-top: 16px;">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Situation Timeline</span>
+        <span class="card-badge" style="background: var(--orange-dim); color: var(--orange);">Evolving</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">Feb 22</span>
+        <div class="timeline-content">Mexican military <span class="highlight">kills El Mencho</span> in Tapalpa, Jalisco. CJNG retaliates with ~250 roadblocks in 20 states. 25 National Guard killed. Guadalajara + PV shut down.</div>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">Feb 23</span>
+        <div class="timeline-content">CDMX flights operate normally. Violence concentrated in Jalisco/Pacific coast. Domestic flights resume in GDL. US crisis hotline activated.</div>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">Feb 24</span>
+        <div class="timeline-content">International flights resume at PV + GDL. State Dept declares "return to normal" in most states. Cancun, CDMX, Los Cabos unaffected.</div>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">Feb 25</span>
+        <div class="timeline-content">El Mencho's body released to family. Analysts flag <span class="highlight">power vacuum risk</span> &#8212; no clear successor. Franchise cartel model may limit fragmentation.</div>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-date">Mar &#8594;</span>
+        <div class="timeline-content">Watch: CJNG succession outcome, FIFA playoff (GDL Mar 26-28), inter-cartel territory grabs. CDMX expected to remain stable as it is not cartel-contested territory.</div>
+      </div>
+    </div>
 
 ```
-<!-- ACTIVE SITUATION TIMELINE -->
-<div class="card">
-  <div class="card-header">
-    <span class="card-title">Situation Timeline</span>
-    <span class="card-badge" style="background: var(--orange-dim); color: var(--orange);">Evolving</span>
-  </div>
-
-  <div class="timeline-item">
-    <span class="timeline-date">Feb 22</span>
-    <div class="timeline-content">Mexican military <span class="highlight">kills El Mencho</span> in Tapalpa, Jalisco. CJNG retaliates with ~250 roadblocks in 20 states. 25 National Guard killed. Guadalajara + PV shut down.</div>
-  </div>
-  <div class="timeline-item">
-    <span class="timeline-date">Feb 23</span>
-    <div class="timeline-content">CDMX flights operate normally. Violence concentrated in Jalisco/Pacific coast. Domestic flights resume in GDL. US crisis hotline activated.</div>
-  </div>
-  <div class="timeline-item">
-    <span class="timeline-date">Feb 24</span>
-    <div class="timeline-content">International flights resume at PV + GDL. State Dept declares "return to normal" in most states. Cancun, CDMX, Los Cabos unaffected.</div>
-  </div>
-  <div class="timeline-item">
-    <span class="timeline-date">Feb 25</span>
-    <div class="timeline-content">El Mencho's body released to family. Analysts flag <span class="highlight">power vacuum risk</span> — no clear successor. Franchise cartel model may limit fragmentation.</div>
-  </div>
-  <div class="timeline-item">
-    <span class="timeline-date">Mar →</span>
-    <div class="timeline-content">Watch: CJNG succession outcome, FIFA playoff (GDL Mar 26-28), inter-cartel territory grabs. CDMX expected to remain stable as it is not cartel-contested territory.</div>
-  </div>
-</div>
-
-<!-- DO / DON'T -->
 <div class="card">
   <div class="card-header">
     <span class="card-title">Operational Checklist</span>
   </div>
-
-  <div style="margin-bottom: 12px; font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--green); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Do</div>
-
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Stay in Polanco, Condesa, Roma Norte, or Coyoacán exclusively</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Use Uber/DiDi/Cabify — verify plate + driver photo every ride</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Get an eSIM before landing (Airalo) — always have data</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Enroll in STEP (State Dept) — or register with Global Affairs Canada</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Buy travel insurance w/ medical evacuation ($50-80)</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Download SASSLA (seismic early warning) + Google Translate</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Bottled water only — even for brushing teeth initially</span></div>
-  <div class="checklist-item"><span class="check-icon check-do">✓</span> <span>Carry a photocopy of passport — lock original in hotel safe</span></div>
-
-  <div style="margin: 12px 0 8px; font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--red); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Don't</div>
-
-  <div class="checklist-item"><span class="check-icon check-dont">✕</span> <span>Walk with phone out for navigation — step into a doorway to check</span></div>
-  <div class="checklist-item"><span class="check-icon check-dont">✕</span> <span>Hail street taxis — ever, under any circumstance</span></div>
-  <div class="checklist-item"><span class="check-icon check-dont">✕</span> <span>Wander into Tepito, Doctores, or Iztapalapa</span></div>
-  <div class="checklist-item"><span class="check-icon check-dont">✕</span> <span>Flash expensive watches, jewelry, or large amounts of cash</span></div>
-  <div class="checklist-item"><span class="check-icon check-dont">✕</span> <span>Buy drugs — this directly interfaces with cartel supply chains</span></div>
-  <div class="checklist-item"><span class="check-icon check-dont">✕</span> <span>Use the Metro at night or when empty — Uber is $2-4</span></div>
+  <div style="margin-bottom: 12px; font-family: var(--sans); font-size: 11px; color: var(--green); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Do</div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Stay in Polanco, Condesa, Roma Norte, or Coyoacan exclusively</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Use Uber/DiDi/Cabify &#8212; verify plate + driver photo every ride</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Get an eSIM before landing (Airalo) &#8212; always have data</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Enroll in STEP (State Dept) &#8212; or register with Global Affairs Canada</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Buy travel insurance w/ medical evacuation ($50-80)</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Download SASSLA (seismic early warning) + Google Translate</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Bottled water only &#8212; even for brushing teeth initially</span></div>
+  <div class="checklist-item"><span class="check-icon check-do">&#10003;</span> <span>Carry a photocopy of passport &#8212; lock original in hotel safe</span></div>
+  <div style="margin: 12px 0 8px; font-family: var(--sans); font-size: 11px; color: var(--red); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Don't</div>
+  <div class="checklist-item"><span class="check-icon check-dont">&#10005;</span> <span>Walk with phone out for navigation &#8212; step into a doorway to check</span></div>
+  <div class="checklist-item"><span class="check-icon check-dont">&#10005;</span> <span>Hail street taxis &#8212; ever, under any circumstance</span></div>
+  <div class="checklist-item"><span class="check-icon check-dont">&#10005;</span> <span>Wander into Tepito, Doctores, or Iztapalapa</span></div>
+  <div class="checklist-item"><span class="check-icon check-dont">&#10005;</span> <span>Flash expensive watches, jewelry, or large amounts of cash</span></div>
+  <div class="checklist-item"><span class="check-icon check-dont">&#10005;</span> <span>Buy drugs &#8212; this directly interfaces with cartel supply chains</span></div>
+  <div class="checklist-item"><span class="check-icon check-dont">&#10005;</span> <span>Use the Metro at night or when empty &#8212; Uber is $2-4</span></div>
 </div>
 
-<!-- DECISION FRAMEWORK -->
 <div class="card">
   <div class="card-header">
     <span class="card-title">Decision Framework</span>
   </div>
-
   <div class="decision-grid">
     <div class="decision-box go">
-      <h4>✓ Proceed Because</h4>
+      <h4>&#10003; Proceed Because</h4>
       <p>47M+ tourists visited Mexico in 2025. Less than 1% of crime involves tourists. Polanco's safety profile matches Manhattan. Modern hotels meet post-1985 seismic codes. CDMX was not affected by the El Mencho fallout.</p>
     </div>
     <div class="decision-box caution">
-      <h4>⚡ Elevated Risk Window</h4>
-      <p>CJNG succession battle may cause sporadic disruptions for 3–6 months. FIFA World Cup prep means heavy security — a double-edged sword. March 26-28 GDL playoff could be a flashpoint (you're in CDMX, not GDL).</p>
+      <h4>&#9889; Elevated Risk Window</h4>
+      <p>CJNG succession battle may cause sporadic disruptions for 3-6 months. FIFA World Cup prep means heavy security &#8212; a double-edged sword. March 26-28 GDL playoff could be a flashpoint (you're in CDMX, not GDL).</p>
     </div>
     <div class="decision-box prep">
-      <h4>◈ Preparation = Risk ÷ 5</h4>
+      <h4>&#9670; Preparation = Risk / 5</h4>
       <p>The gap between a prepared and unprepared tourist in CDMX is enormous. Right neighborhood + Uber + data + travel insurance eliminates ~90% of common risks. Your H-1B status and Canadian passport give you strong consular support from both US + CA embassies.</p>
     </div>
     <div class="decision-box avoid">
-      <h4>✕ Cancel Only If</h4>
+      <h4>&#10005; Cancel Only If</h4>
       <p>New major cartel violence erupts in CDMX specifically (not elsewhere in Mexico). State Dept upgrades CDMX to Level 3+. Your embassy issues a specific CDMX shelter-in-place. None of these have happened or appear likely.</p>
     </div>
   </div>
-
   <div style="margin-top: 14px; padding: 12px; background: var(--surface-2); border-radius: 6px; font-size: 11px; color: var(--text-dim); line-height: 1.6; text-align: center;">
     <strong style="color: var(--text);">Expected Value:</strong> Your most likely experience is excellent food, world-class museums, and zero safety incidents. The tail risks (armed robbery, earthquake, cartel disruption) are real but low-probability, and overwhelmingly mitigable through preparation.
   </div>
@@ -858,17 +756,15 @@ text-transform: uppercase;
 
   </div>
 
-  <!-- ═══ BOTTOM LINE ═══ -->
-
   <div class="bottom-line">
     <h3>A prepared tourist in Polanco in March 2026 is about as safe as a prepared tourist in any major global city.</h3>
     <p>
-      The risks that matter are the boring ones: food illness, phone theft, taxi scams. These are all solvable with basic precautions. The dramatic risks — cartels, earthquakes, kidnapping — make headlines but have negligible probability for a tourist staying in Polanco, using Uber, and keeping a low profile. The El Mencho situation adds uncertainty but has not materially changed the safety calculus for Mexico City specifically. Go. Eat tacos. Visit Soumaya. Stay alert. You'll be fine.
+      The risks that matter are the boring ones: food illness, phone theft, taxi scams. These are all solvable with basic precautions. The dramatic risks &#8212; cartels, earthquakes, kidnapping &#8212; make headlines but have negligible probability for a tourist staying in Polanco, using Uber, and keeping a low profile. The El Mencho situation adds uncertainty but has not materially changed the safety calculus for Mexico City specifically. Go. Eat tacos. Visit Soumaya. Stay alert. You'll be fine.
     </p>
   </div>
 
   <div class="footer-note">
-    Generated Feb 26, 2026 · Sources: U.S. State Dept, Canada Global Affairs, BHTP Safety Ratings, CDMX Open Data, SSA, Wilson Center, Multiple News Agencies · Not legal or travel advisory — use for reasoning only
+    Generated Feb 26, 2026 &#183; Sources: U.S. State Dept, Canada Global Affairs, BHTP Safety Ratings, CDMX Open Data, SSA, Wilson Center, Multiple News Agencies &#183; Not legal or travel advisory &#8212; use for reasoning only
   </div>
 
 </div>
