@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders of Magnitude of Time</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0c10;
+    --bg-card: #12151c;
+    --bg-card-hover: #181c26;
+    --border-subtle: #1e2330;
+    --border-accent: #2a3040;
+    --text-primary: #e8e6e1;
+    --text-secondary: #8a8b8e;
+    --text-muted: #55565a;
+    --accent-time: #e8a840;
+    --accent-time-dim: #c4882a;
+    --accent-compute: #5b9bd5;
+    --accent-compute-dim: #3a6d9e;
+    --accent-physical: #d4845a;
+    --accent-physical-dim: #a86040;
+    --accent-human: #6bba7a;
+    --accent-human-dim: #4a9058;
+    --accent-light: #f0d060;
+    --mono: 'JetBrains Mono', monospace;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+scroll-behavior: smooth;
+background: var(–bg-deep);
+}
+
+body {
+font-family: var(–sans);
+background: var(–bg-deep);
+color: var(–text-primary);
+line-height: 1.6;
+-webkit-font-smoothing: antialiased;
+}
+
+/* === HERO === */
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 4rem 2rem;
+position: relative;
+overflow: hidden;
+}
+
+.hero::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0; bottom: 0;
+background:
+radial-gradient(ellipse 80% 60% at 50% 40%, rgba(232,168,64,0.06) 0%, transparent 70%),
+radial-gradient(ellipse 60% 40% at 30% 70%, rgba(91,155,213,0.04) 0%, transparent 60%);
+pointer-events: none;
+}
+
+.hero-eyebrow {
+font-family: var(–mono);
+font-size: 0.75rem;
+font-weight: 400;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–text-muted);
+margin-bottom: 2rem;
+opacity: 0;
+animation: fadeUp 0.8s ease 0.2s forwards;
+}
+
+.hero h1 {
+font-family: var(–serif);
+font-size: clamp(2.5rem, 6vw, 4.5rem);
+font-weight: 300;
+line-height: 1.15;
+letter-spacing: -0.02em;
+max-width: 800px;
+opacity: 0;
+animation: fadeUp 0.8s ease 0.4s forwards;
+}
+
+.hero h1 em {
+font-style: italic;
+color: var(–accent-time);
+}
+
+.hero-sub {
+font-family: var(–sans);
+font-size: 1.1rem;
+color: var(–text-secondary);
+max-width: 540px;
+margin-top: 1.5rem;
+font-weight: 300;
+opacity: 0;
+animation: fadeUp 0.8s ease 0.6s forwards;
+}
+
+.hero-range {
+display: flex;
+align-items: center;
+gap: 1.5rem;
+margin-top: 3rem;
+font-family: var(–mono);
+font-size: 0.85rem;
+color: var(–text-muted);
+opacity: 0;
+animation: fadeUp 0.8s ease 0.8s forwards;
+}
+
+.hero-range .range-line {
+width: 120px;
+height: 1px;
+background: linear-gradient(90deg, var(–accent-time), var(–accent-compute));
+}
+
+.hero-range span {
+color: var(–accent-time);
+}
+
+/* === LEGEND === */
+.legend-bar {
+display: flex;
+justify-content: center;
+gap: 2rem;
+padding: 1.5rem 2rem;
+border-top: 1px solid var(–border-subtle);
+border-bottom: 1px solid var(–border-subtle);
+background: rgba(18, 21, 28, 0.8);
+backdrop-filter: blur(10px);
+position: sticky;
+top: 0;
+z-index: 100;
+}
+
+.legend-item {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+font-family: var(–mono);
+font-size: 0.7rem;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(–text-secondary);
+}
+
+.legend-dot {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+}
+
+.legend-dot.compute { background: var(–accent-compute); }
+.legend-dot.physical { background: var(–accent-physical); }
+.legend-dot.human { background: var(–accent-human); }
+.legend-dot.light { background: var(–accent-light); }
+
+/* === MAIN TIMELINE === */
+.timeline {
+max-width: 1100px;
+margin: 0 auto;
+padding: 4rem 2rem;
+position: relative;
+}
+
+.timeline::before {
+content: ‘’;
+position: absolute;
+left: 50%;
+top: 0;
+bottom: 0;
+width: 1px;
+background: linear-gradient(
+to bottom,
+transparent,
+var(–border-accent) 5%,
+var(–border-accent) 95%,
+transparent
+);
+transform: translateX(-50%);
+}
+
+/* === MAGNITUDE ROW === */
+.magnitude {
+display: grid;
+grid-template-columns: 1fr auto 1fr;
+gap: 0;
+margin-bottom: 0;
+position: relative;
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.magnitude.visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+/* Center node */
+.mag-node {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
+padding: 2rem 0;
+position: relative;
+z-index: 2;
+}
+
+.mag-badge {
+width: 72px;
+height: 72px;
+border-radius: 50%;
+background: var(–bg-deep);
+border: 2px solid var(–accent-time-dim);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+position: relative;
+transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.magnitude:hover .mag-badge {
+border-color: var(–accent-time);
+box-shadow: 0 0 20px rgba(232,168,64,0.15);
+}
+
+.mag-badge .mag-value {
+font-family: var(–mono);
+font-size: 0.8rem;
+font-weight: 600;
+color: var(–accent-time);
+line-height: 1;
+}
+
+.mag-badge .mag-unit {
+font-family: var(–mono);
+font-size: 0.55rem;
+color: var(–accent-time-dim);
+margin-top: 2px;
+}
+
+.mag-exponent {
+font-family: var(–mono);
+font-size: 0.65rem;
+color: var(–text-muted);
+margin-top: 0.5rem;
+}
+
+.mag-light {
+font-family: var(–mono);
+font-size: 0.6rem;
+color: var(–accent-light);
+opacity: 0.7;
+margin-top: 0.35rem;
+text-align: center;
+max-width: 90px;
+line-height: 1.3;
+}
+
+/* Side panels */
+.mag-left, .mag-right {
+padding: 2rem 1.5rem;
+}
+
+.mag-left {
+text-align: right;
+padding-right: 2.5rem;
+}
+
+.mag-right {
+text-align: left;
+padding-left: 2.5rem;
+}
+
+.side-label {
+font-family: var(–mono);
+font-size: 0.6rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+margin-bottom: 0.75rem;
+}
+
+.mag-left .side-label { color: var(–accent-compute-dim); }
+.mag-right .side-label { color: var(–accent-physical-dim); }
+
+.example-list {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 0.4rem;
+}
+
+.example-list li {
+font-family: var(–sans);
+font-size: 0.85rem;
+color: var(–text-secondary);
+line-height: 1.45;
+transition: color 0.2s ease;
+}
+
+.magnitude:hover .example-list li {
+color: var(–text-primary);
+}
+
+.example-list li strong {
+font-weight: 500;
+}
+
+.mag-left .example-list li strong { color: var(–accent-compute); }
+.mag-right .example-list li strong { color: var(–accent-physical); }
+
+.example-list .human-tag {
+color: var(–accent-human-dim);
+font-weight: 500;
+}
+
+.magnitude:hover .example-list .human-tag {
+color: var(–accent-human);
+}
+
+/* Connector lines from node to panels */
+.mag-left::after, .mag-right::before {
+content: ‘’;
+position: absolute;
+top: 2rem;
+width: 20px;
+height: 1px;
+background: var(–border-accent);
+}
+
+/* === SCALE VISUALIZATION === */
+.scale-section {
+max-width: 1100px;
+margin: 2rem auto 4rem;
+padding: 0 2rem;
+}
+
+.scale-title {
+font-family: var(–serif);
+font-size: 1.8rem;
+font-weight: 300;
+text-align: center;
+margin-bottom: 0.5rem;
+}
+
+.scale-subtitle {
+font-family: var(–sans);
+font-size: 0.9rem;
+color: var(–text-secondary);
+text-align: center;
+margin-bottom: 3rem;
+font-weight: 300;
+}
+
+/* Logarithmic bar chart */
+.log-chart {
+display: flex;
+flex-direction: column;
+gap: 6px;
+padding: 2rem;
+background: var(–bg-card);
+border: 1px solid var(–border-subtle);
+border-radius: 12px;
+}
+
+.log-row {
+display: grid;
+grid-template-columns: 100px 1fr 180px;
+align-items: center;
+gap: 12px;
+height: 32px;
+}
+
+.log-label {
+font-family: var(–mono);
+font-size: 0.7rem;
+color: var(–accent-time);
+text-align: right;
+white-space: nowrap;
+}
+
+.log-bar-container {
+height: 24px;
+position: relative;
+border-radius: 4px;
+overflow: hidden;
+background: rgba(255,255,255,0.02);
+}
+
+.log-bar {
+height: 100%;
+border-radius: 4px;
+transition: width 1s ease;
+position: relative;
+}
+
+.log-example {
+font-family: var(–sans);
+font-size: 0.72rem;
+color: var(–text-secondary);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+/* Ratio comparisons */
+.ratio-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 1.5rem;
+margin-top: 3rem;
+}
+
+.ratio-card {
+background: var(–bg-card);
+border: 1px solid var(–border-subtle);
+border-radius: 10px;
+padding: 1.5rem;
+transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+.ratio-card:hover {
+border-color: var(–border-accent);
+transform: translateY(-2px);
+}
+
+.ratio-card .ratio-value {
+font-family: var(–mono);
+font-size: 2rem;
+font-weight: 700;
+color: var(–accent-time);
+line-height: 1;
+}
+
+.ratio-card .ratio-suffix {
+font-family: var(–mono);
+font-size: 0.75rem;
+color: var(–text-muted);
+margin-top: 0.25rem;
+}
+
+.ratio-card .ratio-desc {
+font-family: var(–serif);
+font-size: 0.9rem;
+color: var(–text-secondary);
+margin-top: 0.75rem;
+line-height: 1.5;
+font-style: italic;
+}
+
+/* === FOOTER === */
+.footer {
+text-align: center;
+padding: 4rem 2rem;
+border-top: 1px solid var(–border-subtle);
+}
+
+.footer p {
+font-family: var(–mono);
+font-size: 0.7rem;
+color: var(–text-muted);
+line-height: 1.8;
+}
+
+.footer a {
+color: var(–accent-compute-dim);
+text-decoration: none;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(16px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+.timeline::before { left: 36px; }
+
+```
+.magnitude {
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+}
+
+.mag-node {
+  grid-row: 1 / -1;
+  padding: 1.5rem 0;
+}
+
+.mag-badge { width: 56px; height: 56px; }
+.mag-badge .mag-value { font-size: 0.7rem; }
+
+.mag-left, .mag-right {
+  text-align: left;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+}
+
+.mag-left { grid-column: 2; grid-row: 1; padding-right: 0; }
+.mag-right { grid-column: 2; grid-row: 2; padding-left: 1.5rem; }
+
+.legend-bar { gap: 1rem; flex-wrap: wrap; }
+
+.log-row {
+  grid-template-columns: 70px 1fr;
+  height: auto;
+  gap: 6px;
+}
+
+.log-example { display: none; }
+.ratio-grid { grid-template-columns: 1fr; }
+```
+
+}
+
+/* Divider between sections */
+.section-divider {
+max-width: 200px;
+margin: 4rem auto;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–border-accent), transparent);
+}
+</style>
+
+</head>
+<body>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="hero-eyebrow">An Engineer's Reference</div>
+  <h1>Orders of Magnitude<br>of <em>Time</em></h1>
+  <p class="hero-sub">
+    From a single CPU clock tick to a decade of technological change.
+    Eighteen orders of magnitude, made intuitive.
+  </p>
+  <div class="hero-range">
+    <span>1 ns</span>
+    <div class="range-line"></div>
+    <span>10 years</span>
+  </div>
+</section>
+
+<!-- LEGEND -->
+
+<nav class="legend-bar">
+  <div class="legend-item"><div class="legend-dot compute"></div>Computing</div>
+  <div class="legend-item"><div class="legend-dot physical"></div>Physical World</div>
+  <div class="legend-item"><div class="legend-dot human"></div>Human Scale</div>
+  <div class="legend-item"><div class="legend-dot light"></div>Light Distance</div>
+</nav>
+
+<!-- SCALE VIZ -->
+
+<section class="scale-section">
+  <h2 class="scale-title">The Logarithmic Ladder</h2>
+  <p class="scale-subtitle">Each row is 10× longer than the one above. Equal visual space, exponential real time.</p>
+  <div class="log-chart" id="logChart">
+    <!-- filled by JS -->
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- RATIO CARDS -->
+
+<section class="scale-section">
+  <h2 class="scale-title">Ratios That Build Intuition</h2>
+  <p class="scale-subtitle">The numbers are so vast they need analogies to land.</p>
+  <div class="ratio-grid">
+    <div class="ratio-card">
+      <div class="ratio-value">1,000×</div>
+      <div class="ratio-suffix">RAM vs. cache</div>
+      <div class="ratio-desc">A main memory access (100ns) vs. L1 cache hit (0.5ns) is like waiting 3 minutes for coffee vs. 8 hours at the DMV.</div>
+    </div>
+    <div class="ratio-card">
+      <div class="ratio-value">100,000×</div>
+      <div class="ratio-suffix">SSD vs. cache</div>
+      <div class="ratio-desc">An NVMe SSD read (~10μs) vs. an L1 cache hit (0.5ns). If the cache hit is one second, the SSD read is a full day.</div>
+    </div>
+    <div class="ratio-card">
+      <div class="ratio-value">10,000,000×</div>
+      <div class="ratio-suffix">HDD seek vs. cache</div>
+      <div class="ratio-desc">A spinning disk seek (~5ms) vs. an L1 cache hit. If the cache is one second, the HDD seek is four months.</div>
+    </div>
+    <div class="ratio-card">
+      <div class="ratio-value">~1,000×</div>
+      <div class="ratio-suffix">Cross-country vs. same-rack</div>
+      <div class="ratio-desc">A cross-country round trip (~40ms) vs. same-rack network hop (~40μs). Local is a thousand times faster.</div>
+    </div>
+    <div class="ratio-card">
+      <div class="ratio-value">31.5M</div>
+      <div class="ratio-suffix">seconds in a year</div>
+      <div class="ratio-desc">π × 10⁷ is the classic engineering approximation. Close enough for napkin math, elegant enough to remember.</div>
+    </div>
+    <div class="ratio-card">
+      <div class="ratio-value">10¹⁷</div>
+      <div class="ratio-suffix">ns in 10 years</div>
+      <div class="ratio-desc">The full span of this chart. A single nanosecond to a decade is 100 quadrillion to one. Your CPU does billions of operations before you finish reading this sentence.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- MAIN TIMELINE -->
+
+<section class="timeline" id="timeline">
+
+  <!-- 1 ns -->
+
+  <div class="magnitude" data-mag="-9">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>L1 cache reference</strong> (~0.5–1ns)</li>
+        <li><strong>Single CPU clock cycle</strong> at 1 GHz</li>
+        <li><strong>Branch prediction hit</strong> — correct guess costs ~1 cycle</li>
+        <li><strong>Register-to-register</strong> operation</li>
+        <li><strong>Single instruction</strong> in a pipelined core</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">ns</span></div>
+      <div class="mag-exponent">10⁻⁹ s</div>
+      <div class="mag-light">☀ Light: 30 cm (1 foot)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li><strong>Light travels 30 cm</strong> — about one foot, one ruler length</li>
+        <li><strong>One microwave oscillation</strong> cycle (~0.4ns at 2.45 GHz)</li>
+        <li><strong>Chemical bond vibration</strong> happens in this range</li>
+        <li>A photon crosses the width of a <strong>human hair ~300 times</strong></li>
+        <li><strong>Transistor switching</strong> in modern chips</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 10 ns -->
+
+  <div class="magnitude" data-mag="-8">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>L2 cache reference</strong> (~3–10ns)</li>
+        <li><strong>Branch misprediction penalty</strong> (~5ns)</li>
+        <li><strong>Mutex lock/unlock</strong> (~15–25ns uncontended)</li>
+        <li><strong>SIMD vector operation</strong> on modern CPU</li>
+        <li><strong>Virtual function call</strong> overhead</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">10</span><span class="mag-unit">ns</span></div>
+      <div class="mag-exponent">10⁻⁸ s</div>
+      <div class="mag-light">☀ Light: 3 m (across a room)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li><strong>Light crosses a room</strong> (~3 meters)</li>
+        <li><strong>One WiFi radio cycle</strong> at 5 GHz (~0.2ns, many per 10ns)</li>
+        <li><strong>Fastest electronic circuits</strong> switch at this scale</li>
+        <li>Acoustic wave in air moves <strong>~3 micrometers</strong></li>
+        <li><strong>Fluorescence decay</strong> of many molecules</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 100 ns -->
+
+  <div class="magnitude" data-mag="-7">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Main memory (DRAM) reference</strong> (~100ns) ← the big one</li>
+        <li><strong>L3 cache miss</strong> penalty</li>
+        <li><strong>System call overhead</strong> (~100–200ns)</li>
+        <li><strong>NUMA remote memory</strong> access (~150ns)</li>
+        <li><strong>Memory-mapped I/O</strong> register access</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">100</span><span class="mag-unit">ns</span></div>
+      <div class="mag-exponent">10⁻⁷ s</div>
+      <div class="mag-light">☀ Light: 30 m (a building's height)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li><strong>Light reaches the 10th floor</strong> of a building (~30m)</li>
+        <li>Sound travels <strong>~0.03 mm</strong> — invisible distance</li>
+        <li><strong>Single nerve impulse</strong> moves ~0.01mm</li>
+        <li><strong>Piezoelectric crystal</strong> response time</li>
+        <li><strong>Fast photodiode</strong> response for optical fiber</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 μs -->
+
+  <div class="magnitude" data-mag="-6">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Compress 1 KB</strong> with Snappy (~3μs)</li>
+        <li><strong>Context switch</strong> between threads (~1–5μs)</li>
+        <li><strong>Send 2 KB</strong> over 1 Gbps network (~2μs)</li>
+        <li><strong>Read 1 MB</strong> from L3 cache (~3μs)</li>
+        <li><strong>Kernel-to-userspace</strong> transition overhead</li>
+        <li><strong>RDMA network operation</strong> (~1–2μs)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">μs</span></div>
+      <div class="mag-exponent">10⁻⁶ s</div>
+      <div class="mag-light">☀ Light: 300 m (3 football fields)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li><strong>Camera flash strobe</strong> duration (~1μs for xenon)</li>
+        <li><strong>Lightning return stroke</strong> channel illumination</li>
+        <li>Sound travels <strong>~0.3 mm</strong> — a grain of sand</li>
+        <li><strong>Housefly wing beat</strong> is ~4ms, so ~250μs per wing stroke phase</li>
+        <li><strong>Single ultrasound pulse</strong> in medical imaging</li>
+        <li><strong>A bullet</strong> moves about 1mm</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 10 μs -->
+
+  <div class="magnitude" data-mag="-5">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>NVMe SSD random read</strong> (~10–20μs)</li>
+        <li><strong>Redis GET</strong> on localhost (~10–20μs)</li>
+        <li><strong>Kernel network stack</strong> processing (~10μs)</li>
+        <li><strong>Epoll event notification</strong> round trip</li>
+        <li><strong>DPDK packet processing</strong> (~2–5μs)</li>
+        <li><strong>gRPC call</strong> on loopback (~20–50μs)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">10</span><span class="mag-unit">μs</span></div>
+      <div class="mag-exponent">10⁻⁵ s</div>
+      <div class="mag-light">☀ Light: 3 km (across a town)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li><strong>A bullet travels ~10 cm</strong> at this timescale</li>
+        <li>Sound moves <strong>~3 mm</strong></li>
+        <li><strong>Fastest neuron spike</strong> (~10–20μs pulse width)</li>
+        <li><strong>A raindrop</strong> falls ~0.1mm</li>
+        <li><strong>Detonation front</strong> moves ~10cm in an explosive</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 100 μs -->
+
+  <div class="magnitude" data-mag="-4">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>SSD random write</strong> (~100μs)</li>
+        <li><strong>Intra-datacenter round trip</strong> (~100–500μs)</li>
+        <li><strong>HFT trade execution</strong> (~50–200μs for co-located)</li>
+        <li><strong>Read 1 MB from SSD</strong> sequentially (~200μs)</li>
+        <li><strong>Memcached GET</strong> over network (~100–200μs)</li>
+        <li><strong>Garbage collection</strong> minor pause</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">100</span><span class="mag-unit">μs</span></div>
+      <div class="mag-exponent">10⁻⁴ s</div>
+      <div class="mag-light">☀ Light: 30 km</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li>Sound travels <strong>~3 cm</strong> — width of a thumb</li>
+        <li><strong>Fastest blink reflex</strong> initiation (~100μs muscle signal)</li>
+        <li><strong>One period of a bass note</strong> (~100 Hz = 10ms, but 20kHz = 50μs)</li>
+        <li><strong>A hummingbird heart</strong> beats every ~50ms (this is 1/500th of that)</li>
+        <li><strong>Spark plug discharge</strong> duration</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 ms -->
+
+  <div class="magnitude" data-mag="-3">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>HDD seek begins</strong> (~2–10ms)</li>
+        <li><strong>WiFi round trip</strong> (~1–5ms)</li>
+        <li><strong>TCP packet, same cloud region</strong> (~1–3ms)</li>
+        <li><strong>TLS handshake</strong> (1 round trip, same region)</li>
+        <li><strong>One frame at 1000 fps</strong> = 1ms</li>
+        <li><strong>Compress 1 MB</strong> with zstd (~1–3ms)</li>
+        <li><strong>Same-AZ database query</strong> (simple)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">ms</span></div>
+      <div class="mag-exponent">10⁻³ s</div>
+      <div class="mag-light">☀ Light: 300 km (Seattle → Portland)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical World</div>
+      <ul class="example-list">
+        <li>Sound travels <strong>~34 cm</strong> — about a foot</li>
+        <li><strong>A hummingbird wing beat</strong> (~4ms full stroke)</li>
+        <li>The <strong class="human-tag">threshold of musical tempo perception</strong></li>
+        <li><strong>A camera shutter</strong> at 1/1000s exposure</li>
+        <li><strong>A mosquito wing</strong> flaps once (~2ms)</li>
+        <li><strong>A single audio sample</strong> at 44.1 kHz lasts ~23μs (43 per ms)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 10 ms -->
+
+  <div class="magnitude" data-mag="-2">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>HDD seek</strong> (~5–10ms)</li>
+        <li><strong>One frame at 60 fps</strong> = 16.7ms</li>
+        <li><strong>One frame at 144 fps</strong> = 6.9ms</li>
+        <li><strong>DNS lookup</strong> (cached resolver, ~5–20ms)</li>
+        <li><strong>Same-region DB query</strong> (moderate)</li>
+        <li><strong>GC major pause</strong> in Go/Java (~5–50ms)</li>
+        <li><strong>Read 1 MB from HDD</strong> sequentially (~20ms)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">10</span><span class="mag-unit">ms</span></div>
+      <div class="mag-exponent">10⁻² s</div>
+      <div class="mag-light">☀ Light: 3,000 km (NYC → Chicago)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">Audio delay threshold</strong> — humans detect ~10ms latency in audio</li>
+        <li><strong class="human-tag">One heartbeat</strong> electrical impulse traverses the heart (~10ms)</li>
+        <li>Sound travels <strong>~3.4 m</strong> — across a small room</li>
+        <li><strong>A dog's ear twitch</strong> reaction</li>
+        <li><strong>A single video frame</strong> at 30fps = 33ms</li>
+        <li><strong class="human-tag">Visual flicker fusion</strong> — below ~15ms, you see continuous motion</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 100 ms -->
+
+  <div class="magnitude" data-mag="-1">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Cross-country round trip</strong> (~30–70ms, e.g. Seattle → Virginia)</li>
+        <li><strong>Transatlantic round trip</strong> (~100–150ms)</li>
+        <li><strong>SSD sequential read 1 GB</strong> (~200ms)</li>
+        <li><strong>UI lag threshold</strong> — users perceive delay >100ms</li>
+        <li><strong>Google search response</strong> target (~200ms)</li>
+        <li><strong>Serverless cold start</strong> (warm) (~50–200ms)</li>
+        <li><strong>Full page render</strong> (well-optimized) (~100–300ms)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">100</span><span class="mag-unit">ms</span></div>
+      <div class="mag-exponent">10⁻¹ s</div>
+      <div class="mag-light">☀ Light: 30,000 km (¾ around Earth)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">Blink of an eye</strong> — 150–300ms total</li>
+        <li><strong class="human-tag">Fastest human reaction</strong> to visual stimulus (~150ms)</li>
+        <li><strong class="human-tag">A spoken syllable</strong> — ~150–200ms</li>
+        <li>Sound travels <strong>~34 m</strong> — across a concert hall</li>
+        <li><strong>A tennis serve</strong> impact to return decision (~200ms)</li>
+        <li><strong class="human-tag">Conscious awareness lag</strong> — brain takes ~100ms to "notice"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 s -->
+
+  <div class="magnitude" data-mag="0">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Serverless cold start</strong> (cold, heavy runtime) (~0.5–3s)</li>
+        <li><strong>Full TLS handshake</strong> + TCP to distant server</li>
+        <li><strong>Inter-continental API call</strong> with processing</li>
+        <li><strong>npm install</strong> — single small package</li>
+        <li><strong>Docker layer pull</strong> (small, cached)</li>
+        <li><strong>GPT-4 first token latency</strong> (~0.5–2s)</li>
+        <li><strong>PostgreSQL complex join</strong> on millions of rows</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">s</span></div>
+      <div class="mag-exponent">10⁰ s</div>
+      <div class="mag-light">☀ Light: 300,000 km (to the Moon in 1.3s)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">One heartbeat</strong> at resting rate</li>
+        <li><strong class="human-tag">One deep breath</strong> begins</li>
+        <li><strong class="human-tag">One step</strong> while walking</li>
+        <li>Sound travels <strong>~343 m</strong> — 3 football fields</li>
+        <li><strong>A pendulum</strong> (1m length) swings once</li>
+        <li><strong class="human-tag">Attention span checkpoint</strong> — "is this loading?"</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 10 s -->
+
+  <div class="magnitude" data-mag="1">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Docker container boot</strong> (~5–15s)</li>
+        <li><strong>Large API response</strong> with pagination</li>
+        <li><strong>Moderate SQL query</strong> on big dataset (~5–30s)</li>
+        <li><strong>npm install</strong> (cached, mid-size project)</li>
+        <li><strong>webpack dev build</strong> (incremental)</li>
+        <li><strong>AI image generation</strong> (Midjourney/SD) (~10–30s)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">10</span><span class="mag-unit">s</span></div>
+      <div class="mag-exponent">10¹ s</div>
+      <div class="mag-light">☀ Light: 3M km (1% to Sun)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">Elevator ride</strong> — 3 floors</li>
+        <li><strong class="human-tag">Pour a cup of coffee</strong></li>
+        <li><strong>A traffic light</strong> yellow phase (~3–5s)</li>
+        <li><strong class="human-tag">Holding your breath</strong> starts to feel uncomfortable</li>
+        <li><strong class="human-tag">Task-switching cost</strong> — getting back into flow</li>
+        <li>A <strong>bowling ball</strong> rolls from hand to pins</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 min -->
+
+  <div class="magnitude" data-mag="1.8">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>CI unit test suite</strong> (small-medium project)</li>
+        <li><strong>Terraform plan</strong> on mid-size infrastructure</li>
+        <li><strong>Docker image build</strong> (moderate, cached layers)</li>
+        <li><strong>Claude/GPT generating</strong> a long, detailed response</li>
+        <li><strong>Kubernetes pod</strong> startup (with image pull)</li>
+        <li><strong>VM boot</strong> in cloud (~30–90s)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">min</span></div>
+      <div class="mag-exponent">60 s</div>
+      <div class="mag-light">☀ Light: 18M km (12% to Sun)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">Microwave a snack</strong></li>
+        <li><strong class="human-tag">Read a page of text</strong> (~250 words)</li>
+        <li><strong class="human-tag">A commercial break</strong> on TV</li>
+        <li><strong class="human-tag">Wash your hands</strong> (properly, 20s + drying)</li>
+        <li>Heart beats <strong>~70 times</strong></li>
+        <li><strong>ISS travels ~460 km</strong> in orbit</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 10 min -->
+
+  <div class="magnitude" data-mag="2.8">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Full CI/CD pipeline</strong> (build + test + deploy)</li>
+        <li><strong>Large Docker build</strong> (no cache)</li>
+        <li><strong>npm install from scratch</strong> (big monorepo)</li>
+        <li><strong>Moderate ML model training</strong> (small dataset)</li>
+        <li><strong>Database backup</strong> (medium-size)</li>
+        <li><strong>Full webpack production build</strong></li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">10</span><span class="mag-unit">min</span></div>
+      <div class="mag-exponent">600 s</div>
+      <div class="mag-light">☀ Light: 180M km (past Sun)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">A coffee break</strong></li>
+        <li><strong class="human-tag">A standup meeting</strong></li>
+        <li><strong class="human-tag">A shower</strong></li>
+        <li><strong class="human-tag">Walk half a mile</strong></li>
+        <li><strong>A 5K runner</strong> at elite pace finishes</li>
+        <li><strong>Blood circulates</strong> through your entire body once</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 hour -->
+
+  <div class="magnitude" data-mag="3.6">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Large codebase full rebuild</strong> (C++ monorepo)</li>
+        <li><strong>Canary deployment</strong> to production</li>
+        <li><strong>Large DB migration</strong></li>
+        <li><strong>Small ML model training</strong> (real dataset, GPU)</li>
+        <li><strong>Full integration test suite</strong> (large project)</li>
+        <li><strong>Security scan</strong> of a large codebase</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">hr</span></div>
+      <div class="mag-exponent">3,600 s</div>
+      <div class="mag-light">☀ Light: 1.1B km (past Jupiter)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">A meeting</strong></li>
+        <li><strong class="human-tag">A commute</strong> (average US: ~27 min each way)</li>
+        <li><strong class="human-tag">A TV episode</strong> (drama)</li>
+        <li><strong class="human-tag">A workout</strong></li>
+        <li><strong>Earth rotates</strong> 15°</li>
+        <li><strong>Your body produces</strong> ~200 billion red blood cells</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 day -->
+
+  <div class="magnitude" data-mag="4.9">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Full regression test suite</strong> (massive project)</li>
+        <li><strong>Medium ML model training</strong> (multi-GPU, real data)</li>
+        <li><strong>Large-scale ETL batch</strong> pipeline</li>
+        <li><strong>DNS propagation</strong> (worst case TTL)</li>
+        <li><strong>Full index rebuild</strong> on TB-scale database</li>
+        <li><strong>Let's Encrypt certificate</strong> issuance + propagation</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">day</span></div>
+      <div class="mag-exponent">86,400 s</div>
+      <div class="mag-light">☀ Light: 26B km (past Neptune)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">A full work day</strong> — ~8 productive hours</li>
+        <li><strong class="human-tag">A sleep cycle</strong> — 7-9 hours</li>
+        <li><strong>Earth rotates once</strong></li>
+        <li><strong>Your heart beats ~100,000 times</strong></li>
+        <li><strong>You breathe ~20,000 times</strong></li>
+        <li><strong>ISS orbits Earth</strong> ~16 times</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 week -->
+
+  <div class="magnitude" data-mag="5.8">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Sprint cycle</strong> (1-2 weeks)</li>
+        <li><strong>Moderate feature development</strong> (design → ship)</li>
+        <li><strong>Load testing campaign</strong></li>
+        <li><strong>Incident postmortem</strong> cycle (event → doc → action items)</li>
+        <li><strong>Large ML model training</strong> (single GPU)</li>
+        <li><strong>Code review cycle</strong> for complex PR</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">wk</span></div>
+      <div class="mag-exponent">604,800 s</div>
+      <div class="mag-light">☀ Light: 181B km (past Voyager 1)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">A short vacation</strong></li>
+        <li><strong class="human-tag">Finish a book</strong> (casual reading pace)</li>
+        <li><strong class="human-tag">Muscle recovery</strong> from intense training</li>
+        <li><strong>A wound</strong> starts significant healing</li>
+        <li><strong>Skin cells</strong> on your hand are replaced</li>
+        <li><strong>Moon completes ¼ orbit</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 month -->
+
+  <div class="magnitude" data-mag="6.4">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Ship a medium feature</strong> end-to-end</li>
+        <li><strong>Security audit</strong> of a service</li>
+        <li><strong>Performance optimization</strong> deep dive</li>
+        <li><strong>Train a large ML model</strong> (multi-GPU cluster)</li>
+        <li><strong>Cloud cost optimization</strong> cycle</li>
+        <li><strong>Team onboarding</strong> to a new codebase</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">mo</span></div>
+      <div class="mag-exponent">~2.6×10⁶ s</div>
+      <div class="mag-light">☀ Light: 780B km (0.08 light-yr)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">A billing cycle</strong></li>
+        <li><strong>Moon orbits Earth</strong> once (~29.5 days)</li>
+        <li><strong class="human-tag">A habit starts forming</strong> (~21–30 days)</li>
+        <li><strong>Red blood cells</strong> are about ⅓ through their lifecycle</li>
+        <li><strong>Fingernails grow</strong> ~3mm</li>
+        <li><strong class="human-tag">Noticeable fitness gains</strong> from new program</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1 year -->
+
+  <div class="magnitude" data-mag="7.5">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Major platform migration</strong> (monolith → microservices)</li>
+        <li><strong>Build team competency</strong> in new technology</li>
+        <li><strong>Full product lifecycle</strong> iteration (idea → launch → iterate)</li>
+        <li><strong>API deprecation timeline</strong></li>
+        <li><strong>Large-scale infrastructure</strong> modernization phase</li>
+        <li><strong>Training a frontier LLM</strong> (GPT-4 scale)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">1</span><span class="mag-unit">yr</span></div>
+      <div class="mag-exponent">~3.15×10⁷ s</div>
+      <div class="mag-light">☀ Light: 1 light-year (9.46T km)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong>Earth orbits the Sun</strong></li>
+        <li><strong>Seasons cycle</strong> once</li>
+        <li><strong class="human-tag">A child goes from crawling to walking</strong></li>
+        <li><strong>Your body replaces</strong> most of its cells</li>
+        <li><strong>Heart beats ~35 million times</strong></li>
+        <li><strong class="human-tag">You can meaningfully learn</strong> a new skill or language</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 10 years -->
+
+  <div class="magnitude" data-mag="8.5">
+    <div class="mag-left">
+      <div class="side-label">Computing</div>
+      <ul class="example-list">
+        <li><strong>Technology generation shift</strong> (mainframe→PC→mobile→cloud→AI)</li>
+        <li><strong>Complete infrastructure modernization</strong></li>
+        <li><strong>Technical debt compounding</strong> — exponential cost growth</li>
+        <li><strong>Programming language adoption</strong> curve (Go, Rust)</li>
+        <li><strong>Moore's Law</strong>: ~6–7 doublings in transistor density</li>
+        <li><strong>A startup's full journey</strong> (founding → IPO/acquisition)</li>
+      </ul>
+    </div>
+    <div class="mag-node">
+      <div class="mag-badge"><span class="mag-value">10</span><span class="mag-unit">yr</span></div>
+      <div class="mag-exponent">~3.15×10⁸ s</div>
+      <div class="mag-light">☀ Light: 10 light-years (past nearest stars)</div>
+    </div>
+    <div class="mag-right">
+      <div class="side-label">Physical / Human</div>
+      <ul class="example-list">
+        <li><strong class="human-tag">A career chapter</strong></li>
+        <li><strong class="human-tag">A child grows from toddler to teenager</strong></li>
+        <li><strong>Cities visibly change</strong> — new buildings, new neighborhoods</li>
+        <li><strong>Heart beats ~350 million times</strong></li>
+        <li><strong>Tectonic plates</strong> move ~25cm (a handspan)</li>
+        <li><strong class="human-tag">Most of your close friendships</strong> will have turned over</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer class="footer">
+  <p>
+    Built for engineers who think in orders of magnitude.<br>
+    Numbers are representative, not precise — use for intuition, not SLAs.<br>
+    Inspired by Jeff Dean's "Numbers Everyone Should Know" and Peter Norvig's latency reference.
+  </p>
+</footer>
+
+<script>
+// === Scroll reveal for magnitude rows ===
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.magnitude').forEach(el => observer.observe(el));
+
+// === Logarithmic bar chart ===
+const logData = [
+  { label: '1 ns',    seconds: 1e-9,  color: '#e8a840', example: 'L1 cache hit, 1 CPU cycle' },
+  { label: '10 ns',   seconds: 1e-8,  color: '#dea035', example: 'L2 cache, branch mispredict' },
+  { label: '100 ns',  seconds: 1e-7,  color: '#d4982a', example: 'DRAM access — the big wall' },
+  { label: '1 μs',    seconds: 1e-6,  color: '#ca9020', example: 'Context switch, compress 1KB' },
+  { label: '10 μs',   seconds: 1e-5,  color: '#5b9bd5', example: 'NVMe SSD read, Redis GET' },
+  { label: '100 μs',  seconds: 1e-4,  color: '#5191c8', example: 'Intra-DC round trip, SSD write' },
+  { label: '1 ms',    seconds: 1e-3,  color: '#4787bb', example: 'WiFi RTT, HDD seek starts' },
+  { label: '10 ms',   seconds: 1e-2,  color: '#3d7dae', example: '60fps frame, HDD seek done' },
+  { label: '100 ms',  seconds: 1e-1,  color: '#d4845a', example: 'Cross-country RTT, blink' },
+  { label: '1 s',     seconds: 1,     color: '#c87a50', example: 'Heartbeat, cold start' },
+  { label: '10 s',    seconds: 10,    color: '#bc7046', example: 'Docker boot, elevator ride' },
+  { label: '1 min',   seconds: 60,    color: '#6bba7a', example: 'CI tests, microwave a snack' },
+  { label: '10 min',  seconds: 600,   color: '#60b06f', example: 'Full CI/CD, standup meeting' },
+  { label: '1 hr',    seconds: 3600,  color: '#55a664', example: 'DB migration, a workout' },
+  { label: '1 day',   seconds: 86400, color: '#4a9c59', example: 'ETL batch, full work day' },
+  { label: '1 wk',    seconds: 604800,color: '#3f924e', example: 'Sprint cycle, short vacation' },
+  { label: '1 mo',    seconds: 2.6e6, color: '#348843', example: 'Feature ship, Moon orbits' },
+  { label: '1 yr',    seconds: 3.15e7,color: '#297e38', example: 'Platform migration, seasons' },
+  { label: '10 yr',   seconds: 3.15e8,color: '#1e742d', example: 'Tech generation shift, career chapter' },
+];
+
+const chart = document.getElementById('logChart');
+const maxLog = Math.log10(3.15e8);
+const minLog = Math.log10(1e-9);
+const range = maxLog - minLog;
+
+logData.forEach((d, i) => {
+  const row = document.createElement('div');
+  row.className = 'log-row';
+
+  const label = document.createElement('div');
+  label.className = 'log-label';
+  label.textContent = d.label;
+
+  const barContainer = document.createElement('div');
+  barContainer.className = 'log-bar-container';
+
+  const bar = document.createElement('div');
+  bar.className = 'log-bar';
+  const pct = ((Math.log10(d.seconds) - minLog) / range) * 100;
+  bar.style.width = '0%';
+  bar.style.background = `linear-gradient(90deg, ${d.color}cc, ${d.color}55)`;
+
+  const example = document.createElement('div');
+  example.className = 'log-example';
+  example.textContent = d.example;
+
+  barContainer.appendChild(bar);
+  row.appendChild(label);
+  row.appendChild(barContainer);
+  row.appendChild(example);
+  chart.appendChild(row);
+
+  // Animate on scroll
+  setTimeout(() => {
+    bar.style.width = pct + '%';
+  }, 200 + i * 80);
+});
+</script>
+
+</body>
+</html>
