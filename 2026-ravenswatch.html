@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ravenswatch — Complete Advanced Guide (Patch 1.04)</title>
+<style>
+/* === RESET & BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–bg: #faf8f5;
+–bg-alt: #f0ece6;
+–bg-card: #fff;
+–text: #1a1a1a;
+–text-muted: #555;
+–text-light: #888;
+–border: #ddd;
+–border-light: #e8e4de;
+–accent: #c0392b;
+–accent-dim: #e74c3c22;
+–link: #8e3b2e;
+
+/* rarity colors */
+–common: #6b8e23;
+–rare: #2e86c1;
+–epic: #8e44ad;
+–legendary: #d4a017;
+–cursed: #922b21;
+
+/* tier colors */
+–tier-s: #d4a017;
+–tier-a: #27ae60;
+–tier-b: #2e86c1;
+–tier-c: #95a5a6;
+
+–font-body: Georgia, ‘Times New Roman’, serif;
+–font-head: ‘Segoe UI’, ‘Helvetica Neue’, Helvetica, sans-serif;
+–font-mono: ‘Consolas’, ‘Courier New’, monospace;
+
+–max-w: 860px;
+–sidebar-w: 220px;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: var(–font-body);
+line-height: 1.7;
+-webkit-font-smoothing: antialiased;
+}
+
+/* === LAYOUT === */
+.page-wrapper {
+display: flex;
+min-height: 100vh;
+}
+
+.sidebar {
+position: sticky;
+top: 0;
+height: 100vh;
+width: var(–sidebar-w);
+min-width: var(–sidebar-w);
+overflow-y: auto;
+background: #2c2118;
+color: #ccc;
+padding: 1.5rem 0;
+font-family: var(–font-head);
+font-size: 0.78rem;
+line-height: 1.4;
+border-right: 3px solid var(–accent);
+scrollbar-width: thin;
+}
+
+.sidebar-title {
+padding: 0 1rem 1rem;
+font-size: 0.9rem;
+font-weight: 700;
+color: #e8c97a;
+letter-spacing: 0.03em;
+border-bottom: 1px solid #444;
+margin-bottom: 0.5rem;
+}
+
+.sidebar a {
+display: block;
+padding: 0.35rem 1rem;
+color: #bbb;
+text-decoration: none;
+transition: background 0.15s, color 0.15s;
+}
+.sidebar a:hover, .sidebar a.active {
+background: #3d2f22;
+color: #e8c97a;
+}
+.sidebar a.sub {
+padding-left: 1.8rem;
+font-size: 0.72rem;
+color: #999;
+}
+.sidebar a.sub:hover { color: #ddd; }
+
+.main-content {
+flex: 1;
+max-width: var(–max-w);
+margin: 0 auto;
+padding: 2.5rem 2rem 6rem;
+}
+
+@media (max-width: 960px) {
+.sidebar { display: none; }
+.main-content { padding: 1.5rem 1rem 4rem; }
+}
+
+/* === TYPOGRAPHY === */
+h1 {
+font-family: var(–font-head);
+font-size: 2.2rem;
+font-weight: 800;
+color: var(–text);
+margin-bottom: 0.3rem;
+letter-spacing: -0.02em;
+}
+
+.subtitle {
+font-size: 1rem;
+color: var(–text-muted);
+margin-bottom: 2rem;
+font-style: italic;
+}
+
+h2 {
+font-family: var(–font-head);
+font-size: 1.5rem;
+font-weight: 700;
+color: var(–text);
+margin: 3rem 0 1rem;
+padding-bottom: 0.4rem;
+border-bottom: 2px solid var(–accent);
+}
+
+h3 {
+font-family: var(–font-head);
+font-size: 1.15rem;
+font-weight: 600;
+color: var(–text);
+margin: 2rem 0 0.6rem;
+}
+
+h4 {
+font-family: var(–font-head);
+font-size: 0.95rem;
+font-weight: 600;
+color: var(–text-muted);
+margin: 1.2rem 0 0.4rem;
+text-transform: uppercase;
+letter-spacing: 0.04em;
+}
+
+p { margin-bottom: 0.9rem; }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+a { color: var(–link); }
+
+code {
+font-family: var(–font-mono);
+font-size: 0.88em;
+background: var(–bg-alt);
+padding: 0.15em 0.4em;
+border-radius: 3px;
+}
+
+pre {
+background: #2c2118;
+color: #e8c97a;
+padding: 1rem 1.2rem;
+border-radius: 4px;
+overflow-x: auto;
+font-family: var(–font-mono);
+font-size: 0.85rem;
+line-height: 1.5;
+margin: 1rem 0;
+}
+
+blockquote {
+border-left: 3px solid var(–accent);
+padding: 0.6rem 1rem;
+margin: 1rem 0;
+background: var(–accent-dim);
+color: var(–text-muted);
+font-size: 0.92rem;
+}
+
+hr {
+border: none;
+border-top: 1px solid var(–border-light);
+margin: 2.5rem 0;
+}
+
+/* === TABLES === */
+.table-wrap {
+overflow-x: auto;
+margin: 1rem 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+font-size: 0.88rem;
+line-height: 1.5;
+}
+
+th {
+background: #2c2118;
+color: #e8c97a;
+font-family: var(–font-head);
+font-weight: 600;
+text-align: left;
+padding: 0.5rem 0.7rem;
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 0.03em;
+}
+
+td {
+padding: 0.5rem 0.7rem;
+border-bottom: 1px solid var(–border-light);
+vertical-align: top;
+}
+
+tr:nth-child(even) td { background: var(–bg-alt); }
+
+/* === CALLOUT BOXES === */
+.callout {
+padding: 0.8rem 1rem;
+border-radius: 4px;
+margin: 1rem 0;
+font-size: 0.9rem;
+line-height: 1.6;
+}
+.callout-info { background: #e8f4f8; border-left: 3px solid #2e86c1; }
+.callout-warn { background: #fdf2e9; border-left: 3px solid #e67e22; }
+.callout-tip { background: #eafaf1; border-left: 3px solid #27ae60; }
+.callout-danger { background: #fdedec; border-left: 3px solid #c0392b; }
+.callout-label {
+font-family: var(–font-head);
+font-weight: 700;
+font-size: 0.8rem;
+text-transform: uppercase;
+letter-spacing: 0.04em;
+margin-bottom: 0.3rem;
+}
+
+/* === FORMULA VISUALIZATION === */
+.formula-pipeline {
+display: flex;
+align-items: center;
+gap: 0;
+flex-wrap: wrap;
+margin: 1.5rem 0;
+font-family: var(–font-head);
+font-size: 0.82rem;
+}
+.formula-box {
+background: var(–bg-card);
+border: 1px solid var(–border);
+padding: 0.6rem 0.8rem;
+border-radius: 4px;
+text-align: center;
+min-width: 100px;
+}
+.formula-box .label { font-size: 0.7rem; color: var(–text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.formula-box .value { font-weight: 700; font-size: 1rem; margin-top: 0.2rem; }
+.formula-mult {
+font-size: 1.2rem;
+font-weight: 700;
+color: var(–text-light);
+padding: 0 0.3rem;
+}
+
+/* === DR VISUALIZATION === */
+.dr-bar-set { margin: 1rem 0 1.5rem; }
+.dr-row {
+display: flex;
+align-items: center;
+margin: 0.4rem 0;
+font-family: var(–font-head);
+font-size: 0.82rem;
+}
+.dr-label {
+width: 130px;
+min-width: 130px;
+font-weight: 600;
+}
+.dr-bar-bg {
+flex: 1;
+height: 24px;
+background: #e0ddd7;
+border-radius: 3px;
+position: relative;
+overflow: hidden;
+}
+.dr-bar-fill {
+height: 100%;
+border-radius: 3px;
+display: flex;
+align-items: center;
+padding-left: 8px;
+font-weight: 700;
+font-size: 0.75rem;
+color: #fff;
+transition: width 0.4s;
+}
+.dr-pct {
+width: 50px;
+min-width: 50px;
+text-align: right;
+font-weight: 700;
+color: var(–text-muted);
+margin-left: 0.5rem;
+}
+
+/* === CDR CHART === */
+.cdr-chart {
+position: relative;
+width: 100%;
+max-width: 500px;
+height: 200px;
+margin: 1rem 0 1.5rem;
+}
+.cdr-chart canvas { width: 100%; height: 100%; }
+
+/* === HERO CARDS === */
+.hero-card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 1.2rem 1.4rem;
+margin: 1.5rem 0;
+position: relative;
+}
+
+.hero-header {
+display: flex;
+align-items: center;
+gap: 0.8rem;
+margin-bottom: 0.8rem;
+flex-wrap: wrap;
+}
+
+.hero-name {
+font-family: var(–font-head);
+font-size: 1.2rem;
+font-weight: 700;
+}
+
+.tier-badge {
+display: inline-block;
+font-family: var(–font-head);
+font-weight: 800;
+font-size: 0.75rem;
+padding: 0.15rem 0.5rem;
+border-radius: 3px;
+color: #fff;
+letter-spacing: 0.04em;
+}
+.tier-s { background: var(–tier-s); }
+.tier-a { background: var(–tier-a); }
+.tier-b { background: var(–tier-b); }
+.tier-c { background: var(–tier-c); }
+
+.hero-stats {
+display: flex;
+gap: 1rem;
+flex-wrap: wrap;
+font-family: var(–font-head);
+font-size: 0.8rem;
+color: var(–text-muted);
+}
+.hero-stat {
+display: flex;
+align-items: center;
+gap: 0.3rem;
+}
+.hp-bar-mini {
+display: inline-block;
+width: 60px;
+height: 8px;
+background: #e0ddd7;
+border-radius: 4px;
+overflow: hidden;
+vertical-align: middle;
+}
+.hp-bar-mini-fill {
+height: 100%;
+background: #c0392b;
+border-radius: 4px;
+}
+
+/* === TALENT PATH === */
+.talent-path {
+background: var(–bg-alt);
+border-radius: 4px;
+padding: 0.8rem 1rem;
+margin: 0.6rem 0;
+border-left: 3px solid var(–accent);
+}
+.talent-path-name {
+font-family: var(–font-head);
+font-weight: 700;
+font-size: 0.9rem;
+margin-bottom: 0.3rem;
+}
+.talent-path p { margin-bottom: 0.3rem; font-size: 0.88rem; }
+
+/* === BUILD CARDS === */
+.build-card {
+background: var(–bg-card);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 1.2rem 1.4rem;
+margin: 1.5rem 0;
+}
+.build-title {
+font-family: var(–font-head);
+font-size: 1.1rem;
+font-weight: 700;
+margin-bottom: 0.6rem;
+}
+
+.item-chain {
+display: flex;
+align-items: center;
+gap: 0;
+flex-wrap: wrap;
+margin: 0.6rem 0;
+font-family: var(–font-head);
+font-size: 0.82rem;
+}
+.item-pill {
+display: inline-block;
+padding: 0.25rem 0.6rem;
+border-radius: 3px;
+font-weight: 600;
+font-size: 0.78rem;
+color: #fff;
+}
+.item-pill.common { background: var(–common); }
+.item-pill.rare { background: var(–rare); }
+.item-pill.epic { background: var(–epic); }
+.item-pill.legendary { background: var(–legendary); color: #1a1a1a; }
+.item-pill.cursed { background: var(–cursed); }
+
+.item-arrow {
+font-size: 1rem;
+color: var(–text-light);
+padding: 0 0.3rem;
+}
+
+/* === SYNERGY MATRIX === */
+.matrix-wrap { overflow-x: auto; }
+.matrix-table { font-size: 0.78rem; }
+.matrix-table th { font-size: 0.72rem; padding: 0.4rem 0.5rem; }
+.matrix-table td { padding: 0.4rem 0.5rem; font-size: 0.78rem; }
+.matrix-table td.primary { background: #eafaf1; }
+.matrix-table td.secondary { background: #e8f4f8; }
+.matrix-table td.avoid { background: #fdedec; }
+
+/* === BOSS PHASE DIAGRAM === */
+.phase-timeline {
+display: flex;
+margin: 1rem 0;
+font-family: var(–font-head);
+font-size: 0.78rem;
+}
+.phase-step {
+flex: 1;
+padding: 0.6rem;
+text-align: center;
+position: relative;
+border-top: 3px solid var(–accent);
+}
+.phase-step::before {
+content: ‘’;
+position: absolute;
+top: -7px;
+left: 50%;
+transform: translateX(-50%);
+width: 10px;
+height: 10px;
+background: var(–accent);
+border-radius: 50%;
+}
+.phase-num {
+font-weight: 700;
+font-size: 0.7rem;
+color: var(–accent);
+margin-bottom: 0.2rem;
+}
+
+/* === ROUTING TIMELINE === */
+.route-timeline {
+display: flex;
+margin: 1rem 0 1.5rem;
+border-radius: 4px;
+overflow: hidden;
+font-family: var(–font-head);
+font-size: 0.78rem;
+height: 70px;
+}
+.route-phase {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 0.4rem 0.6rem;
+color: #fff;
+text-align: center;
+line-height: 1.3;
+}
+.route-phase .rp-label { font-weight: 700; font-size: 0.72rem; text-transform: uppercase; }
+.route-phase .rp-time { font-size: 0.68rem; opacity: 0.8; }
+
+/* === TRAIT TABLE === */
+.trait-table { font-size: 0.85rem; }
+.trait-table td:first-child { font-weight: 600; white-space: nowrap; }
+.trait-rec { color: var(–accent); font-weight: 700; font-size: 0.8rem; }
+
+/* === RARITY TAGS === */
+.rarity { font-family: var(–font-head); font-weight: 700; font-size: 0.78rem; padding: 0.1rem 0.4rem; border-radius: 2px; }
+.rarity-common { color: var(–common); }
+.rarity-rare { color: var(–rare); }
+.rarity-epic { color: var(–epic); }
+.rarity-legendary { color: var(–legendary); }
+.rarity-cursed { color: var(–cursed); }
+
+/* === TIER PRIORITY TABLE */
+.prio-table td:first-child { font-weight: 700; font-family: var(–font-head); }
+.prio-s { color: var(–tier-s); }
+.prio-a { color: var(–tier-a); }
+.prio-b { color: var(–tier-b); }
+
+/* === COLLAPSIBLE SECTIONS === */
+details { margin: 0.5rem 0; }
+details summary {
+cursor: pointer;
+font-family: var(–font-head);
+font-weight: 600;
+font-size: 0.9rem;
+padding: 0.5rem 0;
+color: var(–text);
+list-style: none;
+}
+details summary::before {
+content: ’▸ ’;
+color: var(–accent);
+}
+details[open] summary::before { content: ’▾ ’; }
+
+/* === BACK TO TOP === */
+.back-top {
+position: fixed;
+bottom: 1.5rem;
+right: 1.5rem;
+width: 36px;
+height: 36px;
+background: #2c2118;
+color: #e8c97a;
+border: none;
+border-radius: 50%;
+cursor: pointer;
+font-size: 1rem;
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 100;
+}
+
+/* === PRINT === */
+@media print {
+.sidebar, .back-top { display: none !important; }
+.main-content { max-width: 100%; padding: 0; }
+.hero-card, .build-card { break-inside: avoid; }
+}
+
+/* === LISTS (minimal) === */
+ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+li { margin-bottom: 0.3rem; font-size: 0.92rem; }
+</style>
+
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- SIDEBAR NAV -->
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-title">Ravenswatch Guide</div>
+  <a href="#part1">1. The Math</a>
+  <a href="#damage-formula" class="sub">Damage Formula</a>
+  <a href="#health-formula" class="sub">Health Formula</a>
+  <a href="#armor" class="sub">Armor &amp; CDR</a>
+  <a href="#part2">2. Magical Objects</a>
+  <a href="#items-common" class="sub">Common</a>
+  <a href="#items-rare" class="sub">Rare</a>
+  <a href="#items-epic" class="sub">Epic</a>
+  <a href="#items-legendary" class="sub">Legendary</a>
+  <a href="#items-cursed" class="sub">Cursed</a>
+  <a href="#part3">3. Talent Strategy</a>
+  <a href="#part4">4. Economy &amp; Routing</a>
+  <a href="#part5">5. Hero Profiles</a>
+  <a href="#hero-scarlet" class="sub">Scarlet</a>
+  <a href="#hero-beowulf" class="sub">Beowulf</a>
+  <a href="#hero-snowqueen" class="sub">Snow Queen</a>
+  <a href="#hero-piper" class="sub">Pied Piper</a>
+  <a href="#hero-aladdin" class="sub">Aladdin</a>
+  <a href="#hero-melusine" class="sub">Melusine</a>
+  <a href="#hero-geppetto" class="sub">Geppetto</a>
+  <a href="#hero-wukong" class="sub">Wukong</a>
+  <a href="#hero-carmilla" class="sub">Carmilla</a>
+  <a href="#hero-romeo" class="sub">Romeo</a>
+  <a href="#hero-juliet" class="sub">Juliet</a>
+  <a href="#hero-merlin" class="sub">Merlin</a>
+  <a href="#part6">6. Boss Strategy</a>
+  <a href="#part7">7. Co-op</a>
+  <a href="#part8">8. Build Templates</a>
+  <a href="#part9">9. Synergy Matrix</a>
+  <a href="#part10">10. Mid-Run Decisions</a>
+  <a href="#part11">11. Meta &amp; Resources</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+
+<main class="main-content">
+
+<h1>Ravenswatch — Complete Advanced Guide</h1>
+<p class="subtitle">Patch 1.04 &middot; Merlin DLC &middot; January 2026</p>
+
+<blockquote>
+<strong>Source reliability:</strong> Formulas and item effects are from datamined wiki data (high confidence). Tier lists and strategy reflect community consensus from experienced players. Statistics marked with ~ are approximate community reports.
+</blockquote>
+
+<!-- ============================================================ -->
+
+<!-- PART 1: THE MATH -->
+
+<!-- ============================================================ -->
+
+<h2 id="part1">Part 1: The Math That Governs Everything</h2>
+
+<h3 id="damage-formula">The Damage Formula</h3>
+
+<p>Your total damage is the product of five multiplicative layers. Because they multiply, improving the <em>weakest</em> layer gives the biggest returns.</p>
+
+<div class="formula-pipeline">
+  <div class="formula-box"><div class="label">Base &times; Level</div><div class="value">1.1<sup>Lv-1</sup></div></div>
+  <div class="formula-mult">&times;</div>
+  <div class="formula-box"><div class="label">DMG Stat</div><div class="value">1 + DMG/100</div></div>
+  <div class="formula-mult">&times;</div>
+  <div class="formula-box"><div class="label">Status</div><div class="value">Str 1.25&times;</div></div>
+  <div class="formula-mult">&times;</div>
+  <div class="formula-box"><div class="label">Critical</div><div class="value">1.5&times; base</div></div>
+  <div class="formula-mult">&times;</div>
+  <div class="formula-box"><div class="label">Enemy DR</div><div class="value">1 - DR%</div></div>
+</div>
+
+<p><strong>Layer 1 — Level Multiplier:</strong> Each level multiplies base damage by 1.1. Level 5 = 1.46&times; level 1 — a 46% boost before items. Reaching level 5 (and your Ultimate) before the chapter boss is the single most important thing in the game.</p>
+
+<p><strong>Layer 2 — DMG Stat:</strong> Each point = +1% to all ability damage. 50 DMG = +50%. 100 DMG = double.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Chapter</th><th>DMG Benchmark</th></tr>
+<tr><td>Ch 1 Boss</td><td>15–25</td></tr>
+<tr><td>Ch 2 Boss</td><td>40–60</td></tr>
+<tr><td>Ch 3 Boss</td><td>80–100+</td></tr>
+</table>
+</div>
+
+<p><strong>Layer 3 — Status:</strong> Strength = 1.25&times; dealt. Weaken = 0.75&times; dealt. Binary on/off, multiplicative with everything else.</p>
+
+<p><strong>Layer 4 — Crits:</strong> Base 5% chance. Multiplier = 1.5 + Crit Damage bonus. Crit chance above 100% overflows into extra crit damage (+0.01 per 1% overflow).</p>
+
+<h4>Layer 5 — Enemy Damage Reduction</h4>
+<p>This is not a smooth curve — four discrete tiers. Most players undervalue this layer.</p>
+
+<div class="dr-bar-set">
+  <div class="dr-row">
+    <div class="dr-label">Unarmored</div>
+    <div class="dr-bar-bg"><div class="dr-bar-fill" style="width:100%; background:#27ae60;">100% effective</div></div>
+    <div class="dr-pct">0% DR</div>
+  </div>
+  <div class="dr-row">
+    <div class="dr-label">Light Armor</div>
+    <div class="dr-bar-bg"><div class="dr-bar-fill" style="width:50%; background:#e67e22;">50%</div></div>
+    <div class="dr-pct">50% DR</div>
+  </div>
+  <div class="dr-row">
+    <div class="dr-label">Heavy Armor</div>
+    <div class="dr-bar-bg"><div class="dr-bar-fill" style="width:25%; background:#c0392b;">25%</div></div>
+    <div class="dr-pct">75% DR</div>
+  </div>
+  <div class="dr-row">
+    <div class="dr-label">Perfect Armor</div>
+    <div class="dr-bar-bg"><div class="dr-bar-fill" style="width:2%; background:#7f1d1d;">1 dmg</div></div>
+    <div class="dr-pct">100% DR</div>
+  </div>
+</div>
+
+<div class="callout callout-tip">
+<div class="callout-label">Key Insight</div>
+Staggering an enemy from Light Armor to Stunned <strong>doubles</strong> your effective damage. Heavy &rarr; Stunned <strong>quadruples</strong> it. Boss stagger windows are 2–4&times; damage multipliers — everything between staggers operates at a fraction of your real output.
+</div>
+
+<h3 id="health-formula">The Health Formula</h3>
+
+<pre>Max HP = Base HP &times; 1.1^(Level-1) &times; (1 + Vitality/100) &times; HP Multipliers</pre>
+
+<p><strong>Vitality does double duty:</strong> each 10 Vitality = ~10% more HP AND +1 DMG with Ogre Blood. Healing fountains give +10 Vitality each — simultaneously offensive and defensive.</p>
+
+<h3 id="armor">Armor &amp; Cooldown Reduction</h3>
+
+<p><strong>Armor:</strong> Exact formula undocumented (wiki: "TBA"). Diminishing returns. Useful up to ~40 as a one-shot safety net. Beyond that, invest in DMG or Vitality. Exception: Dragon Hide 4&times; converts Armor &rarr; 40% DMG.</p>
+
+<p><strong>CDR Stacking:</strong> Multiplicative, not additive. Diminishing absolute returns per copy.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Raven Copies</th><th>Naive (Additive)</th><th>Actual (Multiplicative)</th></tr>
+<tr><td>1</td><td>25%</td><td>25%</td></tr>
+<tr><td>2</td><td>50%</td><td>43.75%</td></tr>
+<tr><td>3</td><td>75%</td><td>57.8%</td></tr>
+<tr><td>5</td><td>125%</td><td>76.3%</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 2: ITEMS -->
+
+<!-- ============================================================ -->
+
+<h2 id="part2">Part 2: Complete Magical Objects Reference</h2>
+
+<p>Killed enemies drop <strong>consumables</strong> (healing orbs, strength potions, shield orbs) — these are temporary pickups. <strong>Magical Objects</strong> are permanent inventory items from chests, wells, the Sandman shop, quests, and dungeons.</p>
+
+<blockquote>
+<strong>Rework note:</strong> Items with upcoming reworks list the <em>live Patch 1.04 version first</em>. Reworked versions are marked and may ship in a future patch.
+</blockquote>
+
+<h3 id="items-common">Common Items <span class="rarity rarity-common">(Set at 5 copies)</span></h3>
+
+<div class="table-wrap">
+<table>
+<tr><th>Item</th><th>Effect</th><th>Set Bonus (5&times;)</th><th>Priority &amp; Notes</th></tr>
+<tr><td><strong>Ogre Blood</strong></td><td>+1 DMG per 10 Vitality</td><td>+20% Crit Chance</td><td><strong>Always take.</strong> Best item in the game. Every Vitality source feeds it.</td></tr>
+<tr><td><strong>Horn of Plenty</strong></td><td>Spawns 2 consumables</td><td>+10 DMG, +20 Vit, +20 Armor</td><td>Strong mid-run with Ogre Blood. Set Vitality feeds Ogre.</td></tr>
+<tr><td><strong>Green Armor</strong></td><td>+2 Armor per Common item</td><td>Rare items also count</td><td>Chip damage defense. Feeds Dragon Hide conversion.</td></tr>
+<tr><td><strong>Leprechaun Coin</strong></td><td>+1 Star; +25 Shards per Star spent</td><td>Free first reroll</td><td>Economy acceleration. Falls off vs Ogre Blood.</td></tr>
+<tr><td><strong>Dreamcatcher</strong></td><td>Prices &minus;10%</td><td>Free Sandman purchase/chapter</td><td>Good early if shopping heavily.</td></tr>
+<tr><td><strong>Goldilocks' Porridge</strong></td><td>Orbs grant Strength 8 sec, heal +10%</td><td>+20 DMG while Strength active</td><td>25% damage multiplier with uptime maintenance.</td></tr>
+<tr><td><strong>Voodoo Doll</strong></td><td>+15% Boss damage</td><td>Execute bosses &lt;5% HP</td><td>Interaction with DMG stat unconfirmed (additive vs multiplicative).</td></tr>
+<tr><td><strong>Mermaid Tears</strong></td><td>+25% all healing</td><td>+30 Vitality</td><td>Sustain heroes. Set feeds Ogre (+3 DMG).</td></tr>
+<tr><td><strong>Eternal Rose</strong></td><td>+10% Crit for 2 sec after Dash</td><td>Crits +50% damage</td><td>Dash-attack combos. Set is extremely strong.</td></tr>
+</table>
+</div>
+
+<h3 id="items-rare">Rare Items <span class="rarity rarity-rare">(Set at 4 copies)</span></h3>
+
+<div class="table-wrap">
+<table>
+<tr><th>Item</th><th>Effect</th><th>Set Bonus (4&times;)</th><th>Notes</th></tr>
+<tr><td><strong>Golden Egg</strong></td><td>+1 DMG per 150 Shards spent</td><td>+30% Shard gains</td><td>Second-best scaling after Ogre Blood.</td></tr>
+<tr><td><strong>Ace of Spades</strong></td><td>Attack +20%</td><td>+15% Attack Speed</td><td>Only for auto-attack builds.</td></tr>
+<tr><td><strong>King of Clubs</strong></td><td>Power +20%</td><td>Power +40% Crit</td><td>Power builds. Set at 4&times; is very strong.</td></tr>
+<tr><td><strong>Jack of Diamonds</strong></td><td>Special +20%</td><td>Special +40% Crit</td><td>Special builds.</td></tr>
+<tr><td><strong>Queen of Hearts</strong></td><td>Heal 2% HP/2s out of combat</td><td>+30 DMG at full HP</td><td>Set is strong but fragile on Nightmare.</td></tr>
+<tr><td><strong>Unicorn Horn</strong></td><td>Regen at critical HP (45s CD)</td><td>+50 DMG during Regen</td><td>Emergency. Conditional but huge when it fires.</td></tr>
+<tr><td><strong>Dragon Hide</strong></td><td>+1 Armor per 5% missing HP</td><td>Armor &rarr; 40% DMG</td><td>4&times; set is build-defining. Don't force it.</td></tr>
+<tr><td><strong>Fairy Dust</strong></td><td>18 Shield when hit (30s CD)</td><td>+50% Shield effectiveness</td><td>Safety net.</td></tr>
+<tr><td><strong>Vajra</strong></td><td>Dash +40 flat dmg</td><td>Dash casts lightning</td><td>Flat 40 falls off. Weakest rare.</td></tr>
+<tr><td><strong>Cryptic Prophecy</strong> <em style="font-size:0.75rem;">(Merlin DLC)</em></td><td>+1 Star of Fate</td><td>+6 DMG per complete item set</td><td>Scales with set completions.</td></tr>
+</table>
+</div>
+
+<h3 id="items-epic">Epic Items <span class="rarity rarity-epic">(Set at 3 copies)</span></h3>
+
+<h4>Raven Series — Cooldown Reduction</h4>
+<div class="table-wrap">
+<table>
+<tr><th>Item</th><th>Effect</th><th>Set Bonus (3&times;)</th></tr>
+<tr><td><strong>Raven Claw</strong></td><td>&minus;25% Power CDR</td><td>Power +40% damage</td></tr>
+<tr><td><strong>Raven Beak</strong></td><td>&minus;25% Special CDR</td><td>Special +40% damage</td></tr>
+<tr><td><strong>Raven Skull</strong></td><td>&minus;25% Defense CDR</td><td>+40 Armor</td></tr>
+<tr><td><strong>Raven Wing</strong></td><td>&minus;25% Dash CDR</td><td>+15% Move Speed</td></tr>
+<tr><td><strong>Raven Eye</strong></td><td>&minus;25% Ultimate CDR</td><td>Ult clears all other CDs</td></tr>
+</table>
+</div>
+
+<h4>Stone Series — Extra Charges</h4>
+<div class="table-wrap">
+<table>
+<tr><th>Item</th><th>Effect</th><th>Set Bonus (3&times;)</th></tr>
+<tr><td><strong>Flaming Pearl</strong></td><td>Power +1 charge</td><td>Power +15% dmg per enemy debuff</td></tr>
+<tr><td><strong>Thunderstone</strong></td><td>Special +1 charge</td><td>Special casts lightning on 3 enemies</td></tr>
+<tr><td><strong>Adder Stone</strong></td><td>Defense +1 charge</td><td>+40% Move Speed for 3s after Defense</td></tr>
+<tr><td><strong>Charmstone</strong></td><td>Dash +1 charge</td><td>Dash grants Shield for 6s</td></tr>
+</table>
+</div>
+
+<p><strong>Joker Card</strong> <em>(Merlin DLC)</em>: Grants effects of all other Card items you own. With King + Jack + Joker, get +20% Power AND +20% Special from one slot.</p>
+
+<h3 id="items-legendary">Legendary Items <span class="rarity rarity-legendary">(Unique)</span></h3>
+
+<div class="table-wrap">
+<table class="prio-table">
+<tr><th>Item</th><th>Effect</th><th>Priority</th></tr>
+<tr><td>Philosopher's Stone</td><td>+1 permanent Vitality per Healing Orb</td><td class="prio-s">S-tier (with Ogre Blood)</td></tr>
+<tr><td>Excalibur</td><td>+10 DMG per Legendary Talent</td><td class="prio-s">S-tier (mid-late)</td></tr>
+<tr><td>Raven Effigy</td><td>Power &amp; Special +1 charge each</td><td class="prio-s">S-tier (universal)</td></tr>
+<tr><td>Chainmail</td><td>Damage/sec capped at 50% max HP</td><td class="prio-s">S-tier (Nightmare)</td></tr>
+<tr><td>Holy Grail</td><td>Defense heals nearby heroes 10 HP</td><td class="prio-s">S-tier co-op / A-tier solo</td></tr>
+<tr><td>Sun Crown <em style="font-size:0.75rem;">(Merlin DLC)</em></td><td>Upgrades ALL talent rarities</td><td class="prio-s">S-tier (if found early)</td></tr>
+<tr><td>Vorpal Blade</td><td>Execute standard &lt;20%, elite &lt;10%</td><td class="prio-a">A-tier</td></tr>
+<tr><td>Water of Life</td><td>+25 Vit; full heal each Day/Night</td><td class="prio-a">A-tier</td></tr>
+<tr><td>Tamatebako</td><td>+2 Stars; +1 item choice</td><td class="prio-a">A-tier</td></tr>
+<tr><td>Ring of Dispel</td><td>Dash applies Vulnerable 4 sec</td><td class="prio-a">A-tier (vs armor)</td></tr>
+<tr><td>Seven-League Boots</td><td>Abilities clear Dash CD</td><td class="prio-a">A-tier (ability spam)</td></tr>
+<tr><td>Swan Cloak</td><td>Dash heals 50% of recent damage</td><td class="prio-b">B-tier</td></tr>
+<tr><td>Nibelungen Ring</td><td>Ultimate +1 charge</td><td class="prio-b">B-tier</td></tr>
+<tr><td>Father Time's Hourglass</td><td>CDR increases as HP drops</td><td class="prio-b">B-tier</td></tr>
+</table>
+</div>
+
+<h3 id="items-cursed">Cursed Items <span class="rarity rarity-cursed">(Dungeon Boss Rewards)</span></h3>
+
+<div class="table-wrap">
+<table>
+<tr><th>Item</th><th>Effect</th><th>Downside</th><th>Verdict</th></tr>
+<tr><td><strong>Bloody Mary's Mirror</strong></td><td>+0.5 DMG per Vitality</td><td>Vit &rarr; half HP</td><td>Build-defining. 100 Vit + Ogre = +60 DMG.</td></tr>
+<tr><td><strong>Hungry Grass</strong></td><td>Orbs give +1 permanent DMG</td><td>Lost at Death's Door</td><td>High risk/reward.</td></tr>
+<tr><td><strong>Black Lotus</strong></td><td>Attack +5% Lifesteal</td><td>No orb healing</td><td>Auto-attackers only. Anti-synergy w/ Philosopher's Stone.</td></tr>
+<tr><td><strong>Fast-Walker Boots</strong></td><td>+20% Move Speed</td><td>&minus;10 Armor</td><td>Map efficiency. Manageable trade.</td></tr>
+<tr><td><strong>Cauldron</strong></td><td>+60 Vitality</td><td>&minus;25% all healing</td><td>+6 DMG with Ogre + huge HP.</td></tr>
+<tr><td><strong>Mad Hat</strong></td><td>Damage taken &rarr; 10% as Shards</td><td>&mdash;</td><td>Core of Aladdin infinite builds.</td></tr>
+<tr><td><strong>Hope Diamond</strong></td><td>+50% Shard gains</td><td>Shards lost at Death's Door</td><td>Rich or broke.</td></tr>
+<tr><td><strong>Witch's Broom</strong></td><td>Dash = Intangible</td><td>+15% damage taken</td><td>Boss dodging. Manageable with Chainmail.</td></tr>
+<tr><td><strong>Nightmare Ichor</strong></td><td>Special +100%</td><td>Special +50% CD</td><td>For nuke Specials. Synergizes w/ Thunderstone charges.</td></tr>
+<tr><td><strong>Nightmare Thorn</strong></td><td>Power +100%</td><td>Power +50% CD</td><td>For nuke Powers. Synergizes w/ Flaming Pearl charges.</td></tr>
+<tr><td><strong>Oni Mask</strong></td><td>+15 DMG per Cursed item</td><td>&minus;10 Armor per Legendary</td><td>Full-curse builds. Anti-synergy w/ legendaries.</td></tr>
+<tr><td><strong>Balor's Eye</strong></td><td>Remove all charges; +100% DMG each</td><td>Permanent charge loss</td><td>4 charges = +400% but no multi-charge combos ever.</td></tr>
+<tr><td><strong>Baba Yaga's Mortar</strong></td><td>Prevent lethal, full heal (1/ch)</td><td>&mdash;</td><td>Free extra life. Extremely valuable.</td></tr>
+<tr><td><strong>Devil's Pocket</strong> <em style="font-size:0.75rem;">(Merlin DLC)</em></td><td>Absorbs 50% shards until 400</td><td>Slow start</td><td>+50% Crit permanently after 400. Massive.</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 3: TALENTS -->
+
+<!-- ============================================================ -->
+
+<h2 id="part3">Part 3: Talent Strategy</h2>
+
+<p>One talent per level-up. Rarities: Common &rarr; Rare &rarr; Epic &rarr; Legendary. Upgrade rarity at Sandman for Shards. The Epic&rarr;Legendary jump is significant. Sun Crown (Merlin DLC) auto-upgrades all talents.</p>
+
+<h4>Before the Run</h4>
+<p>Know your hero's 2–3 strongest talents. Know which ability to build around (Power/Special/Attack). Know which items you want.</p>
+
+<h4>During the Run</h4>
+<ol>
+<li><strong>Take the strongest talent offered</strong>, not the one that fits your plan. Adaptation wins.</li>
+<li><strong>Use Stars of Fate</strong> to reroll bad offerings — most valuable early.</li>
+<li><strong>Upgrade core talents to Legendary</strong> at Sandman before buying new items.</li>
+</ol>
+
+<h4>Talent Priority at Each Level-Up</h4>
+<ol>
+<li>Quest talents with DMG or Crit (always take if strong)</li>
+<li>Talents synergizing with your current best ability</li>
+<li>New mechanics (AoE, lifesteal, status application)</li>
+<li>Generic stat boosts (only if nothing better)</li>
+</ol>
+
+<p>For pivot/adaptation guidance, see <a href="#part10">Part 10: Mid-Run Decisions</a>.</p>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 4: ECONOMY -->
+
+<!-- ============================================================ -->
+
+<h2 id="part4">Part 4: The Nightmare Economy &mdash; Time vs. Power</h2>
+
+<h3>The 18-Minute Clock</h3>
+<p>Each chapter gives 18 minutes before the boss awakens. The <strong>Hourglass of Dreams</strong> system lets you trigger bosses early for bonus rewards. Community data: ~77% fail rate with &lt;6 min prep, ~83% success with full timer.</p>
+
+<h4>Optimal Route</h4>
+
+<div class="route-timeline">
+  <div class="route-phase" style="flex:2; background:#27ae60;">
+    <div class="rp-label">Phase 1: Vision</div>
+    <div class="rp-time">18:00 &rarr; 14:00</div>
+    <div style="font-size:0.68rem; margin-top:2px;">Crow Towers + Green POIs</div>
+  </div>
+  <div class="route-phase" style="flex:3; background:#2e86c1;">
+    <div class="rp-label">Phase 2: Power</div>
+    <div class="rp-time">14:00 &rarr; 8:00</div>
+    <div style="font-size:0.68rem; margin-top:2px;">Yellow POIs, Fountains, Wells, Grimoires, Dungeon</div>
+  </div>
+  <div class="route-phase" style="flex:2; background:#c0392b;">
+    <div class="rp-label">Phase 3: Quest</div>
+    <div class="rp-time">8:00 &rarr; 0:00</div>
+    <div style="font-size:0.68rem; margin-top:2px;">Chapter Quest, Red POIs, Tumors (Ch3)</div>
+  </div>
+</div>
+
+<h4>Sandman Spending Priority</h4>
+<ol>
+<li>Upgrade best talent to Legendary</li>
+<li>Buy core scaling item (Ogre Blood, Golden Egg)</li>
+<li>Upgrade second talent</li>
+<li>Supporting items</li>
+</ol>
+
+<h4>Death &amp; Revival</h4>
+<p>At 0 HP you enter <strong>Death's Door</strong> — downed but revivable. Solo: auto-revive with a <strong>feather</strong> (limited, fewer on higher difficulty). Co-op: teammates manually revive or spend a feather. Aladdin's Green Wish revives the entire team. The Altar of Heroes costs 100 Shards per player.</p>
+
+<h4>Points of Interest</h4>
+<div class="table-wrap">
+<table>
+<tr><th>POI</th><th>Reward</th><th>Risk</th><th>Notes</th></tr>
+<tr><td>Crow Tower</td><td>XP + map vision</td><td>None</td><td>Always first</td></tr>
+<tr><td>Dream Crystal</td><td>Shards</td><td>Low</td><td>Enemies can break it for you</td></tr>
+<tr><td>Chest (Green/Yellow/Red)</td><td>1–2+ items</td><td>Low–High</td><td>Yellow guarantees Rare+, Red guarantees Epic+ (1.04)</td></tr>
+<tr><td>Healing Fountain</td><td>Full heal + 10 Vit</td><td>None</td><td><strong>Never skip.</strong> +1 DMG with Ogre Blood</td></tr>
+<tr><td>Wishing Well</td><td>Item (for Shards)</td><td>None</td><td>Match items you own for set progress</td></tr>
+<tr><td>Grimoire (G/Y/R)</td><td>Permanent stat boost</td><td>Med–High</td><td>Take +DMG over +Armor almost always</td></tr>
+<tr><td>Side Quest</td><td>Legendary item</td><td>Varies</td><td>Complete one per chapter</td></tr>
+<tr><td>Dungeon</td><td>Cursed item</td><td>High</td><td>Requires key. Build-defining rewards.</td></tr>
+<tr><td>Nightmare Tumor</td><td>&minus;20% boss HP</td><td>High</td><td>Two/chapter. Ch3: &minus;40% on Claws.</td></tr>
+<tr><td>Swine Brothers</td><td>Legendary item</td><td>Med-High</td><td>Stone house easiest. Start at night.</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 5: HEROES -->
+
+<!-- ============================================================ -->
+
+<h2 id="part5">Part 5: Complete Hero Profiles</h2>
+
+<p>Tier rankings reflect Nightmare consistency and forgiveness. Every hero can clear Nightmare.</p>
+
+<h4>Unlock Order</h4>
+<div class="table-wrap">
+<table>
+<tr><th>Hero</th><th>Unlock</th></tr>
+<tr><td>Scarlet, Pied Piper, Beowulf, Snow Queen</td><td>Available from start</td></tr>
+<tr><td>Aladdin</td><td>Beat Ch1 with Scarlet</td></tr>
+<tr><td>Melusine</td><td>Beat Ch1 with Pied Piper</td></tr>
+<tr><td>Geppetto</td><td>Beat Ch1 with Beowulf</td></tr>
+<tr><td>Sun Wukong</td><td>Beat Ch1 with Snow Queen</td></tr>
+<tr><td>Carmilla</td><td>Beat Ch1 with any unlocked hero</td></tr>
+<tr><td>Romeo &amp; Juliet</td><td>DLC</td></tr>
+<tr><td>Merlin</td><td>DLC (January 2026)</td></tr>
+</table>
+</div>
+
+<!-- SCARLET -->
+
+<div class="hero-card" id="hero-scarlet">
+  <div class="hero-header">
+    <span class="hero-name">5.1 Scarlet, The Red Hood</span>
+    <span class="tier-badge tier-a">A-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Melee Assassin / Werewolf</span>
+      <span class="hero-stat">Difficulty: Medium</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Two complete kits based on day/night. <em>Day</em>: daggers, Swift Strike dash (+50%/combo point), bomb stun, Cloak (Intangible + guaranteed crit), Shotgun ultimate (150 dmg, 2 charges). <em>Night</em>: claws, Bite leap (60 dmg +50%/combo), Slam AoE, Howl (+50 Armor, 15% lifesteal), In The Belly (eat non-boss enemy).</p>
+
+  <details>
+    <summary>Starting Traits</summary>
+    <div class="table-wrap">
+    <table class="trait-table">
+    <tr><th>Trait</th><th>Effect</th><th>When</th></tr>
+    <tr><td>Devourer (Default)</td><td>Enhanced Bite</td><td>Learning</td></tr>
+    <tr><td>Shapeshifter</td><td>Control transform; wolf heals on switch</td><td><span class="trait-rec">Safety pick</span></td></tr>
+    <tr><td>Critical Hunter</td><td>Guaranteed crit bonuses</td><td><span class="trait-rec">Snowball pick</span></td></tr>
+    <tr><td>Lycanthrope</td><td>Passive transformation</td><td>Standard</td></tr>
+    </table>
+    </div>
+  </details>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Power-Crit (Recommended)</div>
+    <p><strong>Commit:</strong> Any talent adding crit to Power or combo point generation.</p>
+    <p><strong>Key talents:</strong> Evisceration (bleed on Power per combo), combo from Defense, max combo points, crit amps.</p>
+    <p><strong>Loop:</strong> Cloak &rarr; Swift Strike (guaranteed crit + full combo = massive burst) &rarr; repeat.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill rare">King of Clubs</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill epic">Raven Claw</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill epic">Flaming Pearl</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill rare">Eternal Rose</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Special-Bomb (Safer AoE)</div>
+    <p><strong>Commit:</strong> Strong Special talents early, miss crit talents.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill rare">Jack of Diamonds</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill epic">Raven Beak</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill epic">Thunderstone</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 3: Wolf Sustain</div>
+    <p><strong>Commit:</strong> Shapeshifter + Defense CDR + Mermaid Tears early.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill epic">Raven Skull</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Holy Grail</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Mermaid Tears</span>
+    </p>
+  </div>
+
+  <p><strong>Best Items:</strong> Ogre Blood, Raven Effigy, Excalibur, Chainmail.</p>
+  <div class="callout callout-warn"><div class="callout-label">Struggles</div>Chapter 1 before scaling. Weak early — play cautiously first 10 minutes.</div>
+</div>
+
+<!-- BEOWULF -->
+
+<div class="hero-card" id="hero-beowulf">
+  <div class="hero-header">
+    <span class="hero-name">5.2 Beowulf</span>
+    <span class="tier-badge tier-b">B-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 120 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:100%"></span></span></span>
+      <span class="hero-stat">Tank / Fire DPS</span>
+      <span class="hero-stat">Difficulty: Low</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Call Wyrm empowers next Power/Special/Defense (+50% dmg, Ignite). Sword combo (70 total, finisher 200%). Shield blocks all damage. +Wyrm Defense heals nearby heroes 30%. Ultimate: Wyrm breathes fire (200 dps).</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Ignite/Fire (Highest Ceiling)</div>
+    <p><strong>Commit:</strong> <strong>Blazing Runes</strong> (+50% crit vs Ignited). Build-defining talent.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill epic">Flaming Pearl</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Ogre Blood</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Eternal Rose</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Special Explosion (Strong AoE)</div>
+    <p><strong>Commit:</strong> Special explosion talent early.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 3: Shield Tank (Co-op)</div>
+    <p><strong>Commit:</strong> Co-op + team needs tank. Holy Grail + Defense talents.</p>
+  </div>
+
+  <p><strong>Best Items:</strong> Ogre Blood, Chainmail (120 HP = highest in original cast), Flaming Pearl, Raven Effigy.</p>
+</div>
+
+<!-- SNOW QUEEN -->
+
+<div class="hero-card" id="hero-snowqueen">
+  <div class="hero-header">
+    <span class="hero-name">5.3 The Snow Queen (Nyss)</span>
+    <span class="tier-badge tier-b">B-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Ranged Caster / CC</span>
+      <span class="hero-stat">Difficulty: Low-Med</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Day = abilities deal extra damage. Night = longer freeze uptime. Ice lances (ranged), Power applies Chill &rarr; Frozen, Special = ice zone + clone, Defense = ice skating. Ultimate: large AoE burst.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Armor Break Quest (Strongest)</div>
+    <p><strong>Commit:</strong> <strong>Armor Break quest talent</strong> — take immediately. Breaks armor AND +10 DMG. Two S-tier effects in one.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill common">Ogre Blood</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Ring of Dispel</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Voodoo Doll</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Freeze Control</div>
+    <p><strong>Commit:</strong> Multiple Chill/Freeze talents early. Snowball (AoE chill).</p>
+  </div>
+
+  <p><strong>Best Items:</strong> Ogre Blood, Excalibur, Raven Effigy, Chainmail.</p>
+  <div class="callout callout-tip"><div class="callout-label">Advantage</div>Safest ranged hero. Freeze = enemies can't attack. Extremely high floor, almost never a "dead" run.</div>
+</div>
+
+<!-- PIED PIPER -->
+
+<div class="hero-card" id="hero-piper">
+  <div class="hero-header">
+    <span class="hero-name">5.4 The Pied Piper</span>
+    <span class="tier-badge tier-c">C-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Ranged DPS / Summoner</span>
+      <span class="hero-stat">Difficulty: High</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Rats spawn passively (max 20), activate for 3&times;5 dmg attacks then die. Flute = twin-stick shooter ranged. Fortissimo Special. Unchained Melody Ultimate.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Rat Swarm</div>
+    <p><strong>Commit:</strong> Giant Rats or rat generation talents. Items: Ogre Blood, Raven Effigy, move speed.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Music Spam</div>
+    <p><strong>Commit:</strong> Om (Special +24% radius), Fortissimo upgrades. Items: Raven Beak/Claw, Thunderstone/Flaming Pearl.</p>
+  </div>
+
+  <div class="callout callout-danger"><div class="callout-label">Why C-Tier</div>Most demanding handling. Twin-stick input unusual for genre. Rat micromanagement. Rewards mastery, punishes harshly.</div>
+</div>
+
+<!-- ALADDIN -->
+
+<div class="hero-card" id="hero-aladdin">
+  <div class="hero-header">
+    <span class="hero-name">5.5 Aladdin</span>
+    <span class="tier-badge tier-a">A-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Melee Flex / Utility</span>
+      <span class="hero-stat">Difficulty: Medium</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> 3 Wishes — Red (burst dmg), Green (heal/revive all nearby), Blue (shards + item). Scimitar chain (16 dmg, Enchantment doubles). Jinn Power (80 dmg, hold +50%). Scimitar Special (returns, gains Enchantment). Defense = Intangible jump + Vulnerable. Ultimate = 150 Shards &rarr; wish charge.</p>
+
+  <details>
+    <summary>Starting Traits</summary>
+    <div class="table-wrap">
+    <table class="trait-table">
+    <tr><th>Trait</th><th>Effect</th><th>When</th></tr>
+    <tr><td>Lamp Bearer</td><td>Standard wishes</td><td>Default</td></tr>
+    <tr><td>Shield Starter</td><td>Begin with shield</td><td><span class="trait-rec">Nightmare pick</span></td></tr>
+    <tr><td>Master Thief</td><td>Double item pickups</td><td>Economy builds</td></tr>
+    <tr><td>Jinn's Favor</td><td>Enhanced Jinn</td><td>Power focus</td></tr>
+    </table>
+    </div>
+  </details>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Wish Utility (Co-op)</div>
+    <p><strong>Commit:</strong> Playing co-op. Green wish = team-wide revive.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill epic">Raven Eye</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill cursed">Mad Hat</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill rare">Golden Egg</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Enchantment DPS (Solo)</div>
+    <p><strong>Commit:</strong> Shard Blades talent. Items: Ace of Spades, Eternal Rose, Black Lotus.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 3: Economy Infinite</div>
+    <p><strong>Commit:</strong> Mad Hat + Master Thief. Closest to "broken."</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill cursed">Mad Hat</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Horn of Plenty</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Ogre Blood</span>
+      <span class="item-arrow">&rarr; &#8734;</span>
+    </p>
+  </div>
+
+  <div class="callout callout-info"><div class="callout-label">Unique Value</div>Only hero who can revive the entire team with one ability. Irreplaceable in co-op Nightmare.</div>
+</div>
+
+<!-- MELUSINE -->
+
+<div class="hero-card" id="hero-melusine">
+  <div class="hero-header">
+    <span class="hero-name">5.6 Melusine</span>
+    <span class="tier-badge tier-s">S-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 90 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:75%"></span></span></span>
+      <span class="hero-stat">Ranged Support / Healer</span>
+      <span class="hero-stat">Difficulty: High</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Siren's Call toggles Sing Stance (Wisp attack, immobile) / Move Stance (mobile, no attack). Wisp = 21 dmg. Power = water attack. Defense = water pool, Intangible. Stance switching IS the gameplay.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Dedicated Healer (Co-op — why she's S-Tier)</div>
+    <p><strong>Commit:</strong> Playing co-op. Take <strong>Sea Dance</strong> + <strong>Siren Tears</strong>.</p>
+    <p><strong>Why S-tier:</strong> Sea Dance + Siren Tears + Mermaid Tears stacking keeps a 4-player team alive through almost anything. No other hero provides this level of team sustain.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill common">Mermaid Tears</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Holy Grail</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Chainmail</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Wisp DPS (Solo)</div>
+    <p><strong>Commit:</strong> Solo play. Wisp damage/multi-hit/speed talents.</p>
+  </div>
+
+  <div class="callout callout-warn"><div class="callout-label">Struggles</div>90 HP (lowest) means any positioning mistake is lethal. Stance lock while attacking punishes fast bosses.</div>
+</div>
+
+<!-- GEPPETTO -->
+
+<div class="hero-card" id="hero-geppetto">
+  <div class="hero-header">
+    <span class="hero-name">5.7 Geppetto</span>
+    <span class="tier-badge tier-c">C-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 80 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:67%"></span></span></span>
+      <span class="hero-stat">Summoner / Indirect DPS</span>
+      <span class="hero-stat">Difficulty: Very High</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Build 3 dummies (attack + draw aggro). Power = launch dummies (main damage). Cogsplosion heals dummies. Ultimate = Master Puppet.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Unstable Cores (Risky)</div>
+    <p><strong>Commit:</strong> Unstable Cores (dummies explode after 5s). Problem: dummies die in 2-3s on Nightmare.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Rocket Science (Recommended)</div>
+    <p><strong>Commit:</strong> Rocket Science (launched dummies deal more on impact). Doesn't require survival.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill rare">King of Clubs</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill epic">Flaming Pearl</span>
+    </p>
+  </div>
+
+  <div class="callout callout-danger"><div class="callout-label">Why C-Tier</div>80 HP = lowest in game. Dummies die too fast. Indirect damage unreliable. Chainmail is absolutely essential.</div>
+</div>
+
+<!-- WUKONG -->
+
+<div class="hero-card" id="hero-wukong">
+  <div class="hero-header">
+    <span class="hero-name">5.8 Sun Wukong</span>
+    <span class="tier-badge tier-a">A-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 110 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:92%"></span></span></span>
+      <span class="hero-stat">Melee Stance Dancer</span>
+      <span class="hero-stat">Difficulty: Very High</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Yin/Yang toggle. Yin = abilities heal, protect allies. Yang = +100% dmg dealt AND taken, Strength to allies. Empty Palm Defense = 0.5s block window (critical timing). Ultimate = 6 clones or transform into random hero.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Yang DPS (Highest Ceiling in Game)</div>
+    <p><strong>Commit:</strong> Seal talents (x2 dmg after extended Yang). <strong>Chainmail is mandatory</strong> — Yang's +100% intake kills you without it.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill common">Ogre Blood</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Chainmail</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill epic">Flaming Pearl</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Power Focus</div>
+    <p><strong>Commit:</strong> "Power strikes same target" — makes Power reliable single-target DPS.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 3: Laser (Ranged Safety)</div>
+    <p><strong>Commit:</strong> Laser talent (massive ranged beam). Extremely strong at Legendary rarity.</p>
+  </div>
+
+  <div class="callout callout-danger"><div class="callout-label">Avoid</div>"Quest for Immortality" (worst quest talent). "Scout" (not valuable when time is bottleneck).</div>
+</div>
+
+<!-- CARMILLA -->
+
+<div class="hero-card" id="hero-carmilla">
+  <div class="hero-header">
+    <span class="hero-name">5.9 Carmilla</span>
+    <span class="tier-badge tier-c">C-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: 100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Glass Cannon / Blood Manager</span>
+      <span class="hero-stat">Difficulty: High</span>
+    </div>
+  </div>
+
+  <p><strong>Kit:</strong> Blood resource — abilities consume Blood for enhanced effects. If empty, they consume HP instead (dangerous spiral). Tearing generates Blood. Death Kiss generates Blood. Power = enhanced Blood ability.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Survivability (Recommended)</div>
+    <p><strong>Commit:</strong> Blood generation or HP cost reduction talents.</p>
+    <p><strong>Items:</strong>
+      <span class="item-pill common">Mermaid Tears</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Chainmail</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill legendary">Holy Grail</span>
+      <span class="item-arrow">&rarr;</span>
+      <span class="item-pill common">Ogre Blood</span>
+    </p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Ability DPS</div>
+    <p><strong>Commit:</strong> Strong Power or Special damage talents. Matching Card + CDR.</p>
+  </div>
+
+  <div class="callout callout-danger"><div class="callout-label">Why C-Tier</div>~50% of talent pool is weak. Blood management adds cognitive load. One bad spiral in a boss fight = death.</div>
+</div>
+
+<!-- ROMEO -->
+
+<div class="hero-card" id="hero-romeo">
+  <div class="hero-header">
+    <span class="hero-name">5.10 Romeo <span style="font-size:0.8rem; font-weight:400;">(DLC)</span></span>
+    <span class="tier-badge tier-b">B-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: ~100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Melee DPS</span>
+      <span class="hero-stat">Difficulty: Med-High</span>
+    </div>
+  </div>
+
+  <blockquote>DLC hero — community build data still developing.</blockquote>
+
+  <p><strong>Kit:</strong> Linked-health with Juliet — if one falls unrevived, both die. Solo uses Broken Heart trait. Melee-focused with strong attack chains. Power and Special are both melee damage dealers with good scaling.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Melee Burst</div>
+    <p><strong>Commit:</strong> Power or Special damage talents — build around whichever the game offers.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Linked Sustain (Duo)</div>
+    <p><strong>Commit:</strong> Playing with Juliet. Sustain talents keeping both alive.</p>
+  </div>
+
+  <div class="callout callout-warn"><div class="callout-label">Key Risk</div>In duo, if either player goes down without revive, BOTH die. Chainmail and sustain are more critical than on solo heroes.</div>
+</div>
+
+<!-- JULIET -->
+
+<div class="hero-card" id="hero-juliet">
+  <div class="hero-header">
+    <span class="hero-name">5.11 Juliet <span style="font-size:0.8rem; font-weight:400;">(DLC)</span></span>
+    <span class="tier-badge tier-s">S-TIER</span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: ~100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Ranged/Melee Hybrid</span>
+      <span class="hero-stat">Difficulty: Medium</span>
+    </div>
+  </div>
+
+  <blockquote>DLC hero — community build data still developing.</blockquote>
+
+  <p><strong>Why S-Tier:</strong> Strongest hero by widespread community consensus. Combines ranged and melee options, good survivability, excellent scaling. Deep talent pool — most paths viable. Unlike heroes with 1-2 must-pick talents, Juliet has strong options at every level-up.</p>
+
+  <div class="talent-path">
+    <div class="talent-path-name">Path 1: Whatever the Game Gives You</div>
+    <p>Juliet's talent pool is strong enough that strict pathing is unnecessary. Build around whichever ability gets the best talents.</p>
+  </div>
+  <div class="talent-path">
+    <div class="talent-path-name">Path 2: Power or Special Focus (for structure)</div>
+    <p><strong>Commit:</strong> 2+ Power talents in first 3 levels &rarr; King of Clubs path. 2+ Special &rarr; Jack of Diamonds path.</p>
+  </div>
+
+  <div class="callout callout-tip"><div class="callout-label">Why She's Forgiving</div>Unlike Wukong (high ceiling, punishing), Juliet has both high ceiling AND high floor. Bad item luck still results in a functional build.</div>
+</div>
+
+<!-- MERLIN -->
+
+<div class="hero-card" id="hero-merlin">
+  <div class="hero-header">
+    <span class="hero-name">5.12 Merlin <span style="font-size:0.8rem; font-weight:400;">(DLC, Jan 2026)</span></span>
+    <div class="hero-stats">
+      <span class="hero-stat">HP: ~100 <span class="hp-bar-mini"><span class="hp-bar-mini-fill" style="width:83%"></span></span></span>
+      <span class="hero-stat">Ranged Caster / Elemental</span>
+      <span class="hero-stat">Difficulty: Medium</span>
+    </div>
+  </div>
+
+  <blockquote>Released January 2026. Community meta actively developing. Section marked for future expansion.</blockquote>
+
+  <p><strong>Kit:</strong> Nature, arcane, and sacred spells. Most spell-diverse caster. Multiple elemental build paths.</p>
+  <p><strong>Best Items:</strong> Ogre Blood, Sun Crown (auto-upgrades all talents — exceptional on talent-diverse hero), Excalibur, Raven Effigy.</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 6: BOSSES -->
+
+<!-- ============================================================ -->
+
+<h2 id="part6">Part 6: Boss Strategy</h2>
+
+<h3>Universal Mechanics</h3>
+<p><strong>Stagger:</strong> White bar fills as boss takes damage. Full = stunned, 0% DR. On Nightmare, <strong>enrage after 3rd stagger</strong> with damage buffs + ability spam. Kill before or during 3rd stagger.</p>
+
+<h3>Chapter 1: Tentacle Master</h3>
+
+<div class="phase-timeline">
+  <div class="phase-step"><div class="phase-num">1</div>Kill tentacles<br>(boss has armor)</div>
+  <div class="phase-step"><div class="phase-num">2</div>Last tentacle dies<br><strong>Boss stunned</strong></div>
+  <div class="phase-step"><div class="phase-num">3</div>Dump all CDs<br>(DPS window)</div>
+  <div class="phase-step"><div class="phase-num">4</div>Tentacles respawn<br>Repeat</div>
+</div>
+
+<p><strong>Key attack:</strong> Massive circular AoE — <strong>cannot be blocked, must dash out</strong>. Save dash for this.</p>
+<p><strong>Level target:</strong> 4 minimum, 5 preferred.</p>
+
+<h3>Chapter 2: The Faceless Master</h3>
+
+<div class="phase-timeline">
+  <div class="phase-step"><div class="phase-num">1</div>Dodge whirlwinds<br>+ ground zones</div>
+  <div class="phase-step"><div class="phase-num">2</div>Adds spawn<br>Kill ALL adds</div>
+  <div class="phase-step"><div class="phase-num">3</div>Boss stunned<br><strong>DPS window</strong></div>
+  <div class="phase-step"><div class="phase-num">4</div>Repeat &times;2<br>for kill</div>
+</div>
+
+<p><strong>Key attack:</strong> Burrow + rotating laser — <strong>run in same direction as rotation</strong>.</p>
+
+<h3>Chapter 3: The Claws (Hardest Fight)</h3>
+
+<div class="callout callout-danger">
+<div class="callout-label">Community Consensus</div>
+Harder than the final boss. Do both Nightmare Tumors first (&minus;40% HP on both entities).
+</div>
+
+<p><strong>Linked Stagger:</strong> Both have 50% DR. One staggers &rarr; gets 100% DR until other also staggers. Both must stagger simultaneously for vulnerability.</p>
+<p><strong>Linked Death:</strong> One at 0 HP &rarr; other stunned. Don't kill second fast enough &rarr; first revives at ~25%.</p>
+<p><strong>Combined Spinning Laser:</strong> Both move to edge &rarr; run to center &rarr; spiral outward following rotation.</p>
+
+<h3>Epilogue: Baba Yaga</h3>
+<p><strong>Phase 1:</strong> Kill skulls &rarr; boss vulnerable &rarr; DPS &rarr; repeat.</p>
+<p><strong>Phase 2:</strong> Rotating laser, red markers, <strong>full arena nova</strong> — requires Defense/Intangible (dash alone insufficient). Witch's Broom also works.</p>
+<p>If scaled properly, often easier than Claws (single target). Save Defense for nova.</p>
+
+<h3>Mini-Bosses</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Mini-Boss</th><th>Location</th><th>Notes</th></tr>
+<tr><td>Brigit, White Lady</td><td>Ch1 event</td><td>Focus minions first</td></tr>
+<tr><td>Mother Ghoul</td><td>Ch1 dungeon</td><td>Underground</td></tr>
+<tr><td>Karkinos</td><td>Ch2 dungeon</td><td>Scourge of Reefs</td></tr>
+<tr><td>Steropes, Cyclops</td><td>Ch2 dungeon</td><td>&mdash;</td></tr>
+<tr><td>Arthur, Fallen King</td><td>Ch3 dungeon</td><td>Fire trails don't trigger Mad Hat</td></tr>
+<tr><td>Mordred</td><td>Hourglass quest</td><td>~25k kills — least deadly</td></tr>
+<tr><td>Jack's Ogre</td><td>Hourglass quest</td><td>~90k kills</td></tr>
+<tr><td>Simorgh</td><td>Hourglass quest</td><td>~119k kills — deadliest</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 7: CO-OP -->
+
+<!-- ============================================================ -->
+
+<h2 id="part7">Part 7: Co-op Strategy</h2>
+
+<h4>Multiplayer Scaling (Per Additional Player)</h4>
+<div class="table-wrap">
+<table>
+<tr><th>Stat</th><th>Increase</th></tr>
+<tr><td>Enemy count</td><td>+13%</td></tr>
+<tr><td>Standard HP</td><td>+30%</td></tr>
+<tr><td>Elite HP</td><td>+60%</td></tr>
+<tr><td>Standard stagger</td><td>+30/40/50% (Ch 1/2/3)</td></tr>
+<tr><td>Elite stagger</td><td>+60/70/80/90% (Ch 1/2/3/Epilogue)</td></tr>
+</table>
+</div>
+
+<h4>Ideal Team</h4>
+<p>Healer (Melusine) + Carry (Juliet/Scarlet/Wukong) + Utility (Aladdin) + AoE/CC (Snow Queen/Pied Piper).</p>
+
+<h4>Rules</h4>
+<ol>
+<li><strong>Reviving &gt; DPS.</strong> Always.</li>
+<li>Conserve feathers — manual revive when safe.</li>
+<li>Communicate items — carry gets Ogre Blood priority.</li>
+<li>Split during Claws — two per entity.</li>
+<li>Melusine healer makes team nearly unkillable.</li>
+</ol>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 8: BUILD TEMPLATES -->
+
+<!-- ============================================================ -->
+
+<h2 id="part8">Part 8: Item Build Templates</h2>
+
+<p>Ten archetypes. Adapt to what the game offers — these are decision trees, not prescriptions.</p>
+
+<!-- Build 1 -->
+
+<div class="build-card">
+  <div class="build-title">Build 1: The Vitality Stacker <span style="font-weight:400; font-size:0.85rem;">(Universal, Highest Win Rate)</span></div>
+  <div class="item-chain">
+    <span class="item-pill common">Ogre Blood</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Philosopher's Stone</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Chainmail</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill common">Mermaid Tears</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill common">Horn of Plenty</span>
+  </div>
+  <p><strong>Luxury:</strong> <span class="item-pill cursed">Bloody Mary's Mirror</span> (build becomes broken)</p>
+  <p><strong>Math:</strong> 100 Vit = +10 DMG from Ogre. With Mirror, 100 Vit = +60 DMG total (but HP halved).</p>
+  <p><strong>Works with:</strong> Every hero. <strong>Commit:</strong> Found Ogre Blood in Chapter 1.</p>
+</div>
+
+<!-- Build 2 -->
+
+<div class="build-card">
+  <div class="build-title">Build 2: The Glass Cannon <span style="font-weight:400; font-size:0.85rem;">(Ability Focus)</span></div>
+  <div class="item-chain">
+    <span class="item-pill legendary">Excalibur</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Raven Effigy</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill epic">Raven CDR</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill rare">Card</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill epic">Stone</span>
+  </div>
+  <p><strong>Power example:</strong> King of Clubs + Raven Claw + Flaming Pearl + Excalibur + Effigy.</p>
+  <p><strong>Works with:</strong> Scarlet, Beowulf, Snow Queen, Wukong. <strong>Commit:</strong> Effigy or Excalibur early.</p>
+</div>
+
+<!-- Build 3 -->
+
+<div class="build-card">
+  <div class="build-title">Build 3: The Armor Converter <span style="font-weight:400; font-size:0.85rem;">(Dragon Hide)</span></div>
+  <div class="item-chain">
+    <span class="item-pill rare">Dragon Hide &times;4</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Green Armor</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Ogre Blood</span>
+  </div>
+  <p><strong>Math:</strong> 60 Armor &times; 40% = +24 free DMG. <strong>Never force this.</strong> Fall into it.</p>
+  <p><strong>Works with:</strong> Beowulf. <strong>Commit:</strong> Found 2+ Dragon Hides in Chapter 1.</p>
+</div>
+
+<!-- Build 4 -->
+
+<div class="build-card">
+  <div class="build-title">Build 4: The Economy Snowball <span style="font-weight:400; font-size:0.85rem;">(Aladdin-Specific)</span></div>
+  <div class="item-chain">
+    <span class="item-pill cursed">Mad Hat</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Horn of Plenty</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Ogre Blood</span>
+    <span class="item-arrow">&rarr; &#8734;</span>
+  </div>
+  <p><strong>Loop:</strong> Damage &rarr; Shards &rarr; Wish &rarr; Items &rarr; Heal &rarr; Repeat. Scales infinitely.</p>
+  <p><strong>Works with:</strong> Aladdin only. <strong>Commit:</strong> Mad Hat + Master Thief.</p>
+</div>
+
+<!-- Build 5 -->
+
+<div class="build-card">
+  <div class="build-title">Build 5: The CDR Machine <span style="font-weight:400; font-size:0.85rem;">(Ability Spam)</span></div>
+  <div class="item-chain">
+    <span class="item-pill epic">Raven Claw</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill epic">Raven Beak</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill epic">Raven Eye</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Seven-League Boots</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Raven Effigy</span>
+  </div>
+  <p><strong>CDR math:</strong> 2&times; Raven = 43.75%. 3&times; = 57.8%. Raven Eye 3&times; = Ult clears all other CDs.</p>
+  <p><strong>Works with:</strong> Wukong, Scarlet, Snow Queen. <strong>Commit:</strong> 2+ Raven pieces + Boots.</p>
+</div>
+
+<!-- Build 6 -->
+
+<div class="build-card">
+  <div class="build-title">Build 6: The Crit Stacker</div>
+  <div class="item-chain">
+    <span class="item-pill common">Ogre Blood &times;5</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Eternal Rose &times;5</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill rare">Card &times;4</span>
+  </div>
+  <p><strong>Luxury:</strong> <span class="item-pill cursed">Devil's Pocket</span> (+50% Crit after 400 shards)</p>
+  <p><strong>Math at full:</strong> 5% + 20% Ogre + 10% Rose + 40% Card + 50% Devil's = 125% crit &rarr; always crit with +25% overflow. Multiplier: 2.25&times; every hit.</p>
+  <p><strong>Works with:</strong> Scarlet (Critical Hunter), Beowulf (Blazing Runes). <strong>Commit:</strong> Ogre + Eternal Rose in Ch1.</p>
+</div>
+
+<!-- Build 7 -->
+
+<div class="build-card">
+  <div class="build-title">Build 7: The Cursed Build <span style="font-weight:400; font-size:0.85rem;">(High Risk)</span></div>
+  <div class="item-chain">
+    <span class="item-pill cursed">Oni Mask</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill cursed">Nightmare Thorn</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill cursed">Witch's Broom</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Chainmail</span>
+  </div>
+  <p><strong>Math:</strong> 3 Cursed = +45 DMG from Oni + doubled Power + Intangible dashes. <strong>Chainmail is mandatory.</strong></p>
+  <p><strong>Avoid:</strong> Legendary items (Oni penalizes &minus;10 Armor each).</p>
+  <p><strong>Works with:</strong> Aladdin, Wukong. <strong>Commit:</strong> Oni Mask from first dungeon + Chainmail from quest.</p>
+</div>
+
+<!-- Build 8 -->
+
+<div class="build-card">
+  <div class="build-title">Build 8: The Sustain Tank <span style="font-weight:400; font-size:0.85rem;">(Co-op Support)</span></div>
+  <div class="item-chain">
+    <span class="item-pill legendary">Holy Grail</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Mermaid Tears</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Chainmail</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Ogre Blood</span>
+  </div>
+  <p><strong>Math:</strong> 3&times; Mermaid Tears &rarr; Holy Grail heal becomes 17.5 HP. Raven Skull reduces CD 25% = ~33% more healing.</p>
+  <p><strong>Works with:</strong> Melusine, Beowulf. <strong>Commit:</strong> Co-op + Holy Grail from quest + Mermaid Tears.</p>
+</div>
+
+<!-- Build 9 -->
+
+<div class="build-card">
+  <div class="build-title">Build 9: The Boss Killer <span style="font-weight:400; font-size:0.85rem;">(Single Target)</span></div>
+  <div class="item-chain">
+    <span class="item-pill common">Voodoo Doll &times;5</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Ogre Blood</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Excalibur</span>
+    <span class="item-arrow">+</span>
+    <span class="item-pill legendary">Ring of Dispel</span>
+  </div>
+  <p><strong>Math:</strong> Ring of Dispel Vulnerable vs Light Armor: 50% DR &rarr; ~25% = 50% real damage increase.</p>
+  <p><strong>Works with:</strong> Wukong, Scarlet, Juliet. <strong>Commit:</strong> Voodoo Doll early + single-target hero.</p>
+</div>
+
+<!-- Build 10 -->
+
+<div class="build-card">
+  <div class="build-title">Build 10: The Speedrunner <span style="font-weight:400; font-size:0.85rem;">(Map Efficiency)</span></div>
+  <div class="item-chain">
+    <span class="item-pill cursed">Fast-Walker Boots</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill epic">Raven Wing &times;3</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill legendary">Seven-League Boots</span>
+    <span class="item-arrow">&rarr;</span>
+    <span class="item-pill common">Ogre Blood</span>
+  </div>
+  <p><strong>Math:</strong> 2 extra fountains/chapter &times; 3 chapters = +60 Vit = +6 DMG + 60% more HP.</p>
+  <p><strong>Works with:</strong> Weak early heroes (Wukong, Geppetto). <strong>Commit:</strong> Fast-Walker + Raven Wing early.</p>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 9: SYNERGY MATRIX -->
+
+<!-- ============================================================ -->
+
+<h2 id="part9">Part 9: Hero-to-Build Synergy Matrix</h2>
+
+<div class="matrix-wrap">
+<table class="matrix-table">
+<tr><th>Hero</th><th>Primary Build</th><th>Secondary Build</th><th>Non-Obvious Anti-Synergy</th></tr>
+<tr><td><strong>Scarlet</strong></td><td class="primary">Vitality + Power-Crit</td><td class="secondary">Crit Stacker (Critical Hunter)</td><td class="avoid">Balor's Eye removes Swift Strike charges</td></tr>
+<tr><td><strong>Beowulf</strong></td><td class="primary">Vitality + Ignite (Blazing Runes)</td><td class="secondary">Armor Converter, Sustain Tank</td><td class="avoid">Black Lotus kills orb sustain between Wyrm CDs</td></tr>
+<tr><td><strong>Snow Queen</strong></td><td class="primary">Vitality + Armor Break quest</td><td class="secondary">CDR Machine (freeze spam)</td><td class="avoid">Nightmare Thorn weak — Power isn't her damage, freeze is</td></tr>
+<tr><td><strong>Pied Piper</strong></td><td class="primary">Vitality + Giant Rats</td><td class="secondary">CDR Machine (Om spam)</td><td class="avoid">Balor's Eye bad — rat dmg is separate instances, not charges</td></tr>
+<tr><td><strong>Aladdin</strong></td><td class="primary">Economy Snowball</td><td class="secondary">Vitality + Enchantment DPS</td><td class="avoid">Hungry Grass anti-synergy with Blue Wish orb drops</td></tr>
+<tr><td><strong>Melusine</strong></td><td class="primary">Sustain Tank + Sea Dance</td><td class="secondary">Vitality + Wisp DPS (solo)</td><td class="avoid">Fast-Walker wastes value — immobile during Sing</td></tr>
+<tr><td><strong>Geppetto</strong></td><td class="primary">Vitality + Rocket Science</td><td class="secondary">CDR Machine (more launches)</td><td class="avoid">Unstable Cores requires 5s dummy survival — unreliable</td></tr>
+<tr><td><strong>Wukong</strong></td><td class="primary">Glass Cannon (Yang) + Chainmail</td><td class="secondary">CDR Machine (Yang spam)</td><td class="avoid">Any build without Chainmail — Yang +100% intake kills</td></tr>
+<tr><td><strong>Carmilla</strong></td><td class="primary">Vitality + Blood sustain</td><td class="secondary">Ability DPS (if brave)</td><td class="avoid">Black Lotus disables orbs — dangerous with Blood HP drain</td></tr>
+<tr><td><strong>Romeo</strong></td><td class="primary">Vitality + melee burst</td><td class="secondary">Boss Killer</td><td class="avoid">No sustain = both die when one goes down</td></tr>
+<tr><td><strong>Juliet</strong></td><td class="primary">Vitality Stacker</td><td class="secondary">Glass Cannon, Crit Stacker</td><td class="avoid">Almost nothing — flexibility is her strength</td></tr>
+<tr><td><strong>Merlin</strong></td><td class="primary">Vitality + Sun Crown</td><td class="secondary">Experiment</td><td class="avoid">Unknown — too new</td></tr>
+</table>
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 10: MID-RUN DECISIONS -->
+
+<!-- ============================================================ -->
+
+<h2 id="part10">Part 10: Mid-Run Decision Framework</h2>
+
+<h3>When to Stay</h3>
+<ul>
+<li>2+ core items by mid-Chapter 1</li>
+<li>Talents support intended ability</li>
+<li>Hitting benchmarks: 15+ DMG by Ch1 boss, 40+ by Ch2</li>
+</ul>
+
+<h3>When to Pivot</h3>
+<ul>
+<li>End of Ch1 with 0 copies of intended core items</li>
+<li>Strong talents for a different ability than planned</li>
+<li>Found build-defining Legendary/Cursed that doesn't match plan</li>
+</ul>
+
+<h3>How to Pivot</h3>
+<ol>
+<li>Identify what the game IS giving you</li>
+<li>Find closest build template from <a href="#part8">Part 8</a></li>
+<li>Stop investing in old plan — don't waste Stars rerolling</li>
+<li><strong>A coherent B-tier build beats a half-assembled S-tier build. Always.</strong></li>
+</ol>
+
+<div class="callout callout-tip">
+<div class="callout-label">Universal Fallback</div>
+If nothing comes together: <strong>Vitality Stacker.</strong> Ogre Blood is Common, every fountain feeds it, works with every hero.
+</div>
+
+<hr>
+
+<!-- ============================================================ -->
+
+<!-- PART 11: META -->
+
+<!-- ============================================================ -->
+
+<h2 id="part11">Part 11: Meta-Skills &amp; Resources</h2>
+
+<h3>Spacing Discipline</h3>
+<p>The single most important skill. Treat boss fights like a bullet hell. Optimizing builds is secondary to not getting hit.</p>
+
+<h3>The Real Difficulty Curve</h3>
+<p>Chapter 1 is where most Nightmare runs die. If you survive Act 1 with decent items, Acts 2–3 get easier as scaling snowballs. The Claws in Ch3 is the exception — hard regardless of power until you learn patterns.</p>
+
+<h3>Community Resources</h3>
+<ul>
+<li><strong>Ravenswatch Wiki</strong> (Fandom) — datamined stats and formulas</li>
+<li><strong>buildmaker.ravenswatch.com</strong> — community build sharing</li>
+<li><strong>ravenswatch-run-helper.netlify.app</strong> — interactive talent compendiums</li>
+<li><strong>Ravenswatch Discord</strong> — active community, co-op matchmaking</li>
+<li><strong>SlashingCreeps</strong> — video guides for Nightmare clears</li>
+</ul>
+
+<hr>
+
+<h3>Changelog</h3>
+<ul>
+<li><strong>v1:</strong> Initial guide — formulas, items, bosses, economy, 4 build templates</li>
+<li><strong>v2:</strong> Added hero profiles (12 heroes), expanded to 10 builds, synergy matrix, pivot framework</li>
+<li><strong>v3:</strong> Fixed HP math, added TOC, Merlin items in Part 2, filled all starting traits, hero unlocks, Hourglass/consumables/death mechanics, deduplicated pivot advice, evened hero depth, improved synergy matrix anti-synergies, fleshed out builds 6–10 with math, confidence calibration, version history</li>
+<li><strong>v4 (current):</strong> HTML conversion with visual pipeline diagrams, DR bars, route timeline, item chain visualizations, hero cards with tier badges and HP bars, phase diagrams for bosses, collapsible trait tables, color-coded rarity system</li>
+</ul>
+
+<p style="text-align:center; color:var(--text-light); font-size:0.82rem; margin-top:3rem;">
+Compiled from Ravenswatch Wiki, Steam community, SlashingCreeps guides, Passtech patch notes (1.04, Jan 2026), and community testing.
+</p>
+
+</main>
+</div>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0})">↑</button>
+
+<script>
+// Back to top button
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('backTop');
+  btn.style.display = window.scrollY > 600 ? 'flex' : 'none';
+});
+
+// Sidebar active state
+(function() {
+  var links = document.querySelectorAll('.sidebar a');
+  var sections = [];
+  links.forEach(function(a) {
+    var id = a.getAttribute('href');
+    if (id && id.startsWith('#')) {
+      var el = document.querySelector(id);
+      if (el) sections.push({ link: a, el: el });
+    }
+  });
+
+  window.addEventListener('scroll', function() {
+    var scrollY = window.scrollY + 100;
+    var current = null;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].el.offsetTop <= scrollY) current = sections[i].link;
+    }
+    links.forEach(function(a) { a.classList.remove('active'); });
+    if (current) current.classList.add('active');
+  });
+})();
+</script>
+
+</body>
+</html>
