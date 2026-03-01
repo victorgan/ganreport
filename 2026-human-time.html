@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Can a Human Do In...?</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+–bg: #faf8f4;
+–bg-card: #ffffff;
+–bg-elite: #fefcf7;
+–bg-normal: #f7faf8;
+–border: #e8e4dc;
+–border-light: #f0ece4;
+–text: #1a1a18;
+–text-secondary: #4a4a45;
+–text-muted: #8a8a82;
+–accent-elite: #9b5d10;
+–accent-elite-light: #f5e6cc;
+–accent-elite-bg: #fdf6ec;
+–accent-normal: #2a7a52;
+–accent-normal-light: #d0ead8;
+–accent-normal-bg: #eef7f1;
+–accent-time: #6b4c8a;
+–accent-time-light: #e8ddf0;
+–font-display: ‘Fraunces’, Georgia, serif;
+–font-body: ‘Outfit’, -apple-system, sans-serif;
+–font-mono: ‘JetBrains Mono’, monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+font-family: var(–font-body);
+background: var(–bg);
+color: var(–text);
+line-height: 1.65;
+-webkit-font-smoothing: antialiased;
+}
+
+/* ============ HERO ============ */
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 4rem 2rem;
+position: relative;
+background:
+radial-gradient(ellipse 70% 50% at 50% 45%, rgba(155,93,16,0.05) 0%, transparent 70%),
+radial-gradient(ellipse 50% 40% at 70% 60%, rgba(42,122,82,0.04) 0%, transparent 60%),
+var(–bg);
+}
+
+.hero-eyebrow {
+font-family: var(–font-mono);
+font-size: 0.72rem;
+font-weight: 400;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–text-muted);
+margin-bottom: 2rem;
+opacity: 0;
+animation: fadeUp 0.7s ease 0.2s forwards;
+}
+
+.hero h1 {
+font-family: var(–font-display);
+font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+font-weight: 300;
+line-height: 1.2;
+letter-spacing: -0.02em;
+max-width: 700px;
+opacity: 0;
+animation: fadeUp 0.7s ease 0.35s forwards;
+}
+
+.hero h1 em {
+font-style: italic;
+font-weight: 400;
+color: var(–accent-elite);
+}
+
+.hero-sub {
+font-size: 1.05rem;
+color: var(–text-secondary);
+max-width: 520px;
+margin-top: 1.5rem;
+font-weight: 300;
+line-height: 1.7;
+opacity: 0;
+animation: fadeUp 0.7s ease 0.5s forwards;
+}
+
+.hero-legend {
+display: flex;
+gap: 2.5rem;
+margin-top: 3rem;
+opacity: 0;
+animation: fadeUp 0.7s ease 0.65s forwards;
+}
+
+.hero-legend-item {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+font-family: var(–font-mono);
+font-size: 0.7rem;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+}
+
+.legend-icon {
+width: 18px;
+height: 18px;
+border-radius: 4px;
+}
+
+.legend-icon.elite { background: var(–accent-elite-light); border: 1.5px solid var(–accent-elite); }
+.legend-icon.normal { background: var(–accent-normal-light); border: 1.5px solid var(–accent-normal); }
+
+.hero-scroll {
+margin-top: 3.5rem;
+opacity: 0;
+animation: fadeUp 0.7s ease 0.8s forwards;
+}
+
+.hero-scroll span {
+font-family: var(–font-mono);
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–text-muted);
+}
+
+.hero-scroll .arrow {
+display: block;
+margin: 0.5rem auto 0;
+width: 20px;
+height: 20px;
+border-right: 1.5px solid var(–text-muted);
+border-bottom: 1.5px solid var(–text-muted);
+transform: rotate(45deg);
+animation: bobDown 2s ease infinite;
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(14px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bobDown {
+0%, 100% { transform: rotate(45deg) translateY(0); }
+50% { transform: rotate(45deg) translateY(4px); }
+}
+
+/* ============ STICKY NAV ============ */
+.sticky-nav {
+position: sticky;
+top: 0;
+z-index: 100;
+background: rgba(250,248,244,0.92);
+backdrop-filter: blur(12px);
+border-bottom: 1px solid var(–border);
+padding: 0.6rem 1rem;
+display: flex;
+justify-content: center;
+gap: 0.25rem;
+flex-wrap: wrap;
+}
+
+.sticky-nav a {
+font-family: var(–font-mono);
+font-size: 0.6rem;
+letter-spacing: 0.04em;
+color: var(–text-muted);
+text-decoration: none;
+padding: 0.3rem 0.6rem;
+border-radius: 4px;
+transition: all 0.2s ease;
+white-space: nowrap;
+}
+
+.sticky-nav a:hover {
+background: var(–accent-time-light);
+color: var(–accent-time);
+}
+
+/* ============ TIME BLOCK ============ */
+.time-block {
+max-width: 1000px;
+margin: 0 auto;
+padding: 4rem 2rem 2rem;
+opacity: 0;
+transform: translateY(16px);
+transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.time-block.visible {
+opacity: 1;
+transform: translateY(0);
+}
+
+.time-header {
+display: flex;
+align-items: baseline;
+gap: 1rem;
+margin-bottom: 0.4rem;
+border-bottom: 2px solid var(–accent-time);
+padding-bottom: 0.75rem;
+}
+
+.time-value {
+font-family: var(–font-display);
+font-size: 2.4rem;
+font-weight: 600;
+color: var(–accent-time);
+line-height: 1;
+}
+
+.time-seconds {
+font-family: var(–font-mono);
+font-size: 0.7rem;
+color: var(–text-muted);
+}
+
+.time-tagline {
+font-family: var(–font-display);
+font-style: italic;
+font-size: 1rem;
+color: var(–text-secondary);
+margin-bottom: 1.75rem;
+padding-left: 2px;
+}
+
+.two-col {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1.25rem;
+}
+
+.col-elite, .col-normal {
+border-radius: 10px;
+padding: 1.5rem;
+border: 1px solid var(–border);
+}
+
+.col-elite {
+background: var(–accent-elite-bg);
+border-color: #e8d8b8;
+}
+
+.col-normal {
+background: var(–accent-normal-bg);
+border-color: #b8d8c4;
+}
+
+.col-label {
+font-family: var(–font-mono);
+font-size: 0.62rem;
+font-weight: 500;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+margin-bottom: 1rem;
+padding-bottom: 0.5rem;
+border-bottom: 1px solid;
+}
+
+.col-elite .col-label {
+color: var(–accent-elite);
+border-color: rgba(155,93,16,0.2);
+}
+
+.col-normal .col-label {
+color: var(–accent-normal);
+border-color: rgba(42,122,82,0.2);
+}
+
+.example {
+margin-bottom: 0.9rem;
+line-height: 1.55;
+}
+
+.example:last-child { margin-bottom: 0; }
+
+.example .fact {
+font-size: 0.88rem;
+color: var(–text);
+font-weight: 400;
+}
+
+.example .fact strong {
+font-weight: 600;
+}
+
+.col-elite .example .fact strong { color: var(–accent-elite); }
+.col-normal .example .fact strong { color: var(–accent-normal); }
+
+.example .detail {
+font-size: 0.78rem;
+color: var(–text-secondary);
+margin-top: 0.15rem;
+font-weight: 300;
+}
+
+/* ============ SECTION DIVIDERS ============ */
+.divider {
+max-width: 100px;
+margin: 1rem auto;
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–border), transparent);
+}
+
+/* ============ FOOTER ============ */
+.footer {
+text-align: center;
+padding: 4rem 2rem;
+border-top: 1px solid var(–border);
+margin-top: 2rem;
+}
+
+.footer p {
+font-family: var(–font-mono);
+font-size: 0.68rem;
+color: var(–text-muted);
+line-height: 1.9;
+max-width: 600px;
+margin: 0 auto;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 700px) {
+.two-col {
+grid-template-columns: 1fr;
+}
+.hero-legend {
+flex-direction: column;
+gap: 0.75rem;
+align-items: center;
+}
+.sticky-nav { gap: 0.15rem; }
+.sticky-nav a { font-size: 0.55rem; padding: 0.25rem 0.4rem; }
+.time-value { font-size: 1.8rem; }
+.time-block { padding: 3rem 1.25rem 1.5rem; }
+}
+</style>
+
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-eyebrow">A Reference for the Impatient and the Ambitious</div>
+  <h1>What Can a Human<br>Get Done <em>In...?</em></h1>
+  <p class="hero-sub">
+    From a single minute to an entire century. What the greatest in history accomplished at each timescale — and what you, realistically, can too.
+  </p>
+  <div class="hero-legend">
+    <div class="hero-legend-item"><div class="legend-icon elite"></div>Peak Human / Genius-Level</div>
+    <div class="hero-legend-item"><div class="legend-icon normal"></div>Realistic / Everyday Human</div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll to explore</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<nav class="sticky-nav">
+  <a href="#t-1min">1 min</a>
+  <a href="#t-5min">5 min</a>
+  <a href="#t-15min">15 min</a>
+  <a href="#t-30min">30 min</a>
+  <a href="#t-1hr">1 hr</a>
+  <a href="#t-3hr">3 hr</a>
+  <a href="#t-8hr">8 hr</a>
+  <a href="#t-1day">1 day</a>
+  <a href="#t-1wk">1 wk</a>
+  <a href="#t-1mo">1 mo</a>
+  <a href="#t-3mo">3 mo</a>
+  <a href="#t-6mo">6 mo</a>
+  <a href="#t-1yr">1 yr</a>
+  <a href="#t-3yr">3 yr</a>
+  <a href="#t-5yr">5 yr</a>
+  <a href="#t-10yr">10 yr</a>
+  <a href="#t-25yr">25 yr</a>
+  <a href="#t-lifetime">Lifetime</a>
+  <a href="#t-100yr">100 yr</a>
+</nav>
+
+<!-- ===================== 1 MINUTE ===================== -->
+
+<div class="time-block" id="t-1min">
+  <div class="time-header">
+    <span class="time-value">1 Minute</span>
+    <span class="time-seconds">60 seconds</span>
+  </div>
+  <div class="time-tagline">The length of a decision. Enough to change a life, not enough to overthink it.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Inge Lehmann</strong> identified an inner core of the Earth — the key insight struck while reviewing a single seismogram printout.</div>
+        <div class="detail">Breakthroughs often arrive in minutes after years of preparation.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Grandmaster Magnus Carlsen</strong> can evaluate ~3–5 chess positions deeply, each with 10+ move lookahead.</div>
+        <div class="detail">In bullet chess (1 min total), he still plays at ~2700+ Elo, stronger than 99.99% of humans with unlimited time.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite pianist</strong> sight-reads ~4 pages of complex sheet music in 60 seconds.</div>
+        <div class="detail">Requires parallel processing: reading ahead, fingering, dynamics, pedaling — all simultaneously.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An ER trauma surgeon</strong> triages and initiates life-saving intervention within 60 seconds of patient arrival.</div>
+        <div class="detail">The "golden minute" in trauma medicine — every second of delay increases mortality.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Usain Bolt</strong> covers 600+ meters at full sprint pace. His 100m takes just 9.58s; in a minute he could run ~5.5 laps of a 100m straight.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A world-class speed cuber</strong> solves a Rubik's cube ~10 times. Record single solve: 3.13 seconds.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Read ~250 words</strong> — about one page of a book.</div>
+        <div class="detail">Average adult reading speed is ~238 wpm. A minute of reading is roughly 1 Kindle "page."</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Type ~40–70 words</strong> — a solid paragraph or a short email.</div>
+        <div class="detail">Average typing speed is ~40 wpm; a good typist hits 70+.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Brush your teeth</strong> (though dentists want you to do 2 minutes).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Walk ~80 meters</strong> — about the length of a city block.</div>
+        <div class="detail">Average walking speed: ~1.4 m/s = 84m per minute.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Have one complete thought</strong> and say it out loud — about 2–3 spoken sentences.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Decide what to eat</strong> from a restaurant menu (on a good day).</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 5 MINUTES ===================== -->
+
+<div class="time-block" id="t-5min">
+  <div class="time-header">
+    <span class="time-value">5 Minutes</span>
+    <span class="time-seconds">300 seconds</span>
+  </div>
+  <div class="time-tagline">The smallest block of real work. Long enough to make progress, short enough to not need a plan.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Srinivasa Ramanujan</strong> would fill half a page with novel mathematical identities in minutes — results that took other mathematicians weeks to verify.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A concert pianist</strong> performs an entire Chopin Ballade movement from memory with full emotional arc.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite simultaneous interpreter</strong> at the UN translates ~750 words across languages in real-time, maintaining nuance and diplomatic tone.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A world-class auctioneer</strong> sells 25–30 lots at Sotheby's, managing bids from a global audience, each sale in ~10 seconds.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Eliud Kipchoge</strong> runs 1.4 km — nearly a full mile — at marathon world record pace (2:01:09).</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Make your bed</strong> and tidy a nightstand.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Write and send a short email</strong> — subject line, 3 sentences, sign-off.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Brew coffee</strong> from bean to cup (pour-over or espresso).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Do a meaningful micro-workout:</strong> 50 push-ups, 50 squats, or 3 sets of pull-ups.</div>
+        <div class="detail">Research shows "exercise snacks" of 5 min have measurable cardiovascular benefit.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Review and merge a small PR</strong> — read the diff, check tests, approve.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Meditate.</strong> 5 minutes of focused breathing measurably reduces cortisol.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 15 MINUTES ===================== -->
+
+<div class="time-block" id="t-15min">
+  <div class="time-header">
+    <span class="time-value">15 Minutes</span>
+    <span class="time-seconds">900 seconds</span>
+  </div>
+  <div class="time-tagline">The "Pomodoro half." Enough for a complete unit of focused work.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Martin Luther King Jr.</strong> delivered the "I Have a Dream" speech in ~17 minutes — arguably the most impactful quarter-hour of American oratory.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Steve Jobs' iPhone launch</strong> demo — the first 15 minutes where he unveiled a phone, an iPod, and an internet device — then revealed they were one device.</div>
+        <div class="detail">Rehearsed for weeks, but the cultural impact landed in minutes.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A top TED speaker</strong> delivers a talk that gets 50M+ views. TED's format is explicitly built around the 15–18 minute sweet spot.</div>
+        <div class="detail">Sir Ken Robinson's "Do Schools Kill Creativity?" is the most-viewed TED talk ever.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite surgeon</strong> performs a complete laparoscopic appendectomy. Average is 30–45 min; the fastest are under 15.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Terence Tao</strong> reportedly solved competition math problems in minutes that stumped PhD students for hours.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Shower and get dressed.</strong></div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Cook a simple meal</strong> — scrambled eggs, rice and beans, a stir-fry with prepped ingredients.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read a long-form article</strong> (~3,000 words, like a good Atlantic or New Yorker piece).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Write 200–400 words</strong> of first-draft prose if you know what you want to say.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Walk a mile</strong> at a comfortable pace.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a focused code task</strong> — fix a clear bug, write a utility function, refactor a method.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Learn 10–15 flashcards</strong> in Anki with full review.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 30 MINUTES ===================== -->
+
+<div class="time-block" id="t-30min">
+  <div class="time-header">
+    <span class="time-value">30 Minutes</span>
+    <span class="time-seconds">1,800 seconds</span>
+  </div>
+  <div class="time-tagline">One Pomodoro. The atomic unit of deep work.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Lin-Manuel Miranda</strong> wrote the opening number of Hamilton in about 30 minutes on a train, after the core concept clicked.</div>
+        <div class="detail">The melody and structure of "Alexander Hamilton" came in a single sitting.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>John Lennon</strong> wrote "Across the Universe" in a single sitting of about 30 minutes, lyrics flowing without revision.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A world-class 10K runner</strong> finishes the entire race. Joshua Cheptegei's world record: 26:11.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite lawyer</strong> drafts a complete contract clause that took the junior associate 4 hours.</div>
+        <div class="detail">Pattern recognition from thousands of prior contracts compresses the work.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A senior staff engineer</strong> reviews a complex system design doc and identifies the 3 critical flaws.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>A solid gym session</strong> — 5 working sets of a compound lift plus accessories.</div>
+        <div class="detail">30 min of focused lifting is more effective than 90 min of phone-checking.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Cook a proper dinner</strong> — pasta from scratch sauce, a curry, a sheet pan meal.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Write ~500–800 words</strong> of decent first-draft content.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A meaningful conversation</strong> — the kind where you actually connect, not small talk.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Run a 5K</strong> — average recreational runner finishes in 28–35 min.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a standup + one focused task</strong> in a sprint.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 1 HOUR ===================== -->
+
+<div class="time-block" id="t-1hr">
+  <div class="time-header">
+    <span class="time-value">1 Hour</span>
+    <span class="time-seconds">3,600 seconds</span>
+  </div>
+  <div class="time-tagline">The natural unit of a meeting, a workout, a commute. The block everyone claims to not have enough of.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Mozart</strong> reportedly composed the overture to Don Giovanni in a single hour the night before the premiere, while chatting with friends.</div>
+        <div class="detail">The anecdote is debated, but contemporary accounts confirm the speed was extraordinary.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Picasso</strong> could complete a full painting in an hour. When asked why one sketch cost $5,000: "It took me 40 years and one hour."</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Eliud Kipchoge</strong> runs a half-marathon (21.1 km / 13.1 mi). His WR pace covers that distance in ~60 min.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A world-class coder</strong> in competitive programming solves 3–4 hard algorithmic problems (Codeforces Div 1 level).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Paul Graham</strong> wrote that his best essays took about an hour of actual writing — after days of thinking.</div>
+        <div class="detail">The leverage is in the preparation; the hour is just transcription of pre-formed thought.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A master sushi chef</strong> prepares ~50–60 pieces of omakase — each one a lifetime of technique compressed into seconds.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>A full gym workout</strong> — warm-up, 4–5 exercises, cool-down.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Write 1,000–1,500 words</strong> of a blog post or report draft.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Deep-clean one room</strong> — kitchen or bathroom, thoroughly.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Watch a meaningful lecture</strong> and take notes (1 MIT OpenCourseWare session).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a real coding task</strong> — implement a feature, write tests, submit a PR.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Commute to work</strong> — US average is 27.6 minutes each way.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Grocery shop</strong> — drive, shop, drive home, put away.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 3 HOURS ===================== -->
+
+<div class="time-block" id="t-3hr">
+  <div class="time-header">
+    <span class="time-value">3 Hours</span>
+    <span class="time-seconds">10,800 seconds</span>
+  </div>
+  <div class="time-tagline">A morning. A focused session. The length of a movie, or the time between meals.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Isaac Asimov</strong> could produce a complete short story (~5,000 words, polished) in a single 3-hour morning session.</div>
+        <div class="detail">He published 500+ books in his career, writing daily 3-hour blocks.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Ernest Hemingway's daily output</strong> was typically one 3-hour morning session — producing 500–1,000 words of final prose.</div>
+        <div class="detail">"The best way is always to stop when you are going good."</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A chess grandmaster</strong> plays and wins a full classical game — 40+ moves with deep calculation at each.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A neurosurgeon</strong> performs a complete tumor resection (simple cases). Complex ones take 6–12 hours.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite marathon runner</strong> finishes a full 26.2-mile marathon. Kelvin Kiptum's WR: 2:00:35.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Watch a long movie</strong> — Lord of the Rings extended, Oppenheimer, Killers of the Flower Moon.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Deep work: write 2,000–3,000 words</strong> of a first draft, or produce a complete short blog post.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a substantial coding task</strong> — design, implement, test a small feature end-to-end.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Bake bread from scratch</strong> — mix, knead, proof, shape, bake (with some waiting).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Assemble an IKEA bookshelf</strong> from box to books-on-shelf.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a full Zwift cycling session</strong> — 60–90 min of structured intervals plus warm-up/cool-down.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 8 HOURS ===================== -->
+
+<div class="time-block" id="t-8hr">
+  <div class="time-header">
+    <span class="time-value">8 Hours</span>
+    <span class="time-seconds">28,800 seconds</span>
+  </div>
+  <div class="time-tagline">One work day. One sleep. The rhythm of industrial civilization.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Jack Kerouac</strong> typed the entire scroll draft of "On the Road" in 3 weeks — roughly 6,000 words per 8-hour day on a continuous roll of paper.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A top competitive programmer</strong> solves 8–12 problems in an ICPC-style contest, including problems rated 2400+ on Codeforces.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Yannick Sener (speedrun)</strong> world records in full-length games are often 4–8 hour endurance tests of perfect execution.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A world-class surgeon</strong> performs 4–6 complex surgeries in a day.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite concert pianist</strong> practices 6–8 hours: scales, études, repertoire, and performance run-throughs.</div>
+        <div class="detail">Lang Lang, Yuja Wang, and others report 6–8 hour daily practice from childhood.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>~4 hours of actual deep work</strong> — Cal Newport's research suggests most knowledge workers max out at 4 hours of cognitively demanding work per day.</div>
+        <div class="detail">The rest is meetings, email, context-switching, and recovery.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read 50,000–60,000 words</strong> — roughly an entire short novel (The Great Gatsby is ~47,000 words).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Drive ~500 miles</strong> — Seattle to San Francisco, or NYC to Cincinnati.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a full sprint's worth of story points</strong> — 5–8 points for an average dev day (if uninterrupted, which never happens).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Move apartments</strong> (small apartment, with help, no major furniture).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Sleep through a full cycle</strong> — 4–5 REM cycles, memory consolidation, growth hormone release.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 1 DAY ===================== -->
+
+<div class="time-block" id="t-1day">
+  <div class="time-header">
+    <span class="time-value">1 Day</span>
+    <span class="time-seconds">86,400 seconds</span>
+  </div>
+  <div class="time-tagline">One full rotation of Earth. The container for everything you are.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Dean Karnazes</strong> ran 350 miles (560 km) in 80 hours 44 minutes — that's ~105 miles (170 km) per 24-hour period.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>In a single 24-hour hackathon,</strong> small teams have built complete working products — GroupMe was built at a TechCrunch hackathon in ~24 hours.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Stephen King</strong> writes ~2,000 polished words per day, every single day, including holidays. Over decades, this produced 65+ novels.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An ER doctor</strong> on a 24-hour shift treats 30–50 patients, making potentially hundreds of diagnostic decisions.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A day trader</strong> at a top firm executes thousands of trades managing tens of millions in capital.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Sleep 7–8 hours, work 8, commute 1, eat/hygiene 2</strong> — leaving ~3–5 hours of actual free time.</div>
+        <div class="detail">This is the real budget. Most self-improvement plans fail because they ignore it.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Hike a significant trail</strong> — 15–20 miles, a full day in the mountains.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Deep-clean an entire apartment.</strong></div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Fly across the country</strong> — door to door including transit, security, flight, arrival.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read 2–3 chapters of a textbook</strong> with notes, or an entire popular nonfiction book.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 1 WEEK ===================== -->
+
+<div class="time-block" id="t-1wk">
+  <div class="time-header">
+    <span class="time-value">1 Week</span>
+    <span class="time-seconds">604,800 seconds</span>
+  </div>
+  <div class="time-tagline">A sprint. A vacation. Long enough to ship, short enough to remember every day.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Einstein</strong> wrote his paper on special relativity in roughly 5–6 weeks, but the core mathematical framework came together in about a week of furious writing in June 1905.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>The Wright Brothers</strong> went from first powered flight (Dec 14, failed) to the historic 59-second flight in <strong>3 days</strong> of iteration.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Faulkner</strong> wrote "As I Lay Dying" in six weeks, claiming the first draft took just 6 days of night shifts at a power plant.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A YC startup team</strong> ships 3–5 iterations of their MVP in a single week during batch.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Apollo 13 engineers</strong> designed and tested the CO₂ scrubber fix in ~2 days using only materials available on the spacecraft.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Complete one sprint</strong> — 3–5 tasks, a demo, a retro.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read an entire book</strong> — 30–60 min per day = a 300-page book by Sunday.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Establish a micro-routine</strong> — 7 consecutive days of a habit starts building neural pathways.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Plan and take a short vacation</strong> — fly somewhere, explore for 4 days, return.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Learn the basics of a new tool</strong> — VS Code shortcuts, a new CLI tool, basic Vim motions.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Recover from a hard training block</strong> — muscle repair, glycogen replenishment, neural adaptation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 1 MONTH ===================== -->
+
+<div class="time-block" id="t-1mo">
+  <div class="time-header">
+    <span class="time-value">1 Month</span>
+    <span class="time-seconds">~2.6M seconds</span>
+  </div>
+  <div class="time-tagline">The billing cycle. The habit horizon. One lunar orbit.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>NaNoWriMo winners</strong> write 50,000 words (a full novel draft) in 30 days. Some published authors do this routinely.</div>
+        <div class="detail">That's ~1,667 words/day. Hemingway would have scoffed at the quality, but the output is real.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Notch</strong> built the first playable version of Minecraft in about a month (May 2009), working in Java.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>The Manhattan Project</strong> assembled the Trinity device in roughly 4 weeks at the final stage.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Picasso's Guernica</strong> — from first sketch to completed 11×25 foot masterpiece in ~5 weeks.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A top bodybuilder</strong> on a prep cut loses 8–12 lbs of fat in a month while preserving muscle mass.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Form a habit</strong> — research suggests 21–30 days for simple habits (drinking water), longer for complex ones.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Ship a medium feature</strong> — design, implement, test, code review, deploy, monitor.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Lose 4–8 lbs of fat</strong> at a healthy 1–2 lbs/week rate.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read 3–4 books</strong> at a book-per-week pace.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete an online course</strong> — Coursera, Udemy, or a MOOC at ~5 hrs/week.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>See first visible fitness gains</strong> — muscle tone, improved run times, lower resting heart rate.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Fingernails grow ~3mm.</strong> You are literally a different physical object.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 3 MONTHS ===================== -->
+
+<div class="time-block" id="t-3mo">
+  <div class="time-header">
+    <span class="time-value">3 Months</span>
+    <span class="time-seconds">~7.9M seconds</span>
+  </div>
+  <div class="time-tagline">A quarter. A season. The minimum viable transformation.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>The first iPhone prototype</strong> went from "let's put a phone in the iPod" to a working demo in roughly one quarter of focused work by a small team.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A YC batch</strong> (3 months) has produced companies worth billions — Stripe, Airbnb, and Dropbox all went through 3-month batches.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Dostoevsky</strong> dictated "The Gambler" in 26 days to meet a contract deadline — and it's considered one of his finest novellas. He wrote "The Idiot" across a quarter.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A professional athlete's off-season training block</strong> — this is how you add 15 lbs to a bench press or shave 10 seconds off a mile time.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>SpaceX's Starship prototype cycles</strong> from design changes to test flight are roughly quarterly.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Dramatically change your physique</strong> — 12-week programs exist because this is the minimum for visible, significant body recomposition.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Go from zero to half-marathon</strong> with a structured training plan (Couch to Half).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Learn a new programming language</strong> well enough to be productive — not expert, but shipping code.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a bootcamp</strong> — most coding bootcamps are 12–16 weeks.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read 10–12 books.</strong> Bill Gates reads ~50/year; 12 in a quarter is ambitious but doable.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Build and ship a side project</strong> — a personal website, a small app, a Chrome extension.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 6 MONTHS ===================== -->
+
+<div class="time-block" id="t-6mo">
+  <div class="time-header">
+    <span class="time-value">6 Months</span>
+    <span class="time-seconds">~15.8M seconds</span>
+  </div>
+  <div class="time-tagline">Half a year. Long enough to forget what it felt like before.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Einstein's "Annus Mirabilis"</strong> — in roughly 6 months (March–September 1905) he published 4 papers that redefined physics: photoelectric effect, Brownian motion, special relativity, and E=mc².</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>The original Macintosh team</strong> went from concept to working prototype in about 6 months under Steve Jobs.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An elite marathoner</strong> completes a full training block — base building, speed work, tapering — for a peak race performance.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A Series A startup</strong> goes from product-market fit signals to a fundable growth trajectory in ~6 months.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Reach conversational level in a new language</strong> — with daily practice using immersion methods (Pimsleur, tutoring, apps).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete a college semester</strong> — 4–5 courses, finals, the whole arc.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Train for and run a marathon</strong> from a solid running base.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Change jobs</strong> — network, apply, interview, negotiate, give notice, start.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Pay off a small debt</strong> — $3,000–$5,000 with aggressive budgeting.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Become "pretty good" at a new skill</strong> — guitar chords, cooking techniques, a new sport. Not expert, but visibly competent.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 1 YEAR ===================== -->
+
+<div class="time-block" id="t-1yr">
+  <div class="time-header">
+    <span class="time-value">1 Year</span>
+    <span class="time-seconds">~31.5M seconds (π × 10⁷)</span>
+  </div>
+  <div class="time-tagline">One orbit around the sun. People overestimate what they can do in a year, and underestimate what they can do in five.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Tolkien</strong> spent a year writing The Hobbit (on and off). <strong>Shakespeare</strong> wrote 2–3 plays per year during his peak period.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A founding team</strong> goes from idea to seed-funded startup with users. Instagram launched ~8 weeks after pivoting from Burbn, but the full arc was about a year.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>OpenAI went from GPT-3 to ChatGPT</strong> in roughly a year (mid-2021 training → Nov 2022 launch), changing the trajectory of AI.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A PhD student</strong> publishes their first significant paper — typically year 2, but the best publish in year 1.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>An Olympic athlete's training year</strong> — periodized blocks leading to a single peak performance lasting seconds or minutes.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Read 20–50 books</strong> — at 30 min/day, you'll finish ~25 books/year.</div>
+        <div class="detail">That's more than most people read in a decade.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Lose 50+ lbs</strong> safely (~1 lb/week). Or gain 10–15 lbs of muscle (first year of lifting = newbie gains).</div>
+      </div>
+      <div class="example">
+        <div name="fact" class="fact"><strong>Build meaningful proficiency</strong> in a new domain — data science, product management, woodworking, music production.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Save $10,000–$20,000</strong> with disciplined budgeting on a median US salary.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A baby goes from immobile blob to walking, babbling human</strong> — the most dramatic year of any life.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Complete 1,000 Anki reviews</strong> at 3/day — enough to meaningfully learn a language's core vocabulary.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 3 YEARS ===================== -->
+
+<div class="time-block" id="t-3yr">
+  <div class="time-header">
+    <span class="time-value">3 Years</span>
+    <span class="time-seconds">~94.5M seconds</span>
+  </div>
+  <div class="time-tagline">The startup window. The PhD arc. Long enough to become genuinely good at something.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>The Apollo Program</strong> went from Kennedy's speech (1961) to first lunar orbit (1964) in 3 years, with 400,000 people working in parallel.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Beethoven</strong> composed the 9th Symphony over roughly 3 years (1822–1824) — while completely deaf.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A world-class startup</strong> goes from founding to Series B. Stripe took ~3 years to reach $100M in payment volume.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Darwin</strong> spent 3 years on the HMS Beagle voyage (1831–1834) collecting the observations that would lead to natural selection.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Complete a law degree</strong> (JD) or a significant portion of a PhD.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Go from beginner to intermediate in a musical instrument</strong> — playing songs, reading music, jamming with others.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Reach conversational fluency in a foreign language</strong> with consistent practice.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Get promoted one level</strong> at a large tech company (e.g. L4 → L5 at Google).</div>
+        <div class="detail">The median time to L5 is ~3 years at L4. Impact documentation and visibility matter as much as output.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Build a $50K–$100K investment portfolio</strong> from consistent monthly contributions + market returns.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A toddler becomes a kindergartener</strong> — from barely talking to reading simple books, riding a bike, having friendships.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 5 YEARS ===================== -->
+
+<div class="time-block" id="t-5yr">
+  <div class="time-header">
+    <span class="time-value">5 Years</span>
+    <span class="time-seconds">~158M seconds</span>
+  </div>
+  <div class="time-tagline">The underestimated horizon. Most life-changing things happen in this window.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>The Manhattan Project</strong> — from the Einstein-Szilard letter (1939) to Trinity (1945): 6 years to build a weapon that ended a world war and started an era.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>SpaceX</strong> went from founding (2002) to first successful Falcon 1 orbit (2008) in 6 years, after 3 failures.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Amazon</strong> went from Jeff Bezos's garage (1994) to IPO (1997) to category dominance in books by ~1999.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Michelangelo</strong> painted the Sistine Chapel ceiling in 4 years (1508–1512), lying on his back on scaffolding.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A PhD student</strong> completes their dissertation — from coursework through quals, research, and defense.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Complete a bachelor's degree</strong> (4–5 years) — the most common 5-year project in modern life.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Become genuinely skilled</strong> at a craft — 5 years of deliberate practice crosses the "people pay you for this" threshold.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Save for and buy a home</strong> — 5 years of saving for a down payment is a common timeline.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Build a meaningful professional network</strong> — 5 years in an industry creates durable connections.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Compound investments grow ~30–40%</strong> at historical market returns (7%/year). $50K becomes $70K.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A relationship goes from dating to deep partnership</strong> — shared experiences, crises navigated, trust built.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 10 YEARS ===================== -->
+
+<div class="time-block" id="t-10yr">
+  <div class="time-header">
+    <span class="time-value">10 Years</span>
+    <span class="time-seconds">~315M seconds</span>
+  </div>
+  <div class="time-tagline">A decade. A career chapter. The "10,000 hour" horizon. You will not be the same person.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>The 10,000-hour rule</strong> (popularized by Gladwell, researched by Ericsson): ~10 years of deliberate practice to reach world-class. The Beatles, Bill Gates, and chess grandmasters all put in roughly this duration.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Apple</strong> went from near-bankruptcy (1997) to the iPod-iPhone era (2007) in one decade under Jobs's return.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>The Human Genome Project</strong> took 13 years (1990–2003) — the most ambitious biology project in history.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Tesla</strong> went from founding (2003) to the Model S (2012) — a decade from concept to industry disruption.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Tolkien</strong> spent ~12 years writing The Lord of the Rings (1937–1949).</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Two full career chapters</strong> — most people change roles or companies 2–3 times per decade.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A child goes from birth to 5th grade</strong> — from helpless infant to reading Harry Potter and having opinions.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Compound investments roughly double</strong> at 7%/year. $100K → $197K. Start early matters more than start big.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Your entire social circle turns over</strong> — research shows you replace about half your close friends every 7 years.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Your body replaces nearly all its cells</strong> — you are physically a different person than a decade ago.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Run 10,000+ miles</strong> if you average 20 miles/week. That's roughly Seattle to Tokyo and back.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 25 YEARS ===================== -->
+
+<div class="time-block" id="t-25yr">
+  <div class="time-header">
+    <span class="time-value">25 Years</span>
+    <span class="time-seconds">~788M seconds</span>
+  </div>
+  <div class="time-tagline">A generation. The time between being parented and becoming a parent.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Warren Buffett</strong> built Berkshire Hathaway from a failing textile company (1965) to one of the world's most valuable conglomerates across ~25 years by 1990.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>The internet</strong> went from ARPANET (1969) to the World Wide Web (1993) in ~24 years.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Darwin</strong> spent 20+ years refining the theory of evolution before publishing "On the Origin of Species" (1859). From Beagle observations to publication: ~25 years.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A Supreme Court justice</strong> shapes American law across 25+ year tenures.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Moore's Law over 25 years:</strong> ~16 doublings. A chip with 1M transistors in 1995 has 65B transistors by 2020.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>Raise a child from birth to adulthood.</strong> The single most common 25-year human project.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Pay off a mortgage</strong> — a 30-year mortgage is 83% done. A 15-year is long finished.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Build a full career</strong> — from entry-level to senior leadership, from junior dev to principal engineer or VP.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Compound investments grow ~5.4×</strong> at 7%/year. $100K → $542K. This is how normal people become millionaires.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Watch an entire city neighborhood transform</strong> — new buildings, new residents, different character.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== LIFETIME ===================== -->
+
+<div class="time-block" id="t-lifetime">
+  <div class="time-header">
+    <span class="time-value">A Lifetime</span>
+    <span class="time-seconds">~50–80 productive years</span>
+  </div>
+  <div class="time-tagline">Your total allocation. Non-renewable. The only resource that truly matters.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">Peak Human</div>
+      <div class="example">
+        <div class="fact"><strong>Leonardo da Vinci</strong> (67 years): painter, sculptor, architect, musician, mathematician, engineer, inventor, anatomist, geologist, botanist. Produced ~15 surviving paintings and 7,000+ pages of notebooks.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Euler</strong> (76 years): published ~866 papers and books — more than any mathematician in history. Averaged a paper per week in his most productive years. Continued producing after going blind.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Marie Curie</strong> (66 years): 2 Nobel Prizes in different sciences (Physics 1903, Chemistry 1911). Discovered radium and polonium, pioneered radiation therapy. Died from her own research.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Bach</strong> (65 years): composed 1,128 known works — cantatas, concertos, fugues, the Mass in B Minor. Most written while managing a church choir and raising 20 children (10 survived infancy).</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Nikola Tesla</strong> (86 years): ~300 patents. Invented AC power systems, radio foundations, the Tesla coil, and envisioned wireless communication decades before WiFi.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">Realistic Human</div>
+      <div class="example">
+        <div class="fact"><strong>~80 years:</strong> 4,000 weeks. 29,000 days. You've already used a significant fraction.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>~25 years sleeping,</strong> ~10 years working, ~7 years eating, ~4 years commuting, ~3 years on screens for entertainment.</div>
+        <div class="detail">That leaves ~31 years. Subtract childhood and old age, and you have maybe 20 years of peak productive freedom.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Build ~3 deep relationships</strong> — partner, 1–2 lifelong friends. Most people's inner circle is shockingly small.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Hold 8–12 jobs</strong> across 3–4 career phases.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Read ~2,000–3,000 books</strong> if you average one per week from age 20 to 75.</div>
+        <div class="detail">This sounds like a lot. It is not. There are ~130M books in existence.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Your heart beats ~3 billion times.</strong> Each one irretrievable.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ===================== 100 YEARS ===================== -->
+
+<div class="time-block" id="t-100yr">
+  <div class="time-header">
+    <span class="time-value">100 Years</span>
+    <span class="time-seconds">~3.15 × 10⁹ seconds</span>
+  </div>
+  <div class="time-tagline">A century. Beyond any single life. The scale at which humanity itself is the protagonist.</div>
+  <div class="two-col">
+    <div class="col-elite">
+      <div class="col-label">What Humanity Accomplished</div>
+      <div class="example">
+        <div class="fact"><strong>1903 → 2003:</strong> From the Wright Brothers' 12-second flight to the International Space Station orbiting permanently with a crew of 6.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>1924 → 2024:</strong> Global life expectancy rose from ~34 years to ~73 years. We doubled the human lifespan in a century.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>1925 → 2025:</strong> From no antibiotics (penicillin discovered 1928) to CRISPR gene editing, mRNA vaccines, and AI-designed proteins.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>1945 → 2025:</strong> From ENIAC (one room, 5,000 additions/sec) to smartphones (pocket-sized, 15 trillion operations/sec). ~3 billion× improvement.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>World GDP grew from ~$1T (1900) to ~$100T (2024).</strong> A hundred-fold increase in total economic output in one century.</div>
+      </div>
+    </div>
+    <div class="col-normal">
+      <div class="col-label">What Persists</div>
+      <div class="example">
+        <div class="fact"><strong>A well-built house</strong> lasts 100 years. A well-planted oak tree is just reaching maturity.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A family line extends ~4 generations.</strong> Your great-grandchildren may hear stories about you — but likely only your name.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>A great book outlives its century.</strong> Shakespeare (400+ years), Homer (2,800+ years). But most books are forgotten within 20.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Languages shift noticeably.</strong> English speakers from 1925 would struggle with modern slang, abbreviations, and technical jargon.</div>
+      </div>
+      <div class="example">
+        <div class="fact"><strong>Nearly every person alive today will be dead.</strong> The roster of humanity completely turns over. And the next century begins.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>
+    A reference for building intuition about what's possible.<br>
+    The genius examples are real and cited. The "realistic" column is where you live.<br>
+    The gap between the two is mostly consistency, not talent.<br><br>
+    Inspired by the observation that people overestimate what they can do in a day<br>
+    and underestimate what they can do in a decade.
+  </p>
+</footer>
+
+<script>
+// Scroll reveal
+var observer = new IntersectionObserver(function(entries) {
+  for (var i = 0; i < entries.length; i++) {
+    if (entries[i].isIntersecting) {
+      entries[i].target.classList.add('visible');
+    }
+  }
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+var blocks = document.querySelectorAll('.time-block');
+for (var i = 0; i < blocks.length; i++) {
+  observer.observe(blocks[i]);
+}
+</script>
+
+</body>
+</html>
