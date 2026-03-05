@@ -140,21 +140,21 @@
 <script>
 const screens=[
   // ── 16:9 ──
-  {name:'Odin 3 / Odin 2 / RP5 / Flip 2 / Pocket S / RG556 / Thor top',nW:1920,nH:1080,note:'16:9 1080p AMOLED/IPS'},
-  {name:'Retroid Pocket 4 Pro / RP3 / RP4 / Flip 1',nW:1334,nH:750,note:'4.7" 16:9 750p IPS'},
+  {name:'Odin 3 / Odin 2 / RP5 / Flip 2 / Pocket S / RG556 / Thor top',nW:1920,nH:1080,note:'16:9 1080p AMOLED/IPS',diag:6},
+  {name:'Retroid Pocket 4 Pro / RP3 / RP4 / Flip 1',nW:1334,nH:750,note:'4.7" 16:9 750p IPS',diag:4.7},
   // ── 16:10 ──
-  {name:'AYANEO Pocket DS (top)',nW:1920,nH:1200,note:'7" 16:10 1200p OLED'},
-  {name:'Steam Deck LCD / OLED',nW:1280,nH:800,note:'7" 16:10 800p IPS/OLED'},
+  {name:'AYANEO Pocket DS (top)',nW:1920,nH:1200,note:'7" 16:10 1200p OLED',diag:7},
+  {name:'Steam Deck LCD / OLED',nW:1280,nH:800,note:'7" 16:10 800p IPS/OLED',diag:7},
   // ── ~31:27 ──
-  {name:'RP Classic / Mini v2 / DMG / Thor bot',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED'},
+  {name:'RP Classic / Mini v2 / DMG / Thor bot',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED',diag:3.92},
   // ── 10:9 ──
-  {name:'Analogue Pocket',nW:1600,nH:1440,note:'3.5" 10:9 IPS'},
+  {name:'Analogue Pocket',nW:1600,nH:1440,note:'3.5" 10:9 IPS',diag:3.5},
   // ── 3:2 ──
-  {name:'AYANEO Pocket Micro',nW:960,nH:640,note:'3.5" 3:2 IPS'},
+  {name:'AYANEO Pocket Micro',nW:960,nH:640,note:'3.5" 3:2 IPS',diag:3.5},
   // ── 4:3 ──
-  {name:'Miyoo Mini+ / RG35XX+',nW:640,nH:480,note:'3.5" 4:3 IPS'},
+  {name:'Miyoo Mini+ / RG35XX+',nW:640,nH:480,note:'3.5" 4:3 IPS',diag:3.5},
   // ── 1:1 ──
-  {name:'RG Cube / RGB30',nW:720,nH:720,note:'4" 1:1 IPS'},
+  {name:'RG Cube / RGB30',nW:720,nH:720,note:'4" 1:1 IPS',diag:4},
 ];
 
 const systems=[
@@ -326,6 +326,14 @@ function drawCell(scr,sys,result,isOver,isInt,cellW,recTag){
   const overscanOk=isOver&&cropPx>0&&cropPx<=Math.max(sys.nW,sys.nH)*0.06;
   const parCaveat=isInt&&parMode==='crt'&&hasDar(sys)?`<div class="cell-tag" style="color:#f59e0b88">${result.m}× vertical · PAR-corrected horizontal</div>`:'';
 
+  // Physical content diagonal
+  const scrDiagPx=Math.sqrt(scr.nW*scr.nW+scr.nH*scr.nH);
+  const pxPitch=scr.diag/scrDiagPx;
+  const visW=isOver?Math.min(result.cW,scr.nW):result.cW;
+  const visH=isOver?Math.min(result.cH,scr.nH):result.cH;
+  const contentDiag=(Math.sqrt(visW*visW+visH*visH)*pxPitch).toFixed(1);
+  const contentDiagStr=` · <b class="w">${contentDiag}"</b> of ${scr.diag}"`;
+
   // Round 5: bar thickness for fit cells
   let barStat='';
   if(!isOver){
@@ -359,7 +367,7 @@ function drawCell(scr,sys,result,isOver,isInt,cellW,recTag){
     </div>
     <div class="cell-scale">${scaleLabel}</div>
     <div class="cell-stats">
-      <div class="cell-stat"><b class="${parseFloat(utilPct)>90?'g':parseFloat(utilPct)>75?'ha':'r'}">${utilPct}%</b> screen used</div>
+      <div class="cell-stat"><b class="${parseFloat(utilPct)>90?'g':parseFloat(utilPct)>75?'ha':'r'}">${utilPct}%</b> screen used${contentDiagStr}</div>
       ${barStat}
       ${isOver?`<div class="cell-stat"><b class="${parseFloat(visPct)>95?'g':parseFloat(visPct)>90?'ha':'r'}">${visPct}%</b> content visible</div>`:''}
       ${cropPx>0?`<div class="cell-stat"><b class="r">${cropPx}px</b> cropped/side</div>`:''}
