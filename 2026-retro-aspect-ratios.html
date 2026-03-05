@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aspect Ratio Comparison</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: #0c0c0f;
+color: #e0e0e0;
+font-family: ‘JetBrains Mono’, monospace;
+min-height: 100vh;
+padding: 2rem;
+}
+
+h1 {
+font-family: ‘Space Grotesk’, sans-serif;
+font-size: 1.6rem;
+font-weight: 700;
+color: #fff;
+margin-bottom: 0.3rem;
+letter-spacing: -0.02em;
+}
+
+.subtitle {
+font-size: 0.75rem;
+color: #666;
+margin-bottom: 2rem;
+letter-spacing: 0.05em;
+text-transform: uppercase;
+}
+
+.views {
+display: flex;
+gap: 2rem;
+flex-wrap: wrap;
+}
+
+.panel {
+flex: 1;
+min-width: 340px;
+background: #131318;
+border: 1px solid #1e1e28;
+border-radius: 12px;
+padding: 1.5rem;
+}
+
+.panel h2 {
+font-family: ‘Space Grotesk’, sans-serif;
+font-size: 0.85rem;
+font-weight: 600;
+color: #888;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+margin-bottom: 1.2rem;
+}
+
+.overlap-container {
+position: relative;
+width: 100%;
+aspect-ratio: 16/9;
+margin: 0 auto;
+}
+
+.ratio-rect {
+position: absolute;
+border: 2px solid;
+border-radius: 4px;
+transition: opacity 0.2s ease, border-width 0.15s ease;
+cursor: pointer;
+}
+
+.ratio-rect:hover {
+border-width: 3px;
+z-index: 100 !important;
+}
+
+.ratio-rect .label {
+position: absolute;
+font-size: 0.65rem;
+font-weight: 700;
+padding: 2px 6px;
+border-radius: 3px;
+white-space: nowrap;
+pointer-events: none;
+letter-spacing: 0.03em;
+}
+
+/* Individual ratios list */
+.ratio-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 0.8rem;
+}
+
+.ratio-card {
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 0.6rem 0;
+border-bottom: 1px solid #1a1a22;
+cursor: pointer;
+transition: background 0.15s ease;
+padding: 0.6rem 0.5rem;
+border-radius: 6px;
+}
+
+.ratio-card:hover {
+background: #1a1a24;
+}
+
+.ratio-card:last-child { border-bottom: none; }
+
+.ratio-thumb {
+border: 2px solid;
+border-radius: 3px;
+flex-shrink: 0;
+position: relative;
+}
+
+.ratio-thumb::after {
+content: ‘’;
+position: absolute;
+inset: 0;
+border-radius: 2px;
+opacity: 0.08;
+}
+
+.ratio-info {
+flex: 1;
+}
+
+.ratio-name {
+font-size: 0.9rem;
+font-weight: 700;
+color: #fff;
+}
+
+.ratio-decimal {
+font-size: 0.7rem;
+color: #555;
+margin-left: 0.4rem;
+}
+
+.ratio-systems {
+font-size: 0.65rem;
+color: #666;
+margin-top: 2px;
+line-height: 1.4;
+}
+
+.ratio-bar-track {
+height: 4px;
+background: #1a1a22;
+border-radius: 2px;
+margin-top: 6px;
+overflow: hidden;
+}
+
+.ratio-bar-fill {
+height: 100%;
+border-radius: 2px;
+transition: width 0.4s ease;
+}
+
+.legend-note {
+font-size: 0.6rem;
+color: #444;
+margin-top: 1.2rem;
+line-height: 1.6;
+text-align: center;
+}
+
+.highlight { color: #fff; }
+
+@media (max-width: 800px) {
+.views { flex-direction: column; }
+.panel { min-width: auto; }
+body { padding: 1rem; }
+}
+</style>
+
+</head>
+<body>
+
+<h1>Aspect Ratios for Retro Gaming</h1>
+<p class="subtitle">Overlapping comparison &middot; Normalized to equal height</p>
+
+<div class="views">
+  <!-- Overlap panel -->
+  <div class="panel" style="flex: 1.3;">
+    <h2>Overlapping View (left-aligned)</h2>
+    <div class="overlap-container" id="overlapContainer"></div>
+    <p class="legend-note">All rectangles share the same height and left edge. Right-edge differences show how each ratio stretches horizontally. Hover to highlight.</p>
+  </div>
+
+  <!-- List panel -->
+
+  <div class="panel">
+    <h2>All Ratios — Narrow to Wide</h2>
+    <div class="ratio-grid" id="ratioGrid"></div>
+  </div>
+</div>
+
+<script>
+const ratios = [
+  { name: '1:1',    w: 1,   h: 1,   color: '#6b7280', systems: 'Square reference' },
+  { name: '10:9',   w: 10,  h: 9,   color: '#a78bfa', systems: 'Game Boy, Game Boy Color' },
+  { name: '8:7',    w: 8,   h: 7,   color: '#f472b6', systems: 'SNES/NES pixel grid (1:1 PAR)' },
+  { name: '5:4',    w: 5,   h: 4,   color: '#fb923c', systems: 'Some CRT monitors' },
+  { name: '4:3',    w: 4,   h: 3,   color: '#34d399', systems: 'NES, SNES, Genesis, PS1, N64, GG' },
+  { name: '11:8',   w: 11,  h: 8,   color: '#818cf8', systems: 'Approx. Sega Game Gear native' },
+  { name: '3:2',    w: 3,   h: 2,   color: '#facc15', systems: 'GBA, 3DS top screen' },
+  { name: '16:10',  w: 16,  h: 10,  color: '#67e8f9', systems: 'Steam Deck, some PC monitors' },
+  { name: '5:3',    w: 5,   h: 3,   color: '#c084fc', systems: 'PSP (≈ 480×272)' },
+  { name: '16:9',   w: 16,  h: 9,   color: '#f87171', systems: 'Widescreen standard, DS combined, Vita' },
+];
+
+// Sort narrowest to widest
+ratios.sort((a, b) => (a.w / a.h) - (b.w / b.h));
+
+// Widest ratio for normalization
+const maxDecimal = Math.max(...ratios.map(r => r.w / r.h));
+
+// --- OVERLAP VIEW ---
+const container = document.getElementById('overlapContainer');
+
+ratios.forEach((r, i) => {
+  const decimal = r.w / r.h;
+  const widthPct = (decimal / maxDecimal) * 100;
+
+  const rect = document.createElement('div');
+  rect.className = 'ratio-rect';
+  rect.style.cssText = `
+    width: ${widthPct}%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    border-color: ${r.color};
+    background: ${r.color}08;
+    z-index: ${ratios.length - i};
+  `;
+
+  const label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = r.name;
+  label.style.cssText = `
+    top: ${4 + i * 18}px;
+    right: 6px;
+    color: ${r.color};
+    background: #0c0c0f;
+  `;
+
+  rect.appendChild(label);
+
+  rect.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.ratio-rect').forEach(el => el.style.opacity = '0.2');
+    rect.style.opacity = '1';
+    rect.style.background = r.color + '15';
+  });
+  rect.addEventListener('mouseleave', () => {
+    document.querySelectorAll('.ratio-rect').forEach(el => {
+      el.style.opacity = '1';
+      el.style.background = el.dataset.color + '08';
+    });
+  });
+  rect.dataset.color = r.color;
+
+  container.appendChild(rect);
+});
+
+// --- LIST VIEW ---
+const grid = document.getElementById('ratioGrid');
+
+ratios.forEach(r => {
+  const decimal = r.w / r.h;
+  const barPct = (decimal / maxDecimal) * 100;
+  const thumbW = Math.round(36 * (decimal / maxDecimal) + 14);
+  const thumbH = 28;
+
+  const card = document.createElement('div');
+  card.className = 'ratio-card';
+  card.innerHTML = `
+    <div class="ratio-thumb" style="
+      width: ${thumbW}px;
+      height: ${thumbH}px;
+      border-color: ${r.color};
+      background: ${r.color}12;
+    "></div>
+    <div class="ratio-info">
+      <div>
+        <span class="ratio-name" style="color: ${r.color}">${r.name}</span>
+        <span class="ratio-decimal">${decimal.toFixed(3)}</span>
+      </div>
+      <div class="ratio-systems">${r.systems}</div>
+      <div class="ratio-bar-track">
+        <div class="ratio-bar-fill" style="width: ${barPct}%; background: ${r.color}"></div>
+      </div>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+</script>
+
+</body>
+</html>
