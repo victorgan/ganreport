@@ -251,14 +251,14 @@ function nonIntOver(scr,sys){
   return{s,cW,cH,util:1,vis,cropW,cropH};
 }
 
-// Integer overscale: smallest integer m where content covers screen
+// Integer overscale: smallest integer m where at least one axis overflows (= underscale + 1)
 function intOver(scr,sys){
   const dar=displayAR(sys);
-  // displayH = sys.nH * m, displayW = displayH * dar
-  // Need: displayH >= scr.nH AND displayW >= scr.nW
-  const mH=Math.ceil(scr.nH/sys.nH);
-  const mW=Math.ceil(scr.nW/(sys.nH*dar));
-  const m=Math.max(mH,mW);
+  // First find underscale m (same logic as intFit)
+  const mH=Math.floor(scr.nH/sys.nH);
+  const mW=Math.floor(scr.nW/(sys.nH*dar));
+  const mFit=Math.min(mH,mW);
+  const m=mFit+1;
   const cH=sys.nH*m, cW=cH*dar;
   const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
   const visW=Math.min(cW,scr.nW), visH=Math.min(cH,scr.nH);
