@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aspect Ratio Fit Simulator</title>
+<title>Retro Scaling Simulator</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
@@ -29,6 +29,7 @@
 .grid-2x2{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto auto auto;gap:0;margin-bottom:.8rem}
 .grid-corner{background:#131318}
 .col-header{padding:.5rem .4rem;text-align:center;font-size:.6rem;font-weight:700;font-family:‘Space Grotesk’,sans-serif;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #1e1e28}
+.col-sub{display:block;font-size:.42rem;font-weight:400;letter-spacing:.03em;margin-top:2px;text-transform:none;opacity:.6}
 .col-h-nonint{color:#67e8f9}
 .col-h-int{color:#a78bfa}
 .row-header{padding:.6rem .5rem;font-size:.55rem;font-weight:700;font-family:‘Space Grotesk’,sans-serif;text-transform:uppercase;letter-spacing:.06em;writing-mode:vertical-lr;text-orientation:mixed;transform:rotate(180deg);text-align:center;border-right:1px solid #1e1e28;display:flex;align-items:center;justify-content:center}
@@ -51,6 +52,9 @@
 .cell-scale{font-size:.7rem;font-weight:700;color:#e0e0e0;margin-bottom:4px;font-family:‘Space Grotesk’,sans-serif}
 .cell-tag{font-size:.44rem;color:#444;text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
 .cell-tag.overscan-ok{color:#34d39988}
+.cell-rec{display:inline-block;font-size:.42rem;font-weight:600;padding:2px 6px;border-radius:3px;margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
+.cell-rec.rec-purist{background:#a78bfa18;color:#a78bfa;border:1px solid #a78bfa33}
+.cell-rec.rec-casual{background:#67e8f918;color:#67e8f9;border:1px solid #67e8f933}
 
 /* Pixel grid inset */
 .pixel-inset{margin-top:6px}
@@ -76,7 +80,7 @@
 .ranker-btn.on{border-color:#f59e0b;background:#f59e0b14;color:#f59e0b}
 .ranker-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem;padding:4px 6px;border-radius:6px}
 .ranker-row:first-child{background:#34d39908;border:1px solid #34d39925}
-.ranker-name{width:120px;font-size:.58rem;font-weight:600;color:#e0e0e0;flex-shrink:0}
+.ranker-name{width:150px;font-size:.56rem;font-weight:600;color:#e0e0e0;flex-shrink:0}
 .ranker-name .rn-sub{display:block;font-size:.44rem;font-weight:400;color:#555}
 .ranker-track{flex:1;height:20px;background:#1a1a22;border-radius:4px;overflow:hidden;position:relative}
 .ranker-fill{height:100%;border-radius:4px;position:relative}
@@ -98,8 +102,8 @@
 
 </head>
 <body>
-<h1>Aspect Ratio Fit Simulator</h1>
-<p class="subtitle">How game content maps to your screen — every scaling mode at a glance</p>
+<h1>Retro Scaling Simulator</h1>
+<p style="font-size:.6rem;color:#666;margin-bottom:1.8rem;line-height:1.6;max-width:640px">Pick a screen and a game system to see how content fits across four scaling modes. Toggle CRT-accurate for consoles that used non-square pixels. Use the ranker at the bottom to find which screen fits your library best.</p>
 
 <div class="layout">
   <div class="panel panel-main">
@@ -114,19 +118,19 @@
     </div>
     <div class="par-note" id="parNote">This system was displayed at <b>4:3</b> on CRT TVs via non-square pixels. The content rectangle is now wider than the raw pixel grid.</div>
     <div class="grid-2x2" id="grid2x2"></div>
-    <p class="note">Each cell is a real emulator scaling mode. Non-integer = maximum fill but uneven pixels. Integer = pixel-perfect vertically, width derived from display aspect ratio.<br>Toggle CRT-accurate above to see how NES/SNES/Genesis change when stretched to 4:3.</p>
+    <p class="note">Each cell is a real emulator scaling mode. Smooth = scale to fill with bilinear filtering (may shimmer). Integer = pixel-perfect vertical scaling.<br>Toggle CRT-accurate above to see how NES/SNES/Genesis change when stretched to 4:3.</p>
   </div>
   <div class="panel panel-side">
     <h2>Utilization by System</h2>
     <p style="font-size:.55rem;color:#555;margin-bottom:.6rem" id="chartSubtitle"></p>
     <div id="chartContainer"></div>
-    <p class="note">Click to select. Shows non-integer fit utilization.</p>
+    <p class="note">Click to select. Shows smooth fit utilization.</p>
   </div>
 </div>
 
 <div class="ranker-section">
   <div class="panel">
-    <h2>Screen Ranker — Which device fits your library best?</h2>
+    <h2>Screen Ranker — Which device fits your library best? <span id="rankerParLabel" style="font-size:.55rem;font-weight:400;color:#555"></span></h2>
     <p style="font-size:.55rem;color:#666;margin-bottom:.8rem">Toggle the systems you care about, then see which screen device has the best average fit.</p>
     <div class="ranker-toggles" id="rankerToggles"></div>
     <div id="rankerResults"></div>
@@ -135,15 +139,22 @@
 
 <script>
 const screens=[
-  {name:'Odin 3',nW:1920,nH:1080,note:'6" 16:9 AMOLED'},
-  {name:'RP5 / Flip 2',nW:1920,nH:1080,note:'5.5" 16:9 AMOLED'},
-  {name:'RP4 Pro',nW:1280,nH:720,note:'4.7" 16:9 IPS'},
-  {name:'RP Classic / DMG',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED'},
-  {name:'Thor (bottom)',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED'},
+  // ── 16:9 ──
+  {name:'Odin 3 / Odin 2 / RP5 / Flip 2 / Pocket S / RG556 / Thor top',nW:1920,nH:1080,note:'16:9 1080p AMOLED/IPS'},
+  {name:'Retroid Pocket 4 Pro',nW:1280,nH:720,note:'4.7" 16:9 720p IPS'},
+  // ── 16:10 ──
+  {name:'AYANEO Pocket DS (top)',nW:1920,nH:1200,note:'7" 16:10 1200p OLED'},
+  {name:'Steam Deck LCD / OLED',nW:1280,nH:800,note:'7" 16:10 800p IPS/OLED'},
+  // ── ~31:27 ──
+  {name:'RP Classic / Mini v2 / DMG / Thor bot',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED'},
+  // ── 10:9 ──
   {name:'Analogue Pocket',nW:1600,nH:1440,note:'3.5" 10:9 IPS'},
-  {name:'Steam Deck',nW:1280,nH:800,note:'7" 16:10 IPS'},
+  // ── 3:2 ──
+  {name:'AYANEO Pocket Micro',nW:960,nH:640,note:'3.5" 3:2 IPS'},
+  // ── 4:3 ──
   {name:'Miyoo Mini+ / RG35XX+',nW:640,nH:480,note:'3.5" 4:3 IPS'},
-  {name:'RGB30 / RG Cube',nW:720,nH:720,note:'4" 1:1 IPS'},
+  // ── 1:1 ──
+  {name:'RG Cube / RGB30',nW:720,nH:720,note:'4" 1:1 IPS'},
 ];
 
 const systems=[
@@ -154,15 +165,21 @@ const systems=[
   {name:'Genesis',nW:320,nH:224,ratio:'10:7',rW:10,rH:7,darW:4,darH:3},
   {name:'PS1',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
   {name:'N64',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
+  {name:'Dreamcast',nW:640,nH:480,ratio:'4:3',rW:4,rH:3},
   {name:'DS (per)',nW:256,nH:192,ratio:'4:3',rW:4,rH:3},
   {name:'GBA',nW:240,nH:160,ratio:'3:2',rW:3,rH:2},
+  {name:'3DS (top)',nW:400,nH:240,ratio:'5:3',rW:5,rH:3},
+  {name:'PS2',nW:640,nH:448,ratio:'10:7',rW:10,rH:7,darW:4,darH:3},
+  {name:'GC / Wii (4:3)',nW:640,nH:480,ratio:'4:3',rW:4,rH:3},
+  {name:'GC / Wii (16:9)',nW:854,nH:480,ratio:'16:9',rW:16,rH:9},
   {name:'PSP',nW:480,nH:272,ratio:'30:17',rW:30,rH:17},
   {name:'Vita',nW:960,nH:544,ratio:'30:17',rW:30,rH:17},
+  {name:'Switch',nW:1280,nH:720,ratio:'16:9',rW:16,rH:9},
 ];
 
-let sIdx=0,gIdx=8;
+let sIdx=0,gIdx=9;
 let parMode='pixel';
-let rankerSel=new Set([0,2,3,5,8]);
+let rankerSel=new Set([0,2,3,5,9,16]); // GB, NES, SNES, PS1, GBA, Switch
 
 function setPar(m){
   parMode=m;
@@ -272,16 +289,13 @@ function renderBtns(){
   });
 }
 
-function drawCell(scr,sys,result,isOver,isInt,cellW){
+function drawCell(scr,sys,result,isOver,isInt,cellW,recTag){
   const ar=scr.nW/scr.nH;
   const maxW=cellW,maxH=180;
   let dW,dH;
   if(maxW/ar<=maxH){dW=maxW;dH=maxW/ar}else{dH=maxH;dW=maxH*ar}
 
-  // Content rect in display coords
   const scX=result.cW/scr.nW, scY=result.cH/scr.nH;
-  const cW_d=dW*(isOver?scX:result.cW/scr.nW);
-  const cH_d=dH*(isOver?scY:result.cH/scr.nH);
 
   let cW_px,cH_px;
   if(!isOver){
@@ -310,23 +324,35 @@ function drawCell(scr,sys,result,isOver,isInt,cellW){
   const visPct=(result.vis*100).toFixed(1);
   const cropPx=Math.max(Math.ceil(result.cropW/2),Math.ceil(result.cropH/2));
   const overscanOk=isOver&&cropPx>0&&cropPx<=Math.max(sys.nW,sys.nH)*0.06;
+  const parCaveat=isInt&&parMode==='crt'&&hasDar(sys)?`<div class="cell-tag" style="color:#f59e0b88">${result.m}× vertical · PAR-corrected horizontal</div>`:'';
 
-  // Pixel grid inset for integer cells
+  // Round 5: bar thickness for fit cells
+  let barStat='';
+  if(!isOver){
+    const barH=Math.round((scr.nH-result.cH)/2);
+    const barW=Math.round((scr.nW-result.cW)/2);
+    if(barH>0&&barW>0) barStat=`<div class="cell-stat"><b class="r">${barW}px</b> side + <b class="r">${barH}px</b> top/bot bars</div>`;
+    else if(barH>0) barStat=`<div class="cell-stat"><b class="r">${barH}px</b> bar top &amp; bottom</div>`;
+    else if(barW>0) barStat=`<div class="cell-stat"><b class="r">${barW}px</b> bar left &amp; right</div>`;
+    else barStat=`<div class="cell-stat"><b class="g">no bars</b> — perfect fit</div>`;
+  }
+
+  // Round 3: recommended badge
+  const recHTML=recTag?`<div class="cell-rec ${recTag.cls}">${recTag.label}</div>`:'';
+
+  // Round 2: larger pixel grid insets
   let pixelHTML='';
+  const pxS=5, gs=8;
   if(isInt && result.m){
-    const pg=5, gs=6;
-    const cSize=Math.round(gs*result.m*pg/result.m)*0.4; // small preview
-    const pxS=3;
-    const cvW=gs*pxS*2, cvH=gs*pxS*2; // fixed small canvas
-    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvW}" height="${cvH}" data-int="1" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uniform grid</div></div>`;
+    const cvSz=gs*pxS*2;
+    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvSz}" height="${cvSz}" data-int="1" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uniform grid</div></div>`;
   } else if(!isInt && result.s){
-    const pxS=3, gs=6;
-    const cvW=Math.round(gs*result.s*pxS/result.s)*gs*0.4;
-    const cvW2=gs*pxS*2, cvH2=gs*pxS*2;
-    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvW2}" height="${cvH2}" data-int="0" data-s="${result.s}" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uneven pixels</div></div>`;
+    const cvSz=gs*pxS*2;
+    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvSz}" height="${cvSz}" data-int="0" data-s="${result.s}" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uneven pixels</div></div>`;
   }
 
   return `
+    ${recHTML}
     <div class="cell-screen" style="width:${dW}px;height:${dH}px">
       <div class="cell-content ${isOver?'t-over':'t-fit'}" style="width:${cW_px}px;height:${cH_px}px;left:${cL}px;top:${cT}px"></div>
       ${crops}
@@ -334,9 +360,11 @@ function drawCell(scr,sys,result,isOver,isInt,cellW){
     <div class="cell-scale">${scaleLabel}</div>
     <div class="cell-stats">
       <div class="cell-stat"><b class="${parseFloat(utilPct)>90?'g':parseFloat(utilPct)>75?'ha':'r'}">${utilPct}%</b> screen used</div>
+      ${barStat}
       ${isOver?`<div class="cell-stat"><b class="${parseFloat(visPct)>95?'g':parseFloat(visPct)>90?'ha':'r'}">${visPct}%</b> content visible</div>`:''}
       ${cropPx>0?`<div class="cell-stat"><b class="r">${cropPx}px</b> cropped/side</div>`:''}
       ${overscanOk?`<div class="cell-tag overscan-ok">within CRT overscan</div>`:''}
+      ${parCaveat}
     </div>
     ${pixelHTML}
   `;
@@ -365,8 +393,8 @@ function update(){
 
   g.innerHTML=`
     <div class="grid-corner"></div>
-    <div class="col-header col-h-nonint">Non-integer</div>
-    <div class="col-header col-h-int">Integer</div>
+    <div class="col-header col-h-nonint">Smooth<span class="col-sub">Bilinear / non-integer</span></div>
+    <div class="col-header col-h-int">Integer<span class="col-sub">Pixel-perfect scaling</span></div>
 
     <div class="row-header row-h-fit">Fit</div>
     <div class="grid-cell" id="cell-nif"></div>
@@ -377,10 +405,10 @@ function update(){
     <div class="grid-cell" id="cell-io"></div>
   `;
 
-  document.getElementById('cell-nif').innerHTML=drawCell(scr,sys,nif,false,false,cellW);
-  document.getElementById('cell-if').innerHTML=inf?drawCell(scr,sys,inf,false,true,cellW):'<div class="cell-stats"><div class="cell-stat">Native res exceeds screen</div></div>';
-  document.getElementById('cell-nio').innerHTML=drawCell(scr,sys,nio,true,false,cellW);
-  document.getElementById('cell-io').innerHTML=drawCell(scr,sys,ino,true,true,cellW);
+  document.getElementById('cell-nif').innerHTML=drawCell(scr,sys,nif,false,false,cellW,{cls:'rec-casual',label:'default for most players'});
+  document.getElementById('cell-if').innerHTML=inf?drawCell(scr,sys,inf,false,true,cellW,{cls:'rec-purist',label:'recommended for retro'}):'<div class="cell-stats"><div class="cell-stat">Native res exceeds screen</div></div>';
+  document.getElementById('cell-nio').innerHTML=drawCell(scr,sys,nio,true,false,cellW,null);
+  document.getElementById('cell-io').innerHTML=drawCell(scr,sys,ino,true,true,cellW,null);
 
   // Draw pixel canvases
   g.querySelectorAll('.px-cv').forEach(cv=>{
@@ -395,7 +423,7 @@ function update(){
         ctx.fillStyle=cols[(x+y)%2];
         ctx.fillRect(x*sz,y*sz,sz,sz);
       }
-      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.4;
+      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.5;
       for(let i=0;i<=gs;i++){
         ctx.beginPath();ctx.moveTo(i*sz,0);ctx.lineTo(i*sz,cv.height);ctx.stroke();
         ctx.beginPath();ctx.moveTo(0,i*sz);ctx.lineTo(cv.width,i*sz);ctx.stroke();
@@ -408,7 +436,7 @@ function update(){
         const fx=Math.round(x*norm*p*2),fy=Math.round(y*norm*p*2);
         ctx.fillRect(fx,fy,Math.round((x+1)*norm*p*2)-fx,Math.round((y+1)*norm*p*2)-fy);
       }
-      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.4;
+      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.5;
       for(let i=0;i<=gs;i++){
         const f=Math.round(i*norm*p*2);
         ctx.beginPath();ctx.moveTo(f,0);ctx.lineTo(f,cv.height);ctx.stroke();
@@ -425,7 +453,8 @@ function update(){
 function renderChart(scr){
   const c=document.getElementById('chartContainer');
   c.innerHTML='';
-  document.getElementById('chartSubtitle').textContent=`${scr.name} (${scr.nW}×${scr.nH})`;
+  const parLabel=parMode==='crt'?' · CRT-accurate':'';
+  document.getElementById('chartSubtitle').textContent=`${scr.name} (${scr.nW}×${scr.nH})${parLabel}`;
   const entries=systems.map((sys,i)=>{
     const r=nonIntFit(scr,sys);
     const effRatio=parMode==='crt'&&sys.darW?`${sys.darW}:${sys.darH}`:sys.ratio;
@@ -447,6 +476,9 @@ function renderChart(scr){
 
 // ── SCREEN RANKER ──
 function renderRanker(){
+  const rpl=document.getElementById('rankerParLabel');
+  rpl.textContent=parMode==='crt'?'(CRT-accurate)':'(pixel-perfect)';
+  rpl.style.color=parMode==='crt'?'#f59e0b88':'#555';
   const tog=document.getElementById('rankerToggles');
   tog.innerHTML='';
   systems.forEach((s,i)=>{
