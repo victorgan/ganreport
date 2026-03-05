@@ -4,306 +4,417 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aspect Ratio Comparison</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Aspect Ratio Fit Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0c0c0f;color:#e0e0e0;font-family:'JetBrains Mono',monospace;min-height:100vh;padding:2rem 2rem 4rem}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.25rem;letter-spacing:-.02em}
+  .subtitle{font-size:.68rem;color:#555;margin-bottom:1.8rem;letter-spacing:.06em;text-transform:uppercase}
+  .layout{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin-bottom:1.5rem}
+  .panel{background:#131318;border:1px solid #1e1e28;border-radius:12px;padding:1.5rem}
+  .panel h2{font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem}
+  .system-btns{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+  .sys-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;padding:4px 7px;border-radius:5px;border:1.5px solid #2a2a35;background:#16161c;color:#777;cursor:pointer;transition:all .15s;line-height:1.3}
+  .sys-btn:hover{border-color:#444;color:#ccc}
+  .sys-btn.act-s{border-color:#60a5fa;background:#60a5fa14;color:#60a5fa}
+  .sys-btn.act-g{border-color:#f59e0b;background:#f59e0b14;color:#f59e0b}
+  .sys-btn .h{display:block;font-size:.46rem;font-weight:400;color:#555;margin-top:1px}
+  .sys-btn.act-s .h{color:#60a5fa88}
+  .sys-btn.act-g .h{color:#f59e0b88}
+  .info-bar{font-size:.62rem;color:#888;margin-bottom:1rem;padding:.5rem .7rem;background:#16161c;border-radius:6px;border:1px solid #1e1e28;line-height:1.6}
+  .hb{color:#60a5fa;font-weight:600}.ha{color:#f59e0b;font-weight:600}
 
-body {
-background: #0c0c0f;
-color: #e0e0e0;
-font-family: ‘JetBrains Mono’, monospace;
-min-height: 100vh;
-padding: 2rem;
-}
+/* 2x2 Grid */
+.grid-2x2{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto auto auto;gap:0;margin-bottom:.8rem}
+.grid-corner{background:#131318}
+.col-header{padding:.5rem .4rem;text-align:center;font-size:.6rem;font-weight:700;font-family:‘Space Grotesk’,sans-serif;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #1e1e28}
+.col-h-nonint{color:#67e8f9}
+.col-h-int{color:#a78bfa}
+.row-header{padding:.6rem .5rem;font-size:.55rem;font-weight:700;font-family:‘Space Grotesk’,sans-serif;text-transform:uppercase;letter-spacing:.06em;writing-mode:vertical-lr;text-orientation:mixed;transform:rotate(180deg);text-align:center;border-right:1px solid #1e1e28;display:flex;align-items:center;justify-content:center}
+.row-h-fit{color:#34d399}
+.row-h-over{color:#f87171}
+.grid-cell{padding:.8rem .6rem;border:1px solid #1a1a22;text-align:center;position:relative}
+.grid-cell:hover{background:#16161e}
 
-h1 {
-font-family: ‘Space Grotesk’, sans-serif;
-font-size: 1.6rem;
-font-weight: 700;
-color: #fff;
-margin-bottom: 0.3rem;
-letter-spacing: -0.02em;
-}
+.cell-screen{position:relative;background:#000;border-radius:4px;overflow:hidden;margin:0 auto .5rem;border:1.5px solid #60a5fa33}
+.cell-content{position:absolute;border-radius:2px;background:repeating-conic-gradient(#2a2a35 0% 25%,#222230 0% 50%) 50%/10px 10px;overflow:hidden}
+.cell-content::after{content:’’;position:absolute;inset:0}
+.cell-content.t-fit::after{background:linear-gradient(135deg,#34d39908,#34d39912)}
+.cell-content.t-over::after{background:linear-gradient(135deg,#f8717108,#f8717112)}
+.crop-z{position:absolute;background:repeating-linear-gradient(45deg,#f8717122,#f8717122 3px,transparent 3px,transparent 6px);pointer-events:none;z-index:3}
 
-.subtitle {
-font-size: 0.75rem;
-color: #666;
-margin-bottom: 2rem;
-letter-spacing: 0.05em;
-text-transform: uppercase;
-}
+.cell-stats{display:flex;flex-direction:column;gap:3px;align-items:center}
+.cell-stat{font-size:.52rem;color:#888;line-height:1.4}
+.cell-stat b{font-weight:700}
+.cell-stat .g{color:#34d399}.cell-stat .r{color:#f87171}.cell-stat .p{color:#a78bfa}.cell-stat .c{color:#67e8f9}.cell-stat .w{color:#fff}
+.cell-scale{font-size:.6rem;font-weight:700;color:#e0e0e0;margin-bottom:4px;font-family:‘Space Grotesk’,sans-serif}
+.cell-tag{font-size:.44rem;color:#444;text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+.cell-tag.overscan-ok{color:#34d39988}
 
-.views {
-display: flex;
-gap: 2rem;
-flex-wrap: wrap;
-}
+/* Pixel grid inset */
+.pixel-inset{margin-top:6px}
+.pixel-inset canvas{border:1px solid #2a2a35;border-radius:2px}
+.pixel-inset-label{font-size:.42rem;color:#555;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 
-.panel {
-flex: 1;
-min-width: 340px;
-background: #131318;
-border: 1px solid #1e1e28;
-border-radius: 12px;
-padding: 1.5rem;
-}
+/* Utilization chart */
+.chart-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.38rem;cursor:pointer;padding:3px 5px;border-radius:6px;transition:background .12s}
+.chart-row:hover{background:#1a1a24}.chart-row.active{background:#1e1e2a}
+.chart-label{width:66px;font-size:.56rem;font-weight:600;text-align:right;flex-shrink:0;line-height:1.3}
+.chart-sub{display:block;font-size:.44rem;font-weight:400;color:#555}
+.chart-track{flex:1;height:18px;background:#1a1a22;border-radius:4px;overflow:hidden;position:relative}
+.chart-fill{height:100%;border-radius:4px;transition:width .4s;position:relative}
+.chart-pct{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:.48rem;font-weight:700;color:#fff;mix-blend-mode:difference}
+.chart-tag{width:34px;font-size:.48rem;font-weight:600;text-align:left;flex-shrink:0;color:#555}
 
-.panel h2 {
-font-family: ‘Space Grotesk’, sans-serif;
-font-size: 0.85rem;
-font-weight: 600;
-color: #888;
-text-transform: uppercase;
-letter-spacing: 0.08em;
-margin-bottom: 1.2rem;
-}
+/* Screen ranker */
+.ranker-section{margin-top:1.5rem}
+.ranker-section .panel{width:100%}
+.ranker-toggles{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.ranker-btn{font-family:‘JetBrains Mono’,monospace;font-size:.56rem;font-weight:600;padding:4px 8px;border-radius:5px;border:1.5px solid #2a2a35;background:#16161c;color:#666;cursor:pointer;transition:all .15s}
+.ranker-btn:hover{border-color:#444;color:#ccc}
+.ranker-btn.on{border-color:#f59e0b;background:#f59e0b14;color:#f59e0b}
+.ranker-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem;padding:4px 6px;border-radius:6px}
+.ranker-row:first-child{background:#34d39908;border:1px solid #34d39925}
+.ranker-name{width:120px;font-size:.58rem;font-weight:600;color:#e0e0e0;flex-shrink:0}
+.ranker-name .rn-sub{display:block;font-size:.44rem;font-weight:400;color:#555}
+.ranker-track{flex:1;height:20px;background:#1a1a22;border-radius:4px;overflow:hidden;position:relative}
+.ranker-fill{height:100%;border-radius:4px;position:relative}
+.ranker-pct{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:.5rem;font-weight:700;color:#fff;mix-blend-mode:difference}
 
-.overlap-container {
-position: relative;
-width: 100%;
-aspect-ratio: 16/9;
-margin: 0 auto;
-}
-
-.ratio-rect {
-position: absolute;
-border: 2px solid;
-border-radius: 4px;
-transition: opacity 0.2s ease, border-width 0.15s ease;
-cursor: pointer;
-}
-
-.ratio-rect:hover {
-border-width: 3px;
-z-index: 100 !important;
-}
-
-.ratio-rect .label {
-position: absolute;
-font-size: 0.65rem;
-font-weight: 700;
-padding: 2px 6px;
-border-radius: 3px;
-white-space: nowrap;
-pointer-events: none;
-letter-spacing: 0.03em;
-}
-
-/* Individual ratios list */
-.ratio-grid {
-display: grid;
-grid-template-columns: 1fr;
-gap: 0.8rem;
-}
-
-.ratio-card {
-display: flex;
-align-items: center;
-gap: 1rem;
-padding: 0.6rem 0;
-border-bottom: 1px solid #1a1a22;
-cursor: pointer;
-transition: background 0.15s ease;
-padding: 0.6rem 0.5rem;
-border-radius: 6px;
-}
-
-.ratio-card:hover {
-background: #1a1a24;
-}
-
-.ratio-card:last-child { border-bottom: none; }
-
-.ratio-thumb {
-border: 2px solid;
-border-radius: 3px;
-flex-shrink: 0;
-position: relative;
-}
-
-.ratio-thumb::after {
-content: ‘’;
-position: absolute;
-inset: 0;
-border-radius: 2px;
-opacity: 0.08;
-}
-
-.ratio-info {
-flex: 1;
-}
-
-.ratio-name {
-font-size: 0.9rem;
-font-weight: 700;
-color: #fff;
-}
-
-.ratio-decimal {
-font-size: 0.7rem;
-color: #555;
-margin-left: 0.4rem;
-}
-
-.ratio-systems {
-font-size: 0.65rem;
-color: #666;
-margin-top: 2px;
-line-height: 1.4;
-}
-
-.ratio-bar-track {
-height: 4px;
-background: #1a1a22;
-border-radius: 2px;
-margin-top: 6px;
-overflow: hidden;
-}
-
-.ratio-bar-fill {
-height: 100%;
-border-radius: 2px;
-transition: width 0.4s ease;
-}
-
-.legend-note {
-font-size: 0.6rem;
-color: #444;
-margin-top: 1.2rem;
-line-height: 1.6;
-text-align: center;
-}
-
-.highlight { color: #fff; }
-
-@media (max-width: 800px) {
-.views { flex-direction: column; }
-.panel { min-width: auto; }
-body { padding: 1rem; }
-}
+.note{font-size:.5rem;color:#444;margin-top:.6rem;text-align:center;line-height:1.5}
+.panel-main{flex:1.2;min-width:400px}
+.panel-side{flex:.7;min-width:260px}
+@media(max-width:900px){.layout{flex-direction:column}.panel-main,.panel-side{min-width:auto}.grid-2x2{grid-template-columns:auto 1fr 1fr}body{padding:1rem 1rem 3rem}}
 </style>
 
 </head>
 <body>
+<h1>Aspect Ratio Fit Simulator</h1>
+<p class="subtitle">How game content maps to your screen — every scaling mode at a glance</p>
 
-<h1>Aspect Ratios for Retro Gaming</h1>
-<p class="subtitle">Overlapping comparison &middot; Normalized to equal height</p>
-
-<div class="views">
-  <!-- Overlap panel -->
-  <div class="panel" style="flex: 1.3;">
-    <h2>Overlapping View (left-aligned)</h2>
-    <div class="overlap-container" id="overlapContainer"></div>
-    <p class="legend-note">All rectangles share the same height and left edge. Right-edge differences show how each ratio stretches horizontally. Hover to highlight.</p>
+<div class="layout">
+  <div class="panel panel-main">
+    <h2>Screen Device</h2>
+    <div class="system-btns" id="screenBtns"></div>
+    <h2>Game System</h2>
+    <div class="system-btns" id="gameBtns"></div>
+    <div class="info-bar" id="selInfo"></div>
+    <div class="grid-2x2" id="grid2x2"></div>
+    <p class="note">Each cell is a real emulator scaling mode. Non-integer = maximum fill but uneven pixels. Integer = perfect pixel grid but steps are discrete.</p>
   </div>
+  <div class="panel panel-side">
+    <h2>Utilization by System</h2>
+    <p style="font-size:.55rem;color:#555;margin-bottom:.6rem" id="chartSubtitle"></p>
+    <div id="chartContainer"></div>
+    <p class="note">Click to select. Shows non-integer fit utilization.</p>
+  </div>
+</div>
 
-  <!-- List panel -->
-
+<div class="ranker-section">
   <div class="panel">
-    <h2>All Ratios — Narrow to Wide</h2>
-    <div class="ratio-grid" id="ratioGrid"></div>
+    <h2>Screen Ranker — Which device fits your library best?</h2>
+    <p style="font-size:.55rem;color:#666;margin-bottom:.8rem">Toggle the systems you care about, then see which screen device has the best average fit.</p>
+    <div class="ranker-toggles" id="rankerToggles"></div>
+    <div id="rankerResults"></div>
   </div>
 </div>
 
 <script>
-const ratios = [
-  { name: '1:1',    w: 1,   h: 1,   color: '#6b7280', systems: 'Square reference' },
-  { name: '10:9',   w: 10,  h: 9,   color: '#a78bfa', systems: 'Game Boy, Game Boy Color' },
-  { name: '8:7',    w: 8,   h: 7,   color: '#f472b6', systems: 'SNES/NES pixel grid (1:1 PAR)' },
-  { name: '5:4',    w: 5,   h: 4,   color: '#fb923c', systems: 'Some CRT monitors' },
-  { name: '4:3',    w: 4,   h: 3,   color: '#34d399', systems: 'NES, SNES, Genesis, PS1, N64, GG' },
-  { name: '11:8',   w: 11,  h: 8,   color: '#818cf8', systems: 'Approx. Sega Game Gear native' },
-  { name: '3:2',    w: 3,   h: 2,   color: '#facc15', systems: 'GBA, 3DS top screen' },
-  { name: '16:10',  w: 16,  h: 10,  color: '#67e8f9', systems: 'Steam Deck, some PC monitors' },
-  { name: '5:3',    w: 5,   h: 3,   color: '#c084fc', systems: 'PSP (≈ 480×272)' },
-  { name: '16:9',   w: 16,  h: 9,   color: '#f87171', systems: 'Widescreen standard, DS combined, Vita' },
+const screens=[
+  {name:'Odin 3',nW:1920,nH:1080,note:'6" 16:9 AMOLED'},
+  {name:'RP5 / Flip 2',nW:1920,nH:1080,note:'5.5" 16:9 AMOLED'},
+  {name:'RP4 Pro',nW:1280,nH:720,note:'4.7" 16:9 IPS'},
+  {name:'RP Classic / DMG',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED'},
+  {name:'Thor (bottom)',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED'},
+  {name:'Analogue Pocket',nW:1600,nH:1440,note:'3.5" 10:9 IPS'},
+  {name:'Steam Deck',nW:1280,nH:800,note:'7" 16:10 IPS'},
+  {name:'Miyoo Mini+ / RG35XX+',nW:640,nH:480,note:'3.5" 4:3 IPS'},
+  {name:'RGB30 / RG Cube',nW:720,nH:720,note:'4" 1:1 IPS'},
 ];
 
-// Sort narrowest to widest
-ratios.sort((a, b) => (a.w / a.h) - (b.w / b.h));
+const systems=[
+  {name:'GB / GBC',nW:160,nH:144,ratio:'10:9',rW:10,rH:9},
+  {name:'Game Gear',nW:160,nH:144,ratio:'10:9',rW:10,rH:9},
+  {name:'NES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7},
+  {name:'SNES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7},
+  {name:'Genesis',nW:320,nH:224,ratio:'10:7',rW:10,rH:7},
+  {name:'PS1',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
+  {name:'N64',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
+  {name:'DS (per)',nW:256,nH:192,ratio:'4:3',rW:4,rH:3},
+  {name:'GBA',nW:240,nH:160,ratio:'3:2',rW:3,rH:2},
+  {name:'PSP',nW:480,nH:272,ratio:'30:17',rW:30,rH:17},
+  {name:'Vita',nW:960,nH:544,ratio:'30:17',rW:30,rH:17},
+];
 
-// Widest ratio for normalization
-const maxDecimal = Math.max(...ratios.map(r => r.w / r.h));
+let sIdx=0,gIdx=8;
+let rankerSel=new Set([0,2,3,5,8]); // GB, NES, SNES, PS1, GBA
 
-// --- OVERLAP VIEW ---
-const container = document.getElementById('overlapContainer');
+// ── SCALING MATH ──
+function nonIntFit(scr,sys){
+  const sx=scr.nW/sys.nW, sy=scr.nH/sys.nH;
+  const s=Math.min(sx,sy);
+  const cW=sys.nW*s, cH=sys.nH*s;
+  const util=(cW*cH)/(scr.nW*scr.nH);
+  return{s,cW,cH,util,vis:1,cropW:0,cropH:0,type:cW<scr.nW?'pillarbox':cH<scr.nH?'letterbox':'perfect'};
+}
 
-ratios.forEach((r, i) => {
-  const decimal = r.w / r.h;
-  const widthPct = (decimal / maxDecimal) * 100;
+function intFit(scr,sys){
+  const mx=Math.floor(scr.nW/sys.nW), my=Math.floor(scr.nH/sys.nH);
+  const m=Math.min(mx,my);
+  if(m<1) return null;
+  const cW=sys.nW*m, cH=sys.nH*m;
+  const util=(cW*cH)/(scr.nW*scr.nH);
+  return{m,cW,cH,util,vis:1,cropW:0,cropH:0};
+}
 
-  const rect = document.createElement('div');
-  rect.className = 'ratio-rect';
-  rect.style.cssText = `
-    width: ${widthPct}%;
-    height: 100%;
-    bottom: 0;
-    left: 0;
-    border-color: ${r.color};
-    background: ${r.color}08;
-    z-index: ${ratios.length - i};
-  `;
+function nonIntOver(scr,sys){
+  const sx=scr.nW/sys.nW, sy=scr.nH/sys.nH;
+  const s=Math.max(sx,sy);
+  const cW=sys.nW*s, cH=sys.nH*s;
+  const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
+  const vis=(scr.nW*scr.nH)/(cW*cH);
+  return{s,cW,cH,util:1,vis,cropW,cropH};
+}
 
-  const label = document.createElement('span');
-  label.className = 'label';
-  label.textContent = r.name;
-  label.style.cssText = `
-    top: ${4 + i * 18}px;
-    right: 6px;
-    color: ${r.color};
-    background: #0c0c0f;
-  `;
+function intOver(scr,sys){
+  const mx=Math.ceil(scr.nW/sys.nW), my=Math.ceil(scr.nH/sys.nH);
+  const m=Math.max(mx,my);
+  const cW=sys.nW*m, cH=sys.nH*m;
+  const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
+  const visW=Math.min(cW,scr.nW), visH=Math.min(cH,scr.nH);
+  const util=(visW*visH)/(scr.nW*scr.nH);
+  const vis=(visW*visH)/(cW*cH);
+  return{m,cW,cH,util,vis,cropW,cropH};
+}
 
-  rect.appendChild(label);
-
-  rect.addEventListener('mouseenter', () => {
-    document.querySelectorAll('.ratio-rect').forEach(el => el.style.opacity = '0.2');
-    rect.style.opacity = '1';
-    rect.style.background = r.color + '15';
+// ── RENDER ──
+function renderBtns(){
+  const sb=document.getElementById('screenBtns'),gb=document.getElementById('gameBtns');
+  sb.innerHTML='';gb.innerHTML='';
+  screens.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='sys-btn'+(i===sIdx?' act-s':'');
+    b.innerHTML=`${s.name}<span class="h">${s.nW}×${s.nH} · ${s.note}</span>`;
+    b.onclick=()=>{sIdx=i;update()};
+    sb.appendChild(b);
   });
-  rect.addEventListener('mouseleave', () => {
-    document.querySelectorAll('.ratio-rect').forEach(el => {
-      el.style.opacity = '1';
-      el.style.background = el.dataset.color + '08';
-    });
+  systems.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='sys-btn'+(i===gIdx?' act-g':'');
+    b.innerHTML=`${s.name}<span class="h">${s.nW}×${s.nH} (${s.ratio})</span>`;
+    b.onclick=()=>{gIdx=i;update()};
+    gb.appendChild(b);
   });
-  rect.dataset.color = r.color;
+}
 
-  container.appendChild(rect);
-});
+function drawCell(scr,sys,result,isOver,isInt,cellW){
+  const ar=scr.nW/scr.nH;
+  const maxW=cellW,maxH=120;
+  let dW,dH;
+  if(maxW/ar<=maxH){dW=maxW;dH=maxW/ar}else{dH=maxH;dW=maxH*ar}
 
-// --- LIST VIEW ---
-const grid = document.getElementById('ratioGrid');
+  // Content rect in display coords
+  const scX=result.cW/scr.nW, scY=result.cH/scr.nH;
+  const cW_d=dW*(isOver?scX:result.cW/scr.nW);
+  const cH_d=dH*(isOver?scY:result.cH/scr.nH);
 
-ratios.forEach(r => {
-  const decimal = r.w / r.h;
-  const barPct = (decimal / maxDecimal) * 100;
-  const thumbW = Math.round(36 * (decimal / maxDecimal) + 14);
-  const thumbH = 28;
+  let cW_px,cH_px;
+  if(!isOver){
+    cW_px=dW*(result.cW/scr.nW);
+    cH_px=dH*(result.cH/scr.nH);
+  } else {
+    cW_px=dW*scX;
+    cH_px=dH*scY;
+  }
+  const cL=(dW-cW_px)/2, cT=(dH-cH_px)/2;
 
-  const card = document.createElement('div');
-  card.className = 'ratio-card';
-  card.innerHTML = `
-    <div class="ratio-thumb" style="
-      width: ${thumbW}px;
-      height: ${thumbH}px;
-      border-color: ${r.color};
-      background: ${r.color}12;
-    "></div>
-    <div class="ratio-info">
-      <div>
-        <span class="ratio-name" style="color: ${r.color}">${r.name}</span>
-        <span class="ratio-decimal">${decimal.toFixed(3)}</span>
-      </div>
-      <div class="ratio-systems">${r.systems}</div>
-      <div class="ratio-bar-track">
-        <div class="ratio-bar-fill" style="width: ${barPct}%; background: ${r.color}"></div>
-      </div>
+  let crops='';
+  if(isOver){
+    if(cL<0){
+      crops+=`<div class="crop-z" style="left:0;top:0;width:${Math.abs(cL)}px;height:${dH}px"></div>`;
+      crops+=`<div class="crop-z" style="right:0;top:0;width:${Math.abs(cL)}px;height:${dH}px"></div>`;
+    }
+    if(cT<0){
+      crops+=`<div class="crop-z" style="top:0;left:0;height:${Math.abs(cT)}px;width:${dW}px"></div>`;
+      crops+=`<div class="crop-z" style="bottom:0;left:0;height:${Math.abs(cT)}px;width:${dW}px"></div>`;
+    }
+  }
+
+  const scaleLabel=isInt?`${result.m}×`:`${result.s?.toFixed(2)||'—'}×`;
+  const utilPct=(result.util*100).toFixed(1);
+  const visPct=(result.vis*100).toFixed(1);
+  const cropPx=Math.max(Math.ceil(result.cropW/2),Math.ceil(result.cropH/2));
+  const overscanOk=isOver&&cropPx>0&&cropPx<=Math.max(sys.nW,sys.nH)*0.06;
+
+  // Pixel grid inset for integer cells
+  let pixelHTML='';
+  if(isInt && result.m){
+    const pg=5, gs=6;
+    const cSize=Math.round(gs*result.m*pg/result.m)*0.4; // small preview
+    const pxS=3;
+    const cvW=gs*pxS*2, cvH=gs*pxS*2; // fixed small canvas
+    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvW}" height="${cvH}" data-int="1" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uniform grid</div></div>`;
+  } else if(!isInt && result.s){
+    const pxS=3, gs=6;
+    const cvW=Math.round(gs*result.s*pxS/result.s)*gs*0.4;
+    const cvW2=gs*pxS*2, cvH2=gs*pxS*2;
+    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvW2}" height="${cvH2}" data-int="0" data-s="${result.s}" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uneven pixels</div></div>`;
+  }
+
+  return `
+    <div class="cell-screen" style="width:${dW}px;height:${dH}px">
+      <div class="cell-content ${isOver?'t-over':'t-fit'}" style="width:${cW_px}px;height:${cH_px}px;left:${cL}px;top:${cT}px"></div>
+      ${crops}
     </div>
+    <div class="cell-scale">${scaleLabel}</div>
+    <div class="cell-stats">
+      <div class="cell-stat"><b class="${parseFloat(utilPct)>90?'g':parseFloat(utilPct)>75?'ha':'r'}">${utilPct}%</b> screen used</div>
+      ${isOver?`<div class="cell-stat"><b class="${parseFloat(visPct)>95?'g':parseFloat(visPct)>90?'ha':'r'}">${visPct}%</b> content visible</div>`:''}
+      ${cropPx>0?`<div class="cell-stat"><b class="r">${cropPx}px</b> cropped/side</div>`:''}
+      ${overscanOk?`<div class="cell-tag overscan-ok">within CRT overscan</div>`:''}
+    </div>
+    ${pixelHTML}
   `;
-  grid.appendChild(card);
-});
+}
+
+function update(){
+  renderBtns();
+  const scr=screens[sIdx],sys=systems[gIdx];
+  document.getElementById('selInfo').innerHTML=
+    `<span class="hb">${scr.name}</span> ${scr.nW}×${scr.nH} → <span class="ha">${sys.name}</span> ${sys.nW}×${sys.nH} (${sys.ratio})`;
+
+  const nif=nonIntFit(scr,sys);
+  const inf=intFit(scr,sys);
+  const nio=nonIntOver(scr,sys);
+  const ino=intOver(scr,sys);
+
+  const g=document.getElementById('grid2x2');
+  const cellW=140;
+
+  g.innerHTML=`
+    <div class="grid-corner"></div>
+    <div class="col-header col-h-nonint">Non-integer</div>
+    <div class="col-header col-h-int">Integer</div>
+
+    <div class="row-header row-h-fit">Fit</div>
+    <div class="grid-cell" id="cell-nif"></div>
+    <div class="grid-cell" id="cell-if"></div>
+
+    <div class="row-header row-h-over">Overscale</div>
+    <div class="grid-cell" id="cell-nio"></div>
+    <div class="grid-cell" id="cell-io"></div>
+  `;
+
+  document.getElementById('cell-nif').innerHTML=drawCell(scr,sys,nif,false,false,cellW);
+  document.getElementById('cell-if').innerHTML=inf?drawCell(scr,sys,inf,false,true,cellW):'<div class="cell-stats"><div class="cell-stat">Native res exceeds screen</div></div>';
+  document.getElementById('cell-nio').innerHTML=drawCell(scr,sys,nio,true,false,cellW);
+  document.getElementById('cell-io').innerHTML=drawCell(scr,sys,ino,true,true,cellW);
+
+  // Draw pixel canvases
+  g.querySelectorAll('.px-cv').forEach(cv=>{
+    const ctx=cv.getContext('2d');
+    const isInt=cv.dataset.int==='1';
+    const p=parseInt(cv.dataset.p),gs=parseInt(cv.dataset.g);
+    const cols=['#2a4a5a','#3a6a7a'];
+
+    if(isInt){
+      const sz=p*2;
+      for(let y=0;y<gs;y++)for(let x=0;x<gs;x++){
+        ctx.fillStyle=cols[(x+y)%2];
+        ctx.fillRect(x*sz,y*sz,sz,sz);
+      }
+      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.4;
+      for(let i=0;i<=gs;i++){
+        ctx.beginPath();ctx.moveTo(i*sz,0);ctx.lineTo(i*sz,cv.height);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(0,i*sz);ctx.lineTo(cv.width,i*sz);ctx.stroke();
+      }
+    } else {
+      const s=parseFloat(cv.dataset.s);
+      const norm=s/Math.round(s);
+      for(let y=0;y<gs;y++)for(let x=0;x<gs;x++){
+        ctx.fillStyle=cols[(x+y)%2];
+        const fx=Math.round(x*norm*p*2),fy=Math.round(y*norm*p*2);
+        ctx.fillRect(fx,fy,Math.round((x+1)*norm*p*2)-fx,Math.round((y+1)*norm*p*2)-fy);
+      }
+      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.4;
+      for(let i=0;i<=gs;i++){
+        const f=Math.round(i*norm*p*2);
+        ctx.beginPath();ctx.moveTo(f,0);ctx.lineTo(f,cv.height);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(0,f);ctx.lineTo(cv.width,f);ctx.stroke();
+      }
+    }
+  });
+
+  renderChart(scr);
+  renderRanker();
+}
+
+// ── CHART ──
+function renderChart(scr){
+  const c=document.getElementById('chartContainer');
+  c.innerHTML='';
+  document.getElementById('chartSubtitle').textContent=`${scr.name} (${scr.nW}×${scr.nH})`;
+  const entries=systems.map((sys,i)=>{
+    const r=nonIntFit(scr,sys);
+    return{...sys,idx:i,util:r.util};
+  }).sort((a,b)=>b.util-a.util);
+  entries.forEach(e=>{
+    const pct=e.util*100,act=e.idx===gIdx;
+    const color=pct>95?'#34d399':pct>85?'#a3e635':pct>75?'#facc15':pct>60?'#fb923c':'#f87171';
+    const row=document.createElement('div');
+    row.className='chart-row'+(act?' active':'');
+    row.onclick=()=>{gIdx=e.idx;update()};
+    row.innerHTML=`
+      <span class="chart-label" style="color:${act?'#f59e0b':'#999'}">${e.name}<span class="chart-sub">${e.nW}×${e.nH}</span></span>
+      <div class="chart-track"><div class="chart-fill" style="width:${pct}%;background:${color}${act?'':'99'}"><span class="chart-pct">${pct.toFixed(1)}%</span></div></div>
+      <span class="chart-tag">${e.ratio}</span>`;
+    c.appendChild(row);
+  });
+}
+
+// ── SCREEN RANKER ──
+function renderRanker(){
+  const tog=document.getElementById('rankerToggles');
+  tog.innerHTML='';
+  systems.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='ranker-btn'+(rankerSel.has(i)?' on':'');
+    b.textContent=`${s.name} (${s.ratio})`;
+    b.onclick=()=>{
+      if(rankerSel.has(i)) rankerSel.delete(i); else rankerSel.add(i);
+      renderRanker();
+    };
+    tog.appendChild(b);
+  });
+
+  const res=document.getElementById('rankerResults');
+  if(rankerSel.size===0){res.innerHTML='<p class="note">Select at least one system above.</p>';return}
+
+  const selectedSys=[...rankerSel].map(i=>systems[i]);
+
+  const ranked=screens.map(scr=>{
+    const utils=selectedSys.map(sys=>nonIntFit(scr,sys).util);
+    const avg=utils.reduce((a,b)=>a+b,0)/utils.length;
+    const min=Math.min(...utils);
+    const worst=selectedSys[utils.indexOf(min)];
+    return{scr,avg,min,worst};
+  }).sort((a,b)=>b.avg-a.avg);
+
+  const maxAvg=ranked[0].avg;
+
+  res.innerHTML=ranked.map((r,i)=>{
+    const pct=(r.avg*100).toFixed(1);
+    const barW=(r.avg/maxAvg)*100;
+    const color=r.avg>.9?'#34d399':r.avg>.8?'#a3e635':r.avg>.7?'#facc15':r.avg>.6?'#fb923c':'#f87171';
+    return`<div class="ranker-row">
+      <span class="ranker-name">${i===0?'🏆 ':''}${r.scr.name}<span class="rn-sub">${r.scr.nW}×${r.scr.nH}</span></span>
+      <div class="ranker-track"><div class="ranker-fill" style="width:${barW}%;background:${color}"><span class="ranker-pct">${pct}% avg</span></div></div>
+    </div>`;
+  }).join('');
+}
+
+update();
 </script>
 
 </body>
