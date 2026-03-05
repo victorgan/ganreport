@@ -83,6 +83,14 @@
 .ranker-pct{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:.5rem;font-weight:700;color:#fff;mix-blend-mode:difference}
 
 .note{font-size:.5rem;color:#444;margin-top:.6rem;text-align:center;line-height:1.5}
+.par-toggle{display:flex;margin-bottom:1rem;background:#16161c;border-radius:8px;border:1px solid #1e1e28;overflow:hidden}
+.par-btn{font-family:‘JetBrains Mono’,monospace;font-size:.56rem;font-weight:600;padding:6px 12px;background:none;border:none;color:#555;cursor:pointer;flex:1;transition:all .15s;text-align:center;line-height:1.4}
+.par-btn:hover{color:#999}
+.par-btn.active{background:#f59e0b18;color:#f59e0b}
+.par-btn .par-sub{display:block;font-size:.42rem;font-weight:400;color:#555;margin-top:1px}
+.par-btn.active .par-sub{color:#f59e0b88}
+.par-note{font-size:.48rem;color:#555;margin-bottom:.8rem;padding:.4rem .6rem;background:#f59e0b08;border:1px solid #f59e0b1a;border-radius:6px;line-height:1.5;display:none}
+.par-note.show{display:block}
 .panel-main{flex:1.2;min-width:400px}
 .panel-side{flex:.7;min-width:260px}
 @media(max-width:900px){.layout{flex-direction:column}.panel-main,.panel-side{min-width:auto}.grid-2x2{grid-template-columns:auto 1fr 1fr}body{padding:1rem 1rem 3rem}}
@@ -100,8 +108,13 @@
     <h2>Game System</h2>
     <div class="system-btns" id="gameBtns"></div>
     <div class="info-bar" id="selInfo"></div>
+    <div class="par-toggle">
+      <button class="par-btn active" data-par="pixel" onclick="setPar('pixel')">Pixel-perfect (1:1 PAR)<span class="par-sub">Square pixels · Core Provided in RetroArch</span></button>
+      <button class="par-btn" data-par="crt" onclick="setPar('crt')">CRT-accurate (original DAR)<span class="par-sub">Non-square pixels · As displayed on TV</span></button>
+    </div>
+    <div class="par-note" id="parNote">This system was displayed at <b>4:3</b> on CRT TVs via non-square pixels. The content rectangle is now wider than the raw pixel grid.</div>
     <div class="grid-2x2" id="grid2x2"></div>
-    <p class="note">Each cell is a real emulator scaling mode. Non-integer = maximum fill but uneven pixels. Integer = perfect pixel grid but steps are discrete.</p>
+    <p class="note">Each cell is a real emulator scaling mode. Non-integer = maximum fill but uneven pixels. Integer = pixel-perfect vertically, width derived from display aspect ratio.<br>Toggle CRT-accurate above to see how NES/SNES/Genesis change when stretched to 4:3.</p>
   </div>
   <div class="panel panel-side">
     <h2>Utilization by System</h2>
@@ -136,9 +149,9 @@ const screens=[
 const systems=[
   {name:'GB / GBC',nW:160,nH:144,ratio:'10:9',rW:10,rH:9},
   {name:'Game Gear',nW:160,nH:144,ratio:'10:9',rW:10,rH:9},
-  {name:'NES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7},
-  {name:'SNES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7},
-  {name:'Genesis',nW:320,nH:224,ratio:'10:7',rW:10,rH:7},
+  {name:'NES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7,darW:4,darH:3},
+  {name:'SNES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7,darW:4,darH:3},
+  {name:'Genesis',nW:320,nH:224,ratio:'10:7',rW:10,rH:7,darW:4,darH:3},
   {name:'PS1',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
   {name:'N64',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
   {name:'DS (per)',nW:256,nH:192,ratio:'4:3',rW:4,rH:3},
@@ -148,39 +161,88 @@ const systems=[
 ];
 
 let sIdx=0,gIdx=8;
-let rankerSel=new Set([0,2,3,5,8]); // GB, NES, SNES, PS1, GBA
+let parMode='pixel';
+let rankerSel=new Set([0,2,3,5,8]);
 
-// ── SCALING MATH ──
-function nonIntFit(scr,sys){
-  const sx=scr.nW/sys.nW, sy=scr.nH/sys.nH;
-  const s=Math.min(sx,sy);
-  const cW=sys.nW*s, cH=sys.nH*s;
-  const util=(cW*cH)/(scr.nW*scr.nH);
-  return{s,cW,cH,util,vis:1,cropW:0,cropH:0,type:cW<scr.nW?'pillarbox':cH<scr.nH?'letterbox':'perfect'};
+function setPar(m){
+  parMode=m;
+  document.querySelectorAll('.par-btn').forEach(b=>b.classList.toggle('active',b.dataset.par===m));
+  update();
 }
 
+// Returns the display aspect ratio for a system based on PAR mode
+function displayAR(sys){
+  if(parMode==='crt'&&sys.darW) return sys.darW/sys.darH;
+  return sys.nW/sys.nH;
+}
+
+// Returns whether this system is affected by PAR mode
+function hasDar(sys){ return !!sys.darW; }
+
+// ── SCALING MATH ──
+// Non-integer fit: scale content (at display AR) to fit inside screen
+function nonIntFit(scr,sys){
+  const dar=displayAR(sys);
+  const scrAR=scr.nW/scr.nH;
+  // Content rectangle: height=scr.nH*scale, width=height*dar
+  // We scale so it fits: min(scrW/(h*dar), scrH/h) where h is normalized
+  const sy=1, sx=dar/scrAR; // normalized: if dar>scrAR, width is limiting
+  let cWfrac,cHfrac;
+  if(dar>scrAR){cWfrac=1;cHfrac=scrAR/dar} // letterbox
+  else if(dar<scrAR){cHfrac=1;cWfrac=dar/scrAR} // pillarbox
+  else{cWfrac=1;cHfrac=1}
+  const cW=scr.nW*cWfrac, cH=scr.nH*cHfrac;
+  const util=cWfrac*cHfrac;
+  const s=cH/sys.nH; // effective scale on native pixels (vertical)
+  return{s,cW,cH,util,vis:1,cropW:0,cropH:0,type:dar>scrAR?'letterbox':dar<scrAR?'pillarbox':'perfect'};
+}
+
+// Integer fit: scale native pixels by integer m, display at DAR
 function intFit(scr,sys){
-  const mx=Math.floor(scr.nW/sys.nW), my=Math.floor(scr.nH/sys.nH);
-  const m=Math.min(mx,my);
+  const dar=displayAR(sys);
+  // Integer m applied to height: displayH = sys.nH * m
+  // displayW = displayH * dar
+  // Both must fit: sys.nH*m <= scr.nH AND sys.nH*m*dar <= scr.nW
+  const mH=Math.floor(scr.nH/sys.nH);
+  const mW=Math.floor(scr.nW/(sys.nH*dar));
+  const m=Math.min(mH,mW);
   if(m<1) return null;
-  const cW=sys.nW*m, cH=sys.nH*m;
+  const cH=sys.nH*m, cW=cH*dar;
   const util=(cW*cH)/(scr.nW*scr.nH);
   return{m,cW,cH,util,vis:1,cropW:0,cropH:0};
 }
 
+// Non-integer overscale: scale content (at display AR) to fill screen entirely
 function nonIntOver(scr,sys){
-  const sx=scr.nW/sys.nW, sy=scr.nH/sys.nH;
-  const s=Math.max(sx,sy);
-  const cW=sys.nW*s, cH=sys.nH*s;
+  const dar=displayAR(sys);
+  const scrAR=scr.nW/scr.nH;
+  let cWfrac,cHfrac;
+  if(dar>scrAR){cHfrac=1;cWfrac=dar/scrAR} // wider content: height fits, width overflows... wait
+  // Overscale: max scale so both axes covered
+  // if dar > scrAR: match height → width = scrH * dar > scrW → crops sides. No wait.
+  // scale to fill: max(scrW/contentW_at_unit, scrH/contentH_at_unit)
+  // at unit height=1, width=dar. Screen: width=scrAR, height=1.
+  // scaleH = scrH/1 = 1 (normalized), scaleW = scrW/dar = scrAR/dar
+  // fill scale = max(1, scrAR/dar) ... hmm let me just compute directly
+  const sH=scr.nH; // scale so height fills
+  const sW=scr.nW/dar; // scale so width fills (this gives the height when width fills)
+  const fillH=Math.max(sH, sW); // pick larger to ensure both covered
+  const cH=fillH, cW=fillH*dar;
   const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
   const vis=(scr.nW*scr.nH)/(cW*cH);
+  const s=cH/sys.nH;
   return{s,cW,cH,util:1,vis,cropW,cropH};
 }
 
+// Integer overscale: smallest integer m where content covers screen
 function intOver(scr,sys){
-  const mx=Math.ceil(scr.nW/sys.nW), my=Math.ceil(scr.nH/sys.nH);
-  const m=Math.max(mx,my);
-  const cW=sys.nW*m, cH=sys.nH*m;
+  const dar=displayAR(sys);
+  // displayH = sys.nH * m, displayW = displayH * dar
+  // Need: displayH >= scr.nH AND displayW >= scr.nW
+  const mH=Math.ceil(scr.nH/sys.nH);
+  const mW=Math.ceil(scr.nW/(sys.nH*dar));
+  const m=Math.max(mH,mW);
+  const cH=sys.nH*m, cW=cH*dar;
   const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
   const visW=Math.min(cW,scr.nW), visH=Math.min(cH,scr.nH);
   const util=(visW*visH)/(scr.nW*scr.nH);
@@ -202,7 +264,9 @@ function renderBtns(){
   systems.forEach((s,i)=>{
     const b=document.createElement('button');
     b.className='sys-btn'+(i===gIdx?' act-g':'');
-    b.innerHTML=`${s.name}<span class="h">${s.nW}×${s.nH} (${s.ratio})</span>`;
+    const effRatio=parMode==='crt'&&s.darW?`${s.darW}:${s.darH}`:s.ratio;
+    const parHint=parMode==='crt'&&s.darW?' · CRT':'';
+    b.innerHTML=`${s.name}<span class="h">${s.nW}×${s.nH} (${effRatio})${parHint}</span>`;
     b.onclick=()=>{gIdx=i;update()};
     gb.appendChild(b);
   });
@@ -281,8 +345,15 @@ function drawCell(scr,sys,result,isOver,isInt,cellW){
 function update(){
   renderBtns();
   const scr=screens[sIdx],sys=systems[gIdx];
+  const dar=displayAR(sys);
+  const darLabel=hasDar(sys)&&parMode==='crt'?`→ displayed as ${sys.darW}:${sys.darH}`:'';
+  const activeRatio=parMode==='crt'&&sys.darW?`${sys.darW}:${sys.darH}`:sys.ratio;
   document.getElementById('selInfo').innerHTML=
-    `<span class="hb">${scr.name}</span> ${scr.nW}×${scr.nH} → <span class="ha">${sys.name}</span> ${sys.nW}×${sys.nH} (${sys.ratio})`;
+    `<span class="hb">${scr.name}</span> ${scr.nW}×${scr.nH} → <span class="ha">${sys.name}</span> ${sys.nW}×${sys.nH} (${activeRatio}) ${darLabel?`<span style="color:#f59e0b88">${darLabel}</span>`:''}`;
+
+  // Show PAR note when relevant
+  const parNote=document.getElementById('parNote');
+  parNote.classList.toggle('show', parMode==='crt'&&hasDar(sys));
 
   const nif=nonIntFit(scr,sys);
   const inf=intFit(scr,sys);
@@ -357,7 +428,8 @@ function renderChart(scr){
   document.getElementById('chartSubtitle').textContent=`${scr.name} (${scr.nW}×${scr.nH})`;
   const entries=systems.map((sys,i)=>{
     const r=nonIntFit(scr,sys);
-    return{...sys,idx:i,util:r.util};
+    const effRatio=parMode==='crt'&&sys.darW?`${sys.darW}:${sys.darH}`:sys.ratio;
+    return{...sys,idx:i,util:r.util,effRatio};
   }).sort((a,b)=>b.util-a.util);
   entries.forEach(e=>{
     const pct=e.util*100,act=e.idx===gIdx;
@@ -368,7 +440,7 @@ function renderChart(scr){
     row.innerHTML=`
       <span class="chart-label" style="color:${act?'#f59e0b':'#999'}">${e.name}<span class="chart-sub">${e.nW}×${e.nH}</span></span>
       <div class="chart-track"><div class="chart-fill" style="width:${pct}%;background:${color}${act?'':'99'}"><span class="chart-pct">${pct.toFixed(1)}%</span></div></div>
-      <span class="chart-tag">${e.ratio}</span>`;
+      <span class="chart-tag">${e.effRatio}</span>`;
     c.appendChild(row);
   });
 }
@@ -380,7 +452,8 @@ function renderRanker(){
   systems.forEach((s,i)=>{
     const b=document.createElement('button');
     b.className='ranker-btn'+(rankerSel.has(i)?' on':'');
-    b.textContent=`${s.name} (${s.ratio})`;
+    const effR=parMode==='crt'&&s.darW?`${s.darW}:${s.darH}`:s.ratio;
+    b.textContent=`${s.name} (${effR})`;
     b.onclick=()=>{
       if(rankerSel.has(i)) rankerSel.delete(i); else rankerSel.add(i);
       renderRanker();
