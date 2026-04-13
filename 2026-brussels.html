@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brussels Bike Trip: July 11&ndash;15, 2026</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .leaflet-container { border-radius: 0.5rem; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-[1000]">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold text-stone-900">Brussels Bike Trip</h1>
+            <p class="text-stone-500 text-sm">July 11 &ndash; 15, 2026 &mdash; Meuse Cliffs &rarr; Ardennes &rarr; Vennbahn &rarr; Aachen</p>
+        </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <nav class="bg-white border-b border-stone-200">
+        <div class="max-w-4xl mx-auto px-6 py-3 flex flex-wrap gap-2 text-sm">
+            <a href="#day1" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 1</a>
+            <a href="#day2" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 2</a>
+            <a href="#day3" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 3</a>
+            <a href="#day4" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 4</a>
+            <a href="#day5" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Day 5</a>
+            <a href="#notes" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Notes</a>
+            <a href="#highlights" class="px-3 py-1 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition">Highlights</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8 space-y-12">
+
+        <!-- Day 1 -->
+        <section id="day1">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 1 &mdash; Saturday, July 11: Meuse Cliffs</h2>
+            <p class="text-stone-500 text-sm mb-4">Brussels &rarr; train to Namur &rarr; Meuse RAVeL south &rarr; Maredsous Abbey &rarr; Dinant (~45km, flat)</p>
+            <div id="map-day1" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Train from Brussels-Midi to Namur (~1 hour). SNCB direct trains run frequently.</li>
+                        <li>Pick up rental bike in Namur or assemble your own at the station</li>
+                        <li><strong>Namur Citadel</strong> &mdash; Vauban-designed fortress on a rocky promontory above the Meuse-Sambre confluence. Panoramic views across the city. The largest medieval fortress in Belgium.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Join the <strong>Meuse RAVeL</strong> (EuroVelo 19) heading south &mdash; car-free asphalt path along the riverbank, limestone cliffs rising on both sides</li>
+                        <li><strong>Wépion</strong> &mdash; Strawberry village on the Meuse; strawberry museum and farm stands in season</li>
+                        <li><strong>Sept Meuses viewpoint</strong> &mdash; Hang-gliders launch from the cliffs here; dramatic river panorama</li>
+                        <li><strong>Jardins d&rsquo;Annevoie</strong> &mdash; 18th-century water gardens powered entirely by gravity. One of the most visited gardens in Belgium. Allow 1 hour.</li>
+                        <li><strong>Ch&acirc;teau de Poilvache</strong> &mdash; Ruined 13th-century castle on a cliff above the river</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Late Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Detour up the <strong>Moligné Valley</strong> &mdash; RAVeL Line 150A through dense forest (~8km each way)</li>
+                        <li><strong>Maredsous Abbey</strong> &mdash; Neo-Gothic Benedictine monastery built into the hillside. Famous for its beer (Maredsous 6, 8, 10) and cheese, both brewed and produced on-site. The abbey shop sells directly &mdash; have a beer in the courtyard.</li>
+                        <li>Return to the Meuse and continue south to <strong>Dinant</strong></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Arrive <strong>Dinant</strong> &mdash; Belgium&rsquo;s most photographed view: onion-domed collegiate church, cliff-top citadel, and the Meuse reflected below</li>
+                        <li>Visit the <strong>Dinant Citadel</strong> (cable car available) for sunset views</li>
+                        <li><strong>Adolphe Sax birthplace</strong> &mdash; The inventor of the saxophone was born here; small museum on the main street</li>
+                        <li>Dinner in Dinant &mdash; <strong>Leffe</strong> is brewed just upstream; widely available on tap</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 2 -->
+        <section id="day2">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 2 &mdash; Sunday, July 12: Into the Ardennes</h2>
+            <p class="text-stone-500 text-sm mb-4">Dinant &rarr; Fonds de Leffe &rarr; Rochefort &rarr; Marche-en-Famenne &rarr; La Roche-en-Ardenne (~65km, rolling)</p>
+            <div id="map-day2" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Depart Dinant east on <strong>EuroVelo 5</strong> (Via Romea Francigena, voted Cycle Route of the Year 2023)</li>
+                        <li><strong>Fonds de Leffe</strong> &mdash; Nature reserve in the valley of the Leffe stream, where Leffe beer has been brewed since 1152</li>
+                        <li>Condroz plateau &mdash; limestone villages (Thynes, Sovet), quiet country roads through farmland transitioning to forest</li>
+                        <li><strong>Ciney</strong> &mdash; Small market town, good for a mid-morning coffee stop</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Rochefort</strong> &mdash; One of only 14 authentic Trappist breweries in the world. The <strong>Abbaye Notre-Dame de Saint-R&eacute;my</strong> produces Rochefort 6, 8, and 10. The 10 (11.3% ABV) is considered among the world&rsquo;s finest beers. The brewery is technically closed to visitors but the abbey church is open and the local caf&eacute;s all serve Rochefort on tap.</li>
+                        <li><strong>Grottes de Han</strong> (optional) &mdash; Famous cave system near Han-sur-Lesse, accessible by tram from Rochefort area</li>
+                        <li><strong>Marche-en-Famenne</strong> &mdash; Transition point from Condroz to Famenne to Ardennes. Terrain gets hillier and more forested from here.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Hotton</strong> &mdash; Pick up the Ourthe river valley; the terrain becomes noticeably more dramatic</li>
+                        <li>Arrive <strong>La Roche-en-Ardenne</strong> &mdash; The Ardennes cycling hub. A small town in a dramatic Ourthe river meander, surrounded by dense forest on all sides, with a ruined 9th-century castle on the hill above.</li>
+                        <li>Dinner in La Roche &mdash; local trout and Ardennes ham are regional specialties</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 3 -->
+        <section id="day3">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 3 &mdash; Monday, July 13: Ourthe Valley &amp; Bastogne</h2>
+            <p class="text-stone-500 text-sm mb-4">La Roche &rarr; H&eacute;rou viewpoint &rarr; Houffalize &rarr; Bastogne &rarr; RAVeL 163 &rarr; Gouvy (~70km, hilly &mdash; biggest day)</p>
+            <div id="map-day3" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Head south along the <strong>Ourthe Valley</strong> &mdash; the most famous cycling section in the Ardennes. Dense oak forest, wild river meanders, almost no traffic. This is what people mean when they say &ldquo;Ardennes cycling.&rdquo;</li>
+                        <li><strong>Nadrin / H&eacute;rou viewpoint</strong> &mdash; A 10-minute hike from the road (or you can see it from the road on a clear day) reaches one of the most dramatic panoramas in Belgium: the Ourthe loops in seven visible meanders far below, surrounded by unbroken forest. Worth the detour.</li>
+                        <li><strong>Houffalize</strong> &mdash; Confluence town where two Ourthe branches meet. Hit hard during the Battle of the Bulge (December 1944 &ndash; January 1945); the rebuilt town center has a memorial and photos showing the destruction.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>South to <strong>Bastogne</strong> &mdash; The city that held out during the Battle of the Bulge. General McAuliffe&rsquo;s one-word reply to German surrender demands (&ldquo;Nuts!&rdquo;) was issued here.</li>
+                        <li><strong>Bastogne War Museum</strong> &mdash; Excellent and moving WWII museum with immersive exhibits. Allow 2 hours.</li>
+                        <li><strong>Mardasson Memorial</strong> &mdash; Star-shaped American memorial on a hill outside town; panoramic views over the Ardennes landscape where the battle was fought</li>
+                        <li><strong>Giant cyclist statue</strong> &mdash; Bastogne marks the turnaround point of Li&egrave;ge&ndash;Bastogne&ndash;Li&egrave;ge, one of cycling&rsquo;s five monuments. A large bronze cyclist stands in the town center.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Pick up <strong>RAVeL 163</strong> east from Bastogne &mdash; cited as one of the most beautiful trails in the entire RAVeL network. A former railway line converted to cycling path, running through deep Ardennes forest with gentle gradients (max 2%), viaducts, and cuttings.</li>
+                        <li>Arrive <strong>Gouvy</strong> &mdash; Small village near the Luxembourg border, gateway to the Vennbahn. The end of the Ardennes section.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 4 -->
+        <section id="day4">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 4 &mdash; Tuesday, July 14: Vennbahn &amp; High Fens</h2>
+            <p class="text-stone-500 text-sm mb-4">Gouvy &rarr; Burg-Reuland &rarr; Sankt Vith &rarr; High Fens &rarr; Monschau (~70km, gentle rail trail)</p>
+            <div id="map-day4" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Connect to the <strong>Vennbahn</strong> heading north &mdash; Europe&rsquo;s longest cross-border rail trail (125km), built on a former Prussian military railway from 1889. Converted to cycling path, awarded Cycling Route of the Year 2014. Max gradient 2%, smooth surface throughout.</li>
+                        <li><strong>Burg-Reuland</strong> &mdash; Picturesque Our valley village with a 10th-century castle on a promontory above the river. The nearby <strong>Lengeler tunnel</strong> has been converted into a bat habitat with interpretive boards &mdash; a memorable passage.</li>
+                        <li><strong>Sankt Vith</strong> &mdash; Capital of the German-speaking community of Belgium. <strong>Vennbahn Museum</strong> in the old station building tells the history of the railway and the bizarre Treaty of Versailles corridor that transferred this territory from Germany to Belgium in 1919.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Continue north through Ardennes farmland &mdash; <strong>Born</strong> (historic railway viaduct), <strong>Faymonville</strong>, <strong>Sourbrodt</strong> (former Vennbahn hub with historical exhibits)</li>
+                        <li><strong>Signal de Botrange</strong> &mdash; Belgium&rsquo;s highest point at 694m, on the edge of the High Fens. A monument and observation tower mark the summit.</li>
+                        <li><strong>High Fens &ndash; Eifel Nature Park</strong> &mdash; Wild peatland moorland with wooden boardwalks across the bog. This landscape feels completely unlike anything else in Belgium &mdash; more like the Scottish Highlands or Scandinavian fell. Protected since 1971 as Belgium&rsquo;s largest nature reserve (700km&sup2;).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>M&uuml;tzenich</strong> &mdash; The Vennbahn passes through a bizarre Treaty of Versailles corridor: a strip of Belgian territory surrounded on all sides by Germany. Cycling between German enclaves on Belgian railway land.</li>
+                        <li>Arrive <strong>Monschau</strong> &mdash; A fairy-tale half-timbered German town squeezed into a dramatic Rur river gorge. Rated 4.7 stars with over 9,000 reviews; regularly listed among Germany&rsquo;s most beautiful small towns. Narrow cobbled lanes, mustard-yellow timber-framed buildings, the 17th-century Red House (Rotes Haus).</li>
+                        <li>Dinner in Monschau &mdash; try local Eifel cuisine; Monschauer Senf (mustard) is a specialty</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Day 5 -->
+        <section id="day5">
+            <h2 class="text-xl font-bold text-stone-900 mb-1">Day 5 &mdash; Wednesday, July 15: Monschau &rarr; Aachen</h2>
+            <p class="text-stone-500 text-sm mb-4">Monschau &rarr; Roetgen &rarr; Raeren &rarr; Kornelim&uuml;nster &rarr; Aachen (~25km, easy morning)</p>
+            <div id="map-day5" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Short morning stroll through Monschau before departing &mdash; explore the old town lanes, visit the Red House (Rotes Haus) museum if open</li>
+                        <li>Vennbahn north, mostly gentle downhill toward Aachen</li>
+                        <li><strong>Roetgen</strong> &mdash; Edge of the Eifel; transition into the suburbs of Aachen</li>
+                        <li><strong>Raeren</strong> &mdash; Former Vennbahn station, now the <strong>Raeren Pottery Museum</strong> &mdash; the village has been producing stoneware since the 16th century; the local &ldquo;Raeren grey&rdquo; glaze is distinctive</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Afternoon</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Kornelim&uuml;nster</strong> &mdash; Charming former abbey town on the edge of Aachen, half-timbered buildings and a Carolingian-era monastery</li>
+                        <li>Arrive <strong>Aachen</strong> (Aix-la-Chapelle) &mdash; Charlemagne&rsquo;s 8th-century capital</li>
+                        <li><strong>Aachen Cathedral</strong> &mdash; UNESCO World Heritage Site #1 (listed 1978, the first site in Germany). Charlemagne&rsquo;s octagonal Palatine Chapel, built 796&ndash;805, is the centerpiece. The Gothic choir was added in the 14th century. Interior mosaics are original Byzantine-inspired work from the 9th century. Charlemagne&rsquo;s throne is in the upper gallery. &euro;7 guided tour strongly recommended &mdash; the treasury holds the reliquary of Charlemagne, the bust reliquary with his skull, and the Lothar Cross.</li>
+                        <li><strong>Cathedral Treasury</strong> &mdash; Considered one of the most important collections of medieval ecclesiastical art in Europe</li>
+                        <li>Explore the old town &mdash; the market square (Marktplatz), the historic <em>Elisenbrunnen</em> (sulphur springs pavilion), the narrow lanes of the <em>Pontstrasse</em></li>
+                        <li><strong>Aachener Printen</strong> &mdash; The city&rsquo;s famous spiced gingerbread, protected geographical indication. Pick up a box from Leo Driessen or Nobis Printen as a souvenir.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-1">Evening / Departure</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Train options from Aachen Hauptbahnhof:
+                            <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                                <li>Aachen &rarr; Brussels (~2h via Li&egrave;ge, Thalys/IC)</li>
+                                <li>Aachen &rarr; Cologne (~1h, ICE/IC) &mdash; connect onward across Europe</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notes -->
+        <section id="notes" class="border-t border-stone-200 pt-8">
+            <h2 class="text-xl font-bold text-stone-900 mb-4">Notes &amp; Logistics</h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Getting There &amp; Away</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Fly into Brussels</strong> (BRU) &mdash; train from the airport to Brussels-Midi takes ~20 minutes</li>
+                        <li><strong>Brussels-Midi &rarr; Namur</strong> ~1 hour on SNCB intercity trains; runs frequently throughout the day</li>
+                        <li><strong>Return: Aachen &rarr; Brussels</strong> ~2 hours via Li&egrave;ge on Thalys or IC. Alternatively, Aachen &rarr; Cologne (~1h) for onwards travel.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Bikes on Trains</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>SNCB (Belgian rail) allows bikes on most intercity trains with a <strong>&ldquo;bike card&rdquo;</strong> (&euro;5 single journey) or <strong>&ldquo;bike day pass&rdquo;</strong> (&euro;8, unlimited trains all day, valid across whole country)</li>
+                        <li>Bikes must be foldable or unboxed; check the bicycle symbol on the train indicator boards for which carriages accept bikes</li>
+                        <li>The Aachen&ndash;Brussels train (Thalys) does <em>not</em> accept non-folding bikes; plan to return via Li&egrave;ge intercity instead, or box the bike</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Bike Rental</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>Rental available in <strong>Namur</strong> (several shops near the station) and <strong>Dinant</strong></li>
+                        <li>Many Bed&amp;Bike accommodations along the Vennbahn rent or store bikes</li>
+                        <li>For the full route, bringing your own or renting in Namur and returning in Aachen is most flexible</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Accommodation</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>50+ <strong>Bed&amp;Bike certified</strong> accommodations along the Vennbahn alone &mdash; these have secure bike storage, tools, and drying rooms. Search vennbahn.eu.</li>
+                        <li>La Roche-en-Ardenne has a wide range of hotels, B&amp;Bs, and hostels &mdash; book ahead in summer</li>
+                        <li>Gouvy is small; options are limited. Consider staying in Vielsalm (~8km south of Gouvy) which has more choices.</li>
+                        <li>Monschau fills up on weekends; book accommodation at least 2 weeks ahead in July</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Routes &amp; Navigation</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Meuse RAVeL (EuroVelo 19)</strong> &mdash; Official GPX tracks at ravel.wallonie.be and eurovelo.com</li>
+                        <li><strong>EuroVelo 5</strong> (Dinant &rarr; La Roche section) &mdash; eurovelo.com</li>
+                        <li><strong>RAVeL 163</strong> (Bastogne &rarr; Gouvy) &mdash; ravel.wallonie.be; search &ldquo;RAVeL 163&rdquo;</li>
+                        <li><strong>Vennbahn</strong> &mdash; Official GPX and route info at vennbahn.eu; well-signposted with dedicated markers</li>
+                        <li>V3 final GPX waypoint file: <em>meuse-ardennes-vennbahn-5day-v3-final.gpx</em> &mdash; import to RideWithGPS and adjust auto-routing to bike paths for RAVeL/Vennbahn sections</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Weather</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li>July is peak season &mdash; expect warm days (20&ndash;27&deg;C) with possible afternoon thunderstorms in the Ardennes</li>
+                        <li>The High Fens moorland can be cold and foggy even in summer; pack a wind layer for Day 4</li>
+                        <li>Summer days are long (light until 10pm) &mdash; useful for the bigger mileage days</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-stone-700 mb-2">Key Stats</h3>
+                    <ul class="list-disc list-inside text-stone-600 space-y-1 text-sm">
+                        <li><strong>Total distance:</strong> ~275km over 5 days</li>
+                        <li><strong>Countries:</strong> Belgium (Wallonia + East Belgium), Germany</li>
+                        <li><strong>Languages:</strong> French &rarr; French/German &rarr; German</li>
+                        <li><strong>Terrain:</strong> Day 1 flat, Day 2 rolling, Day 3 hilly, Day 4 gentle (rail trail), Day 5 easy</li>
+                        <li><strong>Famous routes used:</strong> EuroVelo 5 (Cycle Route of the Year 2023), EuroVelo 19 (Meuse), Vennbahn (Cycling Route of the Year 2014), RAVeL 163</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Route Highlights -->
+        <section id="highlights" class="border-t border-stone-200 pt-8">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6">Route Highlights</h2>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Meuse Valley</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Namur Citadel</h4>
+                    <p class="text-sm text-stone-600">The largest medieval fortress in Belgium, rebuilt by Vauban in the 17th century on a rocky spur above the confluence of the Meuse and Sambre rivers. Extensive underground tunnels and panoramic views over the city. Cable car or walking path from the old town.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Jardins d&rsquo;Annevoie</h4>
+                    <p class="text-sm text-stone-600">One of the most remarkable gardens in Belgium &mdash; 18th-century formal gardens where all the fountains, cascades, and water features run entirely on gravity, with no pumps. The water arrives from natural springs at different heights and is routed to create over 40 distinct water features. Best visited in summer when everything is in full flow.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Maredsous Abbey</h4>
+                    <p class="text-sm text-stone-600">Neo-Gothic Benedictine monastery founded in 1872, built dramatically into a hillside in the Molign&eacute;e valley. The monks still brew Maredsous 6, 8, and 10 and produce cheese on-site. The abbey shop and café are open to visitors; drinking a Maredsous 10 in the courtyard is one of the route highlights.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Dinant</h4>
+                    <p class="text-sm text-stone-600">The most photographed view in Wallonia: a collegiate church with a distinctive onion dome, a cliff-top citadel, and the Meuse reflected below, all squeezed into a narrow gorge. Birthplace of Adolphe Sax (inventor of the saxophone) in 1814, and of Leffe beer, brewed at the nearby abbey since 1152.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Ardennes Interior</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Rochefort Trappist Brewery</h4>
+                    <p class="text-sm text-stone-600">One of 14 authentic Trappist breweries worldwide, producing beer since 1595 at the Abbaye Notre-Dame de Saint-R&eacute;my. The Rochefort 10 (11.3% ABV, dark quadrupel) is consistently rated among the world&rsquo;s greatest beers. The brewery is not open for tours, but the abbey church can be visited and every caf&eacute; in town serves all three Rochefort varieties on tap.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">La Roche-en-Ardenne</h4>
+                    <p class="text-sm text-stone-600">The capital of Ardennes cycling. A small town where the Ourthe river loops in a tight meander, surrounded on all sides by steep forested hills with a ruined 9th-century castle on the hilltop. This is the hub that most Belgian and Dutch cycling holidays use as a base. The town is touristic but the surrounding riding is exceptional.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">H&eacute;rou Viewpoint (Nadrin)</h4>
+                    <p class="text-sm text-stone-600">Widely considered the most dramatic viewpoint in the Belgian Ardennes. From a promontory above Nadrin, you look down several hundred meters to see the Ourthe river looping through seven visible meanders, surrounded by unbroken forest as far as the eye can see. A 10-minute hike from the parking area.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Bastogne War Museum</h4>
+                    <p class="text-sm text-stone-600">Modern museum (opened 2014) covering the Battle of the Bulge &mdash; the largest land battle in American military history, fought in the Ardennes during the winter of 1944&ndash;45. The museum uses an immersive format where you follow one of four characters (American soldier, German soldier, Belgian civilian, Belgian resistance fighter) through the battle. Allow 2 hours minimum.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">RAVeL 163</h4>
+                    <p class="text-sm text-stone-600">The Wallonian RAVeL (R&eacute;seau Autonome de Voies Lentes) network converts former railway and canal towpaths to cycling routes. Line 163 runs east from Bastogne through the deep Ardennes forest, crossing viaducts and running through rock cuttings on a former military railway. Cited by cyclists as among the most scenic trails in the entire RAVeL network.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Vennbahn &amp; High Fens</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">The Vennbahn</h4>
+                    <p class="text-sm text-stone-600">Europe&rsquo;s longest cross-border rail trail &mdash; 125km converted from a Prussian military railway built in 1889 to supply troops in the Eifel. After World War I, the Treaty of Versailles transferred the railway to Belgium but left the German towns on either side German, creating a bizarre situation where the trail passes through a 3m-wide strip of Belgian territory entirely surrounded by Germany. Max gradient 2%, awarded Cycling Route of the Year 2014.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Burg-Reuland Castle</h4>
+                    <p class="text-sm text-stone-600">A 10th-century castle ruin on a rocky promontory above the Our river valley, in one of the most scenic sections of the Vennbahn. The nearby Lengeler tunnel has been converted into a registered bat habitat; cycling through it and hearing the bats is a memorable experience.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">High Fens (Hautes Fagnes)</h4>
+                    <p class="text-sm text-stone-600">Belgium&rsquo;s largest nature reserve, covering 700km&sup2; of wild peatland moorland on the plateau between the Ardennes and the Eifel. Signal de Botrange (694m) is Belgium&rsquo;s highest point. The landscape &mdash; vast open bog with wooden boardwalks, cotton grass, and cloudberry &mdash; feels entirely unlike the rest of Belgium, more reminiscent of the Scottish Highlands or Scandinavian fell. Protected since 1971.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Monschau</h4>
+                    <p class="text-sm text-stone-600">A German market town from the 17th century, squeezed into a narrow gorge of the Rur river. Half-timbered buildings in mustard yellow and deep red climb the steep valley sides; the 17th-century Red House (Rotes Haus), built by a cloth merchant dynasty, is the most famous. Rated 4.7 stars with over 9,000 reviews; regularly listed among Germany&rsquo;s most beautiful small towns. The Christmas market (December) is famous across Germany, but the town is wonderful in summer too.</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-stone-800 mb-3">Aachen</h3>
+            <div class="space-y-4 mb-8">
+                <div>
+                    <h4 class="font-semibold text-stone-700">Aachen Cathedral (Dom)</h4>
+                    <p class="text-sm text-stone-600">Germany&rsquo;s first UNESCO World Heritage Site (listed 1978) and one of the most historically significant buildings in Europe. Charlemagne built his Palatine Chapel here in 796&ndash;805, modelled on the Byzantine San Vitale in Ravenna. For nearly 600 years it was the coronation church of the Holy Roman Emperors &mdash; 30 kings and 12 queens were crowned here. The octagonal central space, with its original 9th-century mosaics, is extraordinarily preserved. Charlemagne&rsquo;s marble throne sits in the upper gallery. The Gothic choir (14th century) contains his gold reliquary shrine. &euro;7 guided tour strongly recommended &mdash; the treasury next door holds priceless medieval artifacts including his skull reliquary.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-stone-700">Aachener Printen</h4>
+                    <p class="text-sm text-stone-600">Aachen&rsquo;s famous spiced gingerbread-like cookies, with protected geographical indication. Harder and spicier than typical gingerbread, with a distinct flavor from beet syrup and a mixture of spices including anise, cardamom, and cloves. Available year-round at Aachen confectioners &mdash; Leo Driessen and Nobis Printen are the most famous makers.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Maps Script -->
+    <script>
+        const dayPins = {
+            day1: [
+                [50.4681, 4.8621, "Brussels-Midi &rarr; train to Namur"],
+                [50.4615, 4.8630, "Namur Citadel"],
+                [50.4670, 4.8620, "Namur Station (start)"],
+                [50.3800, 4.8780, "W&eacute;pion (strawberry village)"],
+                [50.3450, 4.8680, "Jardins d&rsquo;Annevoie"],
+                [50.3090, 4.8930, "Ch&acirc;teau de Poilvache"],
+                [50.2930, 4.7680, "Maredsous Abbey"],
+                [50.2610, 4.9120, "Dinant"],
+            ],
+            day2: [
+                [50.2610, 4.9120, "Dinant"],
+                [50.2500, 4.9300, "Fonds de Leffe"],
+                [50.2260, 5.3450, "Ciney"],
+                [50.1610, 5.2220, "Rochefort (Trappist brewery)"],
+                [50.2260, 5.3450, "Marche-en-Famenne"],
+                [50.2680, 5.4540, "Hotton"],
+                [50.1830, 5.5780, "La Roche-en-Ardenne"],
+            ],
+            day3: [
+                [50.1830, 5.5780, "La Roche-en-Ardenne"],
+                [50.2130, 5.6330, "Nadrin / H&eacute;rou viewpoint"],
+                [50.1300, 5.7890, "Houffalize"],
+                [50.0010, 5.7180, "Bastogne"],
+                [50.0100, 5.7480, "Mardasson Memorial"],
+                [50.1850, 5.9520, "Gouvy"],
+            ],
+            day4: [
+                [50.1850, 5.9520, "Gouvy"],
+                [50.1800, 6.1470, "Burg-Reuland"],
+                [50.2820, 6.1270, "Sankt Vith"],
+                [50.5010, 6.1020, "Signal de Botrange / High Fens"],
+                [50.5410, 6.2220, "M&uuml;tzenich"],
+                [50.5590, 6.2430, "Monschau"],
+            ],
+            day5: [
+                [50.5590, 6.2430, "Monschau"],
+                [50.6530, 6.1940, "Roetgen"],
+                [50.6810, 6.1210, "Raeren"],
+                [50.7380, 6.1260, "Kornelim&uuml;nster"],
+                [50.7745, 6.0840, "Aachen Cathedral (UNESCO)"],
+                [50.7682, 6.0912, "Aachen Hauptbahnhof (train home)"],
+            ],
+        };
+
+        Object.keys(dayPins).forEach(function(key) {
+            const pins = dayPins[key];
+            const mapEl = document.getElementById("map-" + key);
+            if (!mapEl || pins.length === 0) return;
+
+            const map = L.map(mapEl, { scrollWheelZoom: false });
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 18,
+            }).addTo(map);
+
+            const markers = pins.map(function(pin) {
+                return L.marker([pin[0], pin[1]]).addTo(map).bindPopup("<strong>" + pin[2] + "</strong>");
+            });
+
+            // Draw a line connecting the waypoints
+            const latlngs = pins.map(function(pin) { return [pin[0], pin[1]]; });
+            L.polyline(latlngs, { color: '#92400e', weight: 2, opacity: 0.6 }).addTo(map);
+
+            const group = L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.15));
+        });
+    </script>
+</body>
+</html>
