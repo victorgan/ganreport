@@ -18,9 +18,24 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .leaflet-container { border-radius: 0.5rem; }
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.5rem; margin-bottom: 1.5rem; }
+        .photo-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 0.375rem; border: 1px solid #e7e5e4; cursor: pointer; transition: opacity 0.15s; }
+        .photo-grid img:hover { opacity: 0.9; }
+        .photo-caption { font-size: 0.7rem; color: #78716c; margin-top: 2px; text-align: center; }
+        .photo-ops { background: #fef9f0; border-left: 3px solid #d97706; border-radius: 0 0.375rem 0.375rem 0; padding: 0.875rem 1rem; margin-top: 1rem; }
+        .photo-ops h4 { font-size: 0.75rem; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .photo-ops ul { list-style: disc; padding-left: 1.25rem; font-size: 0.8rem; color: #57534e; line-height: 1.6; }
+        /* Lightbox */
+        #lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; }
+        #lightbox.open { display:flex; }
+        #lightbox img { max-width:90vw; max-height:90vh; border-radius:0.375rem; }
+        #lightbox-close { position:absolute; top:1rem; right:1.5rem; color:#fff; font-size:2rem; cursor:pointer; line-height:1; }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800 min-h-screen">
+
+    <!-- Lightbox -->
+    <div id="lightbox"><span id="lightbox-close">&times;</span><img id="lightbox-img" src="" alt=""></div>
 
     <!-- Header -->
     <header class="bg-white border-b border-stone-200 sticky top-0 z-[1000]">
@@ -50,7 +65,35 @@
         <section id="day1">
             <h2 class="text-xl font-bold text-stone-900 mb-1">Day 1 &mdash; Saturday, July 11: Meuse Cliffs</h2>
             <p class="text-stone-500 text-sm mb-4">Brussels &rarr; train to Namur &rarr; Meuse RAVeL south &rarr; Maredsous Abbey &rarr; Dinant (~45km, flat)</p>
-            <div id="map-day1" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div id="map-day1" class="w-full h-72 mb-4 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="photo-grid">
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/La_Citadelle_de_Namur.JPG" alt="Namur Citadel" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Namur Citadel above the Meuse</p>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Tuinen_Annevoie.JPG" alt="Jardins d'Annevoie" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Jardins d&rsquo;Annevoie water gardens</p>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Church_Maredsous_Abbey_03.JPG" alt="Maredsous Abbey" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Maredsous Abbey church</p>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/0_Dinant_-_La_citadelle_%281%29.JPG" alt="Dinant" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Dinant &mdash; citadel, church &amp; Meuse</p>
+                </div>
+            </div>
+            <div class="photo-ops">
+                <h4>&#x1F4F7; Photo Opportunities</h4>
+                <ul>
+                    <li><strong>Namur Citadel:</strong> Cross to the Jambes side of the Meuse for the classic framing &mdash; citadel reflected in the river with the city below. Early morning gives soft light and no crowds.</li>
+                    <li><strong>Meuse RAVeL cliffs:</strong> The limestone walls are tallest between Wépion and Dinant; July afternoon light hits the west-facing cliffs from about 3&ndash;5pm. Look for hang-gliders launching from the Sept Meuses cliffs.</li>
+                    <li><strong>Annevoie gardens:</strong> Overcast days are ideal &mdash; flat light eliminates harsh shadows on the water features and reduces glare on the reflecting pools. The buffet d&rsquo;eau cascade films well in slow shutter.</li>
+                    <li><strong>Maredsous Abbey:</strong> The abbey courtyard with a Maredsous beer in hand is an obvious shot &mdash; but the real prize is the exterior facade at golden hour (roughly 8&ndash;9pm in July), when the stone turns amber.</li>
+                    <li><strong>Dinant at dusk:</strong> Stay for blue hour &mdash; the church dome and citadel light up, and the Meuse reflects the full scene. The best angle is from the bridge or the opposite bank. Arrive 30 minutes before sunset to secure a spot.</li>
+                </ul>
+            </div>
             <div class="space-y-4">
                 <div>
                     <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
@@ -94,7 +137,27 @@
         <section id="day2">
             <h2 class="text-xl font-bold text-stone-900 mb-1">Day 2 &mdash; Sunday, July 12: Into the Ardennes</h2>
             <p class="text-stone-500 text-sm mb-4">Dinant &rarr; Fonds de Leffe &rarr; Rochefort &rarr; Marche-en-Famenne &rarr; La Roche-en-Ardenne (~65km, rolling)</p>
-            <div id="map-day2" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div id="map-day2" class="w-full h-72 mb-4 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="photo-grid">
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Rochefort%2C_abbaye_Saint-Remy.JPG" alt="Rochefort Abbey" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Abbaye Saint-Rémy, Rochefort</p>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/0_La_Roche-en-Ardenne_050518_%288%29.JPG" alt="La Roche-en-Ardenne" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">La Roche-en-Ardenne castle &amp; Ourthe</p>
+                </div>
+            </div>
+            <div class="photo-ops">
+                <h4>&#x1F4F7; Photo Opportunities</h4>
+                <ul>
+                    <li><strong>Fonds de Leffe valley:</strong> Early morning mist settles in the narrow valley floor in July &mdash; if you leave Dinant by 7am you may catch it. The beech forest and stream make strong foreground elements.</li>
+                    <li><strong>Condroz villages:</strong> The limestone farmhouses of Thynes and Sovet are photogenic in warm afternoon light &mdash; look for the typical Condroz style (blue-grey stone, red tile roofs) against the rolling green hills.</li>
+                    <li><strong>Rochefort Abbey:</strong> The abbey exterior is freely photographable from the road. The austere Cistercian facade photographs well in flat overcast light. A glass of Rochefort 10 on a café table is a classic travel shot.</li>
+                    <li><strong>La Roche-en-Ardenne:</strong> Climb up to the castle ruins at sunset &mdash; you get an elevated view straight down the Ourthe meander with the town below. The ruined towers frame the valley nicely. Golden hour in July falls around 9pm.</li>
+                    <li><strong>La Roche from below:</strong> The view upstream from the main bridge, with the castle silhouetted against the wooded hillside, is the classic La Roche postcard shot.</li>
+                </ul>
+            </div>
             <div class="space-y-4">
                 <div>
                     <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
@@ -128,7 +191,27 @@
         <section id="day3">
             <h2 class="text-xl font-bold text-stone-900 mb-1">Day 3 &mdash; Monday, July 13: Ourthe Valley &amp; Bastogne</h2>
             <p class="text-stone-500 text-sm mb-4">La Roche &rarr; H&eacute;rou viewpoint &rarr; Houffalize &rarr; Bastogne &rarr; RAVeL 163 &rarr; Gouvy (~70km, hilly &mdash; biggest day)</p>
-            <div id="map-day3" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div id="map-day3" class="w-full h-72 mb-4 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="photo-grid">
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/Le_Herou_Belvedere.jpg" alt="Hérou viewpoint" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">H&eacute;rou belvedere &mdash; Ourthe meanders</p>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Mardasson_Memorial_Bastogne.JPG" alt="Mardasson Memorial" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Mardasson Memorial, Bastogne</p>
+                </div>
+            </div>
+            <div class="photo-ops">
+                <h4>&#x1F4F7; Photo Opportunities</h4>
+                <ul>
+                    <li><strong>Ourthe Valley riding shots:</strong> The dense forest creates natural light tunnels along the river &mdash; shooting along the path with the river on one side and forest canopy above works especially well in dappled morning light. Polarising filter recommended to cut reflections off the water.</li>
+                    <li><strong>Hérou viewpoint:</strong> This is the signature shot of the entire trip. Arrive early morning (before 9am) for mist in the valley &mdash; the Ourthe loops emerge from cloud like something from a Chinese landscape painting. Wide-angle lens essential. Allow time: the hike up takes 10&ndash;15 minutes from the road.</li>
+                    <li><strong>Houffalize:</strong> The confluence of the two Ourthe branches makes a nice aerial-style shot from the hilltop above town. The rebuilt church spire above the valley is photogenic at any time of day.</li>
+                    <li><strong>Mardasson Memorial:</strong> The star shape is only apparent from above (drone, or the viewing terrace on the memorial itself). At ground level, shoot through the archways framing the Ardennes landscape. The memorial has intentional sightlines &mdash; walk the full perimeter. Evening light from the west catches the stone well.</li>
+                    <li><strong>RAVeL 163 viaducts:</strong> The old railway viaducts carrying the converted path through the Ardennes are dramatic structures &mdash; position yourself below and use a wide angle to capture the arches against the forest and sky.</li>
+                </ul>
+            </div>
             <div class="space-y-4">
                 <div>
                     <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
@@ -161,7 +244,28 @@
         <section id="day4">
             <h2 class="text-xl font-bold text-stone-900 mb-1">Day 4 &mdash; Tuesday, July 14: Vennbahn &amp; High Fens</h2>
             <p class="text-stone-500 text-sm mb-4">Gouvy &rarr; Burg-Reuland &rarr; Sankt Vith &rarr; High Fens &rarr; Monschau (~70km, gentle rail trail)</p>
-            <div id="map-day4" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div id="map-day4" class="w-full h-72 mb-4 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="photo-grid">
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Belgium%2C_Hoge_Venen.JPG" alt="High Fens moorland" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">High Fens moorland, Belgium</p>
+                </div>
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Monschau_Germany_General-views-of-Monschau-01.jpg" alt="Monschau" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Monschau old town in the Rur gorge</p>
+                </div>
+            </div>
+            <div class="photo-ops">
+                <h4>&#x1F4F7; Photo Opportunities</h4>
+                <ul>
+                    <li><strong>Burg-Reuland castle:</strong> The 10th-century ruin sits on a rocky promontory above the Our river. Best shot is from the meadow below, looking up at the tower with the forested hills behind &mdash; morning light from the east catches the facade. The river reflection in calm conditions is exceptional.</li>
+                    <li><strong>Vennbahn leading lines:</strong> The rail trail is dead straight for long stretches &mdash; the converted path disappearing into forest makes a classic leading-lines composition. Try lying the bike in the frame for scale.</li>
+                    <li><strong>High Fens wooden boardwalks:</strong> The long wooden walkways across the bog are a distinctive visual. Shoot along the boardwalk at low angle in early morning or evening light &mdash; the peat and cotton grass glow warm amber. In July the heather may be starting to purple (peaks August).</li>
+                    <li><strong>Signal de Botrange:</strong> Wide open plateau &mdash; good for big-sky shots and the monument silhouette at sunset. At 694m, you get above the cloud inversions that form in the valleys.</li>
+                    <li><strong>Monschau from above:</strong> The most dramatic Monschau shots are from the hillside paths above the town looking down into the gorge &mdash; the half-timbered roofline against the forest. Reach the viewpoint via a 15-minute walk up from the Rotes Haus. Early morning before the day-trippers arrive (Monschau gets very busy by 10am in summer).</li>
+                    <li><strong>Monschau Rur reflection:</strong> At river level, shoot the half-timbered facades reflected in the still Rur water &mdash; best in early morning before wind picks up. The narrow footbridges over the river are good foreground elements.</li>
+                </ul>
+            </div>
             <div class="space-y-4">
                 <div>
                     <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
@@ -194,7 +298,24 @@
         <section id="day5">
             <h2 class="text-xl font-bold text-stone-900 mb-1">Day 5 &mdash; Wednesday, July 15: Monschau &rarr; Aachen</h2>
             <p class="text-stone-500 text-sm mb-4">Monschau &rarr; Roetgen &rarr; Raeren &rarr; Kornelim&uuml;nster &rarr; Aachen (~25km, easy morning)</p>
-            <div id="map-day5" class="w-full h-72 mb-6 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div id="map-day5" class="w-full h-72 mb-4 shadow-sm border border-stone-200 rounded-lg"></div>
+            <div class="photo-grid">
+                <div>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/be/Aachen_Germany_Imperial-Cathedral-01.jpg" alt="Aachen Cathedral" onclick="openLightbox(this.src)">
+                    <p class="photo-caption">Aachen Cathedral (Dom), UNESCO</p>
+                </div>
+            </div>
+            <div class="photo-ops">
+                <h4>&#x1F4F7; Photo Opportunities</h4>
+                <ul>
+                    <li><strong>Monschau morning:</strong> Before you leave &mdash; the Rur river at first light (sunrise is around 5:30am in mid-July). The town is deserted, the water is still, and the timber-framed facades reflect perfectly. This is the best light of the trip.</li>
+                    <li><strong>Raeren pottery:</strong> The stoneware pieces in the museum and local shops make fine close-up still-life shots &mdash; the grey-blue glaze photographed against stone is distinctive.</li>
+                    <li><strong>Aachen Cathedral exterior:</strong> The octagonal tower photographs well from the Domhof square to the south, with the Gothic choir to the right. Midday light works here since the building faces multiple directions &mdash; the original Carolingian rotunda faces south.</li>
+                    <li><strong>Aachen Cathedral interior:</strong> The golden mosaics in the Palatine Chapel dome, the Byzantine-inspired arcade, and Charlemagne&rsquo;s chandelier (a 12th-century gift from Frederick Barbarossa) are extraordinary subjects. Tripod is technically not permitted but a steady hand at ISO 3200 works. The best interior light is in the afternoon when sun enters the west windows.</li>
+                    <li><strong>Cathedral treasury:</strong> Photography is allowed in the treasury. The Lothar Cross (990 AD) and the bust reliquary of Charlemagne are extraordinary close-up subjects &mdash; bring a macro lens or use portrait mode.</li>
+                    <li><strong>Aachen Marktplatz:</strong> The Gothic town hall and the fountain of Charlemagne in the market square make a classic composition. Evening light from the west catches the town hall facade after 7pm.</li>
+                </ul>
+            </div>
             <div class="space-y-4">
                 <div>
                     <h3 class="font-semibold text-stone-700 mb-1">Morning</h3>
@@ -429,6 +550,14 @@
                 [50.7682, 6.0912, "Aachen Hauptbahnhof (train home)"],
             ],
         };
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('open');
+        }
+        document.getElementById('lightbox').addEventListener('click', function() {
+            this.classList.remove('open');
+        });
 
         Object.keys(dayPins).forEach(function(key) {
             const pins = dayPins[key];
