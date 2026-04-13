@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mobile OS Landscape — Android vs iOS, 2007–2026</title>
+<style>
+:root {
+  --bg: #111113;
+  --surface: #1a1a1d;
+  --border: #2a2a2e;
+  --text: #b8b8bf;
+  --bright: #e8e8ed;
+  --dim: #6e6e78;
+  --faint: #3a3a40;
+  --android: #34a853;
+  --android-bg: #1a2e1f;
+  --ios: #0071e3;
+  --ios-bg: #0a1e33;
+  --warm: #d4a843;
+  --warm-bg: #2a2210;
+  --red: #d4504a;
+  --red-bg: #2a1515;
+  --mono: ui-monospace, 'Cascadia Mono', 'SF Mono', Consolas, monospace;
+  --serif: Georgia, 'Times New Roman', Times, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+/* Reset & Base */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+background:var(–bg);
+color:var(–text);
+font-family:var(–sans);
+font-size:16.5px;
+line-height:1.78;
+-webkit-font-smoothing:antialiased;
+-moz-osx-font-smoothing:grayscale;
+}
+
+/* Navigation */
+nav {
+position:sticky; top:0; z-index:100;
+background:rgba(17,17,19,0.88);
+backdrop-filter:blur(16px);
+-webkit-backdrop-filter:blur(16px);
+border-bottom:1px solid var(–border);
+}
+.nav-inner {
+max-width:740px; margin:0 auto; padding:0 28px;
+display:flex; align-items:center; gap:20px;
+height:46px; overflow-x:auto; scrollbar-width:none;
+}
+.nav-inner::-webkit-scrollbar { display:none; }
+.nav-brand { font-family:var(–mono); font-weight:700; font-size:13px; color:var(–bright); flex-shrink:0; letter-spacing:0.5px; }
+nav a { color:var(–dim); text-decoration:none; font-size:13px; white-space:nowrap; transition:color .15s; }
+nav a:hover { color:var(–bright); }
+
+/* Layout */
+.wrap { max-width:740px; margin:0 auto; padding:0 28px; }
+section { padding:56px 0; }
+hr { border:none; border-top:1px solid var(–border); margin:0; }
+
+/* Typography */
+.overline {
+font-family:var(–mono); font-size:11.5px; font-weight:600;
+text-transform:uppercase; letter-spacing:2.5px;
+color:var(–dim); margin-bottom:14px;
+}
+h1 {
+font-family:var(–serif); font-size:clamp(30px,5vw,46px);
+font-weight:400; color:var(–bright); line-height:1.18;
+margin-bottom:18px; letter-spacing:-0.3px;
+}
+h2 {
+font-family:var(–serif); font-size:clamp(23px,3.5vw,32px);
+font-weight:400; color:var(–bright); line-height:1.25;
+margin-bottom:20px; letter-spacing:-0.2px;
+}
+h3 {
+font-size:17px; font-weight:600; color:var(–bright);
+margin:36px 0 12px; line-height:1.4;
+}
+.lead {
+font-size:18px; color:var(–dim); line-height:1.65;
+max-width:620px;
+}
+p { margin-bottom:16px; }
+p:last-child { margin-bottom:0; }
+strong { color:var(–bright); font-weight:600; }
+em { font-style:italic; }
+a.body-link { color:var(–ios); text-decoration:none; border-bottom:1px solid rgba(0,113,227,0.3); }
+a.body-link:hover { border-bottom-color:var(–ios); }
+
+/* Callout */
+.callout {
+background:var(–surface); border-radius:0 8px 8px 0;
+border-left:3px solid var(–warm); padding:22px 26px;
+margin:30px 0;
+}
+.callout.green { border-left-color:var(–android); }
+.callout.blue { border-left-color:var(–ios); }
+.callout.red { border-left-color:var(–red); }
+.callout-title {
+font-family:var(–mono); font-size:12px; font-weight:700;
+text-transform:uppercase; letter-spacing:0.8px;
+margin-bottom:10px;
+}
+.callout .callout-title { color:var(–warm); }
+.callout.green .callout-title { color:var(–android); }
+.callout.blue .callout-title { color:var(–ios); }
+.callout.red .callout-title { color:var(–red); }
+.callout p { font-size:15px; line-height:1.7; }
+
+/* Stats row */
+.stats-row {
+display:flex; gap:1px; margin:32px 0;
+background:var(–border); border-radius:10px; overflow:hidden;
+}
+.stats-row .stat {
+flex:1; background:var(–surface); padding:22px 16px; text-align:center;
+min-width:0;
+}
+.stats-row .stat-num {
+font-family:var(–mono); font-size:clamp(22px,3vw,32px);
+font-weight:700; line-height:1.2;
+}
+.stats-row .stat-label {
+font-size:11px; color:var(–dim); margin-top:4px;
+line-height:1.3;
+}
+
+/* Timeline */
+.timeline { position:relative; padding-left:30px; margin:36px 0; }
+.timeline::before {
+content:’’; position:absolute; left:7px; top:6px; bottom:6px;
+width:2px; background:var(–border);
+}
+.tl-item { position:relative; padding-bottom:30px; }
+.tl-item:last-child { padding-bottom:0; }
+.tl-dot {
+position:absolute; left:-30px; top:6px;
+width:16px; height:16px; border-radius:50%;
+border:3px solid var(–bg);
+}
+.tl-dot.a { background:var(–android); }
+.tl-dot.i { background:var(–ios); }
+.tl-dot.b { background:var(–warm); }
+.tl-year { font-family:var(–mono); font-size:13px; color:var(–dim); }
+.tl-head { font-weight:600; color:var(–bright); }
+.tl-body { font-size:14.5px; color:var(–dim); margin-top:3px; line-height:1.6; }
+
+/* Bars */
+.bar-section { margin:28px 0; }
+.bar-legend {
+display:flex; gap:16px; margin-bottom:14px;
+font-size:12px; color:var(–dim);
+}
+.bar-legend .swatch {
+display:inline-block; width:12px; height:12px;
+border-radius:3px; vertical-align:middle; margin-right:4px;
+}
+.bar-row {
+display:flex; align-items:center; gap:10px; margin-bottom:7px;
+}
+.bar-label {
+width:80px; text-align:right; flex-shrink:0;
+font-family:var(–mono); font-size:12px; color:var(–dim);
+}
+.bar-track {
+flex:1; height:20px; background:rgba(255,255,255,0.03);
+border-radius:4px; overflow:hidden;
+}
+.bar-fill {
+height:100%; border-radius:4px; display:flex;
+align-items:center; padding-left:7px;
+font-size:10px; font-weight:600; color:#fff;
+white-space:nowrap;
+}
+.bar-fill.a { background:linear-gradient(90deg, var(–android-bg), var(–android)); }
+.bar-fill.i { background:linear-gradient(90deg, var(–ios-bg), var(–ios)); }
+
+/* Table */
+table { width:100%; border-collapse:collapse; margin:26px 0; }
+thead th {
+text-align:left; padding:10px 12px;
+font-family:var(–mono); font-size:11px; font-weight:600;
+text-transform:uppercase; letter-spacing:0.8px;
+color:var(–dim); border-bottom:2px solid var(–border);
+}
+td {
+padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.035);
+font-size:14.5px; vertical-align:top;
+}
+tr:hover td { background:rgba(255,255,255,0.015); }
+.win-a { color:var(–android); font-weight:600; }
+.win-i { color:var(–ios); font-weight:600; }
+.gap-note { color:var(–dim); font-size:13px; }
+
+/* Version reference */
+.ver-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:28px 0; }
+@media(max-width:680px) { .ver-grid { grid-template-columns:1fr; } }
+.ver-panel {
+background:var(–surface); border:1px solid var(–border);
+border-radius:10px; padding:22px 20px;
+max-height:520px; overflow-y:auto;
+scrollbar-width:thin; scrollbar-color:var(–faint) transparent;
+}
+.ver-panel::-webkit-scrollbar { width:5px; }
+.ver-panel::-webkit-scrollbar-thumb { background:var(–faint); border-radius:3px; }
+.ver-panel h4 {
+font-family:var(–mono); font-size:12px; font-weight:700;
+text-transform:uppercase; letter-spacing:1px;
+margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.badge {
+display:inline-block; padding:2px 8px; border-radius:10px;
+font-size:10px; font-weight:700;
+}
+.badge.a { background:var(–android-bg); color:var(–android); }
+.badge.i { background:var(–ios-bg); color:var(–ios); }
+.ver-entry { display:flex; gap:6px; font-size:13px; line-height:1.7; padding:2px 0; }
+.ver-entry .v {
+font-family:var(–mono); font-weight:700; flex-shrink:0; min-width:32px;
+}
+.ver-entry .v.a { color:var(–android); }
+.ver-entry .v.i { color:var(–ios); }
+.ver-entry .y { color:var(–faint); min-width:38px; flex-shrink:0; }
+.ver-entry .f { color:var(–dim); }
+.ver-entry .f strong { color:var(–text); font-weight:600; }
+.ver-era {
+font-family:var(–mono); font-size:9.5px; font-weight:700;
+text-transform:uppercase; letter-spacing:1.8px;
+color:var(–faint); margin:14px 0 4px; padding-top:6px;
+border-top:1px solid rgba(255,255,255,0.04);
+}
+.ver-era:first-child { border-top:none; margin-top:0; padding-top:0; }
+
+/* Quote */
+blockquote {
+border-left:3px solid var(–faint); padding:2px 0 2px 22px; margin:30px 0;
+}
+blockquote p {
+font-family:var(–serif); font-size:18px; font-style:italic;
+color:var(–bright); line-height:1.55; margin-bottom:8px;
+}
+blockquote cite {
+font-family:var(–sans); font-size:13px; color:var(–dim);
+font-style:normal;
+}
+
+/* Footer */
+.footer {
+text-align:center; padding:52px 28px;
+font-size:12px; color:var(–faint);
+font-family:var(–mono); line-height:1.9;
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+<div class="nav-inner">
+  <span class="nav-brand">A / I</span>
+  <a href="#arc">The Arc</a>
+  <a href="#philosophy">Philosophy</a>
+  <a href="#updates">Updates</a>
+  <a href="#design">Design</a>
+  <a href="#race">Feature Race</a>
+  <a href="#versions">All Versions</a>
+  <a href="#now">Now</a>
+</div>
+</nav>
+
+<!-- ═════════════════════ HERO ═════════════════════ -->
+
+<section style="padding-top:72px; padding-bottom:48px;">
+<div class="wrap">
+  <div class="overline">February 20, 2026</div>
+  <h1>The Mobile OS Landscape</h1>
+  <p class="lead">Android and iOS have defined personal computing for nearly two decades. This is a guide to how they evolved, how they differ, and what actually matters — written for intuition, not trivia.</p>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ THE ARC ═════════════════════ -->
+
+<section id="arc">
+<div class="wrap">
+  <div class="overline">The 1,000-Foot View</div>
+  <h2>When Phones Learned To…</h2>
+
+  <p>In June 2007, Apple shipped the iPhone with no App Store, no copy-paste, and no third-party apps. In October 2008, Google shipped Android 1.0 on the HTC Dream — a phone with a physical keyboard and a trackball. Both were crude. Both changed everything.</p>
+
+  <p>Eighteen years later, these two operating systems run on over <strong>4 billion active devices</strong>. They've converged on nearly every feature — widgets, dark mode, privacy dashboards, AI assistants, always-on displays — yet they feel fundamentally different to use. That gap isn't about features anymore. It's about <em>philosophy</em>. The timeline below maps the moments that changed what a phone could be.</p>
+
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot i"></div><span class="tl-year">2007</span> <span class="tl-head">The iPhone invents the modern smartphone</span><div class="tl-body">Multitouch, visual voicemail, full web browser. No apps, no keyboard. Steve Jobs bet that software would beat hardware buttons. He was right.</div></div>
+
+```
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2008</span> <span class="tl-head">Android ships — open source, from day one</span><div class="tl-body">Google's bet: let anyone make a phone. The HTC Dream was ugly. The ecosystem it spawned wasn't. Android Market and tight Gmail integration gave it a reason to exist beyond "not-iPhone."</div></div>
+
+<div class="tl-item"><div class="tl-dot i"></div><span class="tl-year">2008</span> <span class="tl-head">The App Store launches</span><div class="tl-body">500 apps on day one. Created the modern software economy. Android Market followed months later, but Apple's head start in developer culture persisted for years.</div></div>
+
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2012</span> <span class="tl-head">Project Butter makes Android feel smooth</span><div class="tl-body">Android 4.1 (Jelly Bean). For years, Android stuttered where iOS glided. Google's 60fps overhaul was the moment Android became a serious daily-driver OS, not just a tinkerer's toy.</div></div>
+
+<div class="tl-item"><div class="tl-dot i"></div><span class="tl-year">2013</span> <span class="tl-head">iOS 7 kills skeuomorphism</span><div class="tl-body">Jony Ive's flat redesign was polarizing and permanent. Leather textures and glossy buttons disappeared overnight. This design language lasted 12 years — until Liquid Glass in 2025.</div></div>
+
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2014</span> <span class="tl-head">Material Design gives Android an identity</span><div class="tl-body">Android 5.0. Paper-and-ink metaphor, bold color, elevation shadows. Android's most influential design system — it spread beyond phones to web, Chrome OS, and wearables.</div></div>
+
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2017</span> <span class="tl-head">Project Treble separates OS from hardware</span><div class="tl-body">Android 8.0. The most important infrastructure change in Android history. Before this, every OEM update required re-integrating hardware drivers from scratch. After Treble, a clean abstraction layer meant updates could flow faster. Fragmentation didn't end — but it stopped getting worse.</div></div>
+
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2019</span> <span class="tl-head">Project Mainline routes around the OEM bottleneck</span><div class="tl-body">Android 10. Google started updating 30+ core OS modules — networking, media codecs, permissions, DNS — through the Play Store, bypassing OEMs entirely. This was Google admitting it couldn't fix OEM update culture, so it built a system that didn't need to.</div></div>
+
+<div class="tl-item"><div class="tl-dot i"></div><span class="tl-year">2020</span> <span class="tl-head">Apple finally allows home screen customization</span><div class="tl-body">iOS 14 brought widgets and App Library — features Android had since 2009. The 11-year gap was intentional: Apple waited until it could ship a polished version. The result launched an aesthetic movement on social media.</div></div>
+
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2021</span> <span class="tl-head">Material You makes every phone personal</span><div class="tl-body">Android 12. Dynamic color theming pulled from your wallpaper. Rounded, bubbly shapes. The first time an OS said "your phone should look like <em>yours</em>, not like everyone else's."</div></div>
+
+<div class="tl-item"><div class="tl-dot b"></div><span class="tl-year">2024</span> <span class="tl-head">Both platforms bet everything on on-device AI</span><div class="tl-body">Apple Intelligence (iOS 18) and Gemini Nano (Android 14+). Smart summaries, writing assistance, image understanding — running locally on the device. The defining battleground for the next decade isn't design or features. It's who owns the intelligent layer between you and your apps.</div></div>
+
+<div class="tl-item"><div class="tl-dot i"></div><span class="tl-year">2025</span> <span class="tl-head">Liquid Glass — iOS's biggest redesign in 12 years</span><div class="tl-body">iOS 26. Translucent, refractive glass surfaces across the entire OS. Apple also jumped version numbers from 18 to 26 to unify naming across all its platforms (iOS 26, macOS 26, watchOS 26). The new language is meant to define the next decade.</div></div>
+
+<div class="tl-item"><div class="tl-dot a"></div><span class="tl-year">2025</span> <span class="tl-head">Android goes biannual</span><div class="tl-body">Android 16 (Baklava) shipped in June instead of October. Google now releases two major versions per year — with Material 3 Expressive, a desktop mode for tablets, and a Linux terminal. Android 17 (Cinnamon Bun) is expected June 2026.</div></div>
+```
+
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">The uncomfortable summary</div>
+    <p>If you've been using one platform for years, your intuitions about the other are probably outdated. They're closer than you think on features and farther apart than you think on update infrastructure. The real gap isn't what either OS <em>can</em> do — it's how quickly improvements reach your actual device.</p>
+  </div>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ PHILOSOPHY ═════════════════════ -->
+
+<section id="philosophy">
+<div class="wrap">
+  <div class="overline">The Core Difference</div>
+  <h2>One Decision Explains Everything</h2>
+
+  <p>Every difference between Android and iOS traces back to a single architectural decision made in 2007: <strong>Apple controls the hardware. Google does not.</strong></p>
+
+  <p>Apple designs the chip, the screen, the case, and the software. When iOS 26 shipped in September 2025, every supported iPhone got it the same week. The result: roughly 75% of all iPhones run the latest version within a few months. Apple has supported individual devices for 6–7 years — the iPhone 11 from 2019 still runs iOS 26.</p>
+
+  <p>Google designs Android, then hands it to Samsung, Xiaomi, Motorola, OnePlus, AYN, and hundreds of other manufacturers who each modify it, test it against their hardware, and ship it whenever they're ready — or never. No single Android version has more than 19% market share. Over 40% of Android devices run versions that no longer receive full security patches.</p>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num" style="color:var(--ios);">~75%</div><div class="stat-label">iPhones on latest iOS<br>within months of release</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--android);">~19%</div><div class="stat-label">Android phones on latest<br>version (Feb 2026)</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--red);">40%+</div><div class="stat-label">Android devices outside<br>security support</div></div>
+  </div>
+
+  <p>This isn't a bug — it's the tradeoff. Android's openness gave us $50 phones that brought billions of people online, gaming handhelds like the Odin 3, foldables, and devices Apple would never make. iOS's control gave us reliability, longevity, and an ecosystem where everything works together without thinking about it.</p>
+
+  <p>Neither approach is objectively better. But you need to understand the tradeoff to interpret everything else on this page — update cadence, design evolution, feature timing, and device longevity all follow directly from this single choice.</p>
+
+  <div class="callout green">
+    <div class="callout-title">How Google is routing around the problem</div>
+    <p>Google has spent a decade building infrastructure to deliver updates without OEM cooperation. <strong>Project Treble</strong> (2017) separated vendor code from the OS so updates don't require OEM-specific driver integration. <strong>Project Mainline</strong> (2019) lets Google update 30+ core OS modules through the Play Store — networking, media codecs, permissions, DNS — regardless of which Android version your phone runs.</p>
+    <p>The practical effect: your phone might say "Android 13" on the settings screen, but its security-critical modules are being updated monthly like apps. This doesn't give you new UI features or design changes, but it means the <em>security</em> gap between Android versions is much narrower than the version number suggests.</p>
+    <p>In 2023, Google also committed to <strong>7 years of OS updates</strong> for Pixel phones — finally matching Apple. Samsung offers 7 years on flagships too. But for most Android devices — budget phones, handhelds, tablets — 2–3 years of major updates remains the norm.</p>
+  </div>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ UPDATES ═════════════════════ -->
+
+<section id="updates">
+<div class="wrap">
+  <div class="overline">Deep Dive</div>
+  <h2>How Long Does Your Phone Last?</h2>
+
+  <p>Device longevity — how many years you receive major OS updates — has been Apple's strongest argument for a decade. That gap is finally closing at the top, but the median Android device still tells a very different story from a Pixel or Galaxy flagship.</p>
+
+  <h3>Flagship update support: average years of major OS updates</h3>
+
+  <div class="bar-section">
+    <div class="bar-legend">
+      <span><span class="swatch" style="background:var(--android)"></span>Android flagship avg.</span>
+      <span><span class="swatch" style="background:var(--ios)"></span>iPhone</span>
+    </div>
+    <div class="bar-row"><div class="bar-label">2016</div><div class="bar-track"><div class="bar-fill a" style="width:28.6%">2y</div></div><div class="bar-track"><div class="bar-fill i" style="width:64.3%">4.5y</div></div></div>
+    <div class="bar-row"><div class="bar-label">2018</div><div class="bar-track"><div class="bar-fill a" style="width:35.7%">2.5y</div></div><div class="bar-track"><div class="bar-fill i" style="width:71.4%">5y</div></div></div>
+    <div class="bar-row"><div class="bar-label">2020</div><div class="bar-track"><div class="bar-fill a" style="width:42.9%">3y</div></div><div class="bar-track"><div class="bar-fill i" style="width:78.6%">5.5y</div></div></div>
+    <div class="bar-row"><div class="bar-label">2022</div><div class="bar-track"><div class="bar-fill a" style="width:50%">3.5y</div></div><div class="bar-track"><div class="bar-fill i" style="width:85.7%">6y</div></div></div>
+    <div class="bar-row"><div class="bar-label">2024</div><div class="bar-track"><div class="bar-fill a" style="width:57.1%">4y</div></div><div class="bar-track"><div class="bar-fill i" style="width:85.7%">6y</div></div></div>
+    <div class="bar-row"><div class="bar-label">2026</div><div class="bar-track"><div class="bar-fill a" style="width:100%">7y</div></div><div class="bar-track"><div class="bar-fill i" style="width:100%">7y</div></div></div>
+  </div>
+
+  <p>The "7 years" line for Android applies to Pixel and Samsung Galaxy S/Z flagships only. An iPhone 16 bought today will run the latest iOS until at least 2031. A Pixel 9 bought today has the same promise. A $200 Motorola or a gaming handheld? Two years, maybe three, then you're frozen in place.</p>
+
+  <h3>The adoption gap, in practice</h3>
+
+  <p>The consequence of this philosophy difference is visible in a single chart:</p>
+
+  <div style="display:flex; gap:28px; flex-wrap:wrap; margin:24px 0;">
+    <div style="flex:1; min-width:220px;">
+      <div style="font-family:var(--mono); font-size:12px; color:var(--android); margin-bottom:10px;">Android version share · Feb 2026</div>
+      <div class="bar-section" style="margin:0;">
+        <div class="bar-row"><div class="bar-label">A16</div><div class="bar-track"><div class="bar-fill a" style="width:56%">11%</div></div></div>
+        <div class="bar-row"><div class="bar-label">A15</div><div class="bar-track"><div class="bar-fill a" style="width:97%">19%</div></div></div>
+        <div class="bar-row"><div class="bar-label">A14</div><div class="bar-track"><div class="bar-fill a" style="width:91%">18%</div></div></div>
+        <div class="bar-row"><div class="bar-label">A13</div><div class="bar-track"><div class="bar-fill a" style="width:74%">15%</div></div></div>
+        <div class="bar-row"><div class="bar-label">≤A12</div><div class="bar-track"><div class="bar-fill a" style="width:100%;opacity:.45">37%</div></div></div>
+      </div>
+    </div>
+    <div style="flex:1; min-width:220px;">
+      <div style="font-family:var(--mono); font-size:12px; color:var(--ios); margin-bottom:10px;">iOS version share · Feb 2026</div>
+      <div class="bar-section" style="margin:0;">
+        <div class="bar-row"><div class="bar-label">iOS 26</div><div class="bar-track"><div class="bar-fill i" style="width:100%">~75%</div></div></div>
+        <div class="bar-row"><div class="bar-label">iOS 18</div><div class="bar-track"><div class="bar-fill i" style="width:13%">~10%</div></div></div>
+        <div class="bar-row"><div class="bar-label">iOS 17</div><div class="bar-track"><div class="bar-fill i" style="width:8%">~6%</div></div></div>
+        <div class="bar-row"><div class="bar-label">≤16</div><div class="bar-track"><div class="bar-fill i" style="width:12%;opacity:.45">~9%</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <p>Android's most popular version (A15) has 19% share. iOS's most popular version (26) has 75%. No single Android version dominates because the ecosystem is structurally incapable of moving in lockstep — and Google has accepted this, focusing instead on Mainline modules that update independently of the version number.</p>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ DESIGN ═════════════════════ -->
+
+<section id="design">
+<div class="wrap">
+  <div class="overline">Visual Identity</div>
+  <h2>Three Design Eras Each</h2>
+
+  <p>Both platforms have gone through exactly three major design languages. Each shift redefined what a phone "should" look like — and each lasted longer than you'd expect.</p>
+
+  <h3>iOS</h3>
+  <p><strong>Skeuomorphism (2007–2013)</strong> — Interfaces that looked like real objects. Notes had yellow legal pad paper. Calendar had stitched leather. It taught a generation how to use touchscreens by making everything look familiar. Six years.</p>
+  <p><strong>Flat Design (2013–2025)</strong> — Jony Ive's iOS 7 stripped every texture, shadow, and gradient. Thin fonts, vibrant colors, translucent layers. Polarizing at launch, it became the default aesthetic of the entire tech industry. Twelve years. The single most influential mobile design decision ever made.</p>
+  <p><strong>Liquid Glass (2025–)</strong> — iOS 26. Translucent, refractive surfaces that bend the content behind them. Apple says it will define the next decade.</p>
+
+  <h3>Android</h3>
+  <p><strong>Holo (2011–2014)</strong> — Blue-accented, dark, futuristic. Android 4.0 gave Android its first real visual identity. Before Holo, Android looked like a developer prototype shipped by accident. Three years.</p>
+  <p><strong>Material Design (2014–2021)</strong> — Paper-and-ink metaphor. Bold color, elevation shadows, responsive animations. More than a phone aesthetic — Google turned it into a cross-platform design language for web, desktop, and wearables. Seven years.</p>
+  <p><strong>Material You / M3 (2021–)</strong> — Dynamic color theming from your wallpaper. Rounded, bubbly shapes. Material 3 Expressive (Android 16, 2025) added richer animation and blur. Five years and counting.</p>
+
+  <div class="callout">
+    <div class="callout-title">The convergence</div>
+    <p>Both platforms' latest designs — Liquid Glass and Material 3 Expressive — emphasize translucency, blur, motion, and personalization. After 18 years of visual divergence, they're converging aesthetically, just as they converged on features. The meaningful differences between platforms are increasingly about ecosystem and philosophy, not look and feel.</p>
+  </div>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ FEATURE RACE ═════════════════════ -->
+
+<section id="race">
+<div class="wrap">
+  <div class="overline">Deep Dive</div>
+  <h2>Who Got There First?</h2>
+
+  <p>The conventional wisdom is that Android innovates first and Apple polishes later. The data is more nuanced than that.</p>
+
+  <table>
+    <thead><tr><th>Feature</th><th>Android</th><th>iOS</th><th>Gap</th></tr></thead>
+    <tbody>
+      <tr><td>Copy & paste</td><td class="win-a">2008</td><td>2009</td><td class="gap-note">Android 1yr first</td></tr>
+      <tr><td>Multitasking</td><td class="win-a">2008</td><td>2010</td><td class="gap-note">Android 2yr first</td></tr>
+      <tr><td>App store</td><td>2008</td><td class="win-i">2008</td><td class="gap-note">iOS months first</td></tr>
+      <tr><td>Voice assistant</td><td>2012</td><td class="win-i">2011</td><td class="gap-note">iOS 1yr first</td></tr>
+      <tr><td>Fingerprint</td><td>2015</td><td class="win-i">2013</td><td class="gap-note">iOS 2yr first</td></tr>
+      <tr><td>Home widgets</td><td class="win-a">2009</td><td>2020</td><td class="gap-note">Android 11yr first</td></tr>
+      <tr><td>Dark mode</td><td>2019</td><td>2019</td><td class="gap-note">Same year</td></tr>
+      <tr><td>Always-on display</td><td class="win-a">~2016</td><td>2022</td><td class="gap-note">Android ~6yr first</td></tr>
+      <tr><td>Desktop mode</td><td class="win-a">2017</td><td>—</td><td class="gap-note">iOS still lacks it</td></tr>
+      <tr><td>Satellite SOS</td><td>2025</td><td class="win-i">2022</td><td class="gap-note">iOS 3yr first</td></tr>
+      <tr><td>On-device AI</td><td class="win-a">2023</td><td>2024</td><td class="gap-note">Android ~1yr first</td></tr>
+      <tr><td>RCS messaging</td><td class="win-a">2019</td><td>2024</td><td class="gap-note">Android 5yr first</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout red">
+    <div class="callout-title">A necessary caveat</div>
+    <p>"First" doesn't always mean "better." Android had widgets 11 years before iOS — but iOS widgets, when they finally shipped, were more polished and drove a cultural moment. Android had dark mode in OEM skins years before Google made it official. Apple's satellite messaging worked seamlessly on day one; Android's arrived years later with carrier limitations.</p>
+    <p>The pattern: Android experiments first in the open. Apple waits, studies what works, and ships later with more polish. Neither approach is strictly superior — but it means that raw timeline comparisons overstate Android's advantage and understate Apple's execution.</p>
+  </div>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ ALL VERSIONS ═════════════════════ -->
+
+<section id="versions">
+<div class="wrap">
+  <div class="overline">Reference</div>
+  <h2>Every Version, At a Glance</h2>
+
+  <p>The complete release history of both platforms, compressed to the single most important thing each version is remembered for.</p>
+
+  <div class="ver-grid">
+    <div class="ver-panel">
+      <h4><span class="badge a">Android</span> 2008–2025</h4>
+      <div class="ver-era">AI & Desktop</div>
+      <div class="ver-entry"><span class="v a">16</span><span class="y">2025</span><span class="f"><strong>M3 Expressive</strong> · desktop mode · Linux terminal</span></div>
+      <div class="ver-entry"><span class="v a">15</span><span class="y">2024</span><span class="f"><strong>Privacy Sandbox</strong> · edge-to-edge · partial screen share</span></div>
+      <div class="ver-entry"><span class="v a">14</span><span class="y">2023</span><span class="f"><strong>Gemini Nano</strong> · lock screen custom · per-app language</span></div>
+      <div class="ver-entry"><span class="v a">13</span><span class="y">2022</span><span class="f"><strong>Themed icons</strong> · clipboard privacy · notif permissions</span></div>
+      <div class="ver-entry"><span class="v a">12</span><span class="y">2021</span><span class="f"><strong>Material You</strong> · privacy dashboard · approximate location</span></div>
+      <div class="ver-era">Privacy & Polish</div>
+      <div class="ver-entry"><span class="v a">11</span><span class="y">2020</span><span class="f"><strong>One-time perms</strong> · chat bubbles · screen recorder</span></div>
+      <div class="ver-entry"><span class="v a">10</span><span class="y">2019</span><span class="f"><strong>Mainline</strong> · dark mode · gesture nav</span></div>
+      <div class="ver-entry"><span class="v a">9</span><span class="y">2018</span><span class="f"><strong>Adaptive Battery</strong> · Digital Wellbeing · pill nav</span></div>
+      <div class="ver-entry"><span class="v a">8</span><span class="y">2017</span><span class="f"><strong>Project Treble</strong> · PiP · notif channels</span></div>
+      <div class="ver-entry"><span class="v a">7</span><span class="y">2016</span><span class="f"><strong>Split-screen</strong> · Vulkan · direct reply</span></div>
+      <div class="ver-era">Maturation</div>
+      <div class="ver-entry"><span class="v a">6</span><span class="y">2015</span><span class="f"><strong>Runtime perms</strong> · Doze · fingerprint API</span></div>
+      <div class="ver-entry"><span class="v a">5</span><span class="y">2014</span><span class="f"><strong>Material Design</strong> · ART runtime</span></div>
+      <div class="ver-entry"><span class="v a">4.4</span><span class="y">2013</span><span class="f"><strong>512MB optimization</strong> · immersive · OK Google</span></div>
+      <div class="ver-entry"><span class="v a">4.1</span><span class="y">2012</span><span class="f"><strong>Project Butter</strong> · Google Now · expandable notifs</span></div>
+      <div class="ver-entry"><span class="v a">4.0</span><span class="y">2011</span><span class="f"><strong>Holo unified</strong> · face unlock · panorama</span></div>
+      <div class="ver-era">Foundation</div>
+      <div class="ver-entry"><span class="v a">3.x</span><span class="y">2011</span><span class="f"><strong>Tablet-only</strong> · holographic UI</span></div>
+      <div class="ver-entry"><span class="v a">2.x</span><span class="y">'09–10</span><span class="f"><strong>JIT (2–5× faster)</strong> · live wallpapers · Flash</span></div>
+      <div class="ver-entry"><span class="v a">1.x</span><span class="y">'08–09</span><span class="f"><strong>First release</strong> · Market · widgets · virtual keyboard</span></div>
+    </div>
+
+```
+<div class="ver-panel">
+  <h4><span class="badge i">iOS</span> 2007–2025</h4>
+  <div class="ver-era">AI & Liquid Glass</div>
+  <div class="ver-entry"><span class="v i">26</span><span class="y">2025</span><span class="f"><strong>Liquid Glass</strong> · 18→26 jump · expanded Apple Intelligence</span></div>
+  <div class="ver-entry"><span class="v i">18</span><span class="y">2024</span><span class="f"><strong>Apple Intelligence</strong> · RCS · custom icons</span></div>
+  <div class="ver-entry"><span class="v i">17</span><span class="y">2023</span><span class="f"><strong>StandBy mode</strong> · contact posters · NameDrop</span></div>
+  <div class="ver-entry"><span class="v i">16</span><span class="y">2022</span><span class="f"><strong>Custom lock screen</strong> · Live Activities · Safety Check</span></div>
+  <div class="ver-entry"><span class="v i">15</span><span class="y">2021</span><span class="f"><strong>Focus modes</strong> · SharePlay · Live Text</span></div>
+  <div class="ver-era">Customization</div>
+  <div class="ver-entry"><span class="v i">14</span><span class="y">2020</span><span class="f"><strong>Home widgets</strong> · App Library · App Clips</span></div>
+  <div class="ver-entry"><span class="v i">13</span><span class="y">2019</span><span class="f"><strong>Dark mode</strong> · Sign in w/ Apple · iPadOS splits</span></div>
+  <div class="ver-entry"><span class="v i">12</span><span class="y">2018</span><span class="f"><strong>Huge perf boost</strong> · Screen Time · Siri Shortcuts</span></div>
+  <div class="ver-entry"><span class="v i">11</span><span class="y">2017</span><span class="f"><strong>ARKit · Core ML</strong> · Files app</span></div>
+  <div class="ver-entry"><span class="v i">10</span><span class="y">2016</span><span class="f"><strong>Siri 3rd-party</strong> · iMessage apps</span></div>
+  <div class="ver-era">Intelligence</div>
+  <div class="ver-entry"><span class="v i">9</span><span class="y">2015</span><span class="f"><strong>Proactive Siri</strong> · Low Power · iPad split-screen</span></div>
+  <div class="ver-entry"><span class="v i">8</span><span class="y">2014</span><span class="f"><strong>3rd-party keyboards</strong> · HealthKit · HomeKit</span></div>
+  <div class="ver-entry"><span class="v i">7</span><span class="y">2013</span><span class="f"><strong>Flat design</strong> · Control Center · AirDrop</span></div>
+  <div class="ver-era">Skeuomorphic</div>
+  <div class="ver-entry"><span class="v i">6</span><span class="y">2012</span><span class="f"><strong>Apple Maps</strong> · Passbook · DND</span></div>
+  <div class="ver-entry"><span class="v i">5</span><span class="y">2011</span><span class="f"><strong>Siri · iCloud · iMessage</strong> · PC-free</span></div>
+  <div class="ver-entry"><span class="v i">4</span><span class="y">2010</span><span class="f"><strong>Multitasking · FaceTime</strong> · folders</span></div>
+  <div class="ver-entry"><span class="v i">3</span><span class="y">2009</span><span class="f"><strong>Copy & paste</strong> · Spotlight · MMS</span></div>
+  <div class="ver-entry"><span class="v i">2</span><span class="y">2008</span><span class="f"><strong>App Store</strong> · 3rd-party SDK · push notifs</span></div>
+  <div class="ver-entry"><span class="v i">1</span><span class="y">2007</span><span class="f"><strong>The iPhone</strong> · multitouch · visual voicemail</span></div>
+</div>
+```
+
+  </div>
+</div>
+</section>
+
+<hr>
+
+<!-- ═════════════════════ WHERE WE ARE ═════════════════════ -->
+
+<section id="now">
+<div class="wrap">
+  <div class="overline">February 2026</div>
+  <h2>Where We Are Now</h2>
+
+  <p>Android holds <strong>71.8%</strong> of global market share. iOS holds <strong>27.6%</strong>. These numbers have been stable within ±2% for five years. Neither side is gaining ground. The coexistence is permanent.</p>
+
+  <p>But market share understates iOS's economic weight. Apple captures roughly 65% of global smartphone <em>revenue</em> and an even higher share of app spending. Android dominates in reach; iOS dominates in monetization. Both are deeply entrenched in their respective markets.</p>
+
+  <p><strong>Android 16</strong> (Baklava, June 2025) is the current release, with Material 3 Expressive, desktop mode for tablets, and a Linux terminal. Google now ships two major versions per year. Android 17 (Cinnamon Bun) arrives around June 2026.</p>
+
+  <p><strong>iOS 26.3</strong> (February 2026) is the current release, with Liquid Glass, expanded Apple Intelligence, and call screening. iOS 27 ships September 2026.</p>
+
+  <p>Both platforms are feature-complete for the vast majority of users. The meaningful differences are ecosystem lock-in — iMessage, AirDrop, Apple Watch vs. Google services, cross-device flexibility, price diversity — not which OS can do more. The features have converged. The philosophies haven't, and probably never will.</p>
+
+  <div class="callout green">
+    <div class="callout-title">What this means for devices like the Odin 3</div>
+    <p>The Odin 3 ships with <strong>Android 15</strong> — one version behind Android 16. AYN provides OTA firmware updates for bug fixes, fan profiles, and performance tuning, but will almost certainly never bump the major Android version. This is normal for every Android device outside of Samsung and Pixel flagships.</p>
+    <p>The practical impact is minimal. Android 15 is new enough that app compatibility won't be an issue for years. Thanks to Project Mainline, the Odin 3's core security modules update through the Play Store regardless of version. The only things you'll miss are UI features (Material 3 Expressive, desktop mode) and new developer APIs — neither of which matters for gaming.</p>
+    <p>Android 15 on a handheld in 2026 is roughly equivalent to buying an iPhone that stays on iOS 25: you're one version back, fully functional, fully secure, and missing nothing that affects your actual use case.</p>
+  </div>
+
+  <blockquote>
+    <p>The question is no longer "Android or iOS?" but "Which ecosystem fits your life?" — and for most people, that was decided years ago.</p>
+  </blockquote>
+</div>
+</section>
+
+<div class="footer">
+  Data compiled February 20, 2026<br>
+  Market share: Statcounter. Adoption data approximate. Update timelines from manufacturer announcements.<br>
+  Sources: Wikipedia · Android Authority · MacRumors · Apple · Statcounter · Google · Samsung<br>
+  Zero external dependencies
+</div>
+
+</body>
+</html>

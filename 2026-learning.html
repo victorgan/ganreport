@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Learning Protocol — How to Jam Any Topic Into Your Head</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --surface: #111114;
+    --surface-2: #1a1a1f;
+    --border: #2a2a32;
+    --text: #e8e6e3;
+    --text-muted: #8a8a95;
+    --accent: #ff6b35;
+    --accent-glow: rgba(255, 107, 53, 0.15);
+    --green: #4ecdc4;
+    --yellow: #ffe66d;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+    --blue: #60a5fa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 100px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid rgba(255, 107, 53, 0.3);
+    border-radius: 100px;
+  }
+
+  h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(42px, 6vw, 68px);
+    line-height: 1.1;
+    font-weight: 400;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* The Spectrum */
+  .spectrum-section {
+    padding: 60px 0;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .section-text {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 40px;
+    max-width: 600px;
+  }
+
+  .spectrum-bar {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .spectrum-bar .stage {
+    flex: 1;
+    padding: 20px 16px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+  }
+
+  .spectrum-bar .stage:hover {
+    transform: scaleY(1.05);
+  }
+
+  .spectrum-bar .stage:nth-child(1) { background: rgba(255, 107, 53, 0.1); color: var(--accent); }
+  .spectrum-bar .stage:nth-child(2) { background: rgba(255, 230, 109, 0.1); color: var(--yellow); }
+  .spectrum-bar .stage:nth-child(3) { background: rgba(78, 205, 196, 0.1); color: var(--green); }
+  .spectrum-bar .stage:nth-child(4) { background: rgba(167, 139, 250, 0.1); color: var(--purple); }
+  .spectrum-bar .stage:nth-child(5) { background: rgba(244, 114, 182, 0.1); color: var(--pink); }
+
+  .stage-number {
+    font-size: 22px;
+    font-family: 'Instrument Serif', serif;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .spectrum-arrow {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .spectrum-desc {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .spectrum-desc span {
+    padding: 8px 4px;
+  }
+
+  /* Failure insight */
+  .insight-box {
+    margin: 40px 0;
+    padding: 28px 32px;
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--text-muted);
+  }
+
+  .insight-box strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* Steps */
+  .steps-section {
+    padding: 40px 0 80px;
+  }
+
+  .step {
+    position: relative;
+    margin-bottom: 48px;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.3s;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .step:hover {
+    border-color: rgba(255, 107, 53, 0.3);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step:nth-child(1) { animation-delay: 0.1s; }
+  .step:nth-child(2) { animation-delay: 0.2s; }
+  .step:nth-child(3) { animation-delay: 0.3s; }
+  .step:nth-child(4) { animation-delay: 0.4s; }
+  .step:nth-child(5) { animation-delay: 0.5s; }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .step-num {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .step:nth-child(1) .step-num { background: rgba(255, 107, 53, 0.15); color: var(--accent); }
+  .step:nth-child(2) .step-num { background: rgba(255, 230, 109, 0.15); color: var(--yellow); }
+  .step:nth-child(3) .step-num { background: rgba(78, 205, 196, 0.15); color: var(--green); }
+  .step:nth-child(4) .step-num { background: rgba(167, 139, 250, 0.15); color: var(--purple); }
+  .step:nth-child(5) .step-num { background: rgba(244, 114, 182, 0.15); color: var(--pink); }
+
+  .step-title-group {
+    flex: 1;
+  }
+
+  .step h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+
+  .step-stage-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .step:nth-child(1) .step-stage-label { color: var(--accent); }
+  .step:nth-child(2) .step-stage-label { color: var(--yellow); }
+  .step:nth-child(3) .step-stage-label { color: var(--green); }
+  .step:nth-child(4) .step-stage-label { color: var(--purple); }
+  .step:nth-child(5) .step-stage-label { color: var(--pink); }
+
+  .step-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    padding: 4px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .step-body {
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .step-body strong {
+    color: var(--text);
+  }
+
+  .prompt-block {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 16px;
+    position: relative;
+  }
+
+  .prompt-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .prompt-label::before {
+    content: '>';
+    color: var(--accent);
+  }
+
+  .prompt-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .output-note {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .output-note::before {
+    content: '→';
+    color: var(--green);
+  }
+
+  /* Connector line between steps */
+  .step-connector {
+    width: 1px;
+    height: 24px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+    margin: 0 auto -24px;
+    position: relative;
+    z-index: -1;
+  }
+
+  /* Timing summary */
+  .timing-box {
+    margin: 48px 0;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .timing-box h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+
+  .timing-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px 20px;
+    font-size: 14px;
+    align-items: center;
+  }
+
+  .timing-grid .day {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+
+  .timing-grid .task {
+    color: var(--text-muted);
+  }
+
+  .timing-grid .time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+
+  .timing-divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  /* Principles */
+  .principles {
+    padding: 40px 0 100px;
+    border-top: 1px solid var(--border);
+  }
+
+  .principles h2 {
+    margin-bottom: 32px;
+  }
+
+  .principle {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border-radius: 8px;
+    align-items: flex-start;
+  }
+
+  .principle-icon {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-2);
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .principle-text {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  .principle-text strong {
+    color: var(--text);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <section class="hero">
+    <div class="hero-label">Meta-Learning Protocol</div>
+    <h1>How to Jam Anything<br>Into Your <em>Head</em></h1>
+    <p class="hero-sub">A 5-step protocol for using Claude to go from "never heard of it" to "I can teach this" on any topic. Each step targets a specific stage of how knowledge actually sticks.</p>
+  </section>
+
+  <section class="spectrum-section">
+    <div class="section-label">The Model</div>
+    <h2>Knowledge is a spectrum, not a switch</h2>
+    <p class="section-text">You don't "learn" something — you move it through stages. Most people loop in Stage 1 forever and mistake familiarity for understanding. Each step in the protocol pushes knowledge one stage deeper.</p>
+
+    <div class="spectrum-bar">
+      <div class="stage"><span class="stage-number">1</span>Exposure</div>
+      <div class="stage"><span class="stage-number">2</span>Structure</div>
+      <div class="stage"><span class="stage-number">3</span>Retrieval</div>
+      <div class="stage"><span class="stage-number">4</span>Application</div>
+      <div class="stage"><span class="stage-number">5</span>Transfer</div>
+    </div>
+    <div class="spectrum-arrow">← "I've seen this" ——————————— "I own this" →</div>
+    <div class="spectrum-desc">
+      <span>Reading, watching, browsing</span>
+      <span>Organizing into a mental model</span>
+      <span>Pulling it from memory unaided</span>
+      <span>Using it to build or solve</span>
+      <span>Teaching, analogizing, combining</span>
+    </div>
+
+    <div class="insight-box">
+      <strong>The trap:</strong> Your brain can't tell the difference between "I recognize this" and "I know this." Recognition feels like knowledge but decays in days. That's why you can re-read something and feel like you already know it — while being unable to explain it without looking. Every step below forces a different type of <strong>production</strong>, which is the only reliable signal that encoding actually happened.
+    </div>
+  </section>
+
+  <section class="steps-section">
+    <div class="section-label">The Protocol</div>
+    <h2>Five steps. One topic. Repeat for everything.</h2>
+    <p class="section-text">Do these in order. Each step depends on the previous one. The whole cycle takes about 90 minutes spread across 2–3 days — the spacing is a feature, not a bug.</p>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title-group">
+          <h3>The Intuition Page</h3>
+          <div class="step-stage-label">Exposure → Structure</div>
+        </div>
+        <div class="step-time">~20 min</div>
+      </div>
+      <div class="step-body">
+        This is what you're already doing. Ask Claude to create a single-page HTML site that gives you the <strong>spatial, visual overview</strong> of a topic. The key is that it's not just text — it's organized with hierarchy, groupings, and visual relationships that mirror how the concepts actually relate.
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt to Claude</div>
+        <div class="prompt-text">"Create a single-page HTML site that builds my intuition for [TOPIC]. Organize it visually so I can see how the key concepts relate to each other. Use hierarchy, grouping, and color to show relationships. Include: the core mental model, the 5–8 most important concepts, how they connect, and one concrete example of each. Make it something I can glance at and immediately orient myself."</div>
+        <div class="output-note">Output: an .html file you save and can revisit</div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-title-group">
+          <h3>The Flashcard Extraction</h3>
+          <div class="step-stage-label">Structure → Retrieval</div>
+        </div>
+        <div class="step-time">~10 min</div>
+      </div>
+      <div class="step-body">
+        Immediately after Step 1 — while the structure is fresh — ask Claude to generate Anki-style flashcards from the same content. The critical thing is <strong>card quality</strong>. You don't want "What is X? → Definition." You want cards that test relationships, causation, and edge cases. These cards are what prevent the structure from decaying over the next week.
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt to Claude</div>
+        <div class="prompt-text">"Based on the intuition page you just made, generate 15–20 Anki flashcards. Rules: (1) No cards that test pure definitions — only test relationships, causation, or 'why' questions. (2) Use these formats: 'Why does X happen instead of Y?', 'If you changed Z, what breaks?', 'What's the relationship between A and B?', cloze deletions on causal chains. (3) Order them from foundational to advanced. Output as a two-column table I can paste into Anki."</div>
+        <div class="output-note">Output: a table or CSV you import into Anki</div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div class="step-title-group">
+          <h3>The Interrogation</h3>
+          <div class="step-stage-label">Retrieval → Deep Retrieval</div>
+        </div>
+        <div class="step-time">~20 min · next day</div>
+      </div>
+      <div class="step-body">
+        Wait at least a few hours (ideally sleep on it). Then, <strong>without looking at your HTML page</strong>, explain the topic back to Claude and tell it to interrogate you. This is the Feynman technique on steroids — Claude will find the exact gaps in your understanding. The discomfort you feel when you can't answer is the learning happening. Lean into it.
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt to Claude</div>
+        <div class="prompt-text">"I'm going to explain [TOPIC] to you from memory. Your job: interrupt me when I'm wrong, vague, or hand-waving. Ask follow-up questions that expose gaps. Don't be nice about it — I want to find where my understanding is shallow. After I'm done, give me a scorecard: what I nailed, what I got wrong, and what I skipped entirely. Here goes: [YOUR EXPLANATION]"</div>
+        <div class="output-note">Output: a gap analysis of your actual understanding</div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div class="step-title-group">
+          <h3>The Micro-Challenge</h3>
+          <div class="step-stage-label">Retrieval → Application</div>
+        </div>
+        <div class="step-time">~30 min</div>
+      </div>
+      <div class="step-body">
+        Now <strong>use</strong> the knowledge. Ask Claude to give you a small, concrete challenge that requires applying what you've learned — not reciting it. For technical topics this might be building something. For conceptual topics it might be analyzing a scenario, making a prediction, or solving a case study. The key: Claude gives you the problem, you attempt it <strong>before</strong> asking for help.
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt to Claude</div>
+        <div class="prompt-text">"Give me a concrete mini-challenge that requires me to actually apply my knowledge of [TOPIC]. It should take 15–30 minutes, require me to make decisions based on the concepts (not just recall them), and have a clear 'done' state. Don't give me hints up front — I'll attempt it first and come back to you if I get stuck."</div>
+        <div class="output-note">Output: a solved challenge that proves you can use the knowledge</div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <div class="step-title-group">
+          <h3>The Synthesis Note</h3>
+          <div class="step-stage-label">Application → Transfer</div>
+        </div>
+        <div class="step-time">~15 min</div>
+      </div>
+      <div class="step-body">
+        Write a short note (in Obsidian, naturally) that explains the topic <strong>in your own words</strong>, connects it to things you already know, and identifies what surprised you or what you'd tell a friend. Then have Claude critique it. This forces transfer — you're not just retrieving the original structure, you're <strong>rebuilding it in your own mental vocabulary</strong> and linking it to your existing knowledge graph.
+      </div>
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt to Claude</div>
+        <div class="prompt-text">"Here's my synthesis note on [TOPIC]. Critique it: Is anything wrong? Is anything important missing? Where am I oversimplifying? Also — suggest 2–3 connections to other fields or concepts that would deepen my understanding. [YOUR NOTE]"</div>
+        <div class="output-note">Output: a refined Obsidian note that becomes a permanent knowledge node</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timing -->
+  <div class="timing-box">
+    <h3>Suggested schedule for one topic</h3>
+    <div class="timing-grid">
+      <span class="day">Day 1</span>
+      <span class="task">Steps 1 & 2 — Intuition page + flashcard extraction</span>
+      <span class="time">30 min</span>
+      <div class="timing-divider"></div>
+      <span class="day">Day 1</span>
+      <span class="task">First Anki review session</span>
+      <span class="time">5 min</span>
+      <div class="timing-divider"></div>
+      <span class="day">Day 2</span>
+      <span class="task">Step 3 — The interrogation (from memory)</span>
+      <span class="time">20 min</span>
+      <div class="timing-divider"></div>
+      <span class="day">Day 2–3</span>
+      <span class="task">Step 4 — Micro-challenge</span>
+      <span class="time">30 min</span>
+      <div class="timing-divider"></div>
+      <span class="day">Day 3</span>
+      <span class="task">Step 5 — Synthesis note + critique</span>
+      <span class="time">15 min</span>
+      <div class="timing-divider"></div>
+      <span class="day">Ongoing</span>
+      <span class="task">Anki reviews (spaced repetition handles the rest)</span>
+      <span class="time">5 min/day</span>
+    </div>
+  </div>
+
+  <!-- Principles -->
+  <section class="principles">
+    <div class="section-label">Why This Works</div>
+    <h2>The underlying principles</h2>
+
+    <div class="principle">
+      <div class="principle-icon">⚡</div>
+      <div class="principle-text">
+        <strong>Production over consumption</strong>
+        Every step after the first requires you to produce something — an explanation, a solution, a note. Your brain encodes what it produces, not what it receives. Reading is necessary but never sufficient.
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">🔄</div>
+      <div class="principle-text">
+        <strong>Desirable difficulty</strong>
+        The protocol deliberately creates friction. Explaining without notes is hard. That difficulty is the signal that real encoding is happening. If it feels easy, you're probably in the recognition trap.
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">📐</div>
+      <div class="principle-text">
+        <strong>Spaced retrieval</strong>
+        Steps are spread across days on purpose. Forgetting a little, then retrieving, strengthens the memory trace far more than cramming everything into one session. Anki automates this long-term.
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">🧩</div>
+      <div class="principle-text">
+        <strong>Multiple encoding modes</strong>
+        Visual (HTML page) → verbal (interrogation) → procedural (challenge) → written (synthesis note). Each mode creates a different neural pathway to the same knowledge, making it more robust and accessible.
+      </div>
+    </div>
+
+    <div class="principle">
+      <div class="principle-icon">🔗</div>
+      <div class="principle-text">
+        <strong>Connection to existing knowledge</strong>
+        The synthesis note forces you to link new knowledge to what you already know. Isolated facts are fragile; connected facts are durable. Your Obsidian graph is the external mirror of this internal linking.
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    THE LEARNING PROTOCOL — BUILT WITH CLAUDE — REPEAT FOR EVERY TOPIC
+  </div>
+
+</div>
+
+</body>
+</html>

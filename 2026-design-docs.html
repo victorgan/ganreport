@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" style="background:#181410;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Anatomy of a Design Doc</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{background:#181410;min-height:100%}
+body{
+  background:#181410;color:#cdc4b7;
+  font-family:'Libre Baskerville',Georgia,serif;
+  font-size:16.5px;line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+::selection{background:rgba(214,166,92,0.3)}
+
+/* tokens */
+:root{
+  --bg:#181410;--card:#1f1b16;--card2:#252019;
+  --border:#332d24;--border-l:#2a2520;
+  --t1:#ede6da;--t2:#cdc4b7;--t3:#9e9487;--t4:#6e6559;
+  --amber:#d6a65c;--amber-bg:rgba(214,166,92,0.09);
+  --green:#6db88a;--green-bg:rgba(109,184,138,0.09);
+  --rose:#c76b6b;--rose-bg:rgba(199,107,107,0.07);
+  --blue:#6b9cc7;--blue-bg:rgba(107,156,199,0.07);
+  --purple:#a68ad4;
+  --head:'Manrope',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Menlo',monospace;
+}
+
+/* nav */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(24,20,16,0.88);backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border-l);
+}
+.nav-in{
+  max-width:780px;margin:0 auto;
+  display:flex;align-items:center;
+  overflow-x:auto;scrollbar-width:none;padding:0 1.5rem;
+}
+.nav-in::-webkit-scrollbar{display:none}
+.nav-b{
+  font-family:var(--head);font-weight:800;font-size:.78rem;
+  color:var(--t1);white-space:nowrap;
+  padding:.82rem 1.2rem .82rem 0;
+  border-right:1px solid var(--border-l);margin-right:.2rem;
+  letter-spacing:-.02em;
+}
+nav a{
+  font-family:var(--head);font-size:.68rem;font-weight:600;
+  color:var(--t4);text-decoration:none;
+  padding:.82rem .55rem;white-space:nowrap;transition:color .15s;
+}
+nav a:hover{color:var(--amber)}
+
+/* layout */
+.wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 5rem}
+
+/* hero */
+.hero{margin-bottom:3rem}
+.hero-date{
+  font-family:var(--head);font-size:.67rem;font-weight:700;
+  letter-spacing:.13em;text-transform:uppercase;
+  color:var(--t4);margin-bottom:1.2rem;
+}
+.hero h1{
+  font-family:var(--head);font-size:clamp(1.9rem,5.5vw,2.7rem);
+  font-weight:800;color:var(--t1);line-height:1.12;
+  margin-bottom:1.2rem;letter-spacing:-.03em;
+}
+.hero-sub{
+  font-size:1.05rem;color:var(--t3);
+  line-height:1.75;max-width:640px;font-style:italic;
+}
+
+hr{border:none;border-top:1px solid var(--border);margin:3rem 0}
+
+/* overline + titles */
+.ov{
+  font-family:var(--head);font-size:.64rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:.55rem;
+}
+h2{
+  font-family:var(--head);font-size:1.55rem;font-weight:700;
+  color:var(--t1);margin-bottom:.7rem;
+  letter-spacing:-.02em;line-height:1.2;
+}
+h3{
+  font-family:var(--head);font-size:1.15rem;font-weight:700;
+  color:var(--t1);margin:2rem 0 .55rem;line-height:1.25;
+}
+.intro{font-size:1rem;color:var(--t3);margin-bottom:1.8rem;line-height:1.78}
+p{margin-bottom:1rem}
+strong{color:var(--t1);font-weight:700}
+em{color:var(--t2)}
+
+/* stats */
+.stats{display:flex;gap:.8rem;margin-bottom:1.8rem;flex-wrap:wrap}
+.stat{
+  flex:1;min-width:140px;background:var(--card);
+  border:1px solid var(--border);border-radius:6px;
+  padding:1.15rem;text-align:center;
+}
+.stat-n{
+  font-family:var(--head);font-size:1.8rem;font-weight:800;
+  line-height:1.1;letter-spacing:-.02em;
+}
+.stat-n.am{color:var(--amber)}.stat-n.gr{color:var(--green)}
+.stat-n.ro{color:var(--rose)}.stat-n.bl{color:var(--blue)}
+.stat-l{font-family:var(--head);font-size:.68rem;color:var(--t4);margin-top:.3rem;line-height:1.35}
+
+/* callout */
+.co{
+  background:var(--card2);border-left:3px solid var(--amber);
+  border-radius:0 6px 6px 0;padding:1.15rem 1.35rem;margin:1.4rem 0 1.8rem;
+}
+.co-t{font-family:var(--head);font-size:.74rem;font-weight:700;color:var(--amber);margin-bottom:.35rem}
+.co p{font-size:.92rem;color:var(--t2);line-height:1.7;margin-bottom:0}
+.co p+p{margin-top:.5rem}
+
+/* table */
+.tb{width:100%;border-collapse:collapse;margin:1.4rem 0 1.8rem;font-size:.86rem}
+.tb th{
+  font-family:var(--head);font-size:.63rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--t4);text-align:left;
+  padding:.6rem .75rem;border-bottom:2px solid var(--border);background:var(--card);
+}
+.tb td{
+  padding:.6rem .75rem;border-bottom:1px solid var(--border-l);
+  vertical-align:top;font-size:.85rem;line-height:1.55;
+}
+.tb tr:hover td{background:rgba(214,166,92,0.02)}
+.tn{font-family:var(--head);font-weight:700;font-size:.82rem;white-space:nowrap;color:var(--t1)}
+.td{color:var(--t4);font-size:.82rem}
+
+/* badges */
+.bg{font-family:var(--head);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block}
+.bg-c{color:var(--rose);background:var(--rose-bg)}
+.bg-h{color:var(--amber);background:var(--amber-bg)}
+.bg-m{color:var(--blue);background:var(--blue-bg)}
+.bg-l{color:var(--green);background:var(--green-bg)}
+
+/* chart */
+.ch{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.3rem;margin:1.4rem 0 1.8rem}
+.ch-l{font-family:var(--head);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--t4);margin-bottom:1rem}
+.ch-w{position:relative;height:300px}
+
+/* flow */
+.flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:.7rem 0;margin:.8rem 0 1.8rem}
+.fs{
+  background:var(--card);border:1px solid var(--border);border-radius:6px;
+  padding:.85rem 1rem;min-width:124px;flex-shrink:0;text-align:center;
+}
+.fs-n{font-family:var(--head);font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:.2rem}
+.fs-t{font-family:var(--head);font-weight:700;font-size:.8rem;color:var(--t1);margin-bottom:.15rem}
+.fs-d{font-family:var(--head);font-size:.66rem;color:var(--t4);line-height:1.3}
+.fa{display:flex;align-items:center;padding:0 .3rem;color:var(--border);font-size:1rem;flex-shrink:0}
+
+/* compare */
+.cl{font-family:var(--head);font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t4);margin-bottom:.55rem}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1.8rem}
+@media(max-width:600px){.cg{grid-template-columns:1fr}}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.05rem;position:relative}
+.cc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:6px 6px 0 0}
+.cc.g::before{background:var(--green)}.cc.b::before{background:var(--rose)}
+.ct{
+  font-family:var(--head);font-size:.58rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:.45rem;display:inline-block;padding:2px 6px;border-radius:3px;
+}
+.cc.g .ct{color:var(--green);background:var(--green-bg)}
+.cc.b .ct{color:var(--rose);background:var(--rose-bg)}
+.cc pre{
+  font-family:var(--mono);font-size:.72rem;color:var(--t2);
+  line-height:1.6;white-space:pre-wrap;word-break:break-word;
+  background:var(--bg);border-radius:4px;padding:.75rem;
+}
+
+/* pattern grid */
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.65rem;margin:1.2rem 0 1.8rem}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.1rem}
+.pc h4{font-family:var(--head);font-size:.84rem;font-weight:700;margin-bottom:.3rem}
+.pc p{font-size:.85rem;color:var(--t3);line-height:1.65;margin-bottom:0}
+.pc.gn{border-left:3px solid var(--green)}.pc.gn h4{color:var(--green)}
+.pc.rd{border-left:3px solid var(--rose)}.pc.rd h4{color:var(--rose)}
+.pc.am{border-left:3px solid var(--amber)}.pc.am h4{color:var(--amber)}
+.pc.bl{border-left:3px solid var(--blue)}.pc.bl h4{color:var(--blue)}
+
+/* size badges */
+.sz{font-family:var(--head);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:3px}
+.sz-s{color:var(--green);background:var(--green-bg)}
+.sz-m{color:var(--amber);background:var(--amber-bg)}
+.sz-l{color:#c8913a;background:rgba(200,145,58,0.09)}
+.sz-xl{color:var(--rose);background:var(--rose-bg)}
+
+/* blockquote */
+blockquote{border-left:3px solid var(--border);margin:1.4rem 0;padding:.5rem 0 .5rem 1.3rem}
+blockquote p{font-style:italic;color:var(--t2);font-size:1rem;line-height:1.7;margin-bottom:0}
+blockquote cite{display:block;font-family:var(--head);font-style:normal;font-size:.74rem;color:var(--t4);margin-top:.35rem}
+
+/* checklist */
+.ck{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem;margin:1.3rem 0 1.8rem}
+.ck h4{font-family:var(--head);font-size:.8rem;font-weight:700;color:var(--amber);margin-bottom:.7rem}
+.ck li{font-size:.86rem;color:var(--t2);line-height:1.65;margin-bottom:.35rem;margin-left:1.2rem}
+
+/* numbered step */
+.step{display:flex;gap:1rem;margin-bottom:1.3rem;align-items:flex-start}
+.step-n{
+  font-family:var(--head);font-weight:800;font-size:1.1rem;
+  color:var(--amber);min-width:28px;padding-top:.15rem;
+}
+.step-c{flex:1}
+.step-c h4{font-family:var(--head);font-size:.92rem;font-weight:700;color:var(--t1);margin-bottom:.25rem}
+.step-c p{font-size:.88rem;margin-bottom:0}
+
+/* footer */
+footer{border-top:1px solid var(--border);padding-top:1.3rem;margin-top:2rem}
+footer p{font-family:var(--head);font-size:.68rem;color:var(--t4);text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-in">
+  <span class="nav-b">Design Docs</span>
+  <a href="#why">Why</a><a href="#ecosystem">Ecosystem</a><a href="#anatomy">Anatomy</a><a href="#process">Process</a><a href="#writing">Writing</a><a href="#patterns">Patterns</a><a href="#tradeoffs">Trade-offs</a><a href="#persuasion">Persuasion</a><a href="#seniority">L4→L5</a><a href="#antipatterns">Anti-Patterns</a><a href="#reviewing">Reviewing</a><a href="#ai">AI Tools</a><a href="#checklist">Checklist</a>
+</div></nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <div class="hero-date">February 2026</div>
+  <h1>The Anatomy of a Design Doc</h1>
+  <p class="hero-sub">A guide to writing engineering design documents that actually drive alignment — what goes in them, why each section exists, how reviewers read them, the social dynamics no one talks about, how to think through trade-offs that signal seniority, and the writing process that produces good docs. For engineers who want intuition, not templates.</p>
+</div>
+
+<hr>
+
+<!-- ===== WHY ===== -->
+<div id="why">
+<div class="ov">The 1,000-Foot View</div>
+<h2>Why Design Docs Exist</h2>
+<p class="intro">A design doc is three things at once: a <em>thinking tool</em> that forces clarity before code, a <em>persuasion artifact</em> that builds consensus, and a <em>decision record</em> that explains why things were built the way they were. The doc is the medium — the real output is aligned understanding across everyone who needs to say yes.</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n am">~65%</div><div class="stat-l">of issues caught in design<br>review vs. code review</div></div>
+  <div class="stat"><div class="stat-n gr">3–10×</div><div class="stat-l">cheaper to fix flaws<br>before implementation</div></div>
+  <div class="stat"><div class="stat-n bl">2–5 pg</div><div class="stat-l">ideal length for<br>most design docs</div></div>
+  <div class="stat"><div class="stat-n ro">~40%</div><div class="stat-l">of doc value lives in<br>alternatives considered</div></div>
+</div>
+
+<div class="co">
+  <div class="co-t">The core test</div>
+  <p>If someone joins your team 6 months after the project ships and reads only the design doc, they should understand: what problem was solved, what approaches were considered, why this one was chosen, and what trade-offs were accepted. If your doc doesn't pass this test, it's incomplete.</p>
+</div>
+
+<h3>Decision Density — The Editing Heuristic</h3>
+<p>Good docs maximize <strong>decisions per page</strong>. Bad docs maximize <em>words per page</em>. Every paragraph should do one of three things: frame a decision, present evidence for a decision, or record a decision. Paragraphs that do none of these should be cut. This single heuristic explains why "The Novel" anti-pattern fails — 20 pages with 4 decisions is worse than 4 pages with 4 decisions. When editing your doc, ask of every paragraph: "which decision does this serve?" If you can't answer, delete it.</p>
+
+<h3>When NOT to Write a Design Doc</h3>
+<p>You don't need one for: bug fixes with obvious solutions, refactors that don't change behavior or interfaces, features where the implementation path is well-established and uncontroversial, or changes with blast radius limited to a single file. The test: <strong>is there a genuine decision to be made, and does more than one person need to agree on it?</strong> If no, a CL description suffices. Over-documenting erodes trust — people stop reading carefully when most docs didn't need to exist.</p>
+</div>
+
+<hr>
+
+<!-- ===== ECOSYSTEM ===== -->
+<div id="ecosystem">
+<div class="ov">Context</div>
+<h2>Where Design Docs Fit</h2>
+<p class="intro">Design docs sit between "what should we build?" (product) and "how exactly does the code work?" (implementation). Confusing a design doc with adjacent artifacts is one of the most common mistakes.</p>
+
+<table class="tb">
+  <thead><tr><th>Artifact</th><th>Answers</th><th>Audience</th><th>Owned By</th></tr></thead>
+  <tbody>
+    <tr><td class="tn">PRD</td><td>What should we build and why does the user want it?</td><td>PM, eng, design, leadership</td><td class="td">Product Manager</td></tr>
+    <tr><td class="tn">Design Doc</td><td>How should we build it technically, and why this approach over alternatives?</td><td>Engineers, TL, cross-team</td><td class="td">Engineer (you)</td></tr>
+    <tr><td class="tn">RFC</td><td>Should we adopt this standard/practice/migration org-wide?</td><td>Broad engineering org</td><td class="td">Senior eng / TLM</td></tr>
+    <tr><td class="tn">Tech Spec</td><td>What are the exact APIs, schemas, and implementation details?</td><td>Implementing engineers</td><td class="td">Engineer</td></tr>
+    <tr><td class="tn">Postmortem</td><td>What went wrong, why, and how do we prevent it?</td><td>Team + incident reviewers</td><td class="td">On-call / incident lead</td></tr>
+  </tbody>
+</table>
+
+<div class="co">
+  <div class="co-t">The handoff principle</div>
+  <p>A design doc should be readable without the PRD but reference it. It should make the tech spec nearly mechanical to write — if someone reads your design doc and still can't predict what the tech spec will say, your doc is too abstract. The design doc is the "why this approach" layer between "what to build" and "the exact code."</p>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== ANATOMY ===== -->
+<div id="anatomy">
+<div class="ov">Deep Dive</div>
+<h2>Sections & Their Weight</h2>
+<p class="intro">Not all sections are created equal. Reviewers spend disproportionate time on certain sections — and the sections that take the most writing time are often not the ones that carry the most value.</p>
+
+<div class="ch">
+  <div class="ch-l">Where Reviewers Actually Spend Their Time</div>
+  <div class="ch-w"><canvas id="attentionChart"></canvas></div>
+</div>
+
+<table class="tb">
+  <thead><tr><th>Section</th><th>Purpose</th><th>Weight</th><th>Common Mistake</th></tr></thead>
+  <tbody>
+    <tr><td class="tn">Title & Metadata</td><td>Author, reviewers, status, date. Sets scope expectations.</td><td><span class="bg bg-l">Low</span></td><td class="td">Missing reviewer list — ambiguous ownership</td></tr>
+    <tr><td class="tn">Context & Problem</td><td>Why now? What's broken? Best docs quantify the pain with data.</td><td><span class="bg bg-h">High</span></td><td class="td">Jumping to solution without establishing pain</td></tr>
+    <tr><td class="tn">Goals & Non-Goals</td><td>Scope boundaries. Non-goals are as important as goals — they prevent scope creep.</td><td><span class="bg bg-c">Very High</span></td><td class="td">Vague goals that can't be evaluated post-launch</td></tr>
+    <tr><td class="tn">Proposed Solution</td><td>Architecture, data models, APIs, flows. Detail should match project complexity.</td><td><span class="bg bg-c">Critical</span></td><td class="td">Too much code-level detail, not enough architecture</td></tr>
+    <tr><td class="tn">Alternatives</td><td>What else could we do? Why not those? Proves you explored the solution space.</td><td><span class="bg bg-c">Critical</span></td><td class="td">Token alternatives never seriously evaluated</td></tr>
+    <tr><td class="tn">Trade-offs</td><td>What are we explicitly giving up? Latency vs cost, consistency vs availability.</td><td><span class="bg bg-c">Very High</span></td><td class="td">Pretending the chosen approach has no downsides</td></tr>
+    <tr><td class="tn">Risks & Mitigations</td><td>What could go wrong? Technical, org, and dependency risks with concrete responses.</td><td><span class="bg bg-h">High</span></td><td class="td">Listing risks without concrete mitigation plans</td></tr>
+    <tr><td class="tn">Milestones & Rollout</td><td>Phased delivery, feature flags, rollback criteria, success metrics, monitoring.</td><td><span class="bg bg-m">Medium</span></td><td class="td">Big-bang launches with no incremental validation</td></tr>
+    <tr><td class="tn">Open Questions</td><td>Things you don't know yet. Focuses reviewer energy on what actually matters.</td><td><span class="bg bg-h">High</span></td><td class="td">Omitting to appear more confident</td></tr>
+  </tbody>
+</table>
+
+<h3>The Power of Diagrams</h3>
+<p>Good design docs almost always include at least one architecture diagram. A diagram compresses 500 words of system description into something a reviewer absorbs in 10 seconds. The best diagrams show <strong>data flow</strong> (what moves where), <strong>system boundaries</strong> (what's yours vs. external), and <strong>failure domains</strong> (where blast radius stops). If your doc describes interactions between 3+ systems and has no diagram, you're making reviewers work unnecessarily hard. A rough Excalidraw sketch beats a missing diagram every time.</p>
+</div>
+
+<hr>
+
+<!-- ===== PROCESS ===== -->
+<div id="process">
+<div class="ov">Process</div>
+<h2>How a Design Doc Gets Written and Reviewed</h2>
+<p class="intro">The process matters as much as the structure. The most important work happens <em>before</em> the doc exists, and the first draft is always wrong in important ways.</p>
+
+<h3>Before You Write a Single Word</h3>
+<p>The best design docs are pre-aligned. Before opening a blank document, have conversations with the 2–3 people whose opinions matter most: your TL, the person who'll review it most critically, and anyone whose system you're depending on. These conversations answer: "Am I solving the right problem? Is my general direction sane? Are there constraints I don't know about?" A 20-minute hallway conversation can prevent a week of review back-and-forth. If your TL is surprised by anything in the design doc, you skipped this step.</p>
+
+<div class="flow">
+  <div class="fs"><div class="fs-n">Phase 0</div><div class="fs-t">Pre-Align</div><div class="fs-d">Hallway chats<br>~1–3 conversations</div></div>
+  <div class="fa">→</div>
+  <div class="fs"><div class="fs-n">Phase 1</div><div class="fs-t">Brain Dump</div><div class="fs-d">Messy first draft<br>~1–2 days</div></div>
+  <div class="fa">→</div>
+  <div class="fs"><div class="fs-n">Phase 2</div><div class="fs-t">Self-Review</div><div class="fs-d">Restructure & gaps<br>~0.5–1 day</div></div>
+  <div class="fa">→</div>
+  <div class="fs"><div class="fs-n">Phase 3</div><div class="fs-t">Trusted Review</div><div class="fs-d">1–2 senior peers<br>~1–2 days</div></div>
+  <div class="fa">→</div>
+  <div class="fs"><div class="fs-n">Phase 4</div><div class="fs-t">Broad Review</div><div class="fs-d">Full reviewer list<br>~3–5 days</div></div>
+  <div class="fa">→</div>
+  <div class="fs"><div class="fs-n">Phase 5</div><div class="fs-t">Approved</div><div class="fs-d">LGTM from leads</div></div>
+</div>
+
+<div class="co">
+  <div class="co-t">Phase 3: The most underrated step</div>
+  <p>Pick reviewers who are <em>skeptical of your approach</em>, not cheerleaders — you want someone who'll find holes before the broad audience does. The 1–2 days this adds saves a week of back-and-forth later. At Google, this is often your TL or a senior peer on an adjacent team who understands the problem space.</p>
+</div>
+
+<h3>Expect 2–3 Major Revisions</h3>
+<p>Your first draft will be wrong in important ways — maybe your cost model is off, maybe you missed a dependency, maybe the alternatives are thin. That's normal. The best engineers treat early feedback not as criticism but as the design process working. A doc that goes through zero revisions either wasn't reviewed carefully or wasn't ambitious enough.</p>
+</div>
+
+<hr>
+
+<!-- ===== WRITING ORDER ===== -->
+<div id="writing">
+<div class="ov">The First 30 Minutes</div>
+<h2>The Order That Produces Good Docs</h2>
+<p class="intro">Most engineers write design docs in section order: context, goals, solution, alternatives. This is wrong. The writing order matters as much as the final structure — it shapes how you think.</p>
+
+<div class="step"><div class="step-n">1</div><div class="step-c"><h4>Start with the Problem Statement</h4><p>Not the solution. Write 3–5 sentences about what's broken, who it affects, and why it matters now. If you can't do this without mentioning your proposed solution, you haven't separated the problem from the approach. Force yourself.</p></div></div>
+
+<div class="step"><div class="step-n">2</div><div class="step-c"><h4>Write Non-Goals Immediately</h4><p>The moment your scope starts expanding in your head — "oh, we could also handle X" — write it as a non-goal. Do this throughout the drafting process, not at the end. Non-goals are live scope defense, not a post-hoc section.</p></div></div>
+
+<div class="step"><div class="step-n">3</div><div class="step-c"><h4>Write Alternatives BEFORE the Solution</h4><p>This is counterintuitive but critical. If you write the solution first, your alternatives will be thin strawmen designed to lose. By exploring 3–4 approaches first, you often discover that your original idea isn't the best one — or you find a hybrid that's better than any single approach.</p></div></div>
+
+<div class="step"><div class="step-n">4</div><div class="step-c"><h4>Write Open Questions Throughout</h4><p>Keep a running list as you write. Every time you think "I'm not sure about this" or "I need to check with team X," capture it immediately. Don't wait until the end. The open questions section should be a curated version of notes you took during writing, not something you brainstorm after you're "done."</p></div></div>
+
+<div class="step"><div class="step-n">5</div><div class="step-c"><h4>Write the Solution Last</h4><p>By this point, if you've done the problem framing, alternatives, and trade-off analysis properly, the solution section should almost write itself. It becomes "obviously, we chose Option A because..." rather than a standalone monolith you have to defend from scratch.</p></div></div>
+
+<div class="ch">
+  <div class="ch-l">Time Allocation — Actual vs. Optimal</div>
+  <div class="ch-w"><canvas id="timeChart"></canvas></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== PATTERNS ===== -->
+<div id="patterns">
+<div class="ov">Patterns</div>
+<h2>Good vs. Bad — Side by Side</h2>
+<p class="intro">The difference between a mediocre and excellent design doc comes down to specificity. Every "weak" example below is something reviewers see weekly. Every "strong" example reflects real decision density.</p>
+
+<div class="cl">Problem Statement</div>
+<div class="cg">
+  <div class="cc b"><div class="ct">Weak</div><pre>Our current system is slow and we need 
+to make it faster. Users have been 
+complaining about performance.</pre></div>
+  <div class="cc g"><div class="ct">Strong</div><pre>P95 latency for /api/feed degraded from 
+120ms→840ms over 6 months as DAU grew 
+2M→8M. 23% of users on 3G connections 
+experience timeouts. This correlates with 
+a 12% drop in D7 retention for new users 
+in SEA markets (dashboard: go/feed-perf).</pre></div>
+</div>
+
+<div class="cl">Goals & Non-Goals</div>
+<div class="cg">
+  <div class="cc b"><div class="ct">Weak</div><pre>Goal: Improve performance
+Goal: Better user experience
+Goal: Scalable architecture</pre></div>
+  <div class="cc g"><div class="ct">Strong</div><pre>Goal: P95 latency ≤200ms at 10M DAU
+Goal: Zero-downtime migration path
+Goal: ≤$500/mo incremental infra cost
+Non-goal: Redesigning feed ranking 
+  (separate effort, go/feed-ranking-q3)
+Non-goal: Supporting offline mode
+Non-goal: Backward compat with v1 API 
+  (deprecated, 0.3% of traffic)</pre></div>
+</div>
+
+<div class="cl">Alternatives Considered — Full Anatomy</div>
+<div class="cg">
+  <div class="cc b"><div class="ct">Weak</div><pre>We could use Redis but decided not to.
+We considered a rewrite but it would 
+take too long.</pre></div>
+  <div class="cc g"><div class="ct">Strong</div><pre>Option A: Redis caching layer
++ Reduces DB reads by ~80%
++ Team has operational exp (3 yr)
++ Est: 6 weeks, 1 eng
+− Cache invalidation complexity
+− New operational dependency
+− $340/mo for r6g.xlarge cluster
+
+Option B: Read replicas + connection pool
++ Simpler architecture, no new deps
++ No cache coherence issues
+− Only ~3× throughput gain
+− Doesn't address serialization overhead
+− Est: 4 weeks, 1 eng
+
+Option C: Do nothing + vertical scaling
++ Zero eng time
+− Buys ~3 months at current growth
+− Monthly cost scales linearly with DAU
+
+Decision: Option A. 80% read reduction 
+gives headroom for 2 years at projected 
+growth. We accept invalidation complexity 
+and mitigate via event-driven updates 
+(§4.2). B was close but doesn't solve 
+the serialization bottleneck driving 60% 
+of current latency.</pre></div>
+</div>
+
+<div class="cl">Open Questions</div>
+<div class="cg">
+  <div class="cc b"><div class="ct">Weak</div><pre>[Section omitted, or:]
+No open questions at this time.</pre></div>
+  <div class="cc g"><div class="ct">Strong</div><pre>1. Cache warming on deploy: cold cache
+   → latency spike. Pre-warm from DB or 
+   accept first-request penalty? 
+   Need SRE input. (Owner: me, ETA 2/25)
+
+2. Team X owns feed ranking — do they 
+   need API contract changes? 
+   Meeting scheduled 2/25. (Owner: me)
+
+3. Cache hit rate instrumentation: per 
+   user segment or per endpoint? 
+   Affects dashboard design (§6.1).
+   (Owner: @jsmith, ETA 3/1)</pre></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== TRADEOFFS ===== -->
+<div id="tradeoffs">
+<div class="ov">The Hardest Section</div>
+<h2>How to Think About Trade-offs</h2>
+<p class="intro">Trade-offs are the hardest section to write well and the single biggest gap between L4 and L5 docs. Most engineers either skip this section or write vague platitudes. Here's how to think through them systematically.</p>
+
+<h3>The Three Types of Trade-offs</h3>
+
+<div class="pg">
+  <div class="pc am"><h4>Trade-offs you chose</h4><p>"We chose eventual consistency (30s TTL) over strong consistency because feed freshness ≤30s is acceptable per PM, and strong consistency would require a write-through cache that adds 4 weeks and doubles operational complexity." These are <em>decisions</em> — you had a choice and you made it with eyes open.</p></div>
+  <div class="pc bl"><h4>Trade-offs imposed by constraints</h4><p>"We're accepting single-region deployment because multi-region is blocked by the billing team's migration timeline (Q4). This means a regional outage takes down the feed for all users." These aren't your choices — they're reality. Naming them explicitly prevents reviewers from thinking you missed them.</p></div>
+  <div class="pc am"><h4>Trade-offs you're deferring</h4><p>"We're not addressing the write amplification problem in this design. At current write volume (~200 QPS), it's manageable. At 2000 QPS (projected Q2 next year), we'll need a follow-up design. Tracked at go/feed-writes-followup." Time-boxing technical debt is L5 thinking.</p></div>
+</div>
+
+<h3>How to Quantify When You Don't Have Exact Numbers</h3>
+<p>You almost never have exact numbers. That's fine. What matters is <strong>order of magnitude</strong>. "This will cost somewhere between $200–500/month" is infinitely more useful than "this will have some cost." "Latency will increase by roughly 50–100ms" is better than "latency will increase slightly." Use back-of-envelope math, state your assumptions, and let reviewers challenge the assumptions rather than the absence of numbers.</p>
+
+<div class="co">
+  <div class="co-t">The trade-off sentence template</div>
+  <p>Every trade-off can be expressed as: "We are choosing [thing A] over [thing B] because [quantified reason], and we accept [specific downside] which manifests as [concrete consequence]." If you can't fill in every blank, you haven't thought it through. If the "quantified reason" is just "it's better," you're not quantifying.</p>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== PERSUASION ===== -->
+<div id="persuasion">
+<div class="ov">The Unspoken Dimension</div>
+<h2>Design Docs as Persuasion</h2>
+<p class="intro">No one says this out loud, but design docs are political documents. They build consensus, manage expectations, and — at companies like Google — serve as primary artifacts for promotion. Understanding the persuasion layer makes your docs dramatically more effective.</p>
+
+<h3>The Narrative Arc</h3>
+<p>Every good design doc follows: <strong>tension</strong> (a problem worth solving) → <strong>exploration</strong> (the solution space and trade-offs) → <strong>resolution</strong> (why this approach) → <strong>confidence</strong> (rollout plan and failure modes). The reader should feel the problem's weight before encountering the solution, understand why alternatives were rejected before reading the chosen approach, and feel confident in the rollback plan before approving.</p>
+
+<h3>What a Reviewer Experiences</h3>
+
+<div class="pg">
+  <div class="pc gn">
+    <h4>Reading a good doc</h4>
+    <p>"I understand the problem. I can see they explored the space thoroughly. The chosen approach makes sense given the constraints. I have one concern about failure mode X — oh, they addressed it in §5.3. I trust this person's judgment. LGTM."</p>
+  </div>
+  <div class="pc rd">
+    <h4>Reading a bad doc</h4>
+    <p>"Why are we doing this? This feels like the solution was decided first and the doc was written to justify it. Where are the alternatives? This risk section is suspiciously empty. I have 14 comments and we're going to need at least two more rounds. This is going to take 3 weeks."</p>
+  </div>
+</div>
+
+<h3>Handling Disagreement</h3>
+<p>When a senior reviewer disagrees with your approach, the worst response is defensiveness. The best: "That's a good point — let me add Option D based on your suggestion and compare it explicitly." Treat feedback as <em>the design process working</em>, not as attack. If you genuinely believe your approach is right after incorporating feedback, state your reasoning clearly and escalate to the decision-maker (TL or area lead). Don't let unresolved disagreements rot — a doc in permanent "under review" is worse than no doc at all.</p>
+
+<h3>When Your TL Wants A and a Staff Engineer Wants B</h3>
+<p>This happens. The move is: document both approaches explicitly in the alternatives section with honest trade-offs. Make it clear you understand both perspectives. Then state your recommendation with reasoning. Let the decision-maker decide. Your job as the doc author is to <em>create clarity around the decision</em>, not to win. If your doc clearly frames the decision such that either the TL or the staff engineer can point to the analysis and say "this is why we chose X," you've succeeded regardless of which option wins.</p>
+
+<div class="co">
+  <div class="co-t">The promo committee dimension (Google-specific)</div>
+  <p>At Google, design docs are often the primary evidence of technical depth in promotion packets. Promo committees look for: problem framing that demonstrates understanding beyond your immediate scope, alternatives that show thorough exploration, trade-off analysis that proves mature judgment, and cross-team impact awareness. A well-written design doc for a medium-complexity project can be more compelling for L5 than a brilliant solution to a narrow problem that was never documented. Your doc is your artifact — treat it accordingly.</p>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== SENIORITY ===== -->
+<div id="seniority">
+<div class="ov">Seniority Signals</div>
+<h2>What Separates L4 from L5 Design Docs</h2>
+<p class="intro">The bar shifts from "can you design a working system" to "do you demonstrate depth of reasoning about trade-offs, failure modes, and organizational impact." The radar below shows where the gap is widest.</p>
+
+<div class="ch">
+  <div class="ch-l">L4 vs L5+ — Where the Gaps Are</div>
+  <div class="ch-w"><canvas id="radarChart"></canvas></div>
+</div>
+
+<p>The three biggest gaps: <strong>Alternatives Quality</strong> (L4 docs have 1 token alternative; L5 docs have 2–3 genuine ones with quantified comparison), <strong>Org Awareness</strong> (L4 treats the system in isolation; L5 acknowledges on-call burden, partner team capacity, migration cost), and <strong>Quantified Trade-offs</strong> (L4: "faster"; L5: "3× faster at $2.4K/month additional cost, payback in 6 weeks").</p>
+
+<div class="pg">
+  <div class="pc am"><h4>Quantified Trade-offs</h4><p>Instead of "Option A is faster," write "Option A reduces P95 by 3× but increases storage cost by $2.4K/month and adds 1 new operational dependency." Numbers — even order-of-magnitude estimates — enable actual decision-making.</p></div>
+  <div class="pc am"><h4>Failure Mode Thinking</h4><p>Walk the data path and ask at every hop: "What if this returns garbage? What if this times out? What if this returns 10× the expected data?" Enumerate the top 5 failure modes with blast radius and recovery strategy. This is the skill reviewers look for most.</p></div>
+  <div class="pc am"><h4>Organizational Awareness</h4><p>"This adds a new pager to team X's rotation." "This requires team Y to migrate by Q3 — confirmed capacity with their TL." Acknowledging the human and organizational cost of technical decisions is L5+ territory.</p></div>
+  <div class="pc am"><h4>Reversibility Assessment</h4><p>Distinguish one-way doors (schema changes, public API contracts, data deletion) from two-way doors (internal implementation, feature flags). Call out which decisions are irreversible. Spend review energy proportional to reversibility difficulty.</p></div>
+  <div class="pc am"><h4>Scope Discipline</h4><p>"We will address X in a follow-up, tracked at go/feed-v2-followups." Explicitly deferring work shows you can resist scope creep. Non-goals are your strongest tool — they prove you know the boundaries.</p></div>
+  <div class="pc am"><h4>Observability by Default</h4><p>What metrics ship with the feature? What SLOs are defined? What does the monitoring dashboard look like? Monitoring as afterthought is L4. Monitoring as integral design — with alert thresholds and escalation policy — is L5+.</p></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== ANTI-PATTERNS ===== -->
+<div id="antipatterns">
+<div class="ov">What Kills Docs</div>
+<h2>Anti-Patterns</h2>
+<p class="intro">Patterns that consistently produce docs that fail to drive alignment, waste reviewer time, or rot without resolution. If a reviewer has seen one, they've seen a hundred.</p>
+
+<div class="pg">
+  <div class="pc rd"><h4>The Implementation Spec</h4><p>Reads like a code walkthrough — method signatures, class hierarchies, pseudocode. Design docs describe <em>what</em> and <em>why</em>, not how at the code level. Implementation belongs in code comments and tech specs.</p></div>
+  <div class="pc rd"><h4>The Rubber Stamp</h4><p>Written after the code is already done to satisfy process. Reviewers always detect this — the alternatives feel performative and there are zero genuine open questions. Destroys trust in the review process for everyone.</p></div>
+  <div class="pc rd"><h4>The Novel</h4><p>20 pages when 5 would do. Low decision density. Buries critical choices in noise. Reviewers skim or abandon it entirely. If you can't express the core design in 2 pages, you don't understand it yet.</p></div>
+  <div class="pc rd"><h4>The Omitted Risk</h4><p>Conspicuously avoids the elephant in the room — the migration risk, the SPOF, the flaky upstream. Reviewers always find it. Better to name it yourself with a mitigation than to have it surfaced as a "blocking concern."</p></div>
+  <div class="pc rd"><h4>The One True Path</h4><p>Only the chosen solution, no alternatives. Signals tunnel vision or retroactive documentation. Even when the answer is "obvious," showing you considered alternatives builds reviewer confidence in your judgment.</p></div>
+  <div class="pc rd"><h4>The Scope Monster</h4><p>Starts as a caching layer, ends up redesigning the data model, the API, and the deployment pipeline. Scope creep in the doc predicts scope creep in implementation. Aggressive non-goals are your defense.</p></div>
+  <div class="pc rd"><h4>The Orphan Doc</h4><p>Approved but never updated as implementation diverges from design. Six months later the doc is actively misleading. Add a "Status" field at the top and update it when reality changes. A doc marked "SUPERSEDED — see go/feed-v3" is better than a stale doc treated as truth.</p></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== REVIEWING ===== -->
+<div id="reviewing">
+<div class="ov">For Reviewers</div>
+<h2>How to Review a Design Doc Well</h2>
+<p class="intro">Good reviewing is a skill distinct from good writing. The goal is to improve the design, not to demonstrate your own expertise or rewrite the doc in your image.</p>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n am">≤ 3</div><div class="stat-lbl">major concerns per<br>review round</div></div>
+  <div class="stat"><div class="stat-n gr">48h</div><div class="stat-l">target turnaround<br>time</div></div>
+  <div class="stat"><div class="stat-n bl">80/20</div><div class="stat-l">architecture decisions<br>not formatting</div></div>
+</div>
+
+<div class="co">
+  <div class="co-t">The 5 questions every reviewer should ask</div>
+  <p>1. Is the problem clearly defined and worth solving at this priority?</p>
+  <p>2. Would the alternatives actually change my mind about the approach?</p>
+  <p>3. What's the worst failure mode and is it explicitly addressed?</p>
+  <p>4. Can this be built and rolled out incrementally, with rollback criteria?</p>
+  <p>5. What's missing that the author might not realize is missing?</p>
+</div>
+
+<blockquote>
+  <p>"The best design review comment isn't 'I would do it differently.' It's 'What happens when X fails at 3am on a Saturday?'"</p>
+  <cite>— Common wisdom across Google, Stripe, and Meta eng orgs</cite>
+</blockquote>
+
+<h3>For Authors: How to Read Review Comments</h3>
+<p>Not all comments are equal. <strong>Blocking concerns</strong> (usually prefixed with "blocking:" or stated as "I can't approve until...") require resolution before approval. <strong>Strong suggestions</strong> ("I think you should consider...") are worth serious engagement. <strong>Nits</strong> ("optional: you could also...") can be addressed or acknowledged without changing anything. When you get 20 comments, triage first — answer the 3 blocking ones thoroughly, batch the nits, and don't let volume overwhelm your judgment about what matters.</p>
+</div>
+
+<hr>
+
+<!-- ===== AI ===== -->
+<div id="ai">
+<div class="ov">New Frontier</div>
+<h2>How AI Tools Change Design Doc Writing</h2>
+<p class="intro">As of early 2026, AI coding tools are reshaping how design docs get written. Used well, they accelerate the hardest parts. Used poorly, they produce confident-sounding docs that don't actually think.</p>
+
+<div class="pg">
+  <div class="pc gn"><h4>Use AI for: Alternatives generation</h4><p>"Here's my problem and constraints. Generate 5 genuinely different approaches with trade-offs for each." AI excels at expanding solution spaces — it suggests approaches you didn't consider, which you then evaluate with your domain knowledge.</p></div>
+  <div class="pc gn"><h4>Use AI for: Failure mode brainstorming</h4><p>"Here's my proposed architecture. What are the 10 most likely failure modes and their blast radius?" Systematic enumeration of edge cases is exactly the kind of thinking that separates L4 from L5 docs.</p></div>
+  <div class="pc gn"><h4>Use AI for: First-draft prose</h4><p>Dictate rough thinking, then use AI to structure it into sections. Especially effective for Context/Problem — talk through pain points, let AI organize them into a coherent narrative with data references.</p></div>
+  <div class="pc rd"><h4>Don't use AI for: The actual decision</h4><p>AI can enumerate options and trade-offs, but choosing requires judgment about your team's capacity, org politics, technical debt history, and risk tolerance. AI doesn't have your context.</p></div>
+  <div class="pc rd"><h4>Don't use AI for: Rubber-stamp docs</h4><p>"Write me a design doc for adding Redis" produces exactly the kind of retroactive, no-genuine-alternatives doc that kills reviewer trust. Use AI to think <em>harder</em>, not to avoid thinking.</p></div>
+  <div class="pc rd"><h4>Watch out for: Confident hallucination</h4><p>AI generates plausible-sounding latency estimates and cost projections. Always verify quantitative claims. A doc with fabricated numbers is worse than one with honest "TBD — need to benchmark" notes.</p></div>
+</div>
+</div>
+
+<hr>
+
+<!-- ===== SIZING ===== -->
+<div>
+<div class="ov">Calibration</div>
+<h2>Right-Sizing Your Doc</h2>
+<p class="intro">Calibrate to blast radius. If the change touches 1 team, 1–5 pages. If it touches 3+ teams, 5–10+. If it could page someone at 3am who isn't on your team, it definitely needs a doc.</p>
+
+<table class="tb">
+  <thead><tr><th>Scope</th><th>Example</th><th>Length</th><th>Reviewers</th><th>Timeline</th></tr></thead>
+  <tbody>
+    <tr><td><span class="sz sz-s">S</span></td><td>New API endpoint, schema migration</td><td class="td">0.5–1 pg</td><td class="td">1–2 peers</td><td class="td">1–2 days</td></tr>
+    <tr><td><span class="sz sz-m">M</span></td><td>New service, caching layer, auth overhaul</td><td class="td">2–5 pg</td><td class="td">3–5 incl. TL</td><td class="td">1–2 wk</td></tr>
+    <tr><td><span class="sz sz-l">L</span></td><td>Data pipeline redesign, multi-team feature</td><td class="td">5–10 pg</td><td class="td">5–10, x-team</td><td class="td">2–4 wk</td></tr>
+    <tr><td><span class="sz sz-xl">XL</span></td><td>Platform migration, infra overhaul, new storage system</td><td class="td">10–20+ pg</td><td class="td">10+, leadership</td><td class="td">4–8+ wk</td></tr>
+  </tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ===== CHECKLIST ===== -->
+<div id="checklist">
+<div class="ov">Before You Send</div>
+<h2>Pre-Review Checklist</h2>
+<p class="intro">Run through this before the doc goes to the broad reviewer list. Each item maps to a failure mode that wastes reviewer time or causes extra review cycles.</p>
+
+<div class="ck">
+  <h4>Structure & Completeness</h4>
+  <ul>
+    <li>Problem statement includes quantified evidence, not just assertion</li>
+    <li>Every goal is measurable — you could write a post-launch eval for each one</li>
+    <li>Non-goals are explicit and specific, not "everything we're not doing"</li>
+    <li>At least 2 genuine alternatives with quantified trade-offs for each</li>
+    <li>The decision rationale explicitly references alternatives' weaknesses</li>
+    <li>At least one architecture diagram for any multi-component design</li>
+  </ul>
+</div>
+
+<div class="ck">
+  <h4>Depth & Judgment</h4>
+  <ul>
+    <li>Trade-offs are quantified (cost, latency, eng-weeks), not just named</li>
+    <li>Risks include concrete mitigations, not "we'll monitor this"</li>
+    <li>Top 3–5 failure modes enumerated with blast radius and recovery</li>
+    <li>Rollout is phased with explicit rollback criteria at each stage</li>
+    <li>Open questions are genuine, specific, and have owners/ETAs</li>
+    <li>Cross-team impact named with specific teams and confirmed capacity</li>
+  </ul>
+</div>
+
+<div class="ck">
+  <h4>Readability & Persuasion</h4>
+  <ul>
+    <li>A new team member could follow the doc without verbal context</li>
+    <li>Reads as problem→exploration→resolution, not solution→justification</li>
+    <li>Decision density is high — no paragraph exists without a purpose</li>
+    <li>Length is appropriate for scope</li>
+    <li>Reviewer list includes at least one person who's skeptical of the approach</li>
+    <li>At least one trusted peer has read it and you've incorporated their feedback</li>
+  </ul>
+</div>
+</div>
+
+<footer>
+  <p>The Anatomy of a Design Doc — An intuition reference for software engineers · Patterns drawn from Google, Meta, Stripe, and industry practice · February 2026</p>
+</footer>
+
+</div>
+
+<script>
+const gc='rgba(255,255,255,0.04)',tc='#6e6559',tbg='#252019';
+const sf="'Manrope',sans-serif",mf="'JetBrains Mono',monospace";
+Chart.defaults.font.family=sf;Chart.defaults.font.size=11;Chart.defaults.color=tc;
+
+new Chart(document.getElementById('attentionChart'),{type:'bar',data:{
+  labels:['Alternatives Considered','Proposed Solution','Goals & Non-Goals','Trade-offs','Problem / Context','Risks & Mitigations','Open Questions','Milestones / Rollout','Title / Metadata'],
+  datasets:[{data:[22,20,14,12,10,8,6,5,3],
+    backgroundColor:['#c76b6b','#c76b6b','#d6a65c','#d6a65c','#d6a65c','#d6a65c','#6db88a','#6db88a','#6e6559'],
+    borderColor:'transparent',borderRadius:3,barThickness:20}]
+},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:tbg,titleFont:{family:mf,size:12},bodyFont:{family:mf,size:11},borderColor:'#332d24',borderWidth:1,padding:10,cornerRadius:4,callbacks:{label:c=>` ${c.raw}% of reviewer attention`}}},scales:{x:{grid:{color:gc},ticks:{color:tc,callback:v=>v+'%'},max:28},y:{grid:{display:false},ticks:{color:'#9e9487',font:{size:11,family:sf}}}}}});
+
+new Chart(document.getElementById('radarChart'),{type:'radar',data:{
+  labels:['Problem Framing','Solution Depth','Alternatives Quality','Quantified Trade-offs','Failure Modes','Org Awareness','Scope Discipline','Observability'],
+  datasets:[
+    {label:'Typical L4',data:[5,7,3,3,4,2,4,3],borderColor:'#d6a65c',backgroundColor:'rgba(214,166,92,0.08)',pointBackgroundColor:'#d6a65c',pointBorderColor:'#181410',pointBorderWidth:2,borderWidth:2},
+    {label:'Strong L5+',data:[8,8,9,8,8,7,8,7],borderColor:'#6db88a',backgroundColor:'rgba(109,184,138,0.06)',pointBackgroundColor:'#6db88a',pointBorderColor:'#181410',pointBorderWidth:2,borderWidth:2}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{color:'#9e9487',font:{size:11,family:sf},boxWidth:12,boxHeight:3,padding:16}},tooltip:{backgroundColor:tbg,borderColor:'#332d24',borderWidth:1,padding:10,cornerRadius:4}},scales:{r:{beginAtZero:true,max:10,ticks:{color:tc,backdropColor:'transparent',font:{size:9},stepSize:2},grid:{color:'rgba(255,255,255,0.05)'},angleLines:{color:'rgba(255,255,255,0.05)'},pointLabels:{color:'#9e9487',font:{size:10.5,family:sf}}}}}});
+
+new Chart(document.getElementById('timeChart'),{type:'bar',data:{
+  labels:['Problem\nFraming','Goals &\nNon-Goals','Proposed\nSolution','Alternatives','Trade-offs\n& Risks','Rollout\n& Metrics'],
+  datasets:[
+    {label:'What Most Engineers Do',data:[8,5,55,10,12,10],backgroundColor:'rgba(214,166,92,0.4)',borderColor:'#d6a65c',borderWidth:1,borderRadius:3,barPercentage:.7},
+    {label:'Optimal Allocation',data:[18,12,25,20,15,10],backgroundColor:'rgba(109,184,138,0.35)',borderColor:'#6db88a',borderWidth:1,borderRadius:3,barPercentage:.7}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',align:'start',labels:{color:'#9e9487',font:{size:11,family:sf},boxWidth:12,boxHeight:3,padding:16}},tooltip:{backgroundColor:tbg,borderColor:'#332d24',borderWidth:1,padding:10,cornerRadius:4,callbacks:{label:c=>` ${c.dataset.label}: ${c.raw}% of time`}}},scales:{x:{grid:{color:gc},ticks:{color:'#9e9487',font:{size:10},maxRotation:0}},y:{grid:{color:gc},ticks:{color:tc,callback:v=>v+'%'},max:60,title:{display:true,text:'% of Writing Time',color:'#6e6559',font:{size:11,family:sf}}}}}});
+</script>
+</body>
+</html>

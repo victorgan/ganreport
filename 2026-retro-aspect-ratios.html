@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retro Scaling Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0c0c0f;color:#e0e0e0;font-family:'JetBrains Mono',monospace;min-height:100vh;padding:2rem 2rem 4rem}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.25rem;letter-spacing:-.02em}
+  .subtitle{font-size:.68rem;color:#555;margin-bottom:1.8rem;letter-spacing:.06em;text-transform:uppercase}
+  .layout{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin-bottom:1.5rem}
+  .panel{background:#131318;border:1px solid #1e1e28;border-radius:12px;padding:1.5rem}
+  .panel h2{font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem}
+  .system-btns{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+  .sys-btn{font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;padding:4px 7px;border-radius:5px;border:1.5px solid #2a2a35;background:#16161c;color:#777;cursor:pointer;transition:all .15s;line-height:1.3}
+  .sys-btn:hover{border-color:#444;color:#ccc}
+  .sys-btn.act-s{border-color:#60a5fa;background:#60a5fa14;color:#60a5fa}
+  .sys-btn.act-g{border-color:#f59e0b;background:#f59e0b14;color:#f59e0b}
+  .sys-btn .h{display:block;font-size:.46rem;font-weight:400;color:#555;margin-top:1px}
+  .sys-btn.act-s .h{color:#60a5fa88}
+  .sys-btn.act-g .h{color:#f59e0b88}
+  .info-bar{font-size:.62rem;color:#888;margin-bottom:1rem;padding:.5rem .7rem;background:#16161c;border-radius:6px;border:1px solid #1e1e28;line-height:1.6}
+  .hb{color:#60a5fa;font-weight:600}.ha{color:#f59e0b;font-weight:600}
+
+/* 2x2 Grid */
+.grid-2x2{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto auto auto;gap:0;margin-bottom:.8rem}
+.grid-corner{background:#131318}
+.col-header{padding:.5rem .4rem;text-align:center;font-size:.6rem;font-weight:700;font-family:‘Space Grotesk’,sans-serif;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #1e1e28}
+.col-sub{display:block;font-size:.42rem;font-weight:400;letter-spacing:.03em;margin-top:2px;text-transform:none;opacity:.6}
+.col-h-nonint{color:#67e8f9}
+.col-h-int{color:#a78bfa}
+.row-header{padding:.6rem .5rem;font-size:.55rem;font-weight:700;font-family:‘Space Grotesk’,sans-serif;text-transform:uppercase;letter-spacing:.06em;writing-mode:vertical-lr;text-orientation:mixed;transform:rotate(180deg);text-align:center;border-right:1px solid #1e1e28;display:flex;align-items:center;justify-content:center}
+.row-h-fit{color:#34d399}
+.row-h-over{color:#f87171}
+.grid-cell{padding:1rem .8rem;border:1px solid #1a1a22;text-align:center;position:relative}
+.grid-cell:hover{background:#16161e}
+.mobile-cell-label{display:none;font-family:‘Space Grotesk’,sans-serif;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem;padding-bottom:.4rem;border-bottom:1px solid #1e1e28}
+
+@media(max-width:580px){
+.grid-2x2{display:flex;flex-direction:column;gap:0}
+.grid-corner,.col-header,.row-header{display:none}
+.grid-cell{border:none;border-bottom:1px solid #1e1e28;padding:1rem .4rem}
+.grid-cell:last-child{border-bottom:none}
+.mobile-cell-label{display:block}
+}
+
+.cell-screen{position:relative;background:#000;border-radius:5px;overflow:hidden;margin:0 auto .6rem;border:2px solid #60a5fa33}
+.cell-content{position:absolute;border-radius:2px;background:repeating-conic-gradient(#2a2a35 0% 25%,#222230 0% 50%) 50%/12px 12px;overflow:hidden}
+.cell-content::after{content:’’;position:absolute;inset:0}
+.cell-content.t-fit::after{background:linear-gradient(135deg,#34d39908,#34d39912)}
+.cell-content.t-over::after{background:linear-gradient(135deg,#f8717108,#f8717112)}
+.crop-z{position:absolute;background:repeating-linear-gradient(45deg,#f8717122,#f8717122 4px,transparent 4px,transparent 8px);pointer-events:none;z-index:3}
+
+.cell-stats{display:flex;flex-direction:column;gap:3px;align-items:center}
+.cell-stat{font-size:.56rem;color:#888;line-height:1.4}
+.cell-stat b{font-weight:700}
+.cell-stat .g{color:#34d399}.cell-stat .r{color:#f87171}.cell-stat .p{color:#a78bfa}.cell-stat .c{color:#67e8f9}.cell-stat .w{color:#fff}
+.cell-scale{font-size:.7rem;font-weight:700;color:#e0e0e0;margin-bottom:4px;font-family:‘Space Grotesk’,sans-serif}
+.cell-tag{font-size:.44rem;color:#444;text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+.cell-tag.overscan-ok{color:#34d39988}
+.cell-rec{display:inline-block;font-size:.42rem;font-weight:600;padding:2px 6px;border-radius:3px;margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase}
+.cell-rec.rec-purist{background:#a78bfa18;color:#a78bfa;border:1px solid #a78bfa33}
+.cell-rec.rec-casual{background:#67e8f918;color:#67e8f9;border:1px solid #67e8f933}
+
+/* Pixel grid inset */
+.pixel-inset{margin-top:6px}
+.pixel-inset canvas{border:1px solid #2a2a35;border-radius:2px}
+.pixel-inset-label{font-size:.42rem;color:#555;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+/* Utilization chart */
+.chart-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.38rem;cursor:pointer;padding:3px 5px;border-radius:6px;transition:background .12s}
+.chart-row:hover{background:#1a1a24}.chart-row.active{background:#1e1e2a}
+.chart-label{width:66px;font-size:.56rem;font-weight:600;text-align:right;flex-shrink:0;line-height:1.3}
+.chart-sub{display:block;font-size:.44rem;font-weight:400;color:#555}
+.chart-track{flex:1;height:18px;background:#1a1a22;border-radius:4px;overflow:hidden;position:relative}
+.chart-fill{height:100%;border-radius:4px;transition:width .4s;position:relative}
+.chart-pct{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:.48rem;font-weight:700;color:#fff;mix-blend-mode:difference}
+.chart-tag{width:34px;font-size:.48rem;font-weight:600;text-align:left;flex-shrink:0;color:#555}
+
+/* Screen ranker */
+.ranker-section{margin-top:1.5rem}
+.ranker-section .panel{width:100%}
+.ranker-toggles{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.ranker-btn{font-family:‘JetBrains Mono’,monospace;font-size:.56rem;font-weight:600;padding:4px 8px;border-radius:5px;border:1.5px solid #2a2a35;background:#16161c;color:#666;cursor:pointer;transition:all .15s}
+.ranker-btn:hover{border-color:#444;color:#ccc}
+.ranker-btn.on{border-color:#f59e0b;background:#f59e0b14;color:#f59e0b}
+.ranker-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem;padding:4px 6px;border-radius:6px}
+.ranker-row:first-child{background:#34d39908;border:1px solid #34d39925}
+.ranker-name{width:150px;font-size:.56rem;font-weight:600;color:#e0e0e0;flex-shrink:0}
+.ranker-name .rn-sub{display:block;font-size:.44rem;font-weight:400;color:#555}
+.ranker-track{flex:1;height:20px;background:#1a1a22;border-radius:4px;overflow:hidden;position:relative}
+.ranker-fill{height:100%;border-radius:4px;position:relative}
+.ranker-pct{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:.5rem;font-weight:700;color:#fff;mix-blend-mode:difference}
+
+.note{font-size:.5rem;color:#444;margin-top:.6rem;text-align:center;line-height:1.5}
+.par-toggle{display:flex;margin-bottom:1rem;background:#16161c;border-radius:8px;border:1px solid #1e1e28;overflow:hidden}
+.par-btn{font-family:‘JetBrains Mono’,monospace;font-size:.56rem;font-weight:600;padding:6px 12px;background:none;border:none;color:#555;cursor:pointer;flex:1;transition:all .15s;text-align:center;line-height:1.4}
+.par-btn:hover{color:#999}
+.par-btn.active{background:#f59e0b18;color:#f59e0b}
+.par-btn .par-sub{display:block;font-size:.42rem;font-weight:400;color:#555;margin-top:1px}
+.par-btn.active .par-sub{color:#f59e0b88}
+.par-note{font-size:.48rem;color:#555;margin-bottom:.8rem;padding:.4rem .6rem;background:#f59e0b08;border:1px solid #f59e0b1a;border-radius:6px;line-height:1.5;display:none}
+.par-note.show{display:block}
+.panel-main{flex:1.3;min-width:540px}
+.panel-side{flex:.7;min-width:260px}
+@media(max-width:960px){.layout{flex-direction:column}.panel-main,.panel-side{min-width:auto}body{padding:1rem 1rem 3rem}}
+</style>
+
+</head>
+<body>
+<h1>Retro Scaling Simulator</h1>
+<p style="font-size:.6rem;color:#666;margin-bottom:1.8rem;line-height:1.6;max-width:640px">Pick a screen and a game system to see how content fits across four scaling modes. Toggle CRT-accurate for consoles that used non-square pixels. Use the ranker at the bottom to find which screen fits your library best.</p>
+
+<div class="layout">
+  <div class="panel panel-main">
+    <h2>Screen Device</h2>
+    <div class="system-btns" id="screenBtns"></div>
+    <h2>Game System</h2>
+    <div class="system-btns" id="gameBtns"></div>
+    <div class="info-bar" id="selInfo"></div>
+    <div class="par-toggle">
+      <button class="par-btn active" data-par="pixel" onclick="setPar('pixel')">Pixel-perfect (1:1 PAR)<span class="par-sub">Square pixels · Core Provided in RetroArch</span></button>
+      <button class="par-btn" data-par="crt" onclick="setPar('crt')">CRT-accurate (original DAR)<span class="par-sub">Non-square pixels · As displayed on TV</span></button>
+    </div>
+    <div class="par-note" id="parNote">This system was displayed at <b>4:3</b> on CRT TVs via non-square pixels. The content rectangle is now wider than the raw pixel grid.</div>
+    <div class="grid-2x2" id="grid2x2"></div>
+    <p class="note">Each cell is a real emulator scaling mode. Smooth = scale to fill with bilinear filtering (may shimmer). Integer = pixel-perfect vertical scaling.<br>Toggle CRT-accurate above to see how NES/SNES/Genesis change when stretched to 4:3.</p>
+  </div>
+  <div class="panel panel-side">
+    <h2>Utilization by System</h2>
+    <p style="font-size:.55rem;color:#555;margin-bottom:.6rem" id="chartSubtitle"></p>
+    <div id="chartContainer"></div>
+    <p class="note">Click to select. Shows smooth fit utilization.</p>
+  </div>
+</div>
+
+<div class="ranker-section">
+  <div class="panel">
+    <h2>Screen Ranker — Which device fits your library best? <span id="rankerParLabel" style="font-size:.55rem;font-weight:400;color:#555"></span></h2>
+    <p style="font-size:.55rem;color:#666;margin-bottom:.8rem">Toggle the systems you care about, then see which screen device has the best average fit.</p>
+    <div class="ranker-toggles" id="rankerToggles"></div>
+    <div id="rankerResults"></div>
+  </div>
+</div>
+
+<script>
+const screens=[
+  // ── 16:9 ──
+  {name:'Odin 3 / Odin 2 / RP5 / Flip 2 / Pocket S / RG556 / Thor top',nW:1920,nH:1080,note:'16:9 1080p AMOLED/IPS',diag:6},
+  {name:'Retroid Pocket 4 Pro / RP3 / RP4 / Flip 1',nW:1334,nH:750,note:'4.7" 16:9 750p IPS',diag:4.7},
+  // ── 16:10 ──
+  {name:'AYANEO Pocket DS (top)',nW:1920,nH:1200,note:'7" 16:10 1200p OLED',diag:7},
+  {name:'Steam Deck LCD / OLED',nW:1280,nH:800,note:'7" 16:10 800p IPS/OLED',diag:7},
+  // ── ~31:27 ──
+  {name:'RP Classic / Mini v2 / DMG / Thor bot',nW:1240,nH:1080,note:'3.92" ~31:27 AMOLED',diag:3.92},
+  // ── 10:9 ──
+  {name:'Analogue Pocket',nW:1600,nH:1440,note:'3.5" 10:9 IPS',diag:3.5},
+  // ── 3:2 ──
+  {name:'AYANEO Pocket Micro',nW:960,nH:640,note:'3.5" 3:2 IPS',diag:3.5},
+  // ── 4:3 ──
+  {name:'Miyoo Mini+ / RG35XX+',nW:640,nH:480,note:'3.5" 4:3 IPS',diag:3.5},
+  // ── 1:1 ──
+  {name:'RG Cube / RGB30',nW:720,nH:720,note:'4" 1:1 IPS',diag:4},
+];
+
+const systems=[
+  {name:'GB / GBC',nW:160,nH:144,ratio:'10:9',rW:10,rH:9},
+  {name:'Game Gear',nW:160,nH:144,ratio:'10:9',rW:10,rH:9},
+  {name:'NES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7,darW:4,darH:3},
+  {name:'SNES',nW:256,nH:224,ratio:'8:7',rW:8,rH:7,darW:4,darH:3},
+  {name:'Genesis',nW:320,nH:224,ratio:'10:7',rW:10,rH:7,darW:4,darH:3},
+  {name:'PS1',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
+  {name:'N64',nW:320,nH:240,ratio:'4:3',rW:4,rH:3},
+  {name:'Dreamcast',nW:640,nH:480,ratio:'4:3',rW:4,rH:3},
+  {name:'DS (per)',nW:256,nH:192,ratio:'4:3',rW:4,rH:3},
+  {name:'GBA',nW:240,nH:160,ratio:'3:2',rW:3,rH:2},
+  {name:'3DS (top)',nW:400,nH:240,ratio:'5:3',rW:5,rH:3},
+  {name:'PS2',nW:640,nH:448,ratio:'10:7',rW:10,rH:7,darW:4,darH:3},
+  {name:'GC / Wii (4:3)',nW:640,nH:480,ratio:'4:3',rW:4,rH:3},
+  {name:'GC / Wii (16:9)',nW:854,nH:480,ratio:'16:9',rW:16,rH:9},
+  {name:'PSP',nW:480,nH:272,ratio:'30:17',rW:30,rH:17},
+  {name:'Vita',nW:960,nH:544,ratio:'30:17',rW:30,rH:17},
+  {name:'Switch',nW:1280,nH:720,ratio:'16:9',rW:16,rH:9},
+];
+
+let sIdx=0,gIdx=9;
+let parMode='pixel';
+let rankerSel=new Set([0,2,3,5,9,16]); // GB, NES, SNES, PS1, GBA, Switch
+
+function setPar(m){
+  parMode=m;
+  document.querySelectorAll('.par-btn').forEach(b=>b.classList.toggle('active',b.dataset.par===m));
+  update();
+}
+
+// Returns the display aspect ratio for a system based on PAR mode
+function displayAR(sys){
+  if(parMode==='crt'&&sys.darW) return sys.darW/sys.darH;
+  return sys.nW/sys.nH;
+}
+
+// Returns whether this system is affected by PAR mode
+function hasDar(sys){ return !!sys.darW; }
+
+// ── SCALING MATH ──
+// Non-integer fit: scale content (at display AR) to fit inside screen
+function nonIntFit(scr,sys){
+  const dar=displayAR(sys);
+  const scrAR=scr.nW/scr.nH;
+  // Content rectangle: height=scr.nH*scale, width=height*dar
+  // We scale so it fits: min(scrW/(h*dar), scrH/h) where h is normalized
+  const sy=1, sx=dar/scrAR; // normalized: if dar>scrAR, width is limiting
+  let cWfrac,cHfrac;
+  if(dar>scrAR){cWfrac=1;cHfrac=scrAR/dar} // letterbox
+  else if(dar<scrAR){cHfrac=1;cWfrac=dar/scrAR} // pillarbox
+  else{cWfrac=1;cHfrac=1}
+  const cW=scr.nW*cWfrac, cH=scr.nH*cHfrac;
+  const util=cWfrac*cHfrac;
+  const s=cH/sys.nH; // effective scale on native pixels (vertical)
+  return{s,cW,cH,util,vis:1,cropW:0,cropH:0,type:dar>scrAR?'letterbox':dar<scrAR?'pillarbox':'perfect'};
+}
+
+// Integer fit: scale native pixels by integer m, display at DAR
+function intFit(scr,sys){
+  const dar=displayAR(sys);
+  // Integer m applied to height: displayH = sys.nH * m
+  // displayW = displayH * dar
+  // Both must fit: sys.nH*m <= scr.nH AND sys.nH*m*dar <= scr.nW
+  const mH=Math.floor(scr.nH/sys.nH);
+  const mW=Math.floor(scr.nW/(sys.nH*dar));
+  const m=Math.min(mH,mW);
+  if(m<1) return null;
+  const cH=sys.nH*m, cW=cH*dar;
+  const util=(cW*cH)/(scr.nW*scr.nH);
+  return{m,cW,cH,util,vis:1,cropW:0,cropH:0};
+}
+
+// Non-integer overscale: scale content (at display AR) to fill screen entirely
+function nonIntOver(scr,sys){
+  const dar=displayAR(sys);
+  const scrAR=scr.nW/scr.nH;
+  let cWfrac,cHfrac;
+  if(dar>scrAR){cHfrac=1;cWfrac=dar/scrAR} // wider content: height fits, width overflows... wait
+  // Overscale: max scale so both axes covered
+  // if dar > scrAR: match height → width = scrH * dar > scrW → crops sides. No wait.
+  // scale to fill: max(scrW/contentW_at_unit, scrH/contentH_at_unit)
+  // at unit height=1, width=dar. Screen: width=scrAR, height=1.
+  // scaleH = scrH/1 = 1 (normalized), scaleW = scrW/dar = scrAR/dar
+  // fill scale = max(1, scrAR/dar) ... hmm let me just compute directly
+  const sH=scr.nH; // scale so height fills
+  const sW=scr.nW/dar; // scale so width fills (this gives the height when width fills)
+  const fillH=Math.max(sH, sW); // pick larger to ensure both covered
+  const cH=fillH, cW=fillH*dar;
+  const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
+  const vis=(scr.nW*scr.nH)/(cW*cH);
+  const s=cH/sys.nH;
+  return{s,cW,cH,util:1,vis,cropW,cropH};
+}
+
+// Integer overscale: smallest integer m where at least one axis overflows (= underscale + 1)
+function intOver(scr,sys){
+  const dar=displayAR(sys);
+  // First find underscale m (same logic as intFit)
+  const mH=Math.floor(scr.nH/sys.nH);
+  const mW=Math.floor(scr.nW/(sys.nH*dar));
+  const mFit=Math.min(mH,mW);
+  const m=mFit+1;
+  const cH=sys.nH*m, cW=cH*dar;
+  const cropW=Math.max(0,cW-scr.nW), cropH=Math.max(0,cH-scr.nH);
+  const visW=Math.min(cW,scr.nW), visH=Math.min(cH,scr.nH);
+  const util=(visW*visH)/(scr.nW*scr.nH);
+  const vis=(visW*visH)/(cW*cH);
+  return{m,cW,cH,util,vis,cropW,cropH};
+}
+
+// ── RENDER ──
+function renderBtns(){
+  const sb=document.getElementById('screenBtns'),gb=document.getElementById('gameBtns');
+  sb.innerHTML='';gb.innerHTML='';
+  screens.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='sys-btn'+(i===sIdx?' act-s':'');
+    b.innerHTML=`${s.name}<span class="h">${s.nW}×${s.nH} · ${s.note}</span>`;
+    b.onclick=()=>{sIdx=i;update()};
+    sb.appendChild(b);
+  });
+  systems.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='sys-btn'+(i===gIdx?' act-g':'');
+    const effRatio=parMode==='crt'&&s.darW?`${s.darW}:${s.darH}`:s.ratio;
+    const parHint=parMode==='crt'&&s.darW?' · CRT':'';
+    b.innerHTML=`${s.name}<span class="h">${s.nW}×${s.nH} (${effRatio})${parHint}</span>`;
+    b.onclick=()=>{gIdx=i;update()};
+    gb.appendChild(b);
+  });
+}
+
+function drawCell(scr,sys,result,isOver,isInt,cellW,recTag){
+  const ar=scr.nW/scr.nH;
+  const maxW=cellW,maxH=180;
+  let dW,dH;
+  if(maxW/ar<=maxH){dW=maxW;dH=maxW/ar}else{dH=maxH;dW=maxH*ar}
+
+  const scX=result.cW/scr.nW, scY=result.cH/scr.nH;
+
+  let cW_px,cH_px;
+  if(!isOver){
+    cW_px=dW*(result.cW/scr.nW);
+    cH_px=dH*(result.cH/scr.nH);
+  } else {
+    cW_px=dW*scX;
+    cH_px=dH*scY;
+  }
+  const cL=(dW-cW_px)/2, cT=(dH-cH_px)/2;
+
+  let crops='';
+  if(isOver){
+    if(cL<0){
+      crops+=`<div class="crop-z" style="left:0;top:0;width:${Math.abs(cL)}px;height:${dH}px"></div>`;
+      crops+=`<div class="crop-z" style="right:0;top:0;width:${Math.abs(cL)}px;height:${dH}px"></div>`;
+    }
+    if(cT<0){
+      crops+=`<div class="crop-z" style="top:0;left:0;height:${Math.abs(cT)}px;width:${dW}px"></div>`;
+      crops+=`<div class="crop-z" style="bottom:0;left:0;height:${Math.abs(cT)}px;width:${dW}px"></div>`;
+    }
+  }
+
+  const scaleLabel=isInt?`${result.m}×`:`${result.s?.toFixed(2)||'—'}×`;
+  const utilPct=(result.util*100).toFixed(1);
+  const visPct=(result.vis*100).toFixed(1);
+  const cropPx=Math.max(Math.ceil(result.cropW/2),Math.ceil(result.cropH/2));
+  const overscanOk=isOver&&cropPx>0&&cropPx<=Math.max(sys.nW,sys.nH)*0.06;
+  const parCaveat=isInt&&parMode==='crt'&&hasDar(sys)?`<div class="cell-tag" style="color:#f59e0b88">${result.m}× vertical · PAR-corrected horizontal</div>`:'';
+
+  // Physical content diagonal
+  const scrDiagPx=Math.sqrt(scr.nW*scr.nW+scr.nH*scr.nH);
+  const pxPitch=scr.diag/scrDiagPx;
+  const visW=isOver?Math.min(result.cW,scr.nW):result.cW;
+  const visH=isOver?Math.min(result.cH,scr.nH):result.cH;
+  const contentDiag=(Math.sqrt(visW*visW+visH*visH)*pxPitch).toFixed(1);
+  const contentDiagStr=` · <b class="w">${contentDiag}"</b> of ${scr.diag}"`;
+
+  // Round 5: bar thickness for fit cells
+  let barStat='';
+  if(!isOver){
+    const barH=Math.round((scr.nH-result.cH)/2);
+    const barW=Math.round((scr.nW-result.cW)/2);
+    if(barH>0&&barW>0) barStat=`<div class="cell-stat"><b class="r">${barW}px</b> side + <b class="r">${barH}px</b> top/bot bars</div>`;
+    else if(barH>0) barStat=`<div class="cell-stat"><b class="r">${barH}px</b> bar top &amp; bottom</div>`;
+    else if(barW>0) barStat=`<div class="cell-stat"><b class="r">${barW}px</b> bar left &amp; right</div>`;
+    else barStat=`<div class="cell-stat"><b class="g">no bars</b> — perfect fit</div>`;
+  }
+
+  // Round 3: recommended badge
+  const recHTML=recTag?`<div class="cell-rec ${recTag.cls}">${recTag.label}</div>`:'';
+
+  // Round 2: larger pixel grid insets
+  let pixelHTML='';
+  const pxS=5, gs=8;
+  if(isInt && result.m){
+    const cvSz=gs*pxS*2;
+    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvSz}" height="${cvSz}" data-int="1" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uniform grid</div></div>`;
+  } else if(!isInt && result.s){
+    const cvSz=gs*pxS*2;
+    pixelHTML=`<div class="pixel-inset"><canvas class="px-cv" width="${cvSz}" height="${cvSz}" data-int="0" data-s="${result.s}" data-p="${pxS}" data-g="${gs}"></canvas><div class="pixel-inset-label">uneven pixels</div></div>`;
+  }
+
+  return `
+    ${recHTML}
+    <div class="cell-screen" style="width:${dW}px;height:${dH}px">
+      <div class="cell-content ${isOver?'t-over':'t-fit'}" style="width:${cW_px}px;height:${cH_px}px;left:${cL}px;top:${cT}px"></div>
+      ${crops}
+    </div>
+    <div class="cell-scale">${scaleLabel}</div>
+    <div class="cell-stats">
+      <div class="cell-stat"><b class="${parseFloat(utilPct)>90?'g':parseFloat(utilPct)>75?'ha':'r'}">${utilPct}%</b> screen used${contentDiagStr}</div>
+      ${barStat}
+      ${isOver?`<div class="cell-stat"><b class="${parseFloat(visPct)>95?'g':parseFloat(visPct)>90?'ha':'r'}">${visPct}%</b> content visible</div>`:''}
+      ${cropPx>0?`<div class="cell-stat"><b class="r">${cropPx}px</b> cropped/side</div>`:''}
+      ${overscanOk?`<div class="cell-tag overscan-ok">within CRT overscan</div>`:''}
+      ${parCaveat}
+    </div>
+    ${pixelHTML}
+  `;
+}
+
+function update(){
+  renderBtns();
+  const scr=screens[sIdx],sys=systems[gIdx];
+  const dar=displayAR(sys);
+  const darLabel=hasDar(sys)&&parMode==='crt'?`→ displayed as ${sys.darW}:${sys.darH}`:'';
+  const activeRatio=parMode==='crt'&&sys.darW?`${sys.darW}:${sys.darH}`:sys.ratio;
+  document.getElementById('selInfo').innerHTML=
+    `<span class="hb">${scr.name}</span> ${scr.nW}×${scr.nH} → <span class="ha">${sys.name}</span> ${sys.nW}×${sys.nH} (${activeRatio}) ${darLabel?`<span style="color:#f59e0b88">${darLabel}</span>`:''}`;
+
+  // Show PAR note when relevant
+  const parNote=document.getElementById('parNote');
+  parNote.classList.toggle('show', parMode==='crt'&&hasDar(sys));
+
+  const nif=nonIntFit(scr,sys);
+  const inf=intFit(scr,sys);
+  const nio=nonIntOver(scr,sys);
+  const ino=intOver(scr,sys);
+
+  const g=document.getElementById('grid2x2');
+  const isMobile=window.innerWidth<=580;
+  const cellW=isMobile?Math.min(280,window.innerWidth-80):220;
+
+  g.innerHTML=`
+    <div class="grid-corner"></div>
+    <div class="col-header col-h-nonint">Smooth<span class="col-sub">Bilinear / non-integer</span></div>
+    <div class="col-header col-h-int">Integer<span class="col-sub">Pixel-perfect scaling</span></div>
+
+    <div class="row-header row-h-fit">Fit</div>
+    <div class="grid-cell" id="cell-nif"><div class="mobile-cell-label" style="color:#34d399">Smooth Fit <span style="color:#67e8f9">· Smooth</span></div></div>
+    <div class="grid-cell" id="cell-if"><div class="mobile-cell-label" style="color:#34d399">Integer Fit <span style="color:#a78bfa">· Pixel-perfect</span></div></div>
+
+    <div class="row-header row-h-over">Overscale</div>
+    <div class="grid-cell" id="cell-nio"><div class="mobile-cell-label" style="color:#f87171">Smooth Overscale <span style="color:#67e8f9">· Smooth</span></div></div>
+    <div class="grid-cell" id="cell-io"><div class="mobile-cell-label" style="color:#f87171">Integer Overscale <span style="color:#a78bfa">· Pixel-perfect</span></div></div>
+  `;
+
+  document.getElementById('cell-nif').insertAdjacentHTML('beforeend',drawCell(scr,sys,nif,false,false,cellW,{cls:'rec-casual',label:'default for most players'}));
+  document.getElementById('cell-if').insertAdjacentHTML('beforeend',inf?drawCell(scr,sys,inf,false,true,cellW,{cls:'rec-purist',label:'recommended for retro'}):'<div class="cell-stats"><div class="cell-stat">Native res exceeds screen</div></div>');
+  document.getElementById('cell-nio').insertAdjacentHTML('beforeend',drawCell(scr,sys,nio,true,false,cellW,null));
+  document.getElementById('cell-io').insertAdjacentHTML('beforeend',drawCell(scr,sys,ino,true,true,cellW,null));
+
+  // Draw pixel canvases
+  g.querySelectorAll('.px-cv').forEach(cv=>{
+    const ctx=cv.getContext('2d');
+    const isInt=cv.dataset.int==='1';
+    const p=parseInt(cv.dataset.p),gs=parseInt(cv.dataset.g);
+    const cols=['#2a4a5a','#3a6a7a'];
+
+    if(isInt){
+      const sz=p*2;
+      for(let y=0;y<gs;y++)for(let x=0;x<gs;x++){
+        ctx.fillStyle=cols[(x+y)%2];
+        ctx.fillRect(x*sz,y*sz,sz,sz);
+      }
+      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.5;
+      for(let i=0;i<=gs;i++){
+        ctx.beginPath();ctx.moveTo(i*sz,0);ctx.lineTo(i*sz,cv.height);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(0,i*sz);ctx.lineTo(cv.width,i*sz);ctx.stroke();
+      }
+    } else {
+      const s=parseFloat(cv.dataset.s);
+      const norm=s/Math.round(s);
+      for(let y=0;y<gs;y++)for(let x=0;x<gs;x++){
+        ctx.fillStyle=cols[(x+y)%2];
+        const fx=Math.round(x*norm*p*2),fy=Math.round(y*norm*p*2);
+        ctx.fillRect(fx,fy,Math.round((x+1)*norm*p*2)-fx,Math.round((y+1)*norm*p*2)-fy);
+      }
+      ctx.strokeStyle='#0c0c0f';ctx.lineWidth=.5;
+      for(let i=0;i<=gs;i++){
+        const f=Math.round(i*norm*p*2);
+        ctx.beginPath();ctx.moveTo(f,0);ctx.lineTo(f,cv.height);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(0,f);ctx.lineTo(cv.width,f);ctx.stroke();
+      }
+    }
+  });
+
+  renderChart(scr);
+  renderRanker();
+}
+
+// ── CHART ──
+function renderChart(scr){
+  const c=document.getElementById('chartContainer');
+  c.innerHTML='';
+  const parLabel=parMode==='crt'?' · CRT-accurate':'';
+  document.getElementById('chartSubtitle').textContent=`${scr.name} (${scr.nW}×${scr.nH})${parLabel}`;
+  const entries=systems.map((sys,i)=>{
+    const r=nonIntFit(scr,sys);
+    const effRatio=parMode==='crt'&&sys.darW?`${sys.darW}:${sys.darH}`:sys.ratio;
+    return{...sys,idx:i,util:r.util,effRatio};
+  }).sort((a,b)=>b.util-a.util);
+  entries.forEach(e=>{
+    const pct=e.util*100,act=e.idx===gIdx;
+    const color=pct>95?'#34d399':pct>85?'#a3e635':pct>75?'#facc15':pct>60?'#fb923c':'#f87171';
+    const row=document.createElement('div');
+    row.className='chart-row'+(act?' active':'');
+    row.onclick=()=>{gIdx=e.idx;update()};
+    row.innerHTML=`
+      <span class="chart-label" style="color:${act?'#f59e0b':'#999'}">${e.name}<span class="chart-sub">${e.nW}×${e.nH}</span></span>
+      <div class="chart-track"><div class="chart-fill" style="width:${pct}%;background:${color}${act?'':'99'}"><span class="chart-pct">${pct.toFixed(1)}%</span></div></div>
+      <span class="chart-tag">${e.effRatio}</span>`;
+    c.appendChild(row);
+  });
+}
+
+// ── SCREEN RANKER ──
+function renderRanker(){
+  const rpl=document.getElementById('rankerParLabel');
+  rpl.textContent=parMode==='crt'?'(CRT-accurate)':'(pixel-perfect)';
+  rpl.style.color=parMode==='crt'?'#f59e0b88':'#555';
+  const tog=document.getElementById('rankerToggles');
+  tog.innerHTML='';
+  systems.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='ranker-btn'+(rankerSel.has(i)?' on':'');
+    const effR=parMode==='crt'&&s.darW?`${s.darW}:${s.darH}`:s.ratio;
+    b.textContent=`${s.name} (${effR})`;
+    b.onclick=()=>{
+      if(rankerSel.has(i)) rankerSel.delete(i); else rankerSel.add(i);
+      renderRanker();
+    };
+    tog.appendChild(b);
+  });
+
+  const res=document.getElementById('rankerResults');
+  if(rankerSel.size===0){res.innerHTML='<p class="note">Select at least one system above.</p>';return}
+
+  const selectedSys=[...rankerSel].map(i=>systems[i]);
+
+  const ranked=screens.map(scr=>{
+    const utils=selectedSys.map(sys=>nonIntFit(scr,sys).util);
+    const avg=utils.reduce((a,b)=>a+b,0)/utils.length;
+    const min=Math.min(...utils);
+    const worst=selectedSys[utils.indexOf(min)];
+    return{scr,avg,min,worst};
+  }).sort((a,b)=>b.avg-a.avg);
+
+  const maxAvg=ranked[0].avg;
+
+  res.innerHTML=ranked.map((r,i)=>{
+    const pct=(r.avg*100).toFixed(1);
+    const barW=(r.avg/maxAvg)*100;
+    const color=r.avg>.9?'#34d399':r.avg>.8?'#a3e635':r.avg>.7?'#facc15':r.avg>.6?'#fb923c':'#f87171';
+    return`<div class="ranker-row">
+      <span class="ranker-name">${i===0?'🏆 ':''}${r.scr.name}<span class="rn-sub">${r.scr.nW}×${r.scr.nH}</span></span>
+      <div class="ranker-track"><div class="ranker-fill" style="width:${barW}%;background:${color}"><span class="ranker-pct">${pct}% avg</span></div></div>
+    </div>`;
+  }).join('');
+}
+
+update();
+let _rt;window.addEventListener('resize',()=>{clearTimeout(_rt);_rt=setTimeout(update,150)});
+</script>
+
+</body>
+</html>
