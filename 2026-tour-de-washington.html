@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Tour de Washington</title>
+<style>
+html, body {
+  background: #faf7ef;
+  color: #1a1a18;
+}
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  line-height: 1.55;
+  font-size: 17px;
+}
+h1 { font-size: 2.4rem; margin-bottom: 0.25rem; line-height: 1.1; }
+h1 + .sub { font-style: italic; color: #555; margin-bottom: 2rem; font-size: 1.05rem; }
+h2 { font-size: 1.7rem; margin: 3rem 0 1rem 0; border-bottom: 2px solid #1a1a18; padding-bottom: 0.3rem; }
+h3 { font-size: 1.2rem; margin: 1.5rem 0 0.4rem 0; }
+p { margin-bottom: 0.7rem; }
+a { color: #1a1a18; }
+.stage {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ccc;
+}
+.stage-lede { font-style: italic; color: #555; margin-bottom: 0.75rem; }
+.stats {
+  font-family: Menlo, Consolas, "Courier New", monospace;
+  background: #ede8dc;
+  padding: 0.55rem 0.75rem;
+  margin: 0.75rem 0;
+  font-size: 0.84rem;
+  border-left: 3px solid #1a1a18;
+  line-height: 1.5;
+}
+.map {
+  width: 100%;
+  height: 260px;
+  border: 1px solid #bbb;
+  margin: 0.75rem 0;
+  display: block;
+  background: #ebe5d7;
+}
+.weekend { color: #b02020; font-weight: bold; }
+.rest {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin: 2.5rem 0;
+  font-style: italic;
+  color: #666;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 1rem 0 1.5rem 0;
+  font-family: Menlo, Consolas, "Courier New", monospace;
+}
+th, td {
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #ccc;
+  vertical-align: top;
+}
+th {
+  background: #ede8dc;
+  font-weight: bold;
+  border-bottom: 2px solid #1a1a18;
+}
+.small { font-size: 0.85rem; color: #555; }
+.disclaimer { font-size: 0.85rem; color: #666; font-style: italic; margin: 0.5rem 0 1rem 0; }
+ul { margin-left: 1.5rem; margin-bottom: 1rem; }
+li { margin-bottom: 0.4rem; }
+.label { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>Tour de Washington</h1>
+<p class="sub">21 stages over 21 days. Two parallel tours — a TdF-matching full version and a weekday-doable SLU-local version. Every stage has both.</p>
+
+<h2>Overview</h2>
+<p><strong>Full version:</strong> ~2,600 km · ~28,500 m of climbing · 7 weekend-required stages · 4 overnight trips.</p>
+<p><strong>Weekday version:</strong> ~1,500 km · ~15,000 m · all stages from SLU or Fremont in 1.5–3 hours. Mountain days become local simulators.</p>
+<p><strong>Structure:</strong> Week 1 (Stages 1–7) Settling In · Rest Day · Week 2 (8–15) Mountains Awaken · Rest Day · Week 3 (16–21) Queen Week.</p>
+<p class="disclaimer">Maps are approximate bounded views of each stage area — they show geography, not a route line. Build accurate GPX in RideWithGPS before riding.</p>
+
+<h2>Stage Matrix</h2>
+<table>
+<thead>
+<tr><th>#</th><th>Stage</th><th>Type</th><th>TdF Parallel</th><th>km</th><th>m vert</th><th>Wknd</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Queen Anne Prologue</td><td>ITT</td><td>Düsseldorf '17</td><td>14</td><td>350</td><td></td></tr>
+<tr><td>2</td><td>Snohomish Valley</td><td>Sprint</td><td>Bayonne sprint</td><td>180</td><td>1,000</td><td></td></tr>
+<tr><td>3</td><td>Seattle 7 Hills+</td><td>Punchy</td><td>Mur de Bretagne</td><td>140</td><td>2,200</td><td></td></tr>
+<tr><td>4</td><td>Snoqualmie Farms</td><td>Flat+</td><td>Breakaway day</td><td>150</td><td>800</td><td></td></tr>
+<tr><td>5</td><td>Bainbridge Inner</td><td>Med mtn</td><td>Corsica rolling</td><td>100</td><td>1,200</td><td></td></tr>
+<tr><td>6</td><td>Issaquah Alps</td><td>Hilly</td><td>Flèche Wallonne</td><td>120</td><td>2,800</td><td></td></tr>
+<tr><td>7</td><td>Green River</td><td>Sprint</td><td>Transitional</td><td>130</td><td>400</td><td></td></tr>
+<tr><td>8</td><td>Snoqualmie Pass</td><td>High mtn</td><td>Alpe du Grand Serre</td><td>120</td><td>1,200</td><td class="weekend">▲</td></tr>
+<tr><td>9</td><td>Artist Point</td><td>Summit</td><td>Plateau de Beille</td><td>170</td><td>1,400</td><td class="weekend">▲</td></tr>
+<tr><td>10</td><td>Olympic Discovery</td><td>Flat</td><td>Bordeaux transition</td><td>110</td><td>400</td><td></td></tr>
+<tr><td>11</td><td>Chuckanut + Skagit</td><td>Hilly</td><td>Brittany coast</td><td>140</td><td>1,500</td><td></td></tr>
+<tr><td>12</td><td>Vashon + Maury</td><td>Med mtn</td><td>Corsica II</td><td>100</td><td>1,600</td><td></td></tr>
+<tr><td>13</td><td>Mercer ITT</td><td>ITT</td><td>Utrecht '15</td><td>40</td><td>250</td><td></td></tr>
+<tr><td>14</td><td>N Cascades Hwy</td><td>Queen</td><td>Col du Tourmalet</td><td>160</td><td>2,800</td><td class="weekend">▲</td></tr>
+<tr><td>15</td><td>Stevens Pass</td><td>High mtn</td><td>Col du Galibier</td><td>170</td><td>1,700</td><td class="weekend">▲</td></tr>
+<tr><td>16</td><td>Whidbey Island</td><td>Hilly</td><td>Brittany II</td><td>120</td><td>1,400</td><td></td></tr>
+<tr><td>17</td><td>Kitsap + Hood Canal</td><td>Med mtn</td><td>Jura quiet</td><td>120</td><td>1,600</td><td></td></tr>
+<tr><td>18</td><td>Hurricane Ridge</td><td>Summit</td><td>Mont Ventoux</td><td>100</td><td>1,700</td><td class="weekend">▲</td></tr>
+<tr><td>19</td><td>Centennial Full</td><td>Flat</td><td>Pre-queen flat</td><td>180</td><td>600</td><td></td></tr>
+<tr><td>20</td><td>Sunrise Rd ITT</td><td>Mtn ITT</td><td>La Planche ITT</td><td>50</td><td>1,100</td><td class="weekend">▲</td></tr>
+<tr><td>21</td><td>RAMROD</td><td>Queen finale</td><td>Queen + ceremonial</td><td>250</td><td>3,050</td><td class="weekend">▲</td></tr>
+</tbody>
+</table>
+
+<h2>Week 1 — Settling In</h2>
+<p class="small">Seattle metro. Ferry-accessible. SLU-start-doable. Build form without blowing up.</p>
+
+<div class="stage">
+<h3>1. Queen Anne Prologue — ITT</h3>
+<p class="stage-lede">Short, steep urban ITT. The Counterbalance shatters the field before breakfast.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.380,47.615,-122.320,47.645&amp;layer=mapnik" loading="lazy" title="Stage 1 map"></iframe>
+<div class="stats">
+Full · 14 km / 350 m &nbsp;·&nbsp; Weekday · 7 km / 175 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★☆☆☆
+</div>
+<p><span class="label">Full:</span> 2 laps. Counterbalance (Queen Anne Ave N, 0.8 km at 10–15%) → Highland Dr → Kerry Park → descend Taylor Ave → Mercer → repeat.</p>
+<p><span class="label">Weekday:</span> Same route, one lap. 25-minute all-out opener, pre-work.</p>
+<p class="small"><span class="label">TdF parallel:</span> Düsseldorf Prologue 2017 &nbsp;·&nbsp; <span class="label">Iconic:</span> Kerry Park skyline at the top of each lap</p>
+</div>
+
+<div class="stage">
+<h3>2. Snohomish Valley — Sprint</h3>
+<p class="stage-lede">Long, flat, fast. Wind-dependent — easterlies off the Cascades can turn benign into brutal.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.420,47.600,-122.060,48.280&amp;layer=mapnik" loading="lazy" title="Stage 2 map"></iframe>
+<div class="stats">
+Full · 180 km / 1,000 m &nbsp;·&nbsp; Weekday · 65 km / 300 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> SLU → Burke-Gilman Trail → Kenmore → Centennial Trail → Arlington → Stanwood → return via Snohomish Valley roads → Woodinville → BGT → SLU.</p>
+<p><span class="label">Weekday:</span> SLU → BGT → Sammamish River Trail → Marymoor → return.</p>
+<p class="small"><span class="label">TdF parallel:</span> Bayonne-style Week 1 bunch sprint &nbsp;·&nbsp; <span class="label">Iconic:</span> Stanwood flats with Mt Baker on the horizon</p>
+</div>
+
+<div class="stage">
+<h3>3. Seattle 7 Hills+ — Punchy</h3>
+<p class="stage-lede">Repeated short-steep climbs. Hills don't end — they change name.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.440,47.560,-122.180,47.720&amp;layer=mapnik" loading="lazy" title="Stage 3 map"></iframe>
+<div class="stats">
+Full · 140 km / 2,200 m &nbsp;·&nbsp; Weekday · 65 km / 1,200 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★★☆
+</div>
+<p><span class="label">Full:</span> Queen Anne (Counterbalance) → Magnolia Blvd → Phinney Ridge → Capitol Hill (E Olive Way) → First Hill (James St) → Beacon Hill (S Spokane) → West Seattle (Admiral + Avalon). Extensions: Mercer Island loop, Juanita Hill.</p>
+<p><span class="label">Weekday:</span> Core 7 Hills only, west-of-I-5. 2.5 hours evening.</p>
+<p class="small"><span class="label">TdF parallel:</span> Mur de Bretagne finish &nbsp;·&nbsp; <span class="label">Iconic:</span> Magnolia Blvd with Olympic Mountains across the Sound</p>
+</div>
+
+<div class="stage">
+<h3>4. Snoqualmie Valley Farms — Flat+</h3>
+<p class="stage-lede">Protected trails, farm roads, one climb out at the end to remind you this isn't Holland.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.360,47.510,-121.780,47.780&amp;layer=mapnik" loading="lazy" title="Stage 4 map"></iframe>
+<div class="stats">
+Full · 150 km / 800 m &nbsp;·&nbsp; Weekday · 70 km / 500 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road or gravel-light &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> SLU → BGT → SRT → Redmond → Snoqualmie Valley Trail → Duvall → Carnation → Snoqualmie → Fall City → climb out via Issaquah-Fall City Rd → I-90 trail → SLU.</p>
+<p><span class="label">Weekday:</span> Short version — SLU → BGT → SRT → Snoqualmie Valley Trail from Redmond → return.</p>
+<p class="small"><span class="label">TdF parallel:</span> Breakaway day (Saint-Amand) &nbsp;·&nbsp; <span class="label">Iconic:</span> Carnation farmland at golden hour</p>
+</div>
+
+<div class="stage">
+<h3>5. Bainbridge Inner Loop — Medium Mountain</h3>
+<p class="stage-lede">Rolling island with no flat. The legs never quite get to rest.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.590,47.580,-122.310,47.730&amp;layer=mapnik" loading="lazy" title="Stage 5 map"></iframe>
+<div class="stats">
+Full · 100 km / 1,200 m &nbsp;·&nbsp; Weekday · 80 km / 1,000 m<br>
+Start · SLU → Colman Dock ferry &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> SLU → Elliott Bay → Colman Dock → ferry → Winslow. Full Chilly Hilly-style loop: Battle Point → Fletcher Bay → Lynwood Center → Point Monroe → Rolling Bay → Kitsap Memorial → return.</p>
+<p><span class="label">Weekday:</span> Catch 5:30 or 6:10am ferry. Full loop. 9am return ferry for remote-work start.</p>
+<p class="small"><span class="label">TdF parallel:</span> Corsica 2013 rolling &nbsp;·&nbsp; <span class="label">Iconic:</span> Agate Pass Bridge at sunrise on the early ferry</p>
+</div>
+
+<div class="stage">
+<h3>6. Issaquah Alps — Hilly</h3>
+<p class="stage-lede">Four short-sharp summits in one day. The closest thing WA has to an Ardennes classic.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.370,47.460,-121.920,47.650&amp;layer=mapnik" loading="lazy" title="Stage 6 map"></iframe>
+<div class="stats">
+Full · 120 km / 2,800 m &nbsp;·&nbsp; Weekday · 65 km / 1,500 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★★☆
+</div>
+<p><span class="label">Full:</span> SLU → I-90 Trail → Issaquah → Zoo Hill (Tiger Mtn Rd east) → Tiger summit → Squak (Mountainside Dr) → Cougar (Lakemont Blvd) → Newcastle → Coal Creek → I-90 home.</p>
+<p><span class="label">Weekday:</span> I-90 trail → Cougar via Lakemont + Zoo Hill → back. 3 hours.</p>
+<p class="small"><span class="label">TdF parallel:</span> Flèche Wallonne / Liège-Bastogne-Liège &nbsp;·&nbsp; <span class="label">Iconic:</span> Tiger Mtn east summit looking south to Rainier</p>
+</div>
+
+<div class="stage">
+<h3>7. Green River + Interurban — Sprint</h3>
+<p class="stage-lede">Industrial flat. Different aesthetic from Snohomish — same sprint training.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.400,47.290,-122.190,47.650&amp;layer=mapnik" loading="lazy" title="Stage 7 map"></iframe>
+<div class="stats">
+Full · 130 km / 400 m &nbsp;·&nbsp; Weekday · 55 km / 200 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★☆☆☆
+</div>
+<p><span class="label">Full:</span> SLU → waterfront → West Seattle Bridge → Duwamish Trail → Green River Trail → Kent → Auburn → Interurban Trail → Tukwila → return via Beacon Hill or Rainier Valley.</p>
+<p><span class="label">Weekday:</span> Interurban Trail south from Beacon Hill to Kent and back.</p>
+<p class="small"><span class="label">TdF parallel:</span> Transitional sprint stage &nbsp;·&nbsp; <span class="label">Iconic:</span> Boeing plant with Rainier framed through power lines</p>
+</div>
+
+<div class="rest">
+<strong>Rest Day I</strong><br>
+Easy Lake Union spin. Brunch. Bike shop run — drivetrain clean, tire swap for mountain week. Verify pass conditions.
+</div>
+
+<h2>Week 2 — Mountains Awaken</h2>
+<p class="small">First Cascade assaults. Overnights start here. One flat ITT bisects the mountain block.</p>
+
+<div class="stage">
+<h3>8. Snoqualmie Pass — High Mountain <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">First real pass. Moderate grade, long approach, tests the legs before the bigger ones.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.080,47.370,-121.370,47.590&amp;layer=mapnik" loading="lazy" title="Stage 8 map"></iframe>
+<div class="stats">
+Full · 120 km / 1,200 m &nbsp;·&nbsp; Weekday sim · 50 km / 1,500 m<br>
+Start · Issaquah (30min drive) &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★★☆
+</div>
+<p><span class="label">Full:</span> Issaquah → Issaquah-Fall City Rd → Fall City → Snoqualmie → North Bend → Edgewick → I-90 shoulder (or Palouse to Cascades Trail) → Snoqualmie Pass summit (3,022 ft) → descend → loop back via Snoqualmie Valley.</p>
+<p><span class="label">Weekday simulator:</span> Zoo Hill × 4 repeats = ~1,500m vert. Captures sustained-climb workload in 3 hours from SLU.</p>
+<p class="small"><span class="label">TdF parallel:</span> Alpe du Grand Serre · mid-mountain introduction &nbsp;·&nbsp; <span class="label">Iconic:</span> Franklin Falls turnout on the descent</p>
+</div>
+
+<div class="stage">
+<h3>9. Mt Baker Hwy → Artist Point — Summit Finish <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">Iconic summit finish. Twenty-four miles of climb, steep third pitch, glaciers at the top.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.540,48.720,-121.620,48.960&amp;layer=mapnik" loading="lazy" title="Stage 9 map"></iframe>
+<div class="stats">
+Full · 170 km / 1,400 m (from Bellingham) &nbsp;·&nbsp; Weekday sim · 60 km / 1,100 m<br>
+Start · Bellingham (overnight) &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★★★
+</div>
+<p><span class="label">Full:</span> Bellingham → SR-542 → Deming → Kendall → Maple Falls → Glacier → climb to Artist Point (5,140 ft). From Glacier: ~40 km at 4–5% steady with a steep final 2 miles. Descend same.</p>
+<p><span class="label">Weekday simulator:</span> Cougar Mtn via Lakemont Blvd × 3. Sustained climb workload, ~1,100m vert.</p>
+<p class="small"><span class="label">TdF parallel:</span> Plateau de Beille · paved summit finish &nbsp;·&nbsp; <span class="label">Iconic:</span> Artist Point with Mt Shuksan reflected in snowmelt pools</p>
+</div>
+
+<div class="stage">
+<h3>10. Olympic Discovery Trail — Flat Transition</h3>
+<p class="stage-lede">Recovery-paced transition through the rain shadow. Easy day. You need it.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-123.480,47.770,-122.340,48.150&amp;layer=mapnik" loading="lazy" title="Stage 10 map"></iframe>
+<div class="stats">
+Full · 110 km / 400 m &nbsp;·&nbsp; Weekday · 80 km / 400 m<br>
+Start · Edmonds → Kingston ferry &nbsp;·&nbsp; Bike · Road or gravel-light &nbsp;·&nbsp; Difficulty · ★★☆☆☆
+</div>
+<p><span class="label">Full:</span> Edmonds → ferry → Kingston → shuttle or ride to Port Townsend → Olympic Discovery Trail east (Port Townsend → Discovery Bay → Sequim → Port Angeles).</p>
+<p><span class="label">Weekday:</span> Edmonds-Kingston ferry → Hansville loop or out-and-back.</p>
+<p class="small"><span class="label">TdF parallel:</span> Bordeaux transition recovery flat &nbsp;·&nbsp; <span class="label">Iconic:</span> Sequim lavender fields in full July bloom</p>
+</div>
+
+<div class="stage">
+<h3>11. Chuckanut + Skagit — Hilly</h3>
+<p class="stage-lede">Cliff-hugging coastal road. Tourists stop at every pullout — ride early or ride late.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.580,48.400,-122.300,48.780&amp;layer=mapnik" loading="lazy" title="Stage 11 map"></iframe>
+<div class="stats">
+Full · 140 km / 1,500 m &nbsp;·&nbsp; Weekday · 45 km / 1,000 m<br>
+Start · Bellingham (Amtrak or drive) &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> Bellingham → Chuckanut Drive south → Edison → Bow → Samish Island loop → return via Skagit Valley flats → Blanchard → Chuckanut north → Bellingham.</p>
+<p><span class="label">Weekday:</span> Juanita Hill × 6 or Cougar Mtn north face. Captures coastal-punchy character locally.</p>
+<p class="small"><span class="label">TdF parallel:</span> Brittany coastal stages (Lorient, Saint-Malo) &nbsp;·&nbsp; <span class="label">Iconic:</span> Chuckanut cliffs over Samish Bay at low tide</p>
+</div>
+
+<div class="stage">
+<h3>12. Vashon + Maury — Medium Mountain</h3>
+<p class="stage-lede">Relentlessly hilly island. Every turn is a kicker. Nothing long, nothing easy.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.560,47.290,-122.340,47.550&amp;layer=mapnik" loading="lazy" title="Stage 12 map"></iframe>
+<div class="stats">
+Full · 100 km / 1,600 m &nbsp;·&nbsp; Weekday · 55 km / 800 m<br>
+Start · Fauntleroy ferry &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★★☆
+</div>
+<p><span class="label">Full:</span> SLU → West Seattle → Fauntleroy → ferry → Vashon perimeter + Maury (Point Robinson) → Tahlequah → Point Defiance ferry → Tacoma → Sounder train home.</p>
+<p><span class="label">Weekday:</span> Early Fauntleroy ferry → Vashon north-end loop → return.</p>
+<p class="small"><span class="label">TdF parallel:</span> Corsica II · short relentless rolling &nbsp;·&nbsp; <span class="label">Iconic:</span> Point Robinson Lighthouse with Mt Rainier behind</p>
+</div>
+
+<div class="stage">
+<h3>13. Mercer Island ITT — Flat ITT</h3>
+<p class="stage-lede">The flat ITT. Pure power. East Mercer Way adds teeth.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.360,47.540,-122.180,47.640&amp;layer=mapnik" loading="lazy" title="Stage 13 map"></iframe>
+<div class="stats">
+Full · 40 km / 250 m &nbsp;·&nbsp; Weekday · same<br>
+Start · SLU &nbsp;·&nbsp; Bike · TT / Aero road &nbsp;·&nbsp; Difficulty · ★★☆☆☆
+</div>
+<p><span class="label">Full:</span> SLU → I-90 trail → Mercer Island → perimeter via East Mercer Way (quieter, hillier) + West Mercer Way → return via I-90 trail → SLU.</p>
+<p><span class="label">Weekday:</span> Same route. Pre-work or evening TT effort. Already commute-compatible.</p>
+<p class="small"><span class="label">TdF parallel:</span> Utrecht ITT 2015 · flat, rolling, clean &nbsp;·&nbsp; <span class="label">Iconic:</span> Lake Washington from the East Mercer Way bluffs</p>
+</div>
+
+<div class="stage">
+<h3>14. N Cascades Hwy — Queen Mountain <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">The queen stage. High, remote, scenic, unforgiving. The Col du Tourmalet of Washington.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-121.150,48.450,-120.150,48.740&amp;layer=mapnik" loading="lazy" title="Stage 14 map"></iframe>
+<div class="stats">
+Full · 160 km / 2,800 m &nbsp;·&nbsp; Weekday sim · 90 km / 2,000 m<br>
+Start · Winthrop / Mazama (overnight) &nbsp;·&nbsp; Bike · Road, climbing gearing &nbsp;·&nbsp; Difficulty · ★★★★★
+</div>
+<p><span class="label">Full:</span> Mazama → SR-20 west → Washington Pass (5,477 ft) → Rainy Pass (4,855 ft) → descend to Diablo Lake → climb back over both → return to Winthrop.</p>
+<p><span class="label">Weekday simulator:</span> Saturday ride of all four Issaquah Alps summits — 2,000m vert in one SLU-start day.</p>
+<p class="small"><span class="label">TdF parallel:</span> Col du Tourmalet day &nbsp;·&nbsp; <span class="label">Iconic:</span> Washington Pass overlook with Liberty Bell spires</p>
+</div>
+
+<div class="stage">
+<h3>15. Stevens Pass via US-2 — High Mountain <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">Long sustained climb up the Skykomish valley. Less brutal than Washington Pass; more grinding.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-121.850,47.700,-121.050,47.880&amp;layer=mapnik" loading="lazy" title="Stage 15 map"></iframe>
+<div class="stats">
+Full · 170 km / 1,700 m &nbsp;·&nbsp; Weekday sim · 70 km / 1,700 m<br>
+Start · Sultan (drive) &nbsp;·&nbsp; Bike · Road, climbing gearing &nbsp;·&nbsp; Difficulty · ★★★★☆
+</div>
+<p><span class="label">Full:</span> Sultan → Gold Bar → Index → Skykomish → Stevens Pass summit (4,061 ft) → out-and-back. Extended: descend to Leavenworth, loop back via Blewett Pass or Amtrak.</p>
+<p><span class="label">Weekday simulator:</span> Cougar Mtn north face × 4 repeats. 4 × 25 min of sustained climbing.</p>
+<p class="small"><span class="label">TdF parallel:</span> Col du Galibier · sustained climb &nbsp;·&nbsp; <span class="label">Iconic:</span> Stevens Pass summit with ski lifts skeletal in July</p>
+</div>
+
+<div class="rest">
+<strong>Rest Day II</strong><br>
+Recovery ride or full off-bike depending on fatigue. Travel day for Hurricane Ridge overnight. Chain inspection after two weeks.
+</div>
+
+<h2>Week 3 — Queen Week</h2>
+<p class="small">Final assaults, mountain ITT, RAMROD finale. The hardest week by any measure.</p>
+
+<div class="stage">
+<h3>16. Whidbey Island — Hilly</h3>
+<p class="stage-lede">Rolling coastal north of Seattle. Deception Pass is the iconic moment; the miles before earn it.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.730,47.920,-122.270,48.550&amp;layer=mapnik" loading="lazy" title="Stage 16 map"></iframe>
+<div class="stats">
+Full · 120 km / 1,400 m &nbsp;·&nbsp; Weekday · 70 km / 800 m<br>
+Start · Mukilteo ferry &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> Mukilteo → ferry → Clinton → Whidbey full length (Langley, Coupeville, Oak Harbor) → Deception Pass → Anacortes → return via Amtrak (Mt Vernon) or reverse ride.</p>
+<p><span class="label">Weekday:</span> Edmonds-Kingston ferry + Kitsap hill loop. 70 km / 800 m.</p>
+<p class="small"><span class="label">TdF parallel:</span> Brittany rolling coastal II &nbsp;·&nbsp; <span class="label">Iconic:</span> Deception Pass Bridge from the north approach</p>
+</div>
+
+<div class="stage">
+<h3>17. Kitsap + Hood Canal — Medium Mountain</h3>
+<p class="stage-lede">Quiet peninsula. Remote, rolling, the kind of day where breakaways go unnoticed.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.880,47.540,-122.310,47.890&amp;layer=mapnik" loading="lazy" title="Stage 17 map"></iframe>
+<div class="stats">
+Full · 120 km / 1,600 m &nbsp;·&nbsp; Weekday · 60 km / 700 m<br>
+Start · Bainbridge ferry &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> SLU → Colman → ferry → Winslow → north on SR-305 → Poulsbo → Hood Canal Bridge → south on SR-3 → Seabeck → Silverdale → Bremerton → ferry home.</p>
+<p><span class="label">Weekday:</span> Short Bainbridge loop. 60 km / 700 m.</p>
+<p class="small"><span class="label">TdF parallel:</span> Jura quiet stages &nbsp;·&nbsp; <span class="label">Iconic:</span> Seabeck Harbor with Olympics reflected on a still morning</p>
+</div>
+
+<div class="stage">
+<h3>18. Hurricane Ridge — Summit Finish <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">The Ventoux of the Olympics. Seventeen miles up, no breaks, exposed.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-123.540,47.940,-123.390,48.160&amp;layer=mapnik" loading="lazy" title="Stage 18 map"></iframe>
+<div class="stats">
+Full · 100 km / 1,700 m &nbsp;·&nbsp; Weekday sim · 50 km / 1,600 m<br>
+Start · Port Angeles (overnight) &nbsp;·&nbsp; Bike · Road, climbing gearing &nbsp;·&nbsp; Difficulty · ★★★★★
+</div>
+<p><span class="label">Full:</span> Port Angeles → Hurricane Ridge Rd → summit (5,242 ft) → descend. 27 km / 1,580m at sustained 5–7%. Extended: add Lake Crescent coastal loop.</p>
+<p><span class="label">Weekday simulator:</span> Zoo Hill × 4. Captures sustained climbing at sustained effort.</p>
+<p class="small"><span class="label">TdF parallel:</span> Mont Ventoux &nbsp;·&nbsp; <span class="label">Iconic:</span> Hurricane Ridge visitor center with Olympic interior glaciated peaks</p>
+</div>
+
+<div class="stage">
+<h3>19. Centennial Trail Full — Flat</h3>
+<p class="stage-lede">Pre-queen transition. Spin the legs. Don't tax them.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.390,47.600,-122.060,48.260&amp;layer=mapnik" loading="lazy" title="Stage 19 map"></iframe>
+<div class="stats">
+Full · 180 km / 600 m &nbsp;·&nbsp; Weekday · 90 km / 400 m<br>
+Start · SLU &nbsp;·&nbsp; Bike · Road &nbsp;·&nbsp; Difficulty · ★★★☆☆
+</div>
+<p><span class="label">Full:</span> SLU → BGT → Kenmore → Centennial Trail full length (Snohomish → Nakashima Heritage Barn, ~48 km one way) → return. Optional Skagit extension via Silvana.</p>
+<p><span class="label">Weekday:</span> SLU → BGT → Snohomish → short Centennial segment → return.</p>
+<p class="small"><span class="label">TdF parallel:</span> Pre-queen transition flat &nbsp;·&nbsp; <span class="label">Iconic:</span> Nakashima Heritage Barn on the Arlington extension</p>
+</div>
+
+<div class="stage">
+<h3>20. Sunrise Rd ITT — Mountain ITT <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">Uphill TT. Steady grade, sustained power. Pure suffering at altitude.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-121.680,46.880,-121.540,46.950&amp;layer=mapnik" loading="lazy" title="Stage 20 map"></iframe>
+<div class="stats">
+Full · 50 km / 1,100 m &nbsp;·&nbsp; Weekday sim · 30 km / 800 m<br>
+Start · SR-410 Sunrise Rd turnoff &nbsp;·&nbsp; Bike · Road, light wheels &nbsp;·&nbsp; Difficulty · ★★★★☆
+</div>
+<p><span class="label">Full:</span> Drive to SR-410 Sunrise Rd turnoff. Pure uphill TT: 26 km / 1,036 m at steady 5–6% to Sunrise Point (6,400 ft). Descend same for 50 km total.</p>
+<p><span class="label">Weekday simulator:</span> Zoo Hill TT × 3 all-out attempts. Same power demand, different altitude.</p>
+<p class="small"><span class="label">TdF parallel:</span> La Planche des Belles Filles ITT · decisive uphill TT &nbsp;·&nbsp; <span class="label">Iconic:</span> Sunrise Point with Rainier's east face dominating</p>
+</div>
+
+<div class="stage">
+<h3>21. RAMROD — Queen Finale <span class="weekend">▲ Weekend</span></h3>
+<p class="stage-lede">Ride Around Mount Rainier in One Day. 250 km. 3,000 m. Five passes. The final exam.</p>
+<iframe class="map" src="https://www.openstreetmap.org/export/embed.html?bbox=-122.320,46.710,-121.470,47.230&amp;layer=mapnik" loading="lazy" title="Stage 21 map"></iframe>
+<div class="stats">
+Full · 250 km / 3,050 m &nbsp;·&nbsp; Weekday sim · 120 km / 2,500 m<br>
+Start · Enumclaw (overnight) &nbsp;·&nbsp; Bike · Road, full climbing kit &nbsp;·&nbsp; Difficulty · ★★★★★
+</div>
+<p><span class="label">Full:</span> Enumclaw → SR-410 → Cayuse Pass (4,694 ft) → Chinook Pass (5,430 ft) out-and-back → SR-123 south → Ohanapecosh → Stevens Canyon Rd → Paradise (5,400 ft) → SR-706 → Longmire → Elbe → Eatonville → Enumclaw.</p>
+<p><span class="label">Weekday simulator:</span> Saturday local ultimate — 7 Hills + Issaquah Alps full loop. 2,500m of local vert. Captures total workload of the finale.</p>
+<p class="small"><span class="label">TdF parallel:</span> Stage 20 queen + ceremonial merged &nbsp;·&nbsp; <span class="label">Iconic:</span> Paradise Inn with Mt Rainier's south face in morning light</p>
+</div>
+
+<h2>Supplement</h2>
+
+<h3>Overnight Trip Clusters</h3>
+<p>Consolidate the seven weekend stages into four overnight trips. Book Mazama and Port Angeles <strong>in April</strong>.</p>
+<table>
+<tr><th>Trip</th><th>Stages</th><th>Base</th><th>Nights</th></tr>
+<tr><td>Baker Weekend</td><td>9</td><td>Glacier / Bellingham</td><td>1–2</td></tr>
+<tr><td>N Cascades Weekend</td><td>14</td><td>Winthrop / Mazama</td><td>2</td></tr>
+<tr><td>Olympics Weekend</td><td>18</td><td>Port Angeles</td><td>1</td></tr>
+<tr><td>Rainier Grand Finale</td><td>20 + 21</td><td>Enumclaw</td><td>2</td></tr>
+</table>
+
+<h3>Cumulative Progression — Full Version</h3>
+<table>
+<tr><th>Milestone</th><th>Stages</th><th>km (cum)</th><th>m vert (cum)</th></tr>
+<tr><td>End of Day 1</td><td>1</td><td>14</td><td>350</td></tr>
+<tr><td>End of Day 2</td><td>2</td><td>194</td><td>1,350</td></tr>
+<tr><td>End of Week 1</td><td>3–7</td><td>834</td><td>10,150</td></tr>
+<tr><td>End of Week 2</td><td>8–15</td><td>1,810</td><td>21,600</td></tr>
+<tr><td>End of Week 3</td><td>16–21</td><td>2,580</td><td>28,500</td></tr>
+</table>
+
+<h3>Cross-Stage Risks</h3>
+<ul>
+<li><span class="label">Pass opening dates.</span> SR-20, Sunrise Rd, and Paradise can open late May through early July. Verify WSDOT weekly in June before booking.</li>
+<li><span class="label">Ferry delays.</span> Stages 5, 10, 12, 16, 17. Carry a 90-minute buffer for return ferry.</li>
+<li><span class="label">Wildfire smoke.</span> Stage 14 most at risk. Check AQI the morning of; have indoor fallback.</li>
+<li><span class="label">Heat.</span> Stages 14, 15, 21 can hit 35°C. Pre-dawn starts; carry 2L minimum.</li>
+<li><span class="label">Traffic on US-2.</span> Stage 15. Logging trucks, narrow shoulder. Front/rear lights always.</li>
+<li><span class="label">Mechanical on RAMROD.</span> 250 km from services. Two tubes, spare tire, chain quick-link, 3L water capacity.</li>
+<li><span class="label">Belgium collision.</span> Ardennes tour July 12–15 will overlap 3–4 TdW stages. Decide in April whether to pre-ride or shift the whole TdW by a week.</li>
+</ul>
+
+<h3>Open Questions</h3>
+<ul>
+<li>Lock overnight lodging for four weekend clusters (April).</li>
+<li>Build 21 GPX files in RideWithGPS and verify distance/vert against these estimates.</li>
+<li>Identify ride partners per group-ideal stage; issue invites.</li>
+<li>Decide support vehicle yes/no for RAMROD.</li>
+<li>Cross-reference TdF 2026 calendar once published for day-by-day date overlay.</li>
+<li>Confirm RAMROD official event permit window vs. solo ride logistics.</li>
+</ul>
+
+<p class="disclaimer" style="margin-top:3rem;text-align:center;">Tour de Washington · April 2026 · Draft · Verify all routes in RideWithGPS before riding.</p>
+
+</body>
+</html>
