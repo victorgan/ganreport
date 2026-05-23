@@ -110,6 +110,16 @@
   .recrest{color:var(--ink-dim);font-size:13.5px;line-height:1.55}
   .recrest b{color:var(--jade)}
 
+  /* systemic gauge */
+  .sysrow{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}
+  .sysz{font-family:var(--mono);font-weight:700;font-size:15px}
+  .sysz.ready{color:var(--gold)} .sysz.cook{color:#8ea4d4}
+  .syssub{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .sysbar{height:10px;border-radius:5px;background:#0e1014;overflow:hidden;position:relative}
+  .sysbar > i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;transition:width .6s ease}
+  .sysbar .readymark{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--faint);opacity:.55}
+  .sysnote{font-size:12px;color:var(--ink-dim);margin-top:10px;line-height:1.5}
+
   /* ---------- muscle list ---------- */
   .sortbar{display:flex;gap:6px;align-items:center;margin:2px 0 12px;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
   .sortbar select{margin-left:auto}
@@ -292,6 +302,12 @@
       </div>
     </div>
 
+    <div class="panel" id="syspanel">
+      <h2>Systemic recovery</h2>
+      <p class="h2sub">Whole-body / cardio freshness — how ready you are for <b>another hard session</b>. Driven by cardio and heavy compound lifting, not any single muscle.</p>
+      <div id="sysgauge"></div>
+    </div>
+
     <div class="panel">
       <h2>Today</h2>
       <p class="h2sub">A suggestion, never a prescription — you decide.</p>
@@ -348,6 +364,20 @@
         <button class="ghost btn" id="clearbtn">Clear</button>
       </div>
       <p class="muted-note" id="logstatus"></p>
+    </div>
+
+    <div class="panel">
+      <h2>Cardio</h2>
+      <p class="h2sub">Logs to the <b>Systemic</b> clock and adds modest fatigue to the muscles it uses. Uses the session time above.</p>
+      <label class="fld">Type</label>
+      <div class="pills" id="cardiopills"></div>
+      <div class="defrow" style="margin-top:4px">
+        <label>Minutes <input type="number" id="cardiomin" min="1" max="600" step="5" value="45"></label>
+        <label style="flex:1">Intensity
+          <div class="pills" id="cardiointensity" style="margin-top:6px"></div>
+        </label>
+      </div>
+      <button class="btn" id="logcardio" style="margin-top:12px;width:100%">Log cardio</button>
     </div>
 
     <div class="panel">
@@ -457,7 +487,7 @@ let memFallback=null;          // used if localStorage is unavailable (e.g. sand
 function loadState(){
   try{ const r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
   if(memFallback) return memFallback;
-  return {sessions:[], customExercises:[], baseline:{}, settings:{}, routines:[]};
+  return {sessions:[], customExercises:[], baseline:{}, settings:{}, routines:[], cardio:[]};
 }
 function saveState(){
   try{ localStorage.setItem(KEY, JSON.stringify(STATE)); }
@@ -616,6 +646,40 @@ function exById(id){ return allExercises().find(e=>e.id===id); }
 function exByName(n){ n=n.trim().toLowerCase(); return allExercises().find(e=>e.name.toLowerCase()===n); }
 
 /* =====================================================================
+   CARDIO + SYSTEMIC fatigue
+   Cardio does a DUAL deposit: modest fatigue to the leg/upper muscles it
+   uses (via deposits()), and a dose to the SYSTEMIC resource. Heavy
+   compound lifting also feeds SYSTEMIC via per-muscle systemic cost.
+   ===================================================================== */
+const CARDIO=[
+  {id:"cycling",     name:"Cycling",       r:{quads:1.0, glutes:0.7, hamstrings:0.5, calves:0.4}},
+  {id:"running",     name:"Running",       r:{calves:1.0, quads:0.7, hamstrings:0.7, glutes:0.7}},
+  {id:"rowing",      name:"Rowing erg",    r:{lats:0.7, mid_back:0.7, quads:0.7, biceps:0.4, erectors:0.6}},
+  {id:"stairs",      name:"Stair climber", r:{glutes:0.9, quads:0.8, calves:0.6}},
+  {id:"elliptical",  name:"Elliptical",    r:{quads:0.7, glutes:0.7, calves:0.5, hamstrings:0.4}},
+  {id:"swimming",    name:"Swimming",      r:{lats:0.7, post_delt:0.6, pecs:0.5, triceps:0.5}},
+  {id:"cardio_other",name:"Other",         r:{}}
+];
+const cardioById=id=>CARDIO.find(c=>c.id===id);
+const INTENSITIES=[
+  {id:"easy",     name:"Easy",     sys:0.15, musc:0.5, note:"Zone 2 / conversational"},
+  {id:"moderate", name:"Moderate", sys:0.45, musc:0.8, note:"tempo / steady hard"},
+  {id:"hard",     name:"Hard",     sys:1.0,  musc:1.2, note:"intervals / threshold / race"}
+];
+const intById=id=>INTENSITIES.find(i=>i.id===id)||INTENSITIES[1];
+const CARDIO_MUSCLE_SCALE=1.2;   // tunes how much cardio fatigues the muscles it uses
+// per-muscle systemic cost (how much a hard set taxes the whole system)
+const SYS_COST={
+  erectors:1.0, quads:0.9, glutes:0.85, hamstrings:0.8, adductors:0.5, lats:0.6, mid_back:0.5,
+  pecs:0.45, ant_delt:0.3, lat_delt:0.2, post_delt:0.2, upper_traps:0.3,
+  biceps:0.25, triceps:0.3, forearms:0.15, calves:0.25, abs:0.3
+};
+const SYS_LIFT_SCALE=0.08;       // lifting -> systemic deposit scaler
+const SYS_BASE=30;               // default hours for systemic to reach READY after a reference dose
+const SYS_REF=1.0;               // systemic reference dose (a hard ~1h session)
+function sysBase(){ return (STATE.baseline && STATE.baseline.systemic) || SYS_BASE; }
+
+/* =====================================================================
    RECOVERY ENGINE
    ===================================================================== */
 const REFERENCE_DOSE=5;        // effective sets that zero out a prime mover
@@ -660,6 +724,14 @@ function deposits(muscleId){
       }
     }
   }
+  // cardio fatigues the muscles it uses (modest, not a growth stimulus)
+  for(const c of (STATE.cardio||[])){
+    const mod=cardioById(c.modality); if(!mod) continue;
+    const w=mod.r[muscleId]; if(!w) continue;
+    const i=intById(c.intensity);
+    const amt=(c.minutes/60)*i.musc*w*CARDIO_MUSCLE_SCALE;
+    if(amt>0) out.push({t:new Date(c.time).getTime(), amount:amt});
+  }
   return out;
 }
 function fatigueAt(muscleId, now){
@@ -703,6 +775,40 @@ function snapshot(muscleId, now){
     for(const set of ex.sets){ if(!set.warmup && (set.rir===""||set.rir==null)) lowConf=true; }
   }
   return {muscleId, readiness, zone, toReady, toFresh, last, idleMs, lowConf};
+}
+// systemic fatigue: lifting (per-muscle systemic cost) + cardio (intensity x duration)
+function systemicDeposits(){
+  const out=[];
+  for(const s of STATE.sessions){
+    const t=new Date(s.time).getTime();
+    for(const ex of s.exercises){
+      const def=exById(ex.exId); if(!def) continue;
+      let maxCost=0;
+      for(const m in def.r){ const c=(SYS_COST[m]||0)*def.r[m]; if(c>maxCost) maxCost=c; }
+      if(maxCost<=0) continue;
+      for(const set of ex.sets){
+        const eff=set.warmup?0:setStimulus(set,1);     // effective sets, recruitment-independent
+        const amt=eff*maxCost*SYS_LIFT_SCALE;
+        if(amt>0) out.push({t, amount:amt});
+      }
+    }
+  }
+  for(const c of (STATE.cardio||[])){
+    const i=intById(c.intensity);
+    const amt=(c.minutes/60)*i.sys;
+    if(amt>0) out.push({t:new Date(c.time).getTime(), amount:amt});
+  }
+  return out;
+}
+function systemicSnapshot(now){
+  const tau=sysBase()/K_READY*HOUR;
+  let f=0, last=null;
+  for(const d of systemicDeposits()){ const dt=now-d.t; if(dt<0) continue; f+=d.amount*Math.exp(-dt/tau); if(last==null||d.t>last) last=d.t; }
+  const readiness=Math.max(0,Math.min(1,1-f/SYS_REF));
+  const fReady=(1-READY)*SYS_REF;
+  let toReady=0; if(f>fReady) toReady=tau*Math.log(f/fReady);
+  const zone = readiness<READY ? "cook" : "ready";
+  return {readiness, zone, toReady, last, fatigue:f};
 }
 function fmtDur(ms){
   if(ms<=0) return "now";
@@ -870,38 +976,43 @@ const EX_NOTE={
   standcalf:"loaded stretch at the bottom", seatedcalf:"soleus, knees bent", goodmorning:"erectors + hams"
 };
 
-function pickExerciseFor(muscleId, cookMap, covered){
+function exSysCost(ex){ let m=0; for(const k in ex.r){ const c=(SYS_COST[k]||0)*ex.r[k]; if(c>m) m=c; } return m; }
+function pickExerciseFor(muscleId, cookMap, covered, allowHighSys){
   const pref=PREFERRED[muscleId];
   const cands = pref ? pref.map(id=>exById(id)).filter(Boolean)
                      : allExercises().filter(e=>(e.r[muscleId]||0)>=0.9);
   const ok = ex=>{
+    if(!allowHighSys && exSysCost(ex)>0.55) return false;   // systemic low: skip heavy compounds
     for(const m in ex.r){
       if(m!==muscleId && ex.r[m]>=0.5){ const ms=cookMap[m]; if(ms && ms.readiness<0.5) return false; }
     }
     return true;
   };
-  // prefer a clean pick that doesn't double-cover an already-covered muscle as its prime mover
   for(const ex of cands){ if(ok(ex)) return ex; }
+  // relax the systemic constraint before giving up entirely
+  if(!allowHighSys){ for(const ex of cands){ let bad=false; for(const m in ex.r){ if(m!==muscleId&&ex.r[m]>=0.5){const ms=cookMap[m]; if(ms&&ms.readiness<0.5) bad=true;} } if(!bad) return ex; } }
   return cands[0]||null;
 }
 function recommendSession(now){
   const snaps=MUSCLES.map(m=>snapshot(m.id, now));
   const cookMap=Object.fromEntries(snaps.map(s=>[s.muscleId,s]));
+  const sys=systemicSnapshot(now);
+  const allowHighSys = sys.readiness>=0.6;
   const trainable=snaps.filter(s=>s.zone==="ready"||s.zone==="idle");
-  if(!trainable.length) return {rest:true};
+  if(!trainable.length) return {rest:true, sys};
   const score=s=>(AES[s.muscleId]??0.5)*(1+(s.zone==="idle"?0.25:0));
   trainable.sort((a,b)=> score(b)-score(a) || (a.last||0)-(b.last||0));
   const covered=new Set(), recs=[];
   for(const s of trainable){
     if(recs.length>=6) break;
     if(covered.has(s.muscleId)) continue;
-    const ex=pickExerciseFor(s.muscleId, cookMap, covered);
+    const ex=pickExerciseFor(s.muscleId, cookMap, covered, allowHighSys);
     if(!ex) continue;
     if(recs.some(r=>r.exId===ex.id)) continue;
     recs.push({exId:ex.id, target:s.muscleId, zone:s.zone, note:EX_NOTE[ex.id]||"solid choice"});
     for(const m in ex.r){ if(ex.r[m]>=0.5) covered.add(m); }
   }
-  return {rest:false, recs};
+  return {rest:false, recs, sys, allowHighSys};
 }
 function renderRecommendations(now){
   const sub=document.getElementById("recsub"), list=document.getElementById("reclist");
@@ -911,7 +1022,8 @@ function renderRecommendations(now){
     list.innerHTML=`<div class="recrest">Most muscles are still recovering. A <b>rest day</b> — or light cardio and fast-recovering work like calves &amp; abs — is the smart call. Training cooked muscles adds fatigue without extra growth.</div>`;
     return;
   }
-  sub.innerHTML="Tuned to <b style='color:var(--ink-dim)'>shoulder + back priority</b> and a lean aesthetic. Picks favor ready muscles and stretch-biased, stable movements.";
+  sub.innerHTML="Tuned to <b style='color:var(--ink-dim)'>shoulder + back priority</b> and a lean aesthetic. Picks favor ready muscles and stretch-biased, stable movements."
+    + (out.sys && !out.allowHighSys ? ` <b style='color:var(--gold)'>Systemic recovery is low — favoring lower-fatigue, isolation-style work over heavy compounds.</b>` : "");
   list.innerHTML = out.recs.map(r=>{
     const def=exById(r.exId);
     const zoneTag = r.zone==="idle" ? `<span class="fresh">fresh</span>` : `ready`;
@@ -934,9 +1046,51 @@ function renderRecommendations(now){
   });
 }
 
+function renderSystemic(now){
+  const g=document.getElementById("sysgauge"); if(!g) return;
+  const s=systemicSnapshot(now);
+  const pct=Math.round(s.readiness*100), col=readinessColor(s.readiness);
+  const zoneTxt = s.zone==="cook"?"Recovering":"Ready";
+  const sub = s.zone==="cook" ? `ready for hard work in ~${fmtDur(s.toReady)}`
+            : (s.last? `last stress ${fmtAgo(s.last)}` : "fully fresh");
+  let note;
+  if(s.last==null) note="No cardio or heavy lifting logged yet.";
+  else if(s.readiness<0.5) note="Heavily fatigued — favor rest, easy Zone 2, or low-systemic isolation work. Stacking another hard session now buys fatigue, not fitness.";
+  else if(s.readiness<READY) note="Partly recovered — fine for easy/moderate work; hold off on a second hard interval or a heavy compound day.";
+  else note="Fresh enough for a hard session — intervals, threshold work, or heavy compounds are on the table.";
+  g.innerHTML=`
+    <div class="sysrow"><span class="sysz ${s.zone==='cook'?'cook':'ready'}">${zoneTxt}</span><span class="syssub">${sub}</span></div>
+    <div class="sysbar"><i style="width:${Math.max(3,pct)}%;background:${col}"></i><span class="readymark" style="left:${READY*100}%"></span></div>
+    <div class="sysnote">${note}</div>`;
+}
+
+// ---- cardio logging ----
+let cardioSel={modality:"cycling", intensity:"moderate"};
+function renderCardioPickers(){
+  const tp=document.getElementById("cardiopills"); if(!tp) return;
+  tp.innerHTML=CARDIO.map(c=>`<button class="pill ${c.id===cardioSel.modality?'active':''}" data-cm="${c.id}">${c.name}</button>`).join("");
+  tp.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{ cardioSel.modality=b.dataset.cm; renderCardioPickers(); }));
+  const ip=document.getElementById("cardiointensity");
+  ip.innerHTML=INTENSITIES.map(i=>`<button class="pill ${i.id===cardioSel.intensity?'active':''}" data-ci="${i.id}" title="${i.note}">${i.name}</button>`).join("");
+  ip.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{ cardioSel.intensity=b.dataset.ci; renderCardioPickers(); }));
+}
+function logCardio(){
+  const min=Math.max(1,+document.getElementById("cardiomin").value||0);
+  const dt=document.getElementById("sessdt").value;
+  const time=dt?new Date(dt).toISOString():new Date().toISOString();
+  STATE.cardio=STATE.cardio||[];
+  STATE.cardio.push({id:"c_"+Date.now().toString(36), time, modality:cardioSel.modality, minutes:min, intensity:cardioSel.intensity});
+  STATE.cardio.sort((a,b)=>new Date(a.time)-new Date(b.time));
+  saveState();
+  const mod=cardioById(cardioSel.modality), inten=intById(cardioSel.intensity);
+  toast(`Logged ${min}m ${inten.name.toLowerCase()} ${mod.name.toLowerCase()}`);
+  renderAll();
+}
+
 function renderReady(){
   const now=Date.now();
   paintMap(now);
+  renderSystemic(now);
   const snaps=MUSCLES.map(m=>({m, s:snapshot(m.id, now)}));
 
   // summary chips
@@ -1176,15 +1330,27 @@ function saveSession(){
    ===================================================================== */
 function renderHistory(){
   const wrap=document.getElementById("histlist");
-  if(!STATE.sessions.length){ wrap.innerHTML=`<div class="empty">No sessions logged.</div>`; return; }
-  const sorted=[...STATE.sessions].sort((a,b)=>new Date(b.time)-new Date(a.time));
-  wrap.innerHTML=sorted.map(s=>{
-    const d=new Date(s.time);
+  const strength=(STATE.sessions||[]).map(s=>({type:"s", time:s.time, s}));
+  const cardio=(STATE.cardio||[]).map(c=>({type:"c", time:c.time, c}));
+  const all=[...strength,...cardio].sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if(!all.length){ wrap.innerHTML=`<div class="empty">No sessions logged.</div>`; return; }
+  wrap.innerHTML=all.map(item=>{
+    const d=new Date(item.time);
     const nice=d.toLocaleString([], {weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    if(item.type==="c"){
+      const c=item.c, mod=cardioById(c.modality), inten=intById(c.intensity);
+      return `<div class="sess" data-id="${c.id}">
+        <div class="sesshead">
+          <span class="sessdate">🚴 ${nice}</span>
+          <span class="sessmeta">${mod?mod.name:"Cardio"} · ${c.minutes}m · ${inten.name} <button class="danger btn tiny" data-delc="${c.id}" style="margin-left:8px">delete</button></span>
+        </div>
+        <div class="sessbody"><ul><li>Systemic + leg fatigue from ${c.minutes} min ${inten.name.toLowerCase()} ${mod?mod.name.toLowerCase():"cardio"}.</li></ul></div>
+      </div>`;
+    }
+    const s=item.s;
     const totalSets=s.exercises.reduce((n,e)=>n+e.sets.length,0);
     const items=s.exercises.map(e=>{
       const def=exById(e.exId);
-      const work=e.sets.filter(x=>!x.warmup);
       const detail=e.sets.map(x=>x.warmup?"wu":`${x.reps}${x.load!=null?"×"+x.load:""}${x.rir!=null?" @"+x.rir:""}`).join(", ");
       return `<li><b style="color:var(--ink)">${def?def.name:"(deleted ex)"}</b> — ${detail}</li>`;
     }).join("");
@@ -1197,7 +1363,7 @@ function renderHistory(){
     </div>`;
   }).join("");
   wrap.querySelectorAll(".sesshead").forEach(h=>h.addEventListener("click",e=>{
-    if(e.target.dataset.del!==undefined) return;
+    if(e.target.dataset.del!==undefined||e.target.dataset.delc!==undefined) return;
     h.parentElement.classList.toggle("open");
   }));
   wrap.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",e=>{
@@ -1205,6 +1371,12 @@ function renderHistory(){
     if(!confirm("Delete this session? Readiness will recompute.")) return;
     STATE.sessions=STATE.sessions.filter(x=>x.id!==e.target.dataset.del);
     saveState(); renderAll(); toast("Session deleted");
+  }));
+  wrap.querySelectorAll("[data-delc]").forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation();
+    if(!confirm("Delete this cardio entry? Readiness will recompute.")) return;
+    STATE.cardio=STATE.cardio.filter(x=>x.id!==e.target.dataset.delc);
+    saveState(); renderAll(); toast("Cardio deleted");
   }));
 }
 
@@ -1216,7 +1388,9 @@ function renderBaselines(){
   g.innerHTML=MUSCLES.map(m=>`
     <span class="bn">${m.name}</span>
     <span><input type="number" min="1" data-base="${m.id}" value="${baseOf(m.id)}"> <span class="unit">h</span></span>
-  `).join("");
+  `).join("") + `
+    <span class="bn" style="color:var(--jade)">Systemic / cardio</span>
+    <span><input type="number" min="1" data-base="systemic" value="${sysBase()}"> <span class="unit">h</span></span>`;
   g.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
     STATE.baseline=STATE.baseline||{};
     const v=+e.target.value; if(v>0) STATE.baseline[e.target.dataset.base]=v;
@@ -1441,6 +1615,7 @@ document.getElementById("sessdt").addEventListener("input",updateDtLabel);
 document.getElementById("savebtn").addEventListener("click",saveSession);
 document.getElementById("clearbtn").addEventListener("click",()=>{ draft=[]; refreshLog(); document.getElementById("logstatus").textContent=""; });
 document.getElementById("saveroutine").addEventListener("click",saveRoutineFromDraft);
+document.getElementById("logcardio").addEventListener("click",logCardio);
 document.getElementById("sortsel").addEventListener("change",renderReady);
 document.getElementById("cxsave").addEventListener("click",saveCustom);
 ["defsets","defreps"].forEach(id=>document.getElementById(id).addEventListener("change",e=>{
@@ -1486,19 +1661,19 @@ document.getElementById("importbtn").addEventListener("click",()=>document.getEl
 document.getElementById("importfile").addEventListener("change",e=>{
   const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
   rd.onload=()=>{ try{ const o=JSON.parse(rd.result);
-      STATE={sessions:o.sessions||[],customExercises:o.customExercises||[],baseline:o.baseline||{},settings:o.settings||{},routines:o.routines||[]};
+      STATE={sessions:o.sessions||[],customExercises:o.customExercises||[],baseline:o.baseline||{},settings:o.settings||{},routines:o.routines||[],cardio:o.cardio||[]};
       saveState(); buildExerciseList(); renderDefaults(); renderRoutines(); renderAll(); toast("Data imported");
     }catch(err){ toast("Import failed — invalid file."); } };
   rd.readAsText(f);
 });
 document.getElementById("wipebtn").addEventListener("click",()=>{
   if(confirm("Erase ALL sessions, custom exercises, and overrides? This cannot be undone.")){
-    STATE={sessions:[],customExercises:[],baseline:{},settings:{},routines:[]}; saveState(); buildExerciseList(); renderDefaults(); renderRoutines(); renderAll(); toast("All data erased");
+    STATE={sessions:[],customExercises:[],baseline:{},settings:{},routines:[],cardio:[]}; saveState(); buildExerciseList(); renderDefaults(); renderRoutines(); renderAll(); toast("All data erased");
   }
 });
 
 /* boot */
-buildMap(); renderCatPills(); renderPicker(); renderRoutines(); setNow(); renderDraft(); renderCustomMuscleEditor(); renderDefaults(); renderAll(); tickClock(); updateTimerUI();
+buildMap(); renderCatPills(); renderPicker(); renderRoutines(); renderCardioPickers(); setNow(); renderDraft(); renderCustomMuscleEditor(); renderDefaults(); renderAll(); tickClock(); updateTimerUI();
 setInterval(()=>{ tickClock();
   if(document.getElementById("tab-ready").classList.contains("active")) renderReady();
   if(document.getElementById("tab-log").classList.contains("active")) renderRecommendations(Date.now());
