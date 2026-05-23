@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0f12">
+<title>Recovery — muscle readiness</title>
+<style>
+  /* ============ Recovery: a precision instrument for muscle readiness ============
+     Aesthetic: dark "telemetry / atelier". Refined serif display, monospace data,
+     warm off-white ink on near-black. Fully self-contained, offline, no CDN. */
+
+  :root{
+    --bg:#0e0f12;
+    --bg2:#121419;
+    --panel:#16181e;
+    --panel2:#1b1e25;
+    --line:#282c34;
+    --line-soft:#21242b;
+    --ink:#ece7db;
+    --ink-dim:#b7b3a8;
+    --muted:#8b9099;
+    --faint:#5d626c;
+    --gold:#d6a93f;       /* ready / warm */
+    --jade:#54b48d;       /* fresh */
+    --indigo:#41557e;     /* recovering */
+    --indigo-deep:#2a3550;
+    --danger:#c66449;
+    --serif: "Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans: "Avenir Next","Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+    --mono: ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #15171d 0%, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, #14161c 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:0 0 64px;
+    min-height:100vh;
+  }
+  /* faint grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
+
+  /* ---------- header ---------- */
+  header{padding:30px 0 14px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.85}
+  h1{font-family:var(--serif);font-weight:600;font-size:34px;line-height:1.05;margin:6px 0 4px;letter-spacing:-.01em}
+  h1 .dot{color:var(--gold)}
+  .sub{color:var(--muted);font-size:13.5px;max-width:54ch}
+  .clock{font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:10px}
+
+  /* ---------- tabs ---------- */
+  nav.tabs{display:flex;gap:4px;margin:18px 0 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:linear-gradient(var(--bg),var(--bg) 70%,transparent);z-index:5;padding-top:6px}
+  .tab{appearance:none;background:none;border:0;color:var(--muted);font-family:var(--sans);font-size:13.5px;font-weight:600;letter-spacing:.02em;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+  .tab:hover{color:var(--ink-dim)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--gold)}
+
+  section{display:none;animation:fade .35s ease}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .panel{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:16px}
+  .panel h2{font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 2px}
+  .panel .h2sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+  .h2sub b{color:var(--ink-dim);font-weight:600}
+
+  /* ---------- body map ---------- */
+  .mapwrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+  svg.bodymap{width:100%;max-width:460px;height:auto;display:block}
+  .region{stroke:#0c0d10;stroke-width:.8;cursor:pointer;transition:filter .2s}
+  .region:hover{filter:brightness(1.25)}
+  .figlabel{fill:var(--faint);font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase}
+  .silhouette{fill:#1a1d24;stroke:var(--line);stroke-width:1}
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+  /* ---------- summary line ---------- */
+  .summary{display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+  .summary .row{display:flex;gap:8px;align-items:flex-start}
+  .summary .tagk{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);min-width:74px;padding-top:3px}
+  .chip{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);margin:2px 4px 2px 0;white-space:nowrap}
+  .chip.ready{color:#f0d79a;border-color:#5a4a23;background:rgba(214,169,63,.08)}
+  .chip.cook{color:#9fb0d6;border-color:#34405e;background:rgba(65,85,126,.1)}
+  .chip.idle{color:#8fd0b6;border-color:#2e5546;background:rgba(84,180,141,.08)}
+
+  /* recommendations */
+  .recpanel{background:linear-gradient(180deg,rgba(214,169,63,.06),var(--bg2))}
+  .rec{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line-soft);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+  .rec:last-of-type{margin-bottom:0}
+  .recname{font-weight:700;font-size:14.5px}
+  .recwhy{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+  .recwhy b{color:var(--gold);font-weight:700}
+  .recwhy .fresh{color:var(--jade);font-weight:700}
+  .recadd{flex:0 0 auto}
+  .recfoot{margin-top:12px;display:flex;justify-content:flex-end}
+  .recrest{color:var(--ink-dim);font-size:13.5px;line-height:1.55}
+  .recrest b{color:var(--jade)}
+
+  /* ---------- muscle list ---------- */
+  .sortbar{display:flex;gap:6px;align-items:center;margin:2px 0 12px;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+  .sortbar select{margin-left:auto}
+  .mlist{display:flex;flex-direction:column;gap:8px}
+  .mcard{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;background:var(--panel2);border:1px solid var(--line-soft);border-radius:10px;padding:11px 13px;transition:border-color .2s,box-shadow .2s}
+  .mcard.flash{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+  .mname{font-weight:600;font-size:14px}
+  .mregion{font-family:var(--mono);font-size:9.5px;color:var(--faint);letter-spacing:.12em;text-transform:uppercase}
+  .mstatus{text-align:right;font-family:var(--mono);font-size:11px}
+  .zone{font-weight:700;letter-spacing:.04em}
+  .zone.ready{color:var(--gold)}
+  .zone.cook{color:#8ea4d4}
+  .zone.idle{color:var(--jade)}
+  .mtime{color:var(--muted);font-size:10.5px;margin-top:1px}
+  .bar{grid-column:1 / -1;height:6px;border-radius:4px;background:#0e1014;overflow:hidden;position:relative;margin-top:5px}
+  .bar > i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;transition:width .6s ease}
+  .bar .readymark{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--faint);opacity:.55}
+  .lowconf{color:var(--faint);font-size:9.5px;font-family:var(--mono)}
+
+  /* ---------- logging ---------- */
+  label.fld{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 5px}
+  input,select,textarea{font-family:var(--sans);font-size:14px;color:var(--ink);background:#0f1115;border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--gold)}
+  input[type=datetime-local]{font-family:var(--mono);font-size:13px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .addrow{display:flex;gap:10px;align-items:flex-end;margin-bottom:14px}
+  .addrow > div{flex:1}
+  button.btn{appearance:none;cursor:pointer;font-family:var(--sans);font-weight:600;font-size:13.5px;border-radius:9px;border:1px solid var(--gold);background:rgba(214,169,63,.12);color:var(--gold);padding:9px 16px;transition:background .15s,transform .05s}
+  button.btn:hover{background:rgba(214,169,63,.2)}
+  button.btn:active{transform:translateY(1px)}
+  button.ghost{border-color:var(--line);background:transparent;color:var(--ink-dim)}
+  button.ghost:hover{background:var(--panel2)}
+  button.tiny{font-size:11px;padding:5px 9px;border-radius:7px}
+  button.danger{border-color:#5a342b;color:var(--danger);background:rgba(198,100,73,.08)}
+  button.danger:hover{background:rgba(198,100,73,.16)}
+
+  .exblock{border:1px solid var(--line);border-radius:11px;padding:13px;margin-bottom:12px;background:var(--panel2)}
+  .exhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+  .exhead .exname{font-weight:700;font-size:15px}
+  .exhead .exmusc{font-family:var(--mono);font-size:9.5px;color:var(--faint);letter-spacing:.08em}
+  .settbl{width:100%;border-collapse:collapse;margin-top:8px}
+  .settbl th{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600;text-align:left;padding:2px 6px}
+  .settbl td{padding:3px 6px}
+  .settbl input{padding:6px 8px;font-family:var(--mono);font-size:13px;text-align:center}
+  .settbl td.x{width:30px;text-align:center}
+  .settbl input[type=checkbox]{width:auto}
+  .muted-note{color:var(--muted);font-size:12px;margin:8px 0 0}
+
+  /* tappable exercise picker */
+  .pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .pill{appearance:none;cursor:pointer;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 12px;transition:.15s}
+  .pill:hover{color:var(--ink-dim);border-color:var(--faint)}
+  .pill.active{color:#0e0f12;background:var(--gold);border-color:var(--gold);font-weight:700}
+  .picker{max-height:260px;overflow-y:auto;border:1px solid var(--line-soft);border-radius:11px;padding:10px;background:#0f1115}
+  .pickgroup{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:8px 2px 6px}
+  .pickgroup:first-child{margin-top:0}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px}
+  .exchip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:600;border:1px solid var(--line);background:var(--panel2);color:var(--ink-dim);border-radius:9px;padding:8px 12px;display:inline-flex;align-items:center;gap:7px;transition:.12s;text-align:left}
+  .exchip:hover{border-color:var(--gold);color:var(--ink)}
+  .exchip:active{transform:scale(.96)}
+  .exchip.added{border-color:var(--gold);color:var(--gold);background:rgba(214,169,63,.1)}
+  .exchip .badge{font-family:var(--mono);font-size:10px;background:var(--gold);color:#0e0f12;border-radius:999px;min-width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;font-weight:700}
+  .pickempty{color:var(--faint);font-size:12px;font-family:var(--mono);padding:14px 4px;text-align:center}
+  .defrow{display:flex;gap:18px;align-items:center;margin:2px 0 4px}
+  .defrow label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .defrow input{width:64px;text-align:center;font-family:var(--mono);padding:7px}
+
+  /* routines */
+  .routinebar{margin-bottom:14px;padding:12px;border:1px solid var(--line-soft);border-radius:11px;background:linear-gradient(180deg,rgba(84,180,141,.05),transparent)}
+  .routinebar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+  .rlabel{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--jade)}
+  .rchips{display:flex;flex-wrap:wrap;gap:7px}
+  .routine-chip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:700;border:1px solid #2e5546;background:rgba(84,180,141,.1);color:var(--jade);border-radius:9px;padding:8px 9px 8px 12px;display:inline-flex;align-items:center;gap:8px;transition:.12s}
+  .routine-chip:hover{background:rgba(84,180,141,.18)}
+  .routine-chip:active{transform:scale(.97)}
+  .routine-chip .rcount{font-family:var(--mono);font-size:9.5px;color:var(--faint);font-weight:400}
+  .routine-chip .rx{font-family:var(--mono);font-size:12px;color:var(--faint);padding:0 2px;border-radius:4px;line-height:1}
+  .routine-chip .rx:hover{color:var(--danger)}
+  .rempty{font-size:12px;color:var(--faint);font-family:var(--mono)}
+
+  /* ---------- history ---------- */
+  .sess{border:1px solid var(--line-soft);border-radius:11px;margin-bottom:10px;background:var(--panel2);overflow:hidden}
+  .sesshead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer}
+  .sessdate{font-family:var(--mono);font-size:12px;color:var(--ink-dim)}
+  .sessmeta{font-size:12px;color:var(--muted)}
+  .sessbody{padding:0 14px 12px;display:none}
+  .sess.open .sessbody{display:block}
+  .sessbody ul{margin:6px 0 10px;padding-left:18px;font-size:13px;color:var(--ink-dim)}
+  .empty{color:var(--faint);font-size:13px;text-align:center;padding:26px 0;font-family:var(--mono);letter-spacing:.05em}
+
+  /* ---------- settings ---------- */
+  .basegrid{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center;font-size:13.5px}
+  .basegrid .bn{color:var(--ink-dim)}
+  .basegrid input{width:84px;text-align:center;font-family:var(--mono);font-size:13px;padding:6px}
+  .basegrid .unit{font-family:var(--mono);font-size:10px;color:var(--faint)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .fineprint{color:var(--faint);font-size:11.5px;line-height:1.6;margin-top:14px;border-top:1px solid var(--line-soft);padding-top:12px}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--panel2);border:1px solid var(--gold);color:var(--ink);padding:11px 18px;border-radius:10px;font-size:13px;opacity:0;pointer-events:none;transition:.3s;z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  datalist{display:none}
+  @media(max-width:520px){
+    h1{font-size:28px}
+    .grid2{grid-template-columns:1fr}
+    .wrap{padding:0 14px}
+  }
+
+  /* floating workout timer bar */
+  .timerbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(18,20,25,.97);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 -8px 30px rgba(0,0,0,.4)}
+  .timerbar.hidden{display:none}
+  .tb-total{display:flex;flex-direction:column;line-height:1.1}
+  .tb-k{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+  .tb-total .v{font-family:var(--mono);font-size:15px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+  .tb-phase{display:flex;align-items:center;gap:9px;margin-left:2px}
+  .tb-badge{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:4px 8px;border-radius:6px}
+  .tb-badge.set{color:#0e0f12;background:var(--gold)}
+  .tb-badge.rest{color:#0e0f12;background:var(--jade)}
+  .tb-time{font-family:var(--mono);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .tb-time.urgent{color:var(--gold)}
+  .tb-ctrls{display:flex;gap:6px;margin-left:auto}
+  .tb-btn{appearance:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--panel2);color:var(--ink-dim);border-radius:8px;padding:9px 11px;min-width:42px;transition:.12s}
+  .tb-btn:hover{border-color:var(--faint);color:var(--ink)}
+  .tb-btn:active{transform:scale(.95)}
+  .tb-btn.primary{border-color:var(--gold);background:rgba(214,169,63,.14);color:var(--gold)}
+  .tb-btn.stop{border-color:#5a342b;color:var(--danger);background:rgba(198,100,73,.08)}
+  .tb-start{flex:1;text-align:center;font-family:var(--sans);font-weight:700;font-size:14px;color:var(--gold)}
+  body.timerOn{padding-bottom:120px}
+
+  /* plate calc */
+  .plbtn{appearance:none;cursor:pointer;border:1px solid var(--line);background:#0f1115;color:var(--muted);border-radius:7px;font-size:12px;padding:5px 7px;line-height:1;margin-left:5px}
+  .plbtn:hover{border-color:var(--gold);color:var(--gold)}
+  .loadcell{display:flex;align-items:center;gap:3px}
+  .loadcell input{flex:1;min-width:0}
+  .modal{position:fixed;inset:0;z-index:60;background:rgba(8,9,11,.72);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:0}
+  .modal.hidden{display:none}
+  .modal-card{background:var(--panel);border:1px solid var(--line);border-radius:18px 18px 0 0;width:100%;max-width:560px;padding:18px 18px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;animation:slideup .25s ease}
+  @keyframes slideup{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;font-family:var(--serif);font-size:19px;font-weight:600;margin-bottom:12px}
+  .modal-head button{appearance:none;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px}
+  .pm-result{margin:14px 0;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--bg2);text-align:center}
+  .pm-bar{display:flex;align-items:center;justify-content:center;gap:3px;flex-wrap:wrap;margin-bottom:12px;min-height:54px}
+  .pl{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:700;color:#0e0f12;border-radius:3px;border:1px solid rgba(0,0,0,.3)}
+  .barstub{width:34px;height:8px;background:linear-gradient(var(--faint),#3a3f49);border-radius:2px;margin:0 2px}
+  .pm-perside{font-family:var(--mono);font-size:13px;color:var(--ink);letter-spacing:.02em}
+  .pm-total{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
+  .pm-warn{color:var(--gold);font-size:12px;margin-top:8px}
+  .pm-cfg{margin-top:8px;border-top:1px solid var(--line-soft);padding-top:10px}
+  .pm-cfg summary{cursor:pointer;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .pm-cfg .grid2{margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Fast clock · muscle recovery</div>
+    <h1>Recovery<span class="dot">.</span></h1>
+    <div class="sub">Each muscle is a recovering resource. Logging sets deposits fatigue; readiness climbs back as it decays. <b style="color:var(--ink-dim)">"Ready" begins before full recovery</b> — that's the productive re-train window, not a flaw.</div>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="ready">Readiness</button>
+    <button class="tab" data-tab="log">Log</button>
+    <button class="tab" data-tab="history">History</button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </nav>
+
+  <!-- ============ READINESS ============ -->
+  <section id="tab-ready" class="active">
+    <div class="panel">
+      <h2>Body map</h2>
+      <p class="h2sub">Tap a muscle to find it in the list. Color shows recovery state — <b>read the labels, not just the hue</b>.</p>
+      <div class="mapwrap">
+        <svg class="bodymap" viewBox="0 0 400 320" id="bodymap" aria-label="Body map of muscle readiness"></svg>
+        <div class="legend">
+          <span><i style="background:var(--indigo-deep)"></i>Recovering</span>
+          <span><i style="background:var(--gold)"></i>Ready</span>
+          <span><i style="background:var(--jade)"></i>Fresh / idle</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Today</h2>
+      <p class="h2sub">A suggestion, never a prescription — you decide.</p>
+      <div class="summary" id="summary"></div>
+    </div>
+
+    <div class="panel">
+      <h2>All muscles</h2>
+      <div class="sortbar">
+        <span>Sorted by</span>
+        <select id="sortsel" style="width:auto;padding:5px 8px;font-size:12px">
+          <option value="readiness">Readiness (cooking first)</option>
+          <option value="readinessDesc">Readiness (ready first)</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+      <div class="mlist" id="mlist"></div>
+    </div>
+  </section>
+
+  <!-- ============ LOG ============ -->
+  <section id="tab-log">
+    <div class="panel recpanel">
+      <h2>Recommended next</h2>
+      <p class="h2sub" id="recsub"></p>
+      <div id="reclist"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Log a session</h2>
+      <p class="h2sub">Tap an exercise to add it — it loads <b>default sets &amp; reps</b> instantly (or your last numbers if you've done it before). Tap again to add a set. Adjust only what you need, then save.</p>
+
+      <div class="routinebar">
+        <div class="routinebar-head">
+          <span class="rlabel">Routines</span>
+          <button class="ghost btn tiny" id="saveroutine">+ Save current as routine</button>
+        </div>
+        <div class="rchips" id="routines"></div>
+      </div>
+
+      <details id="dtwrap" style="margin-bottom:14px">
+        <summary style="cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)">Session time · <span id="dtlabel"></span></summary>
+        <input type="datetime-local" id="sessdt" style="margin-top:8px">
+      </details>
+
+      <input id="exsearch" placeholder="Search 100+ exercises…" autocomplete="off" style="margin-bottom:10px">
+      <div class="pills" id="catpills"></div>
+      <div class="picker" id="picker"></div>
+
+      <div id="exblocks" style="margin-top:16px"></div>
+
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="btn" id="savebtn" style="flex:1">Save session</button>
+        <button class="ghost btn" id="clearbtn">Clear</button>
+      </div>
+      <p class="muted-note" id="logstatus"></p>
+    </div>
+
+    <div class="panel">
+      <h2>Custom exercise</h2>
+      <p class="h2sub">Add your own and set which muscles it recruits (0–1 weight each). Stored locally with the seed library.</p>
+      <div class="grid2">
+        <div><label class="fld">Name</label><input id="cxname" placeholder="Cable Y-Raise"></div>
+        <div><label class="fld">Group</label><input id="cxgroup" placeholder="Shoulders"></div>
+      </div>
+      <div id="cxmuscles" style="margin-top:12px"></div>
+      <button class="btn ghost" id="cxsave" style="margin-top:12px">Save custom exercise</button>
+    </div>
+  </section>
+
+  <!-- ============ HISTORY ============ -->
+  <section id="tab-history">
+    <div class="panel">
+      <h2>Session history</h2>
+      <p class="h2sub">The event log is the source of truth. Editing or deleting here recomputes all readiness — no stored timers.</p>
+      <div id="histlist"></div>
+    </div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section id="tab-settings">
+    <div class="panel">
+      <h2>Logging defaults</h2>
+      <p class="h2sub">When you tap an exercise you haven't logged before, it loads this many sets and reps. Exercises you've done before prefill from your last session instead.</p>
+      <div class="defrow">
+        <label>Default sets <input type="number" id="defsets" min="1" max="10"></label>
+        <label>Default reps <input type="number" id="defreps" min="1" max="50"></label>
+      </div>
+      <div class="defrow" style="margin-top:10px">
+        <label>Rest timer (sec) <input type="number" id="defrest" min="0" max="600" step="5"></label>
+        <label>Set timer (sec, 0 = count up) <input type="number" id="defwork" min="0" max="600" step="5"></label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Baseline recovery</h2>
+      <p class="h2sub">Hours for a muscle to reach the <b>Ready</b> threshold after a reference dose (~5 hard direct sets). Defaults are literature-anchored estimates — <b>override freely for your body</b>.</p>
+      <div class="basegrid" id="basegrid"></div>
+      <div class="actions"><button class="ghost btn tiny" id="resetbase">Reset baselines to defaults</button></div>
+    </div>
+
+    <div class="panel">
+      <h2>Data</h2>
+      <p class="h2sub">All data lives in this browser. Export keeps a portable backup (and migrates cleanly to a future native build).</p>
+      <div class="actions">
+        <button class="btn" id="exportbtn">Export JSON</button>
+        <button class="ghost btn" id="importbtn">Import JSON</button>
+        <input type="file" id="importfile" accept="application/json" style="display:none">
+        <button class="danger btn" id="wipebtn">Erase all data</button>
+      </div>
+      <div class="fineprint">
+        <b>Model, in brief.</b> Each set deposits stimulus to its recruited muscles =
+        recruitment&nbsp;weight × rep-range factor × intensity (RIR) factor. Fatigue per muscle
+        accumulates across sessions and decays exponentially with a time constant derived from that
+        muscle's baseline, so overlapping work stacks rather than resetting. Readiness = 1 − fatigue
+        ÷ reference dose. This is a <b>planning heuristic, not a measurement</b> — soreness and
+        true tissue recovery are messier than any single number. Pain always overrides the app.
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- floating workout timer (Log tab) -->
+<div class="timerbar hidden" id="timerbar">
+  <div class="tb-total"><span class="tb-k">Session</span><span class="v" id="tbTotal">0:00</span></div>
+  <div class="tb-phase"><span class="tb-badge rest" id="tbBadge">Rest</span><span class="tb-time" id="tbTime">0:00</span></div>
+  <div class="tb-ctrls" id="tbCtrls">
+    <button class="tb-btn" id="tbMinus">−15</button>
+    <button class="tb-btn primary" id="tbMain">▶</button>
+    <button class="tb-btn" id="tbSkip">Set ✓</button>
+    <button class="tb-btn stop" id="tbStop">■</button>
+  </div>
+</div>
+
+<!-- plate calculator modal -->
+<div class="modal hidden" id="platemodal">
+  <div class="modal-card">
+    <div class="modal-head"><span>Plate calculator</span><button id="pmClose">✕</button></div>
+    <label class="fld">Target load (<span id="pmUnit">kg</span>)</label>
+    <input id="pmTarget" type="number" inputmode="decimal">
+    <div class="pm-result" id="pmResult"></div>
+    <details class="pm-cfg">
+      <summary>Bar &amp; available plates</summary>
+      <div class="grid2">
+        <div><label class="fld">Bar weight</label><input id="pmBar" type="number" inputmode="decimal"></div>
+        <div><label class="fld">Units</label><select id="pmUnitSel"><option value="kg">kg</option><option value="lb">lb</option></select></div>
+      </div>
+      <label class="fld" style="margin-top:10px">Plate denominations (per side)</label>
+      <input id="pmPlates" placeholder="25,20,15,10,5,2.5,1.25">
+    </details>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   STORAGE  (event log is truth; readiness is always derived from it)
+   ===================================================================== */
+const KEY="recovery_state_v1";
+let memFallback=null;          // used if localStorage is unavailable (e.g. sandboxed preview)
+function loadState(){
+  try{ const r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  if(memFallback) return memFallback;
+  return {sessions:[], customExercises:[], baseline:{}, settings:{}, routines:[]};
+}
+function saveState(){
+  try{ localStorage.setItem(KEY, JSON.stringify(STATE)); }
+  catch(e){ memFallback=STATE; }
+}
+let STATE=loadState();
+
+/* =====================================================================
+   MUSCLE LIBRARY  — baseline hours = time to the READY threshold (0.7)
+   after a reference dose. fr = relative fatigue resistance (cosmetic note only).
+   ===================================================================== */
+const MUSCLES=[
+  {id:"ant_delt",  name:"Anterior delt",  region:"Shoulders", base:48},
+  {id:"lat_delt",  name:"Lateral delt",   region:"Shoulders", base:24},
+  {id:"post_delt", name:"Posterior delt", region:"Shoulders", base:24},
+  {id:"pecs",      name:"Chest",          region:"Chest",     base:60},
+  {id:"biceps",    name:"Biceps",         region:"Arms",      base:48},
+  {id:"triceps",   name:"Triceps",        region:"Arms",      base:48},
+  {id:"forearms",  name:"Forearms",       region:"Arms",      base:30},
+  {id:"lats",      name:"Lats",           region:"Back",      base:60},
+  {id:"upper_traps",name:"Upper traps",   region:"Back",      base:36},
+  {id:"mid_back",  name:"Mid-back",       region:"Back",      base:60},
+  {id:"erectors",  name:"Spinal erectors",region:"Back",      base:80},
+  {id:"quads",     name:"Quadriceps",     region:"Legs",      base:72},
+  {id:"hamstrings",name:"Hamstrings",     region:"Legs",      base:72},
+  {id:"glutes",    name:"Glutes",         region:"Legs",      base:72},
+  {id:"adductors", name:"Adductors",      region:"Legs",      base:60},
+  {id:"calves",    name:"Calves",         region:"Legs",      base:30},
+  {id:"abs",       name:"Abs / core",     region:"Core",      base:30}
+];
+const MNAME=Object.fromEntries(MUSCLES.map(m=>[m.id,m.name]));
+function baseOf(id){ return (STATE.baseline && STATE.baseline[id]) || MUSCLES.find(m=>m.id===id).base; }
+
+/* =====================================================================
+   SEED EXERCISE LIBRARY  (recruitment weights, prime mover = 1.0)
+   ===================================================================== */
+const SEED=[
+  /* ---- CHEST ---- */
+  {id:"bench",   name:"Barbell Bench Press",  group:"Chest", r:{pecs:1.0, ant_delt:0.6, triceps:0.5}},
+  {id:"incbench",name:"Incline Barbell Bench",group:"Chest", r:{pecs:0.9, ant_delt:0.7, triceps:0.45}},
+  {id:"decbench",name:"Decline Bench Press",  group:"Chest", r:{pecs:1.0, triceps:0.5, ant_delt:0.4}},
+  {id:"dbbench", name:"Dumbbell Bench Press", group:"Chest", r:{pecs:1.0, ant_delt:0.6, triceps:0.5}},
+  {id:"incdb",   name:"Incline DB Press",     group:"Chest", r:{pecs:0.9, ant_delt:0.7, triceps:0.4}},
+  {id:"decdb",   name:"Decline DB Press",     group:"Chest", r:{pecs:1.0, triceps:0.45, ant_delt:0.35}},
+  {id:"dbfly",   name:"Dumbbell Fly",         group:"Chest", r:{pecs:1.0, ant_delt:0.2}},
+  {id:"cablefly",name:"Cable Fly",            group:"Chest", r:{pecs:1.0, ant_delt:0.2}},
+  {id:"inccablefly",name:"Incline Cable Fly", group:"Chest", r:{pecs:0.95, ant_delt:0.3}},
+  {id:"pecdeck", name:"Pec Deck",             group:"Chest", r:{pecs:1.0, ant_delt:0.15}},
+  {id:"dip",     name:"Chest Dip",            group:"Chest", r:{pecs:0.9, triceps:0.7, ant_delt:0.4}},
+  {id:"pushup",  name:"Push-Up",              group:"Chest", r:{pecs:0.8, triceps:0.5, ant_delt:0.4, abs:0.3}},
+  {id:"machpress",name:"Machine Chest Press", group:"Chest", r:{pecs:1.0, ant_delt:0.5, triceps:0.5}},
+  {id:"svend",   name:"Svend Press",          group:"Chest", r:{pecs:0.8, ant_delt:0.3}},
+  /* ---- SHOULDERS ---- */
+  {id:"ohp",     name:"Overhead Press",       group:"Shoulders", r:{ant_delt:1.0, lat_delt:0.4, triceps:0.6, upper_traps:0.3}},
+  {id:"dbshoulder",name:"Seated DB Press",    group:"Shoulders", r:{ant_delt:1.0, lat_delt:0.5, triceps:0.5, upper_traps:0.3}},
+  {id:"arnold",  name:"Arnold Press",         group:"Shoulders", r:{ant_delt:1.0, lat_delt:0.5, triceps:0.4, upper_traps:0.25}},
+  {id:"machshoulder",name:"Machine Shoulder Press",group:"Shoulders", r:{ant_delt:1.0, lat_delt:0.45, triceps:0.5}},
+  {id:"latraise",name:"Lateral Raise",        group:"Shoulders", r:{lat_delt:1.0, ant_delt:0.2, post_delt:0.15, upper_traps:0.15}},
+  {id:"cablelat",name:"Cable Lateral Raise",  group:"Shoulders", r:{lat_delt:1.0, ant_delt:0.15, upper_traps:0.1}},
+  {id:"machlat", name:"Machine Lateral Raise",group:"Shoulders", r:{lat_delt:1.0, upper_traps:0.15}},
+  {id:"frontraise",name:"Front Raise",        group:"Shoulders", r:{ant_delt:1.0, lat_delt:0.2, upper_traps:0.1}},
+  {id:"rearfly", name:"Rear Delt Fly",        group:"Shoulders", r:{post_delt:1.0, mid_back:0.4, upper_traps:0.2}},
+  {id:"reversepec",name:"Reverse Pec Deck",   group:"Shoulders", r:{post_delt:1.0, mid_back:0.4}},
+  {id:"facepull",name:"Face Pull",            group:"Shoulders", r:{post_delt:0.8, mid_back:0.6, upper_traps:0.4}},
+  {id:"uprightrow",name:"Upright Row",        group:"Shoulders", r:{lat_delt:0.7, upper_traps:0.7, ant_delt:0.3, biceps:0.3}},
+  {id:"landmine",name:"Landmine Press",       group:"Shoulders", r:{ant_delt:1.0, pecs:0.5, triceps:0.4, upper_traps:0.2}},
+  {id:"cuban",   name:"Cuban Press",          group:"Shoulders", r:{post_delt:0.7, lat_delt:0.6, upper_traps:0.5, ant_delt:0.4}},
+  /* ---- BACK ---- */
+  {id:"pullup",  name:"Pull-Up",              group:"Back", r:{lats:1.0, biceps:0.6, mid_back:0.5, post_delt:0.3, forearms:0.4}},
+  {id:"chinup",  name:"Chin-Up",              group:"Back", r:{lats:0.9, biceps:0.8, mid_back:0.4, forearms:0.4}},
+  {id:"latpull", name:"Lat Pulldown",         group:"Back", r:{lats:1.0, biceps:0.5, mid_back:0.4, forearms:0.3}},
+  {id:"widepull",name:"Wide-Grip Pulldown",   group:"Back", r:{lats:1.0, mid_back:0.5, biceps:0.4}},
+  {id:"closepull",name:"Close-Grip Pulldown", group:"Back", r:{lats:1.0, biceps:0.6, mid_back:0.4}},
+  {id:"row",     name:"Barbell Row",          group:"Back", r:{lats:0.7, mid_back:0.9, post_delt:0.4, biceps:0.5, erectors:0.5, forearms:0.3}},
+  {id:"pendlay", name:"Pendlay Row",          group:"Back", r:{lats:0.7, mid_back:0.9, post_delt:0.4, biceps:0.5, erectors:0.6}},
+  {id:"dbrow",   name:"Dumbbell Row",         group:"Back", r:{lats:0.9, mid_back:0.7, biceps:0.5, post_delt:0.3, forearms:0.3}},
+  {id:"cablerow",name:"Seated Cable Row",     group:"Back", r:{mid_back:0.9, lats:0.7, biceps:0.5, post_delt:0.3, forearms:0.3}},
+  {id:"cssr",    name:"Chest-Supported Row",  group:"Back", r:{mid_back:1.0, lats:0.6, post_delt:0.4, biceps:0.4}},
+  {id:"tbar",    name:"T-Bar Row",            group:"Back", r:{mid_back:0.9, lats:0.7, biceps:0.5, post_delt:0.3, erectors:0.4}},
+  {id:"machrow", name:"Machine Row",          group:"Back", r:{mid_back:0.9, lats:0.7, biceps:0.4}},
+  {id:"meadows", name:"Meadows Row",          group:"Back", r:{lats:0.8, mid_back:0.7, biceps:0.4, post_delt:0.3}},
+  {id:"straightarm",name:"Straight-Arm Pulldown",group:"Back", r:{lats:1.0, mid_back:0.3, triceps:0.2}},
+  {id:"shrug",   name:"Barbell Shrug",        group:"Back", r:{upper_traps:1.0, forearms:0.3}},
+  {id:"dbshrug", name:"Dumbbell Shrug",       group:"Back", r:{upper_traps:1.0, forearms:0.3}},
+  {id:"deadlift",name:"Deadlift",             group:"Back", r:{erectors:1.0, glutes:0.8, hamstrings:0.8, mid_back:0.6, upper_traps:0.5, quads:0.4, forearms:0.5}},
+  {id:"rackpull",name:"Rack Pull",            group:"Back", r:{erectors:0.8, upper_traps:0.7, mid_back:0.6, glutes:0.5, forearms:0.5}},
+  {id:"sumodl",  name:"Sumo Deadlift",        group:"Back", r:{glutes:0.9, quads:0.6, erectors:0.8, adductors:0.5, hamstrings:0.6, forearms:0.5}},
+  /* ---- ARMS: biceps ---- */
+  {id:"curl",    name:"Barbell Curl",         group:"Arms", r:{biceps:1.0, forearms:0.5}},
+  {id:"ezcurl",  name:"EZ-Bar Curl",          group:"Arms", r:{biceps:1.0, forearms:0.4}},
+  {id:"dbcurl",  name:"Dumbbell Curl",        group:"Arms", r:{biceps:1.0, forearms:0.4}},
+  {id:"hammer",  name:"Hammer Curl",          group:"Arms", r:{biceps:0.8, forearms:0.7}},
+  {id:"inccurl", name:"Incline DB Curl",      group:"Arms", r:{biceps:1.0, forearms:0.3}},
+  {id:"preacher",name:"Preacher Curl",        group:"Arms", r:{biceps:1.0, forearms:0.3}},
+  {id:"cablecurl",name:"Cable Curl",          group:"Arms", r:{biceps:1.0, forearms:0.4}},
+  {id:"concentration",name:"Concentration Curl",group:"Arms", r:{biceps:1.0}},
+  {id:"spider",  name:"Spider Curl",          group:"Arms", r:{biceps:1.0, forearms:0.3}},
+  /* ---- ARMS: triceps ---- */
+  {id:"pushdown",name:"Triceps Pushdown",     group:"Arms", r:{triceps:1.0}},
+  {id:"rope",    name:"Rope Pushdown",        group:"Arms", r:{triceps:1.0}},
+  {id:"ohext",   name:"Overhead Cable Ext.",  group:"Arms", r:{triceps:1.0}},
+  {id:"skull",   name:"Skull Crusher",        group:"Arms", r:{triceps:1.0}},
+  {id:"cgbench", name:"Close-Grip Bench",     group:"Arms", r:{triceps:1.0, pecs:0.5, ant_delt:0.4}},
+  {id:"dbohext", name:"DB Overhead Ext.",     group:"Arms", r:{triceps:1.0}},
+  {id:"tridip",  name:"Triceps Dip",          group:"Arms", r:{triceps:1.0, pecs:0.4, ant_delt:0.3}},
+  {id:"kickback",name:"Triceps Kickback",     group:"Arms", r:{triceps:1.0}},
+  {id:"benchdip",name:"Bench Dip",            group:"Arms", r:{triceps:1.0, pecs:0.3, ant_delt:0.3}},
+  /* ---- ARMS: forearms ---- */
+  {id:"wristcurl",name:"Wrist Curl",          group:"Arms", r:{forearms:1.0}},
+  {id:"revwrist",name:"Reverse Wrist Curl",   group:"Arms", r:{forearms:1.0}},
+  {id:"revcurl", name:"Reverse Curl",         group:"Arms", r:{forearms:1.0, biceps:0.5}},
+  {id:"farmer",  name:"Farmer's Carry",       group:"Arms", r:{forearms:1.0, upper_traps:0.6, abs:0.4, glutes:0.3}},
+  /* ---- LEGS: quads ---- */
+  {id:"squat",   name:"Back Squat",           group:"Legs", r:{quads:1.0, glutes:0.7, hamstrings:0.4, erectors:0.5, adductors:0.4}},
+  {id:"frontsq", name:"Front Squat",          group:"Legs", r:{quads:1.0, glutes:0.5, erectors:0.5, abs:0.4}},
+  {id:"hacksq",  name:"Hack Squat",           group:"Legs", r:{quads:1.0, glutes:0.5, hamstrings:0.3}},
+  {id:"legpress",name:"Leg Press",            group:"Legs", r:{quads:1.0, glutes:0.6, hamstrings:0.3, adductors:0.3}},
+  {id:"legext",  name:"Leg Extension",        group:"Legs", r:{quads:1.0}},
+  {id:"bulgarian",name:"Bulgarian Split Squat",group:"Legs", r:{quads:0.9, glutes:0.8, hamstrings:0.4, adductors:0.3}},
+  {id:"lunge",   name:"Walking Lunge",        group:"Legs", r:{quads:0.8, glutes:0.8, hamstrings:0.4, adductors:0.3}},
+  {id:"goblet",  name:"Goblet Squat",         group:"Legs", r:{quads:0.9, glutes:0.6, abs:0.3}},
+  {id:"smithsq", name:"Smith Machine Squat",  group:"Legs", r:{quads:1.0, glutes:0.6, hamstrings:0.3}},
+  {id:"sissy",   name:"Sissy Squat",          group:"Legs", r:{quads:1.0}},
+  /* ---- LEGS: posterior ---- */
+  {id:"rdl",     name:"Romanian Deadlift",    group:"Legs", r:{hamstrings:1.0, glutes:0.8, erectors:0.5, forearms:0.3}},
+  {id:"sldl",    name:"Stiff-Leg Deadlift",   group:"Legs", r:{hamstrings:1.0, glutes:0.7, erectors:0.5}},
+  {id:"legcurl", name:"Lying Leg Curl",       group:"Legs", r:{hamstrings:1.0}},
+  {id:"seatedcurl",name:"Seated Leg Curl",    group:"Legs", r:{hamstrings:1.0}},
+  {id:"hipthrust",name:"Hip Thrust",          group:"Legs", r:{glutes:1.0, hamstrings:0.4, quads:0.2}},
+  {id:"glutebridge",name:"Glute Bridge",      group:"Legs", r:{glutes:1.0, hamstrings:0.3}},
+  {id:"goodmorning",name:"Good Morning",      group:"Legs", r:{hamstrings:0.8, erectors:0.8, glutes:0.6}},
+  {id:"pullthrough",name:"Cable Pull-Through",group:"Legs", r:{glutes:1.0, hamstrings:0.5, erectors:0.3}},
+  {id:"kickbackglute",name:"Glute Kickback",  group:"Legs", r:{glutes:1.0, hamstrings:0.3}},
+  {id:"stepup",  name:"Step-Up",              group:"Legs", r:{quads:0.7, glutes:0.8, hamstrings:0.4}},
+  {id:"nordic",  name:"Nordic Curl",          group:"Legs", r:{hamstrings:1.0, glutes:0.3}},
+  /* ---- LEGS: adductors / calves ---- */
+  {id:"adductor",name:"Adductor Machine",     group:"Legs", r:{adductors:1.0}},
+  {id:"cossack", name:"Cossack Squat",        group:"Legs", r:{adductors:0.7, quads:0.6, glutes:0.5}},
+  {id:"standcalf",name:"Standing Calf Raise", group:"Legs", r:{calves:1.0}},
+  {id:"seatedcalf",name:"Seated Calf Raise",  group:"Legs", r:{calves:1.0}},
+  {id:"legpresscalf",name:"Leg Press Calf Raise",group:"Legs", r:{calves:1.0}},
+  {id:"donkeycalf",name:"Donkey Calf Raise",  group:"Legs", r:{calves:1.0}},
+  /* ---- CORE ---- */
+  {id:"plank",   name:"Plank",                group:"Core", r:{abs:1.0, erectors:0.3}},
+  {id:"hangleg", name:"Hanging Leg Raise",    group:"Core", r:{abs:1.0, forearms:0.4}},
+  {id:"cablecrunch",name:"Cable Crunch",      group:"Core", r:{abs:1.0}},
+  {id:"crunch",  name:"Crunch",               group:"Core", r:{abs:1.0}},
+  {id:"abwheel", name:"Ab Wheel",             group:"Core", r:{abs:1.0, lats:0.3}},
+  {id:"russian", name:"Russian Twist",        group:"Core", r:{abs:1.0}},
+  {id:"hollow",  name:"Hollow Hold",          group:"Core", r:{abs:1.0}},
+  {id:"pallof",  name:"Pallof Press",         group:"Core", r:{abs:1.0}}
+];
+const EX_CATS=["Chest","Shoulders","Back","Arms","Legs","Core"];
+function allExercises(){ return SEED.concat(STATE.customExercises||[]); }
+function exById(id){ return allExercises().find(e=>e.id===id); }
+function exByName(n){ n=n.trim().toLowerCase(); return allExercises().find(e=>e.name.toLowerCase()===n); }
+
+/* =====================================================================
+   RECOVERY ENGINE
+   ===================================================================== */
+const REFERENCE_DOSE=5;        // effective sets that zero out a prime mover
+const READY=0.70;              // readiness threshold => "Ready"
+const FRESH=0.95;              // readiness threshold => essentially fully recovered
+const K_READY=Math.log(1/(1-READY));   // 1.204 ; tau = base / K_READY
+const HOUR=3600*1000;
+
+function repFactor(reps){
+  reps=+reps||0;
+  if(reps<=0) return 0;
+  if(reps<2) return 0.7;
+  if(reps<5) return 0.85;
+  if(reps<=30) return 1.0;
+  if(reps<=40) return 0.8;
+  return 0.6;
+}
+function intensityFactor(rir){
+  if(rir===""||rir==null||isNaN(rir)) return {f:0.85, conf:false}; // default RIR 2, low confidence
+  rir=+rir;
+  const tbl={0:1.0,1:0.94,2:0.85,3:0.72,4:0.58};
+  const f = rir>=5 ? 0.45 : tbl[rir];
+  return {f, conf:true};
+}
+// stimulus a single set delivers to one muscle
+function setStimulus(set, weight){
+  if(set.warmup) return weight*0.1*repFactor(set.reps);
+  const i=intensityFactor(set.rir);
+  return weight*repFactor(set.reps)*i.f;
+}
+// build per-muscle deposit list: {t, amount}
+function deposits(muscleId){
+  const out=[];
+  for(const s of STATE.sessions){
+    const t=new Date(s.time).getTime();
+    for(const ex of s.exercises){
+      const def=exById(ex.exId); if(!def) continue;
+      const w=def.r[muscleId]; if(!w) continue;
+      for(const set of ex.sets){
+        const amt=setStimulus(set,w);
+        if(amt>0) out.push({t, amount:amt});
+      }
+    }
+  }
+  return out;
+}
+function fatigueAt(muscleId, now){
+  const tau=baseOf(muscleId)/K_READY*HOUR;
+  let f=0;
+  for(const d of deposits(muscleId)){
+    const dt=now-d.t;
+    if(dt<0) continue;
+    f += d.amount*Math.exp(-dt/tau);
+  }
+  return f;
+}
+function lastTrained(muscleId){
+  let last=null;
+  for(const d of deposits(muscleId)) if(last===null||d.t>last) last=d.t;
+  return last;
+}
+// returns full readiness snapshot for a muscle
+function snapshot(muscleId, now){
+  const f=fatigueAt(muscleId, now);
+  const readiness=Math.max(0,Math.min(1,1-f/REFERENCE_DOSE));
+  const tau=baseOf(muscleId)/K_READY*HOUR;
+  // closed form: f decays uniformly (single tau) -> f(t+dt)=f*exp(-dt/tau)
+  const fReady=(1-READY)*REFERENCE_DOSE;   // 1.5
+  const fFresh=(1-FRESH)*REFERENCE_DOSE;   // 0.25
+  let toReady=0,toFresh=0;
+  if(f>fReady) toReady=tau*Math.log(f/fReady);
+  if(f>fFresh) toFresh=tau*Math.log(f/fFresh);
+  const last=lastTrained(muscleId);
+  const idleMs = last? now-last : Infinity;
+  // detraining drift: fully fresh AND idle well beyond full recovery
+  const driftMs = Math.max(5*24*HOUR, baseOf(muscleId)*3*HOUR);
+  let zone;
+  if(readiness<READY) zone="cook";
+  else if(readiness>=FRESH && idleMs>driftMs) zone="idle";
+  else zone="ready";
+  // confidence: any contributing set without RIR -> low confidence
+  let lowConf=false;
+  for(const s of STATE.sessions) for(const ex of s.exercises){
+    const def=exById(ex.exId); if(!def||!def.r[muscleId]) continue;
+    for(const set of ex.sets){ if(!set.warmup && (set.rir===""||set.rir==null)) lowConf=true; }
+  }
+  return {muscleId, readiness, zone, toReady, toFresh, last, idleMs, lowConf};
+}
+function fmtDur(ms){
+  if(ms<=0) return "now";
+  const h=ms/HOUR;
+  if(h<1) return Math.round(h*60)+"m";
+  if(h<48) return (h<10? h.toFixed(1):Math.round(h))+"h";
+  return Math.round(h/24*10)/10+"d";
+}
+function fmtAgo(t){
+  if(t==null) return "never";
+  const d=(Date.now()-t)/HOUR;
+  if(d<1) return Math.round(d*60)+"m ago";
+  if(d<48) return Math.round(d)+"h ago";
+  return Math.round(d/24)+"d ago";
+}
+// color along recovering->ready->fresh, redundant with text labels
+function readinessColor(r){
+  if(r<READY){ // indigo-deep -> indigo, scaled within [0,0.7]
+    const t=r/READY;
+    return mix([42,53,80],[80,110,160],t);
+  } else { // gold -> jade across [0.7,1]
+    const t=(r-READY)/(1-READY);
+    return mix([214,169,63],[84,180,141],t);
+  }
+}
+function mix(a,b,t){t=Math.max(0,Math.min(1,t));return `rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(",")})`;}
+
+/* =====================================================================
+   BODY MAP  (stylized front + back silhouettes)
+   ===================================================================== */
+function buildMap(){
+  const svg=document.getElementById("bodymap");
+  // helper to make a region (one or more shapes share a muscle id)
+  const shapes=[];
+  function blob(m,x,y,w,h,rx){ shapes.push(`<rect class="region" data-muscle="${m}" x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx||w/2}"/>`); }
+  function ell(m,cx,cy,rx,ry){ shapes.push(`<ellipse class="region" data-muscle="${m}" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}"/>`); }
+
+  // ---- FRONT figure (left), centered x~108 ----
+  const FX=108;
+  const front=`
+    <g>
+      <text class="figlabel" x="${FX}" y="20" text-anchor="middle">Front</text>
+      <!-- silhouette -->
+      <circle class="silhouette" cx="${FX}" cy="42" r="13"/>
+      <path class="silhouette" d="M${FX-30} 60 Q${FX} 52 ${FX+30} 60 L${FX+26} 150 Q${FX} 158 ${FX-26} 150 Z"/>
+      <rect class="silhouette" x="${FX-44}" y="62" width="15" height="78" rx="7"/>
+      <rect class="silhouette" x="${FX+29}" y="62" width="15" height="78" rx="7"/>
+      <rect class="silhouette" x="${FX-22}" y="152" width="18" height="100" rx="9"/>
+      <rect class="silhouette" x="${FX+4}" y="152" width="18" height="100" rx="9"/>
+    </g>`;
+  // front muscles
+  const fm=[];
+  fm.push(`<g>`);
+  // lateral delts (outer caps)
+  shapes.length=0;
+  ell("lat_delt", FX-34, 70, 9, 11); ell("lat_delt", FX+34, 70, 9, 11);
+  ell("ant_delt", FX-22, 70, 10, 9); ell("ant_delt", FX+22, 70, 10, 9);
+  blob("pecs", FX-24, 80, 22, 22, 7); blob("pecs", FX+2, 80, 22, 22, 7);
+  blob("biceps", FX-43, 90, 13, 30, 6); blob("biceps", FX+30, 90, 13, 30, 6);
+  blob("forearms", FX-44, 122, 14, 26, 6); blob("forearms", FX+30, 122, 14, 26, 6);
+  blob("abs", FX-15, 108, 30, 40, 8);
+  blob("quads", FX-21, 158, 17, 56, 8); blob("quads", FX+4, 158, 17, 56, 8);
+  blob("adductors", FX-3, 158, 6, 50, 3);
+  blob("calves", FX-20, 220, 15, 30, 6); blob("calves", FX+5, 220, 15, 30, 6);
+  const frontMuscles=shapes.join("");
+
+  // ---- BACK figure (right), centered x~292 ----
+  const BX=292; shapes.length=0;
+  const backSil=`
+    <g>
+      <text class="figlabel" x="${BX}" y="20" text-anchor="middle">Back</text>
+      <circle class="silhouette" cx="${BX}" cy="42" r="13"/>
+      <path class="silhouette" d="M${BX-30} 60 Q${BX} 52 ${BX+30} 60 L${BX+26} 150 Q${BX} 158 ${BX-26} 150 Z"/>
+      <rect class="silhouette" x="${BX-44}" y="62" width="15" height="78" rx="7"/>
+      <rect class="silhouette" x="${BX+29}" y="62" width="15" height="78" rx="7"/>
+      <rect class="silhouette" x="${BX-22}" y="152" width="18" height="100" rx="9"/>
+      <rect class="silhouette" x="${BX+4}" y="152" width="18" height="100" rx="9"/>
+    </g>`;
+  ell("post_delt", BX-34, 70, 9, 11); ell("post_delt", BX+34, 70, 9, 11);
+  blob("upper_traps", BX-18, 60, 36, 14, 6);
+  blob("triceps", BX-43, 90, 13, 30, 6); blob("triceps", BX+30, 90, 13, 30, 6);
+  blob("forearms", BX-44, 122, 14, 26, 6); blob("forearms", BX+30, 122, 14, 26, 6);
+  blob("lats", BX-26, 80, 16, 34, 6); blob("lats", BX+10, 80, 16, 34, 6);
+  blob("mid_back", BX-10, 78, 20, 26, 6);
+  blob("erectors", BX-6, 104, 12, 44, 4);
+  blob("glutes", BX-20, 150, 18, 22, 8); blob("glutes", BX+2, 150, 18, 22, 8);
+  blob("hamstrings", BX-21, 174, 17, 50, 8); blob("hamstrings", BX+4, 174, 17, 50, 8);
+  blob("calves", BX-20, 224, 15, 28, 6); blob("calves", BX+5, 224, 15, 28, 6);
+  const backMuscles=shapes.join("");
+
+  svg.innerHTML = front + backSil + frontMuscles + backMuscles;
+  svg.querySelectorAll(".region").forEach(el=>{
+    el.addEventListener("click",()=>{
+      const id=el.getAttribute("data-muscle");
+      const card=document.querySelector(`.mcard[data-m="${id}"]`);
+      if(card){ card.scrollIntoView({behavior:"smooth",block:"center"}); card.classList.add("flash"); setTimeout(()=>card.classList.remove("flash"),1400); }
+    });
+    // tooltip
+    const id=el.getAttribute("data-muscle");
+    const ti=document.createElementNS("http://www.w3.org/2000/svg","title");
+    ti.textContent=MNAME[id]; el.appendChild(ti);
+  });
+}
+function paintMap(now){
+  const svg=document.getElementById("bodymap");
+  MUSCLES.forEach(m=>{
+    const s=snapshot(m.id, now);
+    const col = s.zone==="idle"? "var(--jade)" : readinessColor(s.readiness);
+    svg.querySelectorAll(`.region[data-muscle="${m.id}"]`).forEach(el=>el.setAttribute("fill",col));
+  });
+}
+
+/* =====================================================================
+   RENDER: readiness tab
+   ===================================================================== */
+/* =====================================================================
+   RECOMMENDATION ENGINE
+   Tuned to: shoulder + back priority, lean "xian rou" aesthetic.
+   Picks favor (1) ready/fresh muscles, (2) high aesthetic priority,
+   (3) best-practice exercises (stretch-biased, stable, high SFR), and
+   avoid movements whose other key muscles are still deeply cooking.
+   ===================================================================== */
+// aesthetic priority per muscle (0–1). Edit to retune goals.
+const AES={
+  lat_delt:1.0, lats:0.9, post_delt:0.82, mid_back:0.75, upper_traps:0.5,
+  pecs:0.68, biceps:0.7, triceps:0.68, forearms:0.4, abs:0.6, ant_delt:0.45,
+  glutes:0.6, quads:0.55, hamstrings:0.55, calves:0.5, adductors:0.38, erectors:0.4
+};
+// best-practice ordered picks per muscle (best first); ids exist in SEED
+const PREFERRED={
+  lat_delt:["cablelat","latraise","machlat"],
+  post_delt:["reversepec","facepull","rearfly"],
+  ant_delt:["ohp","dbshoulder"],
+  lats:["pullup","latpull","straightarm"],
+  mid_back:["cssr","cablerow","tbar","row"],
+  upper_traps:["shrug","dbshrug"],
+  pecs:["incdb","incbench","dip","machpress"],
+  biceps:["inccurl","preacher","dbcurl","cablecurl"],
+  triceps:["ohext","pushdown","skull"],
+  forearms:["hammer","wristcurl","revcurl"],
+  abs:["cablecrunch","hangleg","abwheel"],
+  quads:["hacksq","legpress","squat","legext"],
+  hamstrings:["rdl","seatedcurl","legcurl"],
+  glutes:["hipthrust","rdl"],
+  adductors:["adductor","cossack"],
+  calves:["standcalf","seatedcalf"],
+  erectors:["rdl","goodmorning","squat"]
+};
+// short best-practice rationale per pick
+const EX_NOTE={
+  cablelat:"constant-tension width work", latraise:"the width staple", machlat:"stable, easy to push to failure",
+  reversepec:"clean rear-delt isolation", facepull:"rear delts + healthy shoulders", rearfly:"rear-delt detail",
+  ohp:"vertical pressing strength", dbshoulder:"front delts with a longer ROM",
+  pullup:"king of back width", latpull:"lat width, easy to load", straightarm:"lats without biceps fatigue",
+  cssr:"chest-supported — no lower-back tax", cablerow:"thickness with constant tension", tbar:"heavy mid-back thickness", row:"loadable back thickness",
+  shrug:"direct upper-trap mass", dbshrug:"traps through a full ROM",
+  incdb:"deep stretch, upper-chest bias", incbench:"loadable upper-chest pressing", dip:"big stretch on the lower pecs", machpress:"stable chest volume",
+  inccurl:"biceps under deep stretch", preacher:"hard short-head contraction", dbcurl:"simple, scalable", cablecurl:"constant tension",
+  ohext:"long head, lengthened bias", pushdown:"elbow-friendly volume", skull:"long-head stretch",
+  hammer:"brachialis + forearm thickness", wristcurl:"direct forearm flexors", revcurl:"forearm extensors + brachialis",
+  cablecrunch:"loadable abs", hangleg:"lower-ab emphasis", abwheel:"big eccentric on the abs",
+  hacksq:"quad-biased, deep, stable", legpress:"high quad volume, low systemic cost", squat:"the foundational leg builder", legext:"pure quad isolation",
+  rdl:"hamstring stretch, posterior staple", seatedcurl:"hamstrings in the stretch", legcurl:"hamstring isolation",
+  hipthrust:"glutes at peak contraction", adductor:"direct adductor work", cossack:"adductors through range",
+  standcalf:"loaded stretch at the bottom", seatedcalf:"soleus, knees bent", goodmorning:"erectors + hams"
+};
+
+function pickExerciseFor(muscleId, cookMap, covered){
+  const pref=PREFERRED[muscleId];
+  const cands = pref ? pref.map(id=>exById(id)).filter(Boolean)
+                     : allExercises().filter(e=>(e.r[muscleId]||0)>=0.9);
+  const ok = ex=>{
+    for(const m in ex.r){
+      if(m!==muscleId && ex.r[m]>=0.5){ const ms=cookMap[m]; if(ms && ms.readiness<0.5) return false; }
+    }
+    return true;
+  };
+  // prefer a clean pick that doesn't double-cover an already-covered muscle as its prime mover
+  for(const ex of cands){ if(ok(ex)) return ex; }
+  return cands[0]||null;
+}
+function recommendSession(now){
+  const snaps=MUSCLES.map(m=>snapshot(m.id, now));
+  const cookMap=Object.fromEntries(snaps.map(s=>[s.muscleId,s]));
+  const trainable=snaps.filter(s=>s.zone==="ready"||s.zone==="idle");
+  if(!trainable.length) return {rest:true};
+  const score=s=>(AES[s.muscleId]??0.5)*(1+(s.zone==="idle"?0.25:0));
+  trainable.sort((a,b)=> score(b)-score(a) || (a.last||0)-(b.last||0));
+  const covered=new Set(), recs=[];
+  for(const s of trainable){
+    if(recs.length>=6) break;
+    if(covered.has(s.muscleId)) continue;
+    const ex=pickExerciseFor(s.muscleId, cookMap, covered);
+    if(!ex) continue;
+    if(recs.some(r=>r.exId===ex.id)) continue;
+    recs.push({exId:ex.id, target:s.muscleId, zone:s.zone, note:EX_NOTE[ex.id]||"solid choice"});
+    for(const m in ex.r){ if(ex.r[m]>=0.5) covered.add(m); }
+  }
+  return {rest:false, recs};
+}
+function renderRecommendations(now){
+  const sub=document.getElementById("recsub"), list=document.getElementById("reclist");
+  const out=recommendSession(now);
+  if(out.rest){
+    sub.textContent="Tuned to your shoulder + back priority and a lean aesthetic.";
+    list.innerHTML=`<div class="recrest">Most muscles are still recovering. A <b>rest day</b> — or light cardio and fast-recovering work like calves &amp; abs — is the smart call. Training cooked muscles adds fatigue without extra growth.</div>`;
+    return;
+  }
+  sub.innerHTML="Tuned to <b style='color:var(--ink-dim)'>shoulder + back priority</b> and a lean aesthetic. Picks favor ready muscles and stretch-biased, stable movements.";
+  list.innerHTML = out.recs.map(r=>{
+    const def=exById(r.exId);
+    const zoneTag = r.zone==="idle" ? `<span class="fresh">fresh</span>` : `ready`;
+    return `<div class="rec">
+      <div>
+        <span class="recname">${def.name}</span>
+        <span class="recwhy"><b>${MNAME[r.target]}</b> · ${zoneTag} — ${r.note}</span>
+      </div>
+      <button class="btn tiny recadd" data-addrec="${r.exId}">+ Add</button>
+    </div>`;
+  }).join("") + `<div class="recfoot"><button class="btn tiny" id="addallrec">Add all to a log session →</button></div>`;
+  list.querySelectorAll("[data-addrec]").forEach(b=>b.addEventListener("click",()=>{
+    addExerciseById(b.dataset.addrec); toast(`Added ${exById(b.dataset.addrec).name} to log`);
+  }));
+  const all=document.getElementById("addallrec");
+  if(all) all.addEventListener("click",()=>{
+    out.recs.forEach(r=>{ if(!draft.some(d=>d.exId===r.exId)) addExerciseById(r.exId); });
+    document.getElementById("exblocks").scrollIntoView({behavior:"smooth",block:"start"});
+    toast("Loaded recommended session");
+  });
+}
+
+function renderReady(){
+  const now=Date.now();
+  paintMap(now);
+  const snaps=MUSCLES.map(m=>({m, s:snapshot(m.id, now)}));
+
+  // summary chips
+  const ready=snaps.filter(x=>x.s.zone==="ready").map(x=>x.m.name);
+  const idle=snaps.filter(x=>x.s.zone==="idle").map(x=>x.m.name);
+  const cook=snaps.filter(x=>x.s.zone==="cook")
+    .sort((a,b)=>a.s.toReady-b.s.toReady)
+    .map(x=>`${x.m.name} <span style="opacity:.6">·${fmtDur(x.s.toReady)}</span>`);
+  const sum=document.getElementById("summary");
+  const seg=(k,arr,cls)=> arr.length? `<div class="row"><span class="tagk">${k}</span><span>${arr.map(t=>`<span class="chip ${cls}">${t}</span>`).join("")}</span></div>`:"";
+  sum.innerHTML =
+    (ready.length||idle.length||cook.length)
+    ? seg("Ready",ready,"ready")+seg("Fresh",idle,"idle")+seg("Cooking",cook,"cook")
+    : `<div class="empty">No data yet — log a session to wake the model.</div>`;
+
+  // sorted list
+  const sort=document.getElementById("sortsel").value;
+  snaps.sort((a,b)=>{
+    if(sort==="name") return a.m.name.localeCompare(b.m.name);
+    if(sort==="readinessDesc") return b.s.readiness-a.s.readiness;
+    return a.s.readiness-b.s.readiness;
+  });
+  const list=document.getElementById("mlist");
+  list.innerHTML=snaps.map(({m,s})=>{
+    const pct=Math.round(s.readiness*100);
+    const zoneTxt = s.zone==="ready"?"Ready":s.zone==="idle"?"Fresh":"Recovering";
+    const sub = s.zone==="cook" ? `ready in ~${fmtDur(s.toReady)}`
+              : s.zone==="idle" ? `idle ${fmtAgo(s.last)}`
+              : `last ${fmtAgo(s.last)}`;
+    const col=readinessColor(s.readiness);
+    return `<div class="mcard" data-m="${m.id}">
+      <div>
+        <div class="mname">${m.name}</div>
+        <div class="mregion">${m.region}</div>
+      </div>
+      <div class="mstatus">
+        <div class="zone ${s.zone}">${zoneTxt}</div>
+        <div class="mtime">${sub}${s.lowConf?` · <span class="lowconf">est</span>`:""}</div>
+      </div>
+      <div class="bar" title="${pct}% recovered">
+        <i style="width:${Math.max(3,pct)}%;background:${col}"></i>
+        <span class="readymark" style="left:${READY*100}%"></span>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+
+/* =====================================================================
+   RENDER: log tab (draft session held in memory until saved)
+   ===================================================================== */
+let draft=[]; // [{exId, sets:[{reps,load,rir,warmup}]}]
+let pickerCat="All";
+function defSets(){ return (STATE.settings&&+STATE.settings.defaultSets)||3; }
+function defReps(){ return (STATE.settings&&+STATE.settings.defaultReps)||10; }
+function refreshLog(){ renderDraft(); renderPicker(); }
+
+// most recent logged sets for an exercise (for prefill)
+function lastSessionFor(exId){
+  for(let i=STATE.sessions.length-1;i>=0;i--){
+    const ex=STATE.sessions[i].exercises.find(e=>e.exId===exId);
+    if(ex && ex.sets.length) return ex.sets.map(s=>({reps:s.reps, load:s.load==null?"":s.load, rir:s.rir==null?"":s.rir, warmup:!!s.warmup}));
+  }
+  return null;
+}
+// one tap: add exercise (default sets×reps, or your last numbers). tap again: +1 set.
+function addExerciseById(exId){
+  const di=draft.findIndex(d=>d.exId===exId);
+  if(di>=0){
+    const prev=draft[di].sets[draft[di].sets.length-1]||{reps:defReps(),load:"",rir:""};
+    draft[di].sets.push({reps:prev.reps, load:prev.load, rir:prev.rir, warmup:false});
+  }else{
+    const prev=lastSessionFor(exId);
+    const sets = prev && prev.length ? prev.map(s=>({...s}))
+      : Array.from({length:defSets()},()=>({reps:defReps(), load:"", rir:"", warmup:false}));
+    draft.push({exId, sets});
+  }
+  refreshLog();
+}
+
+// ---- routines (one-tap templates) ----
+function buildDraftEntry(exId, count){
+  count=Math.max(1, count||defSets());
+  const prev=lastSessionFor(exId);
+  let sets;
+  if(prev && prev.length){
+    sets=prev.map(s=>({...s}));
+    while(sets.length<count) sets.push({...sets[sets.length-1], warmup:false});
+    sets=sets.slice(0,count);
+  }else{
+    sets=Array.from({length:count},()=>({reps:defReps(), load:"", rir:"", warmup:false}));
+  }
+  return {exId, sets};
+}
+function loadRoutine(id){
+  const r=(STATE.routines||[]).find(x=>x.id===id); if(!r) return;
+  let added=0;
+  for(const it of r.items){
+    if(!exById(it.exId)) continue;
+    if(draft.some(d=>d.exId===it.exId)) continue;
+    draft.push(buildDraftEntry(it.exId, it.sets)); added++;
+  }
+  refreshLog();
+  toast(added ? `Loaded "${r.name}"` : `"${r.name}" already loaded`);
+  if(added) document.getElementById("exblocks").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function saveRoutineFromDraft(){
+  if(!draft.length){ toast("Add exercises first, then save as routine."); return; }
+  const name=(prompt("Name this routine (e.g. Push Day):")||"").trim();
+  if(!name) return;
+  STATE.routines=STATE.routines||[];
+  STATE.routines.push({id:"r_"+Date.now().toString(36), name, items:draft.map(d=>({exId:d.exId, sets:d.sets.length}))});
+  saveState(); renderRoutines(); toast(`Saved routine "${name}"`);
+}
+function renderRoutines(){
+  const wrap=document.getElementById("routines"); if(!wrap) return;
+  const rs=STATE.routines||[];
+  if(!rs.length){ wrap.innerHTML=`<span class="rempty">None yet — build a session below, then tap "Save current as routine".</span>`; return; }
+  wrap.innerHTML=rs.map(r=>{
+    const valid=r.items.filter(it=>exById(it.exId)).length;
+    return `<button class="routine-chip" data-r="${r.id}">${r.name} <span class="rcount">${valid} ex</span><span class="rx" data-rx="${r.id}" title="delete routine">✕</span></button>`;
+  }).join("");
+  wrap.querySelectorAll(".routine-chip").forEach(b=>b.addEventListener("click",e=>{
+    if(e.target.dataset.rx!==undefined) return;
+    loadRoutine(b.dataset.r);
+  }));
+  wrap.querySelectorAll(".rx").forEach(x=>x.addEventListener("click",e=>{
+    e.stopPropagation();
+    const id=e.target.dataset.rx, r=(STATE.routines||[]).find(r=>r.id===id);
+    if(r && confirm(`Delete routine "${r.name}"? (Your logged history is unaffected.)`)){
+      STATE.routines=STATE.routines.filter(r=>r.id!==id); saveState(); renderRoutines(); toast("Routine deleted");
+    }
+  }));
+}
+
+function renderCatPills(){
+  const wrap=document.getElementById("catpills");
+  const cats=["All",...EX_CATS];
+  wrap.innerHTML=cats.map(c=>`<button class="pill ${c===pickerCat?'active':''}" data-cat="${c}">${c}</button>`).join("");
+  wrap.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{
+    pickerCat=b.dataset.cat; document.getElementById("exsearch").value=""; renderCatPills(); renderPicker();
+  }));
+}
+function renderPicker(){
+  const search=(document.getElementById("exsearch").value||"").trim().toLowerCase();
+  const all=allExercises();
+  const inDraft=new Set(draft.map(d=>d.exId));
+  const counts=Object.fromEntries(draft.map(d=>[d.exId,d.sets.length]));
+  const chip=e=>{
+    const added=inDraft.has(e.id);
+    return `<button class="exchip ${added?'added':''}" data-ex="${e.id}" title="${Object.keys(e.r).map(k=>MNAME[k]).join(', ')}">${e.name}${added?`<span class="badge">${counts[e.id]}</span>`:""}</button>`;
+  };
+  let html="";
+  if(search){
+    const m=all.filter(e=>e.name.toLowerCase().includes(search)||e.group.toLowerCase().includes(search));
+    html = m.length? `<div class="chips">${m.map(chip).join("")}</div>` : `<div class="pickempty">No match — add it as a custom exercise below.</div>`;
+  }else if(pickerCat!=="All"){
+    html=`<div class="chips">${all.filter(e=>e.group===pickerCat).map(chip).join("")}</div>`;
+  }else{
+    const recents=[];
+    for(let i=STATE.sessions.length-1;i>=0 && recents.length<8;i--)
+      for(const ex of STATE.sessions[i].exercises){ if(!recents.includes(ex.exId)&&exById(ex.exId)) recents.push(ex.exId); if(recents.length>=8) break; }
+    if(recents.length) html+=`<div class="pickgroup">Recent</div><div class="chips">${recents.map(id=>chip(exById(id))).join("")}</div>`;
+    for(const cat of EX_CATS){
+      const items=all.filter(e=>e.group===cat);
+      if(items.length) html+=`<div class="pickgroup">${cat}</div><div class="chips">${items.map(chip).join("")}</div>`;
+    }
+  }
+  document.getElementById("picker").innerHTML=html;
+  document.getElementById("picker").querySelectorAll(".exchip").forEach(b=>b.addEventListener("click",()=>addExerciseById(b.dataset.ex)));
+}
+
+function renderDraft(){
+  const wrap=document.getElementById("exblocks");
+  if(!draft.length){ wrap.innerHTML=`<div class="empty">Tap an exercise above to start.</div>`; return; }
+  wrap.innerHTML=draft.map((d,di)=>{
+    const def=exById(d.exId);
+    const musc=Object.keys(def.r).map(k=>MNAME[k]).slice(0,4).join(" · ");
+    const rows=d.sets.map((s,si)=>`
+      <tr>
+        <td style="color:var(--faint);font-family:var(--mono);font-size:11px">${si+1}</td>
+        <td><input type="number" inputmode="numeric" value="${s.reps}" data-di="${di}" data-si="${si}" data-f="reps" placeholder="reps"></td>
+        <td><div class="loadcell"><input type="number" inputmode="decimal" value="${s.load}" data-di="${di}" data-si="${si}" data-f="load" placeholder="load"><button class="plbtn" data-plate="${di}-${si}" title="plate calculator">▦</button></div></td>
+        <td><input type="number" inputmode="numeric" value="${s.rir}" data-di="${di}" data-si="${si}" data-f="rir" placeholder="—" min="0" max="6"></td>
+        <td class="x"><input type="checkbox" ${s.warmup?"checked":""} data-di="${di}" data-si="${si}" data-f="warmup" title="warm-up"></td>
+        <td class="x"><button class="ghost btn tiny" data-rm="${di}-${si}">✕</button></td>
+      </tr>`).join("");
+    return `<div class="exblock">
+      <div class="exhead">
+        <div><div class="exname">${def.name}</div><div class="exmusc">${musc}</div></div>
+        <button class="ghost btn tiny" data-rmex="${di}">remove</button>
+      </div>
+      <table class="settbl">
+        <thead><tr><th></th><th>Reps</th><th>Load</th><th>RIR</th><th class="x">WU</th><th class="x"></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <button class="ghost btn tiny" data-addset="${di}" style="margin-top:8px">+ set</button>
+    </div>`;
+  }).join("");
+  wrap.querySelectorAll("input").forEach(inp=>inp.addEventListener("input",e=>{
+    const di=+e.target.dataset.di, si=+e.target.dataset.si, f=e.target.dataset.f;
+    draft[di].sets[si][f] = f==="warmup"? e.target.checked : e.target.value;
+  }));
+  wrap.querySelectorAll("[data-rm]").forEach(b=>b.addEventListener("click",e=>{
+    const [di,si]=e.target.dataset.rm.split("-").map(Number);
+    draft[di].sets.splice(si,1); if(!draft[di].sets.length) draft.splice(di,1); refreshLog();
+  }));
+  wrap.querySelectorAll("[data-rmex]").forEach(b=>b.addEventListener("click",e=>{ draft.splice(+e.target.dataset.rmex,1); refreshLog(); }));
+  wrap.querySelectorAll("[data-plate]").forEach(b=>b.addEventListener("click",e=>{
+    const [di,si]=e.currentTarget.dataset.plate.split("-").map(Number);
+    openPlateModal(draft[di].sets[si].load);
+  }));
+  wrap.querySelectorAll("[data-addset]").forEach(b=>b.addEventListener("click",e=>{
+    const di=+e.target.dataset.addset; const prev=draft[di].sets[draft[di].sets.length-1]||{reps:defReps(),load:"",rir:""};
+    draft[di].sets.push({reps:prev.reps,load:prev.load,rir:prev.rir,warmup:false}); refreshLog();
+  }));
+}
+function saveSession(){
+  if(!draft.length){ toast("Add at least one exercise."); return; }
+  const dt=document.getElementById("sessdt").value;
+  const time = dt? new Date(dt).toISOString() : new Date().toISOString();
+  const exercises=draft.map(d=>({exId:d.exId, sets:d.sets
+      .filter(s=>(+s.reps>0)||s.warmup)
+      .map(s=>({reps:+s.reps||0, load:s.load===""?null:+s.load, rir:s.rir===""?null:+s.rir, warmup:!!s.warmup}))}))
+    .filter(e=>e.sets.length);
+  if(!exercises.length){ toast("No valid sets — add reps."); return; }
+  STATE.sessions.push({id:Date.now()+"-"+Math.random().toString(36).slice(2,6), time, exercises});
+  STATE.sessions.sort((a,b)=>new Date(a.time)-new Date(b.time));
+  saveState(); draft=[]; refreshLog(); setNow();
+  document.getElementById("logstatus").textContent="Saved. Readiness updated.";
+  toast("Session saved");
+  renderAll();
+}
+
+/* =====================================================================
+   RENDER: history
+   ===================================================================== */
+function renderHistory(){
+  const wrap=document.getElementById("histlist");
+  if(!STATE.sessions.length){ wrap.innerHTML=`<div class="empty">No sessions logged.</div>`; return; }
+  const sorted=[...STATE.sessions].sort((a,b)=>new Date(b.time)-new Date(a.time));
+  wrap.innerHTML=sorted.map(s=>{
+    const d=new Date(s.time);
+    const nice=d.toLocaleString([], {weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+    const totalSets=s.exercises.reduce((n,e)=>n+e.sets.length,0);
+    const items=s.exercises.map(e=>{
+      const def=exById(e.exId);
+      const work=e.sets.filter(x=>!x.warmup);
+      const detail=e.sets.map(x=>x.warmup?"wu":`${x.reps}${x.load!=null?"×"+x.load:""}${x.rir!=null?" @"+x.rir:""}`).join(", ");
+      return `<li><b style="color:var(--ink)">${def?def.name:"(deleted ex)"}</b> — ${detail}</li>`;
+    }).join("");
+    return `<div class="sess" data-id="${s.id}">
+      <div class="sesshead">
+        <span class="sessdate">${nice}</span>
+        <span class="sessmeta">${s.exercises.length} ex · ${totalSets} sets <button class="danger btn tiny" data-del="${s.id}" style="margin-left:8px">delete</button></span>
+      </div>
+      <div class="sessbody"><ul>${items}</ul></div>
+    </div>`;
+  }).join("");
+  wrap.querySelectorAll(".sesshead").forEach(h=>h.addEventListener("click",e=>{
+    if(e.target.dataset.del!==undefined) return;
+    h.parentElement.classList.toggle("open");
+  }));
+  wrap.querySelectorAll("[data-del]").forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation();
+    if(!confirm("Delete this session? Readiness will recompute.")) return;
+    STATE.sessions=STATE.sessions.filter(x=>x.id!==e.target.dataset.del);
+    saveState(); renderAll(); toast("Session deleted");
+  }));
+}
+
+/* =====================================================================
+   RENDER: settings (baselines, custom-muscle editor, data)
+   ===================================================================== */
+function renderBaselines(){
+  const g=document.getElementById("basegrid");
+  g.innerHTML=MUSCLES.map(m=>`
+    <span class="bn">${m.name}</span>
+    <span><input type="number" min="1" data-base="${m.id}" value="${baseOf(m.id)}"> <span class="unit">h</span></span>
+  `).join("");
+  g.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
+    STATE.baseline=STATE.baseline||{};
+    const v=+e.target.value; if(v>0) STATE.baseline[e.target.dataset.base]=v;
+    saveState(); renderReady(); toast("Baseline updated");
+  }));
+}
+function renderCustomMuscleEditor(){
+  const c=document.getElementById("cxmuscles");
+  c.innerHTML=`<label class="fld">Recruited muscles (weight 0–1; leave blank to skip)</label>
+    <div class="basegrid">`+MUSCLES.map(m=>`
+      <span class="bn">${m.name}</span>
+      <span><input type="number" step="0.05" min="0" max="1" data-cx="${m.id}" placeholder="0"></span>
+    `).join("")+`</div>`;
+}
+function saveCustom(){
+  const name=document.getElementById("cxname").value.trim();
+  if(!name){ toast("Name the exercise."); return; }
+  const r={};
+  document.querySelectorAll("[data-cx]").forEach(inp=>{ const v=+inp.value; if(v>0) r[inp.dataset.cx]=Math.min(1,v); });
+  if(!Object.keys(r).length){ toast("Assign at least one muscle."); return; }
+  const id="cx_"+Date.now().toString(36);
+  STATE.customExercises=STATE.customExercises||[];
+  STATE.customExercises.push({id,name,group:document.getElementById("cxgroup").value.trim()||"Custom",r});
+  saveState(); buildExerciseList();
+  document.getElementById("cxname").value=""; document.getElementById("cxgroup").value="";
+  renderCustomMuscleEditor(); toast("Custom exercise saved");
+}
+
+/* =====================================================================
+   misc UI
+   ===================================================================== */
+function buildExerciseList(){ renderCatPills(); renderPicker(); }
+function setNow(){
+  const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+  document.getElementById("sessdt").value=d.toISOString().slice(0,16);
+  updateDtLabel();
+}
+function updateDtLabel(){
+  const v=document.getElementById("sessdt").value;
+  const lab=document.getElementById("dtlabel");
+  if(!lab) return;
+  const d=v?new Date(v):new Date();
+  const now=new Date();
+  const sameDay=d.toDateString()===now.toDateString();
+  lab.textContent = sameDay ? "now ("+d.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+")"
+    : d.toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+}
+function renderDefaults(){
+  const ds=document.getElementById("defsets"), dr=document.getElementById("defreps");
+  if(ds) ds.value=defSets();
+  if(dr) dr.value=defReps();
+  const rr=document.getElementById("defrest"), rw=document.getElementById("defwork");
+  if(rr) rr.value=restSec();
+  if(rw) rw.value=workSec();
+}
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2200);
+}
+function tickClock(){
+  document.getElementById("clock").textContent =
+    new Date().toLocaleString([], {weekday:"long",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+function renderAll(){ renderReady(); renderHistory(); renderBaselines(); renderRecommendations(Date.now()); }
+
+/* =====================================================================
+   WORKOUT TIMER  — continuous session clock + auto-cycling SET/REST
+   ===================================================================== */
+function restSec(){ const v=STATE.settings&&STATE.settings.restSec; return (v==null?90:+v); }
+function workSec(){ const v=STATE.settings&&STATE.settings.workSec; return (v==null?0:+v); } // 0 = count up
+const T={ running:false, paused:false, phase:"idle", sessionStart:0, phaseStart:0,
+          phaseDur:0, accumPause:0, phasePause:0, pauseStart:0, fired:false };
+let _audio=null;
+function beep(times){
+  try{
+    _audio = _audio || new (window.AudioContext||window.webkitAudioContext)();
+    let t=_audio.currentTime;
+    for(let i=0;i<(times||1);i++){
+      const o=_audio.createOscillator(), g=_audio.createGain();
+      o.frequency.value=880; o.connect(g); g.connect(_audio.destination);
+      g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.25,t+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+0.18);
+      o.start(t); o.stop(t+0.2); t+=0.28;
+    }
+  }catch(e){}
+  if(navigator.vibrate) navigator.vibrate(times>1?[120,80,120]:120);
+}
+function tNow(){ return T.paused ? T.pauseStart : Date.now(); }
+function elapsedSession(){ return Math.max(0,(tNow()-T.sessionStart-T.accumPause)/1000); }
+function elapsedPhase(){ return Math.max(0,(tNow()-T.phaseStart-T.phasePause)/1000); }
+function beginPhase(phase){
+  T.phase=phase; T.phaseStart=Date.now(); T.phasePause=0; T.fired=false;
+  T.phaseDur = phase==="rest"? restSec() : workSec();   // work 0 => count up
+}
+function timerStart(){
+  if(!_audio){ try{ _audio=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  T.running=true; T.paused=false; T.accumPause=0; T.pauseStart=0;
+  T.sessionStart=Date.now(); beginPhase("work");
+  document.body.classList.add("timerOn");
+  updateTimerUI();
+}
+function timerPauseToggle(){
+  if(!T.running) return;
+  if(T.paused){ const d=Date.now()-T.pauseStart; T.accumPause+=d; T.phasePause+=d; T.pauseStart=0; T.paused=false; }
+  else { T.pauseStart=Date.now(); T.paused=true; }
+  updateTimerUI();
+}
+function timerAdvance(){ // SET -> REST -> SET ...
+  beep(T.phase==="rest"?1:1);
+  beginPhase(T.phase==="rest"?"work":"rest");
+  updateTimerUI();
+}
+function timerStop(){
+  T.running=false; T.paused=false; T.phase="idle";
+  document.body.classList.remove("timerOn");
+  updateTimerUI();
+}
+function timerAdjustRest(delta){
+  if(T.phase!=="rest") return;
+  T.phaseDur=Math.max(0, T.phaseDur+delta);
+  updateTimerUI();
+}
+function fmtMS(s){ s=Math.max(0,Math.round(s)); const m=Math.floor(s/60); return m+":"+String(s%60).padStart(2,"0"); }
+function updateTimerUI(){
+  const bar=document.getElementById("timerbar"), onLog=document.getElementById("tab-log").classList.contains("active");
+  if(!onLog){ bar.classList.add("hidden"); document.body.classList.remove("timerOn"); return; }
+  bar.classList.remove("hidden"); document.body.classList.add("timerOn");
+  const total=document.getElementById("tbTotal"), badge=document.getElementById("tbBadge"),
+        time=document.getElementById("tbTime"), main=document.getElementById("tbMain"),
+        skip=document.getElementById("tbSkip"), minus=document.getElementById("tbMinus"),
+        stop=document.getElementById("tbStop"), phaseWrap=document.querySelector(".tb-phase"),
+        totalWrap=document.querySelector(".tb-total");
+  if(!T.running){
+    // idle: just a start affordance
+    phaseWrap.style.display="none"; totalWrap.style.display="none";
+    minus.style.display="none"; skip.style.display="none"; stop.style.display="none";
+    main.textContent="▶  Start timer"; main.classList.add("tb-start");
+    return;
+  }
+  main.classList.remove("tb-start");
+  phaseWrap.style.display=""; totalWrap.style.display="";
+  minus.style.display = T.phase==="rest"?"":"none";
+  skip.style.display=""; stop.style.display="";
+  total.textContent=fmtMS(elapsedSession());
+  const isRest=T.phase==="rest";
+  badge.textContent=isRest?"Rest":"Set"; badge.className="tb-badge "+(isRest?"rest":"set");
+  let remaining;
+  if(T.phaseDur>0){ remaining=T.phaseDur-elapsedPhase(); time.textContent=fmtMS(remaining); }
+  else { remaining=999; time.textContent=fmtMS(elapsedPhase()); } // count up
+  time.classList.toggle("urgent", T.phaseDur>0 && remaining<=5 && remaining>0);
+  main.textContent = T.paused?"▶":"⏸";
+  skip.textContent = isRest?"Skip ▶":"Set ✓";
+}
+function timerTick(){
+  if(!T.running||T.paused) return;
+  if(T.phaseDur>0 && !T.fired && elapsedPhase()>=T.phaseDur){
+    T.fired=true; timerAdvance(); return;
+  }
+  updateTimerUI();
+}
+
+/* =====================================================================
+   PLATE CALCULATOR
+   ===================================================================== */
+const PLATE_DEFAULTS={ kg:{bar:20, plates:[25,20,15,10,5,2.5,1.25]}, lb:{bar:45, plates:[45,35,25,10,5,2.5]} };
+function plUnit(){ return (STATE.settings&&STATE.settings.unit)||"kg"; }
+function plBar(){ const v=STATE.settings&&STATE.settings.bar; return v==null?PLATE_DEFAULTS[plUnit()].bar:+v; }
+function plPlates(){ const v=STATE.settings&&STATE.settings.plates; return (v&&v.length?v:PLATE_DEFAULTS[plUnit()].plates).slice().sort((a,b)=>b-a); }
+function plateBreakdown(total, bar, plates){
+  if(!(total>0)) return {empty:true};
+  if(total<bar) return {tooLight:true, bar};
+  let perSide=(total-bar)/2, rem=perSide, used=[];
+  for(const p of plates){ while(rem>=p-1e-9){ used.push(p); rem-=p; } }
+  const made=bar+2*used.reduce((a,b)=>a+b,0);
+  return {bar, perSide:used, made, exact:Math.abs(made-total)<1e-6, short:+(total-made).toFixed(3)};
+}
+function plateColor(p, max){ const t=Math.min(1,p/max); const a=[65,85,126],b=[214,169,63]; return mix(a,b,t); }
+function renderPlateResult(){
+  const target=+document.getElementById("pmTarget").value;
+  const bar=plBar(), plates=plPlates(), u=plUnit();
+  const r=plateBreakdown(target, bar, plates);
+  const box=document.getElementById("pmResult");
+  if(r.empty){ box.innerHTML=`<div class="pm-perside" style="color:var(--faint)">Enter a target load.</div>`; return; }
+  if(r.tooLight){ box.innerHTML=`<div class="pm-perside">Below the bar (${bar} ${u}).</div>`; return; }
+  const max=Math.max(...plates);
+  const chips=r.perSide.map(p=>{
+    const w=22+ (p/max)*22, h=30+(p/max)*22;
+    return `<span class="pl" style="width:${w}px;height:${h}px;background:${plateColor(p,max)}">${p}</span>`;
+  }).join("");
+  const persideTxt = r.perSide.length? r.perSide.join(" + ") : "(empty bar)";
+  box.innerHTML=`
+    <div class="pm-bar">${chips}<span class="barstub"></span>${chips? "":""}</div>
+    <div class="pm-perside">Per side: ${persideTxt}</div>
+    <div class="pm-total">${r.exact?`= ${target} ${u}`:`closest: ${r.made} ${u}`} · bar ${bar} + ${(2*r.perSide.reduce((a,b)=>a+b,0)).toFixed(2).replace(/\.?0+$/,"")} ${u}</div>
+    ${r.exact?"":`<div class="pm-warn">Can't hit ${target} exactly with these plates — ${r.short>0?`${r.short} ${u} short`:`over by ${-r.short} ${u}`}.</div>`}`;
+}
+function openPlateModal(load){
+  document.getElementById("pmTarget").value = (load!=null&&load!=="")?load:"";
+  document.getElementById("pmUnit").textContent=plUnit();
+  document.getElementById("pmUnitSel").value=plUnit();
+  document.getElementById("pmBar").value=plBar();
+  document.getElementById("pmPlates").value=plPlates().join(",");
+  renderPlateResult();
+  document.getElementById("platemodal").classList.remove("hidden");
+}
+function closePlateModal(){ document.getElementById("platemodal").classList.add("hidden"); }
+
+/* =====================================================================
+   wiring
+   ===================================================================== */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll("section").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  document.getElementById("tab-"+t.dataset.tab).classList.add("active");
+  if(t.dataset.tab==="ready") renderReady();
+  if(t.dataset.tab==="log") renderRecommendations(Date.now());
+  updateTimerUI();
+}));
+document.getElementById("exsearch").addEventListener("input",renderPicker);
+document.getElementById("sessdt").addEventListener("input",updateDtLabel);
+document.getElementById("savebtn").addEventListener("click",saveSession);
+document.getElementById("clearbtn").addEventListener("click",()=>{ draft=[]; refreshLog(); document.getElementById("logstatus").textContent=""; });
+document.getElementById("saveroutine").addEventListener("click",saveRoutineFromDraft);
+document.getElementById("sortsel").addEventListener("change",renderReady);
+document.getElementById("cxsave").addEventListener("click",saveCustom);
+["defsets","defreps"].forEach(id=>document.getElementById(id).addEventListener("change",e=>{
+  STATE.settings=STATE.settings||{};
+  const v=Math.max(1,+e.target.value||1);
+  if(id==="defsets") STATE.settings.defaultSets=v; else STATE.settings.defaultReps=v;
+  e.target.value=v; saveState(); toast("Defaults updated");
+}));
+["defrest","defwork"].forEach(id=>document.getElementById(id).addEventListener("change",e=>{
+  STATE.settings=STATE.settings||{};
+  const v=Math.max(0,+e.target.value||0);
+  if(id==="defrest") STATE.settings.restSec=v; else STATE.settings.workSec=v;
+  e.target.value=v; saveState(); toast("Timer defaults updated");
+}));
+// timer controls
+document.getElementById("tbMain").addEventListener("click",()=>{ T.running? timerPauseToggle() : timerStart(); });
+document.getElementById("tbSkip").addEventListener("click",()=>{ if(T.running){ T.fired=true; timerAdvance(); } });
+document.getElementById("tbMinus").addEventListener("click",()=>timerAdjustRest(-15));
+document.getElementById("tbStop").addEventListener("click",timerStop);
+// plate modal
+document.getElementById("pmClose").addEventListener("click",closePlateModal);
+document.getElementById("platemodal").addEventListener("click",e=>{ if(e.target.id==="platemodal") closePlateModal(); });
+document.getElementById("pmTarget").addEventListener("input",renderPlateResult);
+document.getElementById("pmBar").addEventListener("input",e=>{ STATE.settings=STATE.settings||{}; STATE.settings.bar=Math.max(0,+e.target.value||0); saveState(); renderPlateResult(); });
+document.getElementById("pmPlates").addEventListener("input",e=>{
+  STATE.settings=STATE.settings||{};
+  const arr=e.target.value.split(/[,\s]+/).map(Number).filter(n=>n>0);
+  STATE.settings.plates=arr; saveState(); renderPlateResult();
+});
+document.getElementById("pmUnitSel").addEventListener("change",e=>{
+  STATE.settings=STATE.settings||{}; STATE.settings.unit=e.target.value;
+  STATE.settings.bar=PLATE_DEFAULTS[e.target.value].bar;
+  STATE.settings.plates=PLATE_DEFAULTS[e.target.value].plates.slice();
+  saveState(); openPlateModal(document.getElementById("pmTarget").value); toast("Switched to "+e.target.value);
+});
+document.getElementById("resetbase").addEventListener("click",()=>{ if(confirm("Reset all baselines to defaults?")){STATE.baseline={};saveState();renderBaselines();renderReady();toast("Baselines reset");} });
+document.getElementById("exportbtn").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="recovery-export-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+});
+document.getElementById("importbtn").addEventListener("click",()=>document.getElementById("importfile").click());
+document.getElementById("importfile").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+  rd.onload=()=>{ try{ const o=JSON.parse(rd.result);
+      STATE={sessions:o.sessions||[],customExercises:o.customExercises||[],baseline:o.baseline||{},settings:o.settings||{},routines:o.routines||[]};
+      saveState(); buildExerciseList(); renderDefaults(); renderRoutines(); renderAll(); toast("Data imported");
+    }catch(err){ toast("Import failed — invalid file."); } };
+  rd.readAsText(f);
+});
+document.getElementById("wipebtn").addEventListener("click",()=>{
+  if(confirm("Erase ALL sessions, custom exercises, and overrides? This cannot be undone.")){
+    STATE={sessions:[],customExercises:[],baseline:{},settings:{},routines:[]}; saveState(); buildExerciseList(); renderDefaults(); renderRoutines(); renderAll(); toast("All data erased");
+  }
+});
+
+/* boot */
+buildMap(); renderCatPills(); renderPicker(); renderRoutines(); setNow(); renderDraft(); renderCustomMuscleEditor(); renderDefaults(); renderAll(); tickClock(); updateTimerUI();
+setInterval(()=>{ tickClock();
+  if(document.getElementById("tab-ready").classList.contains("active")) renderReady();
+  if(document.getElementById("tab-log").classList.contains("active")) renderRecommendations(Date.now());
+}, 60000);
+setInterval(timerTick, 250);
+</script>
+</body>
+</html>
