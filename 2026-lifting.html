@@ -120,6 +120,15 @@
   .sysbar .readymark{position:absolute;top:-2px;bottom:-2px;width:1px;background:var(--faint);opacity:.55}
   .sysnote{font-size:12px;color:var(--ink-dim);margin-top:10px;line-height:1.5}
 
+  /* utilization hero metric */
+  .heropanel{background:linear-gradient(180deg,rgba(214,169,63,.08),var(--bg2));border-color:#3a3526}
+  .hero{display:flex;align-items:center;gap:18px;margin-bottom:12px}
+  .hero-num{font-family:var(--serif);font-size:54px;font-weight:600;line-height:.95;letter-spacing:-.02em}
+  .hero-label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  .hero-sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .hero-detail{font-size:12.5px;color:var(--ink-dim);margin-top:11px;line-height:1.55}
+  .hero-detail b{color:var(--gold);font-weight:700}
+
   /* ---------- muscle list ---------- */
   .sortbar{display:flex;gap:6px;align-items:center;margin:2px 0 12px;font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
   .sortbar select{margin-left:auto}
@@ -226,27 +235,6 @@
     .wrap{padding:0 14px}
   }
 
-  /* floating workout timer bar */
-  .timerbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(18,20,25,.97);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 -8px 30px rgba(0,0,0,.4)}
-  .timerbar.hidden{display:none}
-  .tb-total{display:flex;flex-direction:column;line-height:1.1}
-  .tb-k{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
-  .tb-total .v{font-family:var(--mono);font-size:15px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
-  .tb-phase{display:flex;align-items:center;gap:9px;margin-left:2px}
-  .tb-badge{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:4px 8px;border-radius:6px}
-  .tb-badge.set{color:#0e0f12;background:var(--gold)}
-  .tb-badge.rest{color:#0e0f12;background:var(--jade)}
-  .tb-time{font-family:var(--mono);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
-  .tb-time.urgent{color:var(--gold)}
-  .tb-ctrls{display:flex;gap:6px;margin-left:auto}
-  .tb-btn{appearance:none;cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:700;border:1px solid var(--line);background:var(--panel2);color:var(--ink-dim);border-radius:8px;padding:9px 11px;min-width:42px;transition:.12s}
-  .tb-btn:hover{border-color:var(--faint);color:var(--ink)}
-  .tb-btn:active{transform:scale(.95)}
-  .tb-btn.primary{border-color:var(--gold);background:rgba(214,169,63,.14);color:var(--gold)}
-  .tb-btn.stop{border-color:#5a342b;color:var(--danger);background:rgba(198,100,73,.08)}
-  .tb-start{flex:1;text-align:center;font-family:var(--sans);font-weight:700;font-size:14px;color:var(--gold)}
-  body.timerOn{padding-bottom:120px}
-
   /* plate calc */
   .plbtn{appearance:none;cursor:pointer;border:1px solid var(--line);background:#0f1115;color:var(--muted);border-radius:7px;font-size:12px;padding:5px 7px;line-height:1;margin-left:5px}
   .plbtn:hover{border-color:var(--gold);color:var(--gold)}
@@ -289,6 +277,20 @@
 
   <!-- ============ READINESS ============ -->
   <section id="tab-ready" class="active">
+    <div class="panel heropanel">
+      <h2>Training utilization</h2>
+      <p class="h2sub">How much of your weekly training potential you're actually using — your priority muscles getting quality volume vs. sitting idle. <b>Keep it high by training muscles as they come ready.</b></p>
+      <div class="hero">
+        <div class="hero-num" id="utilNum">—</div>
+        <div class="hero-meta">
+          <div class="hero-label" id="utilLabel"></div>
+          <div class="hero-sub">this week, weighted to your goals</div>
+        </div>
+      </div>
+      <div class="sysbar"><i id="utilBar" style="width:3%"></i><span class="readymark" style="left:80%"></span></div>
+      <div class="hero-detail" id="utilDetail"></div>
+    </div>
+
     <div class="panel">
       <h2>Body map</h2>
       <p class="h2sub">Tap a muscle to find it in the list. Color shows recovery state — <b>read the labels, not just the hue</b>.</p>
@@ -304,7 +306,7 @@
 
     <div class="panel" id="syspanel">
       <h2>Systemic recovery</h2>
-      <p class="h2sub">Whole-body / cardio freshness — how ready you are for <b>another hard session</b>. Driven by cardio and heavy compound lifting, not any single muscle.</p>
+      <p class="h2sub">Whole-body / cardio freshness — how ready you are for <b>another hard session</b>. Driven by cardio and heavy compound lifting, not any single muscle. A <b>coarse estimate</b> from your logged sessions, not a measurement.</p>
       <div id="sysgauge"></div>
     </div>
 
@@ -410,10 +412,6 @@
         <label>Default sets <input type="number" id="defsets" min="1" max="10"></label>
         <label>Default reps <input type="number" id="defreps" min="1" max="50"></label>
       </div>
-      <div class="defrow" style="margin-top:10px">
-        <label>Rest timer (sec) <input type="number" id="defrest" min="0" max="600" step="5"></label>
-        <label>Set timer (sec, 0 = count up) <input type="number" id="defwork" min="0" max="600" step="5"></label>
-      </div>
     </div>
 
     <div class="panel">
@@ -444,18 +442,6 @@
   </section>
 
 </div>
-<!-- floating workout timer (Log tab) -->
-<div class="timerbar hidden" id="timerbar">
-  <div class="tb-total"><span class="tb-k">Session</span><span class="v" id="tbTotal">0:00</span></div>
-  <div class="tb-phase"><span class="tb-badge rest" id="tbBadge">Rest</span><span class="tb-time" id="tbTime">0:00</span></div>
-  <div class="tb-ctrls" id="tbCtrls">
-    <button class="tb-btn" id="tbMinus">−15</button>
-    <button class="tb-btn primary" id="tbMain">▶</button>
-    <button class="tb-btn" id="tbSkip">Set ✓</button>
-    <button class="tb-btn stop" id="tbStop">■</button>
-  </div>
-</div>
-
 <!-- plate calculator modal -->
 <div class="modal hidden" id="platemodal">
   <div class="modal-card">
@@ -484,12 +470,24 @@
    ===================================================================== */
 const KEY="recovery_state_v1";
 let memFallback=null;          // used if localStorage is unavailable (e.g. sandboxed preview)
-function loadState(){
-  try{ const r=localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
-  if(memFallback) return memFallback;
-  return {sessions:[], customExercises:[], baseline:{}, settings:{}, routines:[], cardio:[]};
+const SCHEMA=1;
+function migrate(st){
+  // forward-compatible: fill any missing top-level fields, stamp the version
+  st.sessions=st.sessions||[]; st.customExercises=st.customExercises||[];
+  st.baseline=st.baseline||{}; st.settings=st.settings||{};
+  st.routines=st.routines||[]; st.cardio=st.cardio||[];
+  st.schemaVersion=SCHEMA;
+  return st;
 }
+function loadState(){
+  try{ const r=localStorage.getItem(KEY); if(r) return migrate(JSON.parse(r)); }catch(e){}
+  if(memFallback) return memFallback;
+  return {sessions:[], customExercises:[], baseline:{}, settings:{}, routines:[], cardio:[], schemaVersion:SCHEMA};
+}
+let _stateVer=0;                       // bumped on every save; invalidates derived caches
 function saveState(){
+  _stateVer++;
+  STATE.schemaVersion=SCHEMA;
   try{ localStorage.setItem(KEY, JSON.stringify(STATE)); }
   catch(e){ memFallback=STATE; }
 }
@@ -710,8 +708,11 @@ function setStimulus(set, weight){
   const i=intensityFactor(set.rir);
   return weight*repFactor(set.reps)*i.f;
 }
-// build per-muscle deposit list: {t, amount}
+// build per-muscle deposit list: {t, amount}  (memoized per state version)
+let _depCache={}, _depCacheVer=-1;
 function deposits(muscleId){
+  if(_depCacheVer!==_stateVer){ _depCache={}; _depCacheVer=_stateVer; }
+  if(_depCache[muscleId]) return _depCache[muscleId];
   const out=[];
   for(const s of STATE.sessions){
     const t=new Date(s.time).getTime();
@@ -732,6 +733,7 @@ function deposits(muscleId){
     const amt=(c.minutes/60)*i.musc*w*CARDIO_MUSCLE_SCALE;
     if(amt>0) out.push({t:new Date(c.time).getTime(), amount:amt});
   }
+  _depCache[muscleId]=out;
   return out;
 }
 function fatigueAt(muscleId, now){
@@ -777,7 +779,9 @@ function snapshot(muscleId, now){
   return {muscleId, readiness, zone, toReady, toFresh, last, idleMs, lowConf};
 }
 // systemic fatigue: lifting (per-muscle systemic cost) + cardio (intensity x duration)
+let _sysCache=null, _sysCacheVer=-1;
 function systemicDeposits(){
+  if(_sysCacheVer===_stateVer && _sysCache) return _sysCache;
   const out=[];
   for(const s of STATE.sessions){
     const t=new Date(s.time).getTime();
@@ -798,6 +802,7 @@ function systemicDeposits(){
     const amt=(c.minutes/60)*i.sys;
     if(amt>0) out.push({t:new Date(c.time).getTime(), amount:amt});
   }
+  _sysCache=out; _sysCacheVer=_stateVer;
   return out;
 }
 function systemicSnapshot(now){
@@ -977,6 +982,10 @@ const EX_NOTE={
 };
 
 function exSysCost(ex){ let m=0; for(const k in ex.r){ const c=(SYS_COST[k]||0)*ex.r[k]; if(c>m) m=c; } return m; }
+function exLastDone(exId){
+  for(let i=STATE.sessions.length-1;i>=0;i--){ if(STATE.sessions[i].exercises.some(e=>e.exId===exId)) return new Date(STATE.sessions[i].time).getTime(); }
+  return null;
+}
 function pickExerciseFor(muscleId, cookMap, covered, allowHighSys){
   const pref=PREFERRED[muscleId];
   const cands = pref ? pref.map(id=>exById(id)).filter(Boolean)
@@ -988,8 +997,13 @@ function pickExerciseFor(muscleId, cookMap, covered, allowHighSys){
     }
     return true;
   };
+  const now=Date.now();
+  const fresh = ex=>{ const t=exLastDone(ex.id); return t==null || (now-t) > 36*HOUR; }; // not done in last ~1.5 days
+  // 1) a valid pick you haven't done recently (rotates the lateral-raise variant etc.)
+  for(const ex of cands){ if(ok(ex) && fresh(ex)) return ex; }
+  // 2) any valid pick
   for(const ex of cands){ if(ok(ex)) return ex; }
-  // relax the systemic constraint before giving up entirely
+  // 3) relax the systemic constraint before giving up entirely
   if(!allowHighSys){ for(const ex of cands){ let bad=false; for(const m in ex.r){ if(m!==muscleId&&ex.r[m]>=0.5){const ms=cookMap[m]; if(ms&&ms.readiness<0.5) bad=true;} } if(!bad) return ex; } }
   return cands[0]||null;
 }
@@ -1000,7 +1014,14 @@ function recommendSession(now){
   const allowHighSys = sys.readiness>=0.6;
   const trainable=snaps.filter(s=>s.zone==="ready"||s.zone==="idle");
   if(!trainable.length) return {rest:true, sys};
-  const score=s=>(AES[s.muscleId]??0.5)*(1+(s.zone==="idle"?0.25:0));
+  // priority = aesthetic goal x staleness (so neglected muscles surface) x small fresh bonus
+  const score=s=>{
+    const ap=AES[s.muscleId]??0.5;
+    const idleH = s.last ? (now-s.last)/HOUR : baseOf(s.muscleId)*4;   // never-trained ~ very stale, bounded
+    const overdue = idleH / baseOf(s.muscleId);                        // 1 == one recovery-window since trained
+    const stale = 1 + Math.min(1.2, Math.max(0, overdue-1)*0.4);       // overdue muscles climb the list
+    return ap * stale * (s.zone==="idle"?1.15:1);
+  };
   trainable.sort((a,b)=> score(b)-score(a) || (a.last||0)-(b.last||0));
   const covered=new Set(), recs=[];
   for(const s of trainable){
@@ -1044,6 +1065,47 @@ function renderRecommendations(now){
     document.getElementById("exblocks").scrollIntoView({behavior:"smooth",block:"start"});
     toast("Loaded recommended session");
   });
+}
+
+/* =====================================================================
+   UTILIZATION  — % of weekly training potential captured, goal-weighted.
+   Anti-gaming by construction: counts EFFECTIVE hard sets (warm-ups and
+   high-RIR token sets barely register), caps each muscle at its target
+   (hammering one muscle can't inflate the score), and weights by your
+   aesthetic priorities so neglected muscles drag it down.
+   ===================================================================== */
+const UTIL_TARGET=10;   // effective sets / week that count a muscle "fully utilized"
+function weeklyVolume(muscleId, now){   // strength effective sets, last 7d (cardio excluded)
+  const cut=now-7*24*HOUR; let v=0;
+  for(const s of STATE.sessions){
+    const t=new Date(s.time).getTime(); if(t<cut) continue;
+    for(const ex of s.exercises){ const def=exById(ex.exId); if(!def) continue; const w=def.r[muscleId]; if(!w) continue;
+      for(const set of ex.sets){ v+=setStimulus(set,w); } }
+  }
+  return v;
+}
+function utilOf(muscleId, now){ return Math.min(1, weeklyVolume(muscleId, now)/UTIL_TARGET); }   // capped: over-target ≠ higher
+function renderUtilization(now){
+  const num=document.getElementById("utilNum"); if(!num) return;
+  const rows=MUSCLES.map(m=>({m, u:utilOf(m.id, now), z:snapshot(m.id, now).zone, w:(AES[m.id]??0.5)}));
+  let n=0,d=0; for(const x of rows){ n+=x.w*x.u; d+=x.w; }
+  const util=d? n/d : 0, pct=Math.round(util*100), col=readinessColor(util);
+  let label = util>=0.8?"Dialed in" : util>=0.6?"Solid" : util>=0.4?"Room to fill" : "Lots untapped";
+  num.textContent=pct+"%"; num.style.color=col;
+  const lab=document.getElementById("utilLabel"); lab.textContent=label; lab.style.color=col;
+  const bar=document.getElementById("utilBar"); bar.style.width=Math.max(3,pct)+"%"; bar.style.background=col;
+  const det=document.getElementById("utilDetail");
+  if(!STATE.sessions.length){
+    det.innerHTML=`Log some sessions and this fills in. <span style="color:var(--faint)">Counts hard sets only — warm-ups and token sets barely move it.</span>`;
+    return;
+  }
+  const under=rows.filter(x=>x.w>=0.6 && x.u<0.5).sort((a,b)=>a.u-b.u).slice(0,3).map(x=>x.m.name);
+  const drifting=rows.filter(x=>x.z==="idle").length;
+  const parts=[];
+  if(under.length) parts.push(`Most untapped: <b>${under.join(", ")}</b> — easy room for quality volume.`);
+  else parts.push(`Your priority muscles are all getting solid volume.`);
+  if(drifting) parts.push(`${drifting} muscle${drifting>1?"s":""} fully fresh and idle.`);
+  det.innerHTML=parts.join(" ")+` <span style="color:var(--faint)">Counts hard sets only — warm-ups and token sets barely move it.</span>`;
 }
 
 function renderSystemic(now){
@@ -1090,6 +1152,7 @@ function logCardio(){
 function renderReady(){
   const now=Date.now();
   paintMap(now);
+  renderUtilization(now);
   renderSystemic(now);
   const snaps=MUSCLES.map(m=>({m, s:snapshot(m.id, now)}));
 
@@ -1442,9 +1505,6 @@ function renderDefaults(){
   const ds=document.getElementById("defsets"), dr=document.getElementById("defreps");
   if(ds) ds.value=defSets();
   if(dr) dr.value=defReps();
-  const rr=document.getElementById("defrest"), rw=document.getElementById("defwork");
-  if(rr) rr.value=restSec();
-  if(rw) rw.value=workSec();
 }
 function toast(msg){
   const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
@@ -1455,102 +1515,6 @@ function tickClock(){
     new Date().toLocaleString([], {weekday:"long",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
 }
 function renderAll(){ renderReady(); renderHistory(); renderBaselines(); renderRecommendations(Date.now()); }
-
-/* =====================================================================
-   WORKOUT TIMER  — continuous session clock + auto-cycling SET/REST
-   ===================================================================== */
-function restSec(){ const v=STATE.settings&&STATE.settings.restSec; return (v==null?90:+v); }
-function workSec(){ const v=STATE.settings&&STATE.settings.workSec; return (v==null?0:+v); } // 0 = count up
-const T={ running:false, paused:false, phase:"idle", sessionStart:0, phaseStart:0,
-          phaseDur:0, accumPause:0, phasePause:0, pauseStart:0, fired:false };
-let _audio=null;
-function beep(times){
-  try{
-    _audio = _audio || new (window.AudioContext||window.webkitAudioContext)();
-    let t=_audio.currentTime;
-    for(let i=0;i<(times||1);i++){
-      const o=_audio.createOscillator(), g=_audio.createGain();
-      o.frequency.value=880; o.connect(g); g.connect(_audio.destination);
-      g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.25,t+0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001,t+0.18);
-      o.start(t); o.stop(t+0.2); t+=0.28;
-    }
-  }catch(e){}
-  if(navigator.vibrate) navigator.vibrate(times>1?[120,80,120]:120);
-}
-function tNow(){ return T.paused ? T.pauseStart : Date.now(); }
-function elapsedSession(){ return Math.max(0,(tNow()-T.sessionStart-T.accumPause)/1000); }
-function elapsedPhase(){ return Math.max(0,(tNow()-T.phaseStart-T.phasePause)/1000); }
-function beginPhase(phase){
-  T.phase=phase; T.phaseStart=Date.now(); T.phasePause=0; T.fired=false;
-  T.phaseDur = phase==="rest"? restSec() : workSec();   // work 0 => count up
-}
-function timerStart(){
-  if(!_audio){ try{ _audio=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
-  T.running=true; T.paused=false; T.accumPause=0; T.pauseStart=0;
-  T.sessionStart=Date.now(); beginPhase("work");
-  document.body.classList.add("timerOn");
-  updateTimerUI();
-}
-function timerPauseToggle(){
-  if(!T.running) return;
-  if(T.paused){ const d=Date.now()-T.pauseStart; T.accumPause+=d; T.phasePause+=d; T.pauseStart=0; T.paused=false; }
-  else { T.pauseStart=Date.now(); T.paused=true; }
-  updateTimerUI();
-}
-function timerAdvance(){ // SET -> REST -> SET ...
-  beep(T.phase==="rest"?1:1);
-  beginPhase(T.phase==="rest"?"work":"rest");
-  updateTimerUI();
-}
-function timerStop(){
-  T.running=false; T.paused=false; T.phase="idle";
-  document.body.classList.remove("timerOn");
-  updateTimerUI();
-}
-function timerAdjustRest(delta){
-  if(T.phase!=="rest") return;
-  T.phaseDur=Math.max(0, T.phaseDur+delta);
-  updateTimerUI();
-}
-function fmtMS(s){ s=Math.max(0,Math.round(s)); const m=Math.floor(s/60); return m+":"+String(s%60).padStart(2,"0"); }
-function updateTimerUI(){
-  const bar=document.getElementById("timerbar"), onLog=document.getElementById("tab-log").classList.contains("active");
-  if(!onLog){ bar.classList.add("hidden"); document.body.classList.remove("timerOn"); return; }
-  bar.classList.remove("hidden"); document.body.classList.add("timerOn");
-  const total=document.getElementById("tbTotal"), badge=document.getElementById("tbBadge"),
-        time=document.getElementById("tbTime"), main=document.getElementById("tbMain"),
-        skip=document.getElementById("tbSkip"), minus=document.getElementById("tbMinus"),
-        stop=document.getElementById("tbStop"), phaseWrap=document.querySelector(".tb-phase"),
-        totalWrap=document.querySelector(".tb-total");
-  if(!T.running){
-    // idle: just a start affordance
-    phaseWrap.style.display="none"; totalWrap.style.display="none";
-    minus.style.display="none"; skip.style.display="none"; stop.style.display="none";
-    main.textContent="▶  Start timer"; main.classList.add("tb-start");
-    return;
-  }
-  main.classList.remove("tb-start");
-  phaseWrap.style.display=""; totalWrap.style.display="";
-  minus.style.display = T.phase==="rest"?"":"none";
-  skip.style.display=""; stop.style.display="";
-  total.textContent=fmtMS(elapsedSession());
-  const isRest=T.phase==="rest";
-  badge.textContent=isRest?"Rest":"Set"; badge.className="tb-badge "+(isRest?"rest":"set");
-  let remaining;
-  if(T.phaseDur>0){ remaining=T.phaseDur-elapsedPhase(); time.textContent=fmtMS(remaining); }
-  else { remaining=999; time.textContent=fmtMS(elapsedPhase()); } // count up
-  time.classList.toggle("urgent", T.phaseDur>0 && remaining<=5 && remaining>0);
-  main.textContent = T.paused?"▶":"⏸";
-  skip.textContent = isRest?"Skip ▶":"Set ✓";
-}
-function timerTick(){
-  if(!T.running||T.paused) return;
-  if(T.phaseDur>0 && !T.fired && elapsedPhase()>=T.phaseDur){
-    T.fired=true; timerAdvance(); return;
-  }
-  updateTimerUI();
-}
 
 /* =====================================================================
    PLATE CALCULATOR
@@ -1608,7 +1572,6 @@ document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
   document.getElementById("tab-"+t.dataset.tab).classList.add("active");
   if(t.dataset.tab==="ready") renderReady();
   if(t.dataset.tab==="log") renderRecommendations(Date.now());
-  updateTimerUI();
 }));
 document.getElementById("exsearch").addEventListener("input",renderPicker);
 document.getElementById("sessdt").addEventListener("input",updateDtLabel);
@@ -1624,17 +1587,6 @@ document.getElementById("cxsave").addEventListener("click",saveCustom);
   if(id==="defsets") STATE.settings.defaultSets=v; else STATE.settings.defaultReps=v;
   e.target.value=v; saveState(); toast("Defaults updated");
 }));
-["defrest","defwork"].forEach(id=>document.getElementById(id).addEventListener("change",e=>{
-  STATE.settings=STATE.settings||{};
-  const v=Math.max(0,+e.target.value||0);
-  if(id==="defrest") STATE.settings.restSec=v; else STATE.settings.workSec=v;
-  e.target.value=v; saveState(); toast("Timer defaults updated");
-}));
-// timer controls
-document.getElementById("tbMain").addEventListener("click",()=>{ T.running? timerPauseToggle() : timerStart(); });
-document.getElementById("tbSkip").addEventListener("click",()=>{ if(T.running){ T.fired=true; timerAdvance(); } });
-document.getElementById("tbMinus").addEventListener("click",()=>timerAdjustRest(-15));
-document.getElementById("tbStop").addEventListener("click",timerStop);
 // plate modal
 document.getElementById("pmClose").addEventListener("click",closePlateModal);
 document.getElementById("platemodal").addEventListener("click",e=>{ if(e.target.id==="platemodal") closePlateModal(); });
@@ -1673,12 +1625,11 @@ document.getElementById("wipebtn").addEventListener("click",()=>{
 });
 
 /* boot */
-buildMap(); renderCatPills(); renderPicker(); renderRoutines(); renderCardioPickers(); setNow(); renderDraft(); renderCustomMuscleEditor(); renderDefaults(); renderAll(); tickClock(); updateTimerUI();
+buildMap(); renderCatPills(); renderPicker(); renderRoutines(); renderCardioPickers(); setNow(); renderDraft(); renderCustomMuscleEditor(); renderDefaults(); renderAll(); tickClock();
 setInterval(()=>{ tickClock();
   if(document.getElementById("tab-ready").classList.contains("active")) renderReady();
   if(document.getElementById("tab-log").classList.contains("active")) renderRecommendations(Date.now());
 }, 60000);
-setInterval(timerTick, 250);
 </script>
 </body>
 </html>
