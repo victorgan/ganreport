@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0f12">
+<title>People — relationship cadence</title>
+<style>
+  /* Sibling aesthetic to Recovery: dark "telemetry / atelier" with serif display + mono data.
+     Same palette so the two apps feel like one family. */
+  :root{
+    --bg:#0e0f12; --bg2:#121419; --panel:#16181e; --panel2:#1b1e25;
+    --line:#282c34; --line-soft:#21242b;
+    --ink:#ece7db; --ink-dim:#b7b3a8; --muted:#8b9099; --faint:#5d626c;
+    --gold:#d6a93f; --jade:#54b48d; --indigo:#41557e; --indigo-deep:#2a3550;
+    --danger:#c66449;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --sans:"Avenir Next","Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 20% -10%, #15171d 0%, transparent 60%),
+      radial-gradient(900px 500px at 110% 110%, #14161c 0%, transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:var(--sans); font-size:15px; line-height:1.5;
+    -webkit-font-smoothing:antialiased; padding:0 0 64px; min-height:100vh;
+  }
+  body::before{ content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay; }
+  .wrap{max-width:760px; margin:0 auto; padding:0 18px; position:relative; z-index:1}
+
+  /* header */
+  header{padding:30px 0 14px}
+  .kicker{font-family:var(--mono); font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--jade); opacity:.85}
+  h1{font-family:var(--serif); font-weight:600; font-size:34px; line-height:1.05; margin:6px 0 4px; letter-spacing:-.01em}
+  h1 .dot{color:var(--jade)}
+  .sub{color:var(--muted); font-size:13.5px; max-width:54ch}
+  .sub b{color:var(--ink-dim); font-weight:600}
+  .clock{font-family:var(--mono); font-size:12px; color:var(--faint); margin-top:10px}
+
+  /* tabs */
+  nav.tabs{display:flex; gap:4px; margin:18px 0 22px; border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:linear-gradient(var(--bg),var(--bg) 70%,transparent); z-index:5; padding-top:6px}
+  .tab{appearance:none; background:none; border:0; color:var(--muted); font-family:var(--sans);
+    font-size:13.5px; font-weight:600; letter-spacing:.02em; padding:10px 14px; cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .15s}
+  .tab:hover{color:var(--ink-dim)}
+  .tab.active{color:var(--ink); border-bottom-color:var(--jade)}
+
+  section{display:none; animation:fade .35s ease}
+  section.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+  .panel{background:linear-gradient(180deg,var(--panel),var(--bg2)); border:1px solid var(--line);
+    border-radius:var(--r); padding:18px; margin-bottom:16px}
+  .panel h2{font-family:var(--serif); font-size:18px; font-weight:600; margin:0 0 2px}
+  .panel .h2sub{color:var(--muted); font-size:12.5px; margin:0 0 14px}
+  .h2sub b{color:var(--ink-dim); font-weight:600}
+
+  /* today list */
+  .empty{color:var(--faint); font-size:13px; text-align:center; padding:26px 0; font-family:var(--mono); letter-spacing:.05em}
+  .ppl-row{display:grid; grid-template-columns:1fr auto; gap:6px 12px; align-items:center;
+    background:var(--panel2); border:1px solid var(--line-soft); border-radius:11px; padding:12px 13px; margin-bottom:8px; transition:.15s}
+  .ppl-row:last-child{margin-bottom:0}
+  .ppl-row.flash{border-color:var(--jade); box-shadow:0 0 0 1px var(--jade)}
+  .ppl-row .name-wrap{cursor:pointer; min-width:0}
+  .ppl-name{font-weight:700; font-size:14.5px; color:var(--ink)}
+  .ppl-meta{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-top:2px}
+  .ppl-meta .tier{display:inline-block; padding:1px 6px; border-radius:4px; border:1px solid var(--line); margin-right:6px}
+  .ppl-status{text-align:right; font-family:var(--mono); font-size:11px}
+  .zone-warm{color:var(--jade); font-weight:700}
+  .zone-cool{color:var(--gold); font-weight:700}
+  .zone-drift{color:#8ea4d4; font-weight:700}
+  .zone-lost{color:#6c7896; font-weight:700}
+  .zone-paused{color:var(--faint); font-weight:700}
+  .last{color:var(--muted); font-size:10.5px; margin-top:1px}
+  .bar{grid-column:1 / -1; height:6px; border-radius:4px; background:#0e1014; overflow:hidden; position:relative; margin-top:8px}
+  .bar > i{position:absolute; left:0; top:0; bottom:0; border-radius:4px; transition:width .6s ease}
+  .bar .mark{position:absolute; top:-2px; bottom:-2px; width:1px; background:var(--faint); opacity:.5}
+  .quick{grid-column:1 / -1; display:flex; gap:6px; margin-top:9px}
+  .qbtn{appearance:none; cursor:pointer; flex:1; padding:7px 0; border-radius:7px; font-family:var(--sans);
+    font-size:11.5px; font-weight:700; letter-spacing:.04em; border:1px solid var(--line); background:var(--bg2); color:var(--ink-dim); transition:.12s}
+  .qbtn:hover{border-color:var(--jade); color:var(--jade)}
+  .qbtn.q{border-color:rgba(84,180,141,.4)} .qbtn.q:hover{background:rgba(84,180,141,.1)}
+  .qbtn .lbl{display:block; font-family:var(--mono); font-size:9px; color:var(--faint); margin-top:1px; letter-spacing:.1em}
+
+  /* sort/filter bar */
+  .controls{display:flex; gap:6px; align-items:center; margin:2px 0 12px; font-family:var(--mono);
+    font-size:10.5px; color:var(--faint); letter-spacing:.1em; text-transform:uppercase; flex-wrap:wrap}
+  .controls select, .controls input{font-family:var(--sans); font-size:13px; color:var(--ink);
+    background:#0f1115; border:1px solid var(--line); border-radius:7px; padding:5px 8px}
+  .controls input{flex:1; min-width:120px}
+  .controls .right{margin-left:auto}
+
+  /* buttons */
+  button.btn{appearance:none; cursor:pointer; font-family:var(--sans); font-weight:600; font-size:13.5px;
+    border-radius:9px; border:1px solid var(--jade); background:rgba(84,180,141,.12); color:var(--jade);
+    padding:9px 16px; transition:background .15s, transform .05s}
+  button.btn:hover{background:rgba(84,180,141,.2)}
+  button.btn:active{transform:translateY(1px)}
+  button.ghost{border-color:var(--line); background:transparent; color:var(--ink-dim)}
+  button.ghost:hover{background:var(--panel2)}
+  button.tiny{font-size:11px; padding:5px 9px; border-radius:7px}
+  button.danger{border-color:#5a342b; color:var(--danger); background:rgba(198,100,73,.08)}
+  button.danger:hover{background:rgba(198,100,73,.16)}
+
+  /* floating add button */
+  .fab{position:fixed; right:22px; bottom:calc(22px + env(safe-area-inset-bottom)); z-index:30;
+    width:56px; height:56px; border-radius:50%; border:1px solid var(--jade);
+    background:linear-gradient(180deg, rgba(84,180,141,.25), rgba(84,180,141,.12)); color:var(--jade);
+    font-size:26px; cursor:pointer; box-shadow:0 8px 26px rgba(0,0,0,.5); transition:.15s}
+  .fab:hover{transform:translateY(-2px); background:rgba(84,180,141,.3)}
+  .fab:active{transform:scale(.96)}
+
+  /* modal */
+  .modal{position:fixed; inset:0; z-index:60; background:rgba(8,9,11,.72); backdrop-filter:blur(4px);
+    display:flex; align-items:flex-end; justify-content:center; padding:0}
+  .modal.hidden{display:none}
+  .modal-card{background:var(--panel); border:1px solid var(--line); border-radius:18px 18px 0 0;
+    width:100%; max-width:560px; padding:18px 18px calc(20px + env(safe-area-inset-bottom));
+    max-height:88vh; overflow-y:auto; animation:slideup .25s ease}
+  @keyframes slideup{from{transform:translateY(40px); opacity:.6} to{transform:none; opacity:1}}
+  .modal-head{display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--serif); font-size:21px; font-weight:600; margin-bottom:14px}
+  .modal-head .close{appearance:none; background:none; border:0; color:var(--muted); font-size:22px; cursor:pointer; padding:4px 8px}
+
+  /* forms */
+  label.fld{display:block; font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); margin:10px 0 5px}
+  input[type=text],input[type=number],input[type=date],textarea,select{
+    font-family:var(--sans); font-size:14px; color:var(--ink); background:#0f1115;
+    border:1px solid var(--line); border-radius:9px; padding:9px 11px; width:100%}
+  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--jade)}
+  textarea{resize:vertical; min-height:60px}
+  .pills{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px}
+  .pill{appearance:none; cursor:pointer; font-family:var(--mono); font-size:10.5px; letter-spacing:.08em;
+    text-transform:uppercase; border:1px solid var(--line); background:transparent; color:var(--muted);
+    border-radius:999px; padding:6px 12px; transition:.15s}
+  .pill:hover{color:var(--ink-dim); border-color:var(--faint)}
+  .pill.active{color:#0e0f12; background:var(--jade); border-color:var(--jade); font-weight:700}
+
+  /* person card content */
+  .card-name{font-family:var(--serif); font-size:24px; font-weight:600; line-height:1.1}
+  .card-meta{font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--muted); margin-top:3px}
+  .card-warmth{margin:18px 0 6px; display:flex; justify-content:space-between; align-items:baseline}
+  .card-warmth .zlab{font-family:var(--mono); font-size:13px; font-weight:700}
+  .card-warmth .since{font-family:var(--mono); font-size:11px; color:var(--muted)}
+  .pct{font-family:var(--mono); font-size:10.5px; color:var(--faint); margin-left:6px}
+  .quick-log{display:flex; gap:8px; margin:12px 0 6px}
+  .quick-log .qbtn{flex:1; padding:11px 0; font-size:13px}
+  .hist{margin-top:12px}
+  .hist-row{display:flex; justify-content:space-between; align-items:center; padding:8px 10px;
+    border-radius:8px; margin-bottom:5px; background:var(--panel2); font-size:12.5px}
+  .hist-row .htype{font-family:var(--mono); font-size:10px; letter-spacing:.1em; padding:2px 7px; border-radius:5px;
+    background:var(--bg2); border:1px solid var(--line)}
+  .htype.quality{color:var(--jade); border-color:#2e5546}
+  .htype.touch{color:var(--gold); border-color:#5a4a23}
+  .htype.surface{color:var(--faint)}
+  .hist-row .hdel{appearance:none; cursor:pointer; background:none; border:0; color:var(--faint); font-size:14px; padding:2px 6px}
+  .hist-row .hdel:hover{color:var(--danger)}
+
+  .info-fine{color:var(--faint); font-size:11.5px; line-height:1.6; margin-top:14px; border-top:1px solid var(--line-soft); padding-top:12px}
+  .info-fine b{color:var(--ink-dim)}
+
+  .toast{position:fixed; left:50%; bottom:90px; transform:translateX(-50%) translateY(20px);
+    background:var(--panel2); border:1px solid var(--jade); color:var(--ink); padding:11px 18px;
+    border-radius:10px; font-size:13px; opacity:0; pointer-events:none; transition:.3s; z-index:80;
+    box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+  .tier-grid{display:grid; grid-template-columns:1fr auto; gap:8px 14px; align-items:center; font-size:13.5px; margin-top:8px}
+  .tier-grid .bn{color:var(--ink-dim)}
+  .tier-grid input{width:84px; text-align:center; font-family:var(--mono); font-size:13px; padding:6px}
+  .tier-grid .unit{font-family:var(--mono); font-size:10px; color:var(--faint); margin-left:6px}
+
+  .toggle{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:8px 0}
+  .toggle-label{font-size:13.5px}
+  .toggle-label small{display:block; color:var(--muted); font-size:11.5px; margin-top:2px}
+  .switch{position:relative; width:44px; height:24px; flex-shrink:0}
+  .switch input{position:absolute; inset:0; opacity:0; cursor:pointer; margin:0}
+  .switch .slot{position:absolute; inset:0; background:var(--bg2); border:1px solid var(--line); border-radius:14px; transition:.2s}
+  .switch .knob{position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:var(--muted); transition:.2s}
+  .switch input:checked ~ .slot{background:rgba(84,180,141,.25); border-color:var(--jade)}
+  .switch input:checked ~ .knob{left:22px; background:var(--jade)}
+
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+
+  @media(max-width:520px){ h1{font-size:28px} .wrap{padding:0 14px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Cadence · the people you want close</div>
+    <h1>People<span class="dot">.</span></h1>
+    <div class="sub">Each person you care about has a natural contact rhythm. This shows where you've shown up and where it's been a while — <b>a measure of your investment, not the relationship.</b> No guilt, no scores, no sharing.</div>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="today">Today</button>
+    <button class="tab" data-tab="people">People</button>
+    <button class="tab" data-tab="settings">Settings</button>
+  </nav>
+
+  <!-- ============ TODAY ============ -->
+  <section id="tab-today" class="active">
+    <div class="panel">
+      <h2>People you've been meaning to reach out to</h2>
+      <p class="h2sub">Sorted by tier × time since you connected. Tap the row to open someone; tap a chip to log that you reached out.</p>
+      <div id="todayList"></div>
+    </div>
+
+    <div class="panel" id="recentPanel">
+      <h2>Recently connected</h2>
+      <p class="h2sub">In rhythm — no action needed.</p>
+      <div id="recentList"></div>
+    </div>
+  </section>
+
+  <!-- ============ PEOPLE ============ -->
+  <section id="tab-people">
+    <div class="panel">
+      <h2>Everyone</h2>
+      <div class="controls">
+        <span>Sort</span>
+        <select id="sortsel">
+          <option value="overdue">By when to reach out</option>
+          <option value="name">By name</option>
+          <option value="tier">By tier</option>
+        </select>
+        <span class="right">Filter</span>
+        <select id="tierfilt">
+          <option value="all">All tiers</option>
+          <option value="inner">Inner</option>
+          <option value="close">Close</option>
+          <option value="maintained">Maintained</option>
+          <option value="extended">Extended</option>
+          <option value="dormant">Dormant</option>
+        </select>
+      </div>
+      <input id="searchInp" type="text" placeholder="Search by name…" style="margin-bottom:12px">
+      <div id="peopleList"></div>
+    </div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section id="tab-settings">
+    <div class="panel">
+      <h2>Tier cadences</h2>
+      <p class="h2sub">Roughly how often you'd ideally connect with people in each tier. Defaults are <b>Dunbar-anchored</b>. Adjust to fit your life — per-person overrides are also available on each person.</p>
+      <div class="tier-grid" id="tierGrid"></div>
+      <div class="actions" style="margin-top:14px"><button class="ghost btn tiny" id="resetTiers">Reset to defaults</button></div>
+    </div>
+
+    <div class="panel">
+      <h2>Display</h2>
+      <div class="toggle">
+        <div class="toggle-label">Show warmth percentages
+          <small>Off by default — labels alone are usually enough.</small>
+        </div>
+        <label class="switch"><input type="checkbox" id="showPct"><span class="slot"></span><span class="knob"></span></label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Data</h2>
+      <p class="h2sub">All data lives locally in this browser only. Export keeps a portable backup.</p>
+      <div class="actions">
+        <button class="btn" id="exportBtn">Export JSON</button>
+        <button class="ghost btn" id="importBtn">Import JSON</button>
+        <input type="file" id="importFile" accept="application/json" style="display:none">
+        <button class="danger btn" id="wipeBtn">Erase all data</button>
+      </div>
+      <div class="info-fine">
+        <b>The model, briefly.</b> Each contact you log "places" a warmth pulse that decays toward zero
+        across the person's cadence interval. Current warmth is the highest of all those pulses — so a quality
+        in-person hangout dominates a string of text replies. Three weights (quality / touch / surface) keep the
+        cadence honest: surface acknowledgments can't pump a friendship's warmth, only deeper contact can.
+        This measures your investment, not the relationship's state. <b>The other person has agency the app cannot see.</b>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<button class="fab" id="fab" title="Add person">+</button>
+
+<!-- person modal -->
+<div class="modal hidden" id="personModal">
+  <div class="modal-card" id="personCard"></div>
+</div>
+
+<!-- add/edit modal -->
+<div class="modal hidden" id="editModal">
+  <div class="modal-card">
+    <div class="modal-head"><span id="editTitle">Add someone</span><button class="close" id="editClose">✕</button></div>
+    <label class="fld">Name</label>
+    <input type="text" id="editName" placeholder="First name or nickname">
+    <label class="fld">Tier</label>
+    <div class="pills" id="editTierPills"></div>
+    <label class="fld">Custom cadence (days, optional)</label>
+    <input type="number" id="editCadence" placeholder="leave blank to use tier default" min="1" max="3650">
+    <label class="fld">Notes (private)</label>
+    <textarea id="editNotes" placeholder="kids, allergies, last conversation topic, anything you want to remember"></textarea>
+    <label class="fld">Last connected</label>
+    <input type="date" id="editLastDate">
+    <div style="display:flex; gap:10px; margin-top:14px">
+      <button class="btn" id="editSave" style="flex:1">Save</button>
+      <button class="ghost btn" id="editCancel">Cancel</button>
+    </div>
+    <button class="ghost btn tiny danger" id="editDelete" style="margin-top:14px; display:none">Delete person</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   STORAGE — append-only events; derived state recomputed from them.
+   ===================================================================== */
+const KEY="people_state_v1", SCHEMA=1;
+let memFallback=null;
+function migrate(st){
+  st.people=st.people||[]; st.contacts=st.contacts||[]; st.tierDefaults=st.tierDefaults||{};
+  st.settings=st.settings||{}; st.schemaVersion=SCHEMA;
+  return st;
+}
+function loadState(){
+  try{ const r=localStorage.getItem(KEY); if(r) return migrate(JSON.parse(r)); }catch(e){}
+  if(memFallback) return memFallback;
+  return {people:[], contacts:[], tierDefaults:{}, settings:{}, schemaVersion:SCHEMA};
+}
+function saveState(){
+  STATE.schemaVersion=SCHEMA;
+  try{ localStorage.setItem(KEY, JSON.stringify(STATE)); } catch(e){ memFallback=STATE; }
+}
+let STATE=loadState();
+
+/* =====================================================================
+   DOMAIN — tiers, contact types, weights.
+   ===================================================================== */
+const HOUR=3600*1000, DAY=24*HOUR;
+const TIERS=[
+  {id:"inner",      name:"Inner",      defaultDays:7,   note:"partner, very closest friends"},
+  {id:"close",      name:"Close",      defaultDays:21,  note:"good friends, immediate family"},
+  {id:"maintained", name:"Maintained", defaultDays:60,  note:"extended friends, mentors, cousins"},
+  {id:"extended",   name:"Extended",   defaultDays:180, note:"old colleagues, far-flung family, weak ties you value"},
+  {id:"dormant",    name:"Dormant",    defaultDays:0,   note:"tracked but never nudged"}
+];
+const tierById=id=>TIERS.find(t=>t.id===id)||TIERS[2];
+const CONTACT_TYPES=[
+  {id:"quality", name:"Quality", short:"Q", weight:1.0,  note:"real conversation, in person or call"},
+  {id:"touch",   name:"Touch",   short:"T", weight:0.4,  note:"meaningful text, voice note"},
+  {id:"surface", name:"Surface", short:"S", weight:0.1,  note:"passing acknowledgment, story reply"}
+];
+const ctById=id=>CONTACT_TYPES.find(c=>c.id===id);
+
+function tierCadenceDays(tierId){
+  const def=tierById(tierId).defaultDays;
+  const o=STATE.tierDefaults[tierId];
+  return (o!=null && o>=0) ? +o : def;
+}
+function cadenceDaysFor(person){
+  if(person.customCadenceDays && person.customCadenceDays>0) return +person.customCadenceDays;
+  return tierCadenceDays(person.tier);
+}
+
+/* =====================================================================
+   WARMTH ENGINE — warmth = max over contacts of weight * exp(-elapsed/tau).
+   Max (not sum) is the structural anti-gaming property: three surface
+   texts can't pump warmth past 0.1, only a quality contact takes it to 1.
+   ===================================================================== */
+const WARM=0.70, COOL=0.40, LOST=0.10;
+const K = Math.log(1/COOL);   // tau = cadenceMs / K, so warmth=COOL at elapsed=cadence
+
+function tauFor(person){
+  const cd=cadenceDaysFor(person);
+  if(cd<=0) return 0;
+  return (cd*DAY)/K;
+}
+function warmthOf(person, now){
+  if(person.paused) return null;
+  const tau=tauFor(person);
+  if(tau<=0) return null;       // dormant or zero cadence => no warmth concept
+  let w=0;
+  for(const c of STATE.contacts){
+    if(c.personId!==person.id) continue;
+    const dt=now-new Date(c.time).getTime();
+    if(dt<0) continue;
+    const weight=ctById(c.type)?.weight ?? 0;
+    const v = weight*Math.exp(-dt/tau);
+    if(v>w) w=v;
+  }
+  return w;
+}
+function zoneOf(w, person){
+  if(person.paused) return "paused";
+  if(w==null) return "dormant";
+  if(w>=WARM)  return "warm";
+  if(w>=COOL)  return "cool";
+  if(w>=LOST)  return "drift";
+  return "lost";
+}
+function lastContactFor(personId){
+  let latest=null;
+  for(const c of STATE.contacts){
+    if(c.personId!==personId) continue;
+    if(!latest || new Date(c.time)>new Date(latest.time)) latest=c;
+  }
+  return latest;
+}
+function fmtAgo(t){
+  if(t==null) return "no contact yet";
+  const ms=Date.now()-new Date(t).getTime();
+  if(ms<60*1000) return "just now";
+  const h=ms/HOUR;
+  if(h<1) return Math.round(h*60)+"m ago";
+  if(h<48) return Math.round(h)+"h ago";
+  const d=h/24;
+  if(d<14) return Math.round(d)+"d ago";
+  const wk=d/7;
+  if(wk<8) return Math.round(wk)+"w ago";
+  const mo=d/30;
+  if(mo<18) return Math.round(mo)+"mo ago";
+  return Math.round(d/365)+"y ago";
+}
+function fmtDateInput(t){
+  const d=t?new Date(t):new Date();
+  return d.toISOString().slice(0,10);
+}
+function zoneLabel(zone){
+  return {warm:"In touch", cool:"Reach out", drift:"Reach out", lost:"Been a while", paused:"Paused", dormant:"Dormant"}[zone];
+}
+function zoneClass(zone){ return "zone-"+(zone==="dormant"?"paused":zone); }
+function warmthColor(w){
+  // jade (warm) -> gold (cool) -> indigo (drift) -> deep indigo (lost)
+  if(w>=WARM){
+    const t=(w-WARM)/(1-WARM); return mix([84,180,141],[120,200,160],t);
+  }
+  if(w>=COOL){
+    const t=(w-COOL)/(WARM-COOL); return mix([214,169,63],[84,180,141],t);
+  }
+  if(w>=LOST){
+    const t=(w-LOST)/(COOL-LOST); return mix([65,85,126],[214,169,63],t);
+  }
+  return "rgb(42,53,80)";
+}
+function mix(a,b,t){t=Math.max(0,Math.min(1,t));return `rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(",")})`;}
+
+/* =====================================================================
+   ACTIONS
+   ===================================================================== */
+function logContact(personId, type){
+  STATE.contacts.push({
+    id:"c_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    personId, type, time:new Date().toISOString()
+  });
+  saveState();
+  const p=STATE.people.find(x=>x.id===personId);
+  toast(`Logged ${ctById(type).name.toLowerCase()} with ${p?p.name:'…'}`);
+  renderAll();
+}
+function deleteContact(contactId){
+  STATE.contacts=STATE.contacts.filter(c=>c.id!==contactId);
+  saveState(); renderAll();
+}
+function deletePerson(personId){
+  STATE.people=STATE.people.filter(p=>p.id!==personId);
+  STATE.contacts=STATE.contacts.filter(c=>c.personId!==personId);
+  saveState();
+}
+function togglePause(personId){
+  const p=STATE.people.find(x=>x.id===personId);
+  if(!p) return;
+  p.paused=!p.paused; saveState(); renderAll();
+  toast(p.paused?`Paused ${p.name}`:`Resumed ${p.name}`);
+}
+
+/* =====================================================================
+   RENDER — Today
+   ===================================================================== */
+function showPct(){ return !!STATE.settings.showPct; }
+function rowHTML(person, now, options){
+  options=options||{};
+  const w = warmthOf(person, now);
+  const zone = zoneOf(w, person);
+  const last = lastContactFor(person.id);
+  const t = tierById(person.tier);
+  const pct = (w!=null) ? Math.round(w*100) : null;
+  const col = (w!=null) ? warmthColor(w) : "var(--faint)";
+  const cd = cadenceDaysFor(person);
+  const showBar = !person.paused && w!=null;
+  // warm zone mark: position where warmth would cross "warm" threshold (just visual reference)
+  const markPos = WARM*100;
+  return `<div class="ppl-row" data-pid="${person.id}">
+    <div class="name-wrap" data-open="${person.id}">
+      <div class="ppl-name">${escapeHTML(person.name)}</div>
+      <div class="ppl-meta"><span class="tier">${t.name}</span>${person.paused?"paused":(cd>0?`every ~${cd}d`:"dormant")}</div>
+    </div>
+    <div class="ppl-status">
+      <div class="${zoneClass(zone)}">${zoneLabel(zone)}${showPct()&&pct!=null?` <span class="pct">${pct}%</span>`:""}</div>
+      <div class="last">${last?`last: ${ctById(last.type).name.toLowerCase()} · ${fmtAgo(last.time)}`:"no contact logged"}</div>
+    </div>
+    ${showBar?`<div class="bar"><i style="width:${Math.max(3,pct)}%;background:${col}"></i><span class="mark" style="left:${markPos}%"></span></div>`:""}
+    ${options.quick && !person.paused ? `
+      <div class="quick">
+        <button class="qbtn q" data-log="${person.id}|quality">Quality <span class="lbl">in person / call</span></button>
+        <button class="qbtn" data-log="${person.id}|touch">Touch <span class="lbl">meaningful text</span></button>
+        <button class="qbtn" data-log="${person.id}|surface">Surface <span class="lbl">brief reply</span></button>
+      </div>` : ""}
+  </div>`;
+}
+function escapeHTML(s){ return (s+"").replace(/[&<>"']/g, ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch])); }
+
+function renderToday(){
+  const now=Date.now();
+  const list=document.getElementById("todayList");
+  const recent=document.getElementById("recentList");
+  if(!STATE.people.length){
+    list.innerHTML=`<div class="empty">Add the people you want to stay close to.<br><span style="opacity:.7">Tap the green + button below.</span></div>`;
+    recent.innerHTML="";
+    document.getElementById("recentPanel").style.display="none";
+    return;
+  }
+  document.getElementById("recentPanel").style.display="";
+  const ranked = STATE.people.map(p=>({p, w:warmthOf(p,now), z:zoneOf(warmthOf(p,now),p)}))
+    .filter(x=>!x.p.paused && x.p.tier!=="dormant");
+  const overdue = ranked.filter(x => x.z==="cool" || x.z==="drift" || x.z==="lost");
+  // priority by tier (inner most important) then by how cool
+  const tierWeight = {inner:4, close:3, maintained:2, extended:1, dormant:0};
+  overdue.sort((a,b)=> (tierWeight[b.p.tier]-tierWeight[a.p.tier]) || (a.w-b.w));
+  if(!overdue.length){
+    list.innerHTML=`<div class="empty">Everyone's in rhythm. Quiet days are fine.</div>`;
+  }else{
+    list.innerHTML=overdue.slice(0,8).map(x=>rowHTML(x.p, now, {quick:true})).join("");
+  }
+  // Recently connected
+  const warm = ranked.filter(x=>x.z==="warm");
+  warm.sort((a,b)=>b.w-a.w);
+  recent.innerHTML = warm.length
+    ? warm.map(x=>rowHTML(x.p, now)).join("")
+    : `<div class="empty">No one currently in the warm zone.</div>`;
+  wireRows(document.getElementById("tab-today"));
+}
+
+/* =====================================================================
+   RENDER — People (full list, sortable, searchable, filterable)
+   ===================================================================== */
+function renderPeople(){
+  const now=Date.now();
+  const sort=document.getElementById("sortsel").value;
+  const tierFilt=document.getElementById("tierfilt").value;
+  const q=(document.getElementById("searchInp").value||"").trim().toLowerCase();
+  let arr=STATE.people.slice();
+  if(tierFilt!=="all") arr=arr.filter(p=>p.tier===tierFilt);
+  if(q) arr=arr.filter(p=>p.name.toLowerCase().includes(q));
+  const tierWeight={inner:4,close:3,maintained:2,extended:1,dormant:0};
+  arr.sort((a,b)=>{
+    if(sort==="name") return a.name.localeCompare(b.name);
+    if(sort==="tier") return (tierWeight[b.tier]-tierWeight[a.tier]) || a.name.localeCompare(b.name);
+    // overdue
+    if(a.paused && !b.paused) return 1;
+    if(!a.paused && b.paused) return -1;
+    const wa=warmthOf(a,now), wb=warmthOf(b,now);
+    if(wa==null && wb==null) return a.name.localeCompare(b.name);
+    if(wa==null) return 1;
+    if(wb==null) return -1;
+    return wa-wb;
+  });
+  const wrap=document.getElementById("peopleList");
+  if(!arr.length){
+    wrap.innerHTML=`<div class="empty">${STATE.people.length?"No matches.":"No people yet — tap + to add."}</div>`;
+    return;
+  }
+  wrap.innerHTML=arr.map(p=>rowHTML(p, now)).join("");
+  wireRows(wrap);
+}
+function wireRows(scope){
+  scope.querySelectorAll("[data-log]").forEach(b=>b.addEventListener("click",e=>{
+    e.stopPropagation();
+    const [pid,type]=b.dataset.log.split("|");
+    logContact(pid, type);
+    const row=b.closest(".ppl-row");
+    if(row){ row.classList.add("flash"); setTimeout(()=>row.classList.remove("flash"),900); }
+  }));
+  scope.querySelectorAll("[data-open]").forEach(el=>el.addEventListener("click",()=>{
+    openPersonCard(el.dataset.open);
+  }));
+}
+
+/* =====================================================================
+   RENDER — Person card (modal)
+   ===================================================================== */
+function openPersonCard(personId){
+  const p=STATE.people.find(x=>x.id===personId); if(!p) return;
+  const now=Date.now();
+  const w=warmthOf(p,now), z=zoneOf(w,p), last=lastContactFor(p.id);
+  const cd=cadenceDaysFor(p), t=tierById(p.tier);
+  const contacts=STATE.contacts.filter(c=>c.personId===p.id).slice().sort((a,b)=>new Date(b.time)-new Date(a.time));
+  const pct=(w!=null)?Math.round(w*100):null;
+  const col=(w!=null)?warmthColor(w):"var(--faint)";
+  const card=document.getElementById("personCard");
+  card.innerHTML=`
+    <div class="modal-head">
+      <span class="card-name">${escapeHTML(p.name)}</span>
+      <button class="close" id="cardClose">✕</button>
+    </div>
+    <div class="card-meta">${t.name} · ${p.paused?"paused":(cd>0?`every ~${cd} days`:"dormant — no nudges")}</div>
+    ${(w!=null&&!p.paused)?`
+      <div class="card-warmth">
+        <span class="zlab ${zoneClass(z)}">${zoneLabel(z)}${showPct()?` <span class="pct">${pct}%</span>`:""}</span>
+        <span class="since">${last?`last ${ctById(last.type).name.toLowerCase()} ${fmtAgo(last.time)}`:"no contact logged"}</span>
+      </div>
+      <div class="bar"><i style="width:${Math.max(3,pct)}%;background:${col}"></i><span class="mark" style="left:${WARM*100}%"></span></div>
+    `:`
+      <div class="card-warmth"><span class="zlab zone-paused">${zoneLabel(z)}</span>
+      <span class="since">${last?`last ${ctById(last.type).name.toLowerCase()} ${fmtAgo(last.time)}`:"no contact logged"}</span></div>
+    `}
+    ${!p.paused?`
+      <div class="quick-log">
+        <button class="qbtn q" data-log="${p.id}|quality">Quality<span class="lbl">in person / call</span></button>
+        <button class="qbtn" data-log="${p.id}|touch">Touch<span class="lbl">meaningful text</span></button>
+        <button class="qbtn" data-log="${p.id}|surface">Surface<span class="lbl">brief reply</span></button>
+      </div>`:""}
+    ${p.notes?`<label class="fld">Notes</label><div style="font-size:13px;color:var(--ink-dim);white-space:pre-wrap;background:var(--panel2);padding:10px 12px;border-radius:9px">${escapeHTML(p.notes)}</div>`:""}
+    <div class="hist">
+      <label class="fld">Recent contact</label>
+      ${contacts.length?contacts.slice(0,10).map(c=>`
+        <div class="hist-row">
+          <span><span class="htype ${c.type}">${ctById(c.type).name}</span> · <span style="color:var(--ink-dim)">${fmtAgo(c.time)}</span></span>
+          <button class="hdel" data-cdel="${c.id}" title="Remove">✕</button>
+        </div>`).join(""):`<div style="color:var(--faint);font-size:12px;font-family:var(--mono)">No contact logged.</div>`}
+    </div>
+    <div class="actions" style="margin-top:16px">
+      <button class="ghost btn tiny" id="cardEdit">Edit</button>
+      <button class="ghost btn tiny" id="cardPause">${p.paused?"Resume":"Pause"}</button>
+    </div>
+  `;
+  document.getElementById("personModal").classList.remove("hidden");
+  card.querySelector("#cardClose").addEventListener("click",closePersonCard);
+  card.querySelector("#cardEdit").addEventListener("click",()=>{ closePersonCard(); openEditModal(p.id); });
+  card.querySelector("#cardPause").addEventListener("click",()=>{ togglePause(p.id); openPersonCard(p.id); });
+  card.querySelectorAll("[data-log]").forEach(b=>b.addEventListener("click",()=>{
+    const [pid,type]=b.dataset.log.split("|"); logContact(pid,type); openPersonCard(pid);
+  }));
+  card.querySelectorAll("[data-cdel]").forEach(b=>b.addEventListener("click",()=>{
+    if(!confirm("Remove this contact entry? Warmth will recompute.")) return;
+    deleteContact(b.dataset.cdel); openPersonCard(p.id);
+  }));
+}
+function closePersonCard(){ document.getElementById("personModal").classList.add("hidden"); }
+
+/* =====================================================================
+   RENDER — Add/Edit modal
+   ===================================================================== */
+let editingId=null;
+function openEditModal(personId){
+  editingId=personId||null;
+  const p = personId? STATE.people.find(x=>x.id===personId): null;
+  document.getElementById("editTitle").textContent = p? "Edit person" : "Add someone";
+  document.getElementById("editName").value = p? p.name : "";
+  document.getElementById("editCadence").value = p && p.customCadenceDays ? p.customCadenceDays : "";
+  document.getElementById("editNotes").value = p? (p.notes||"") : "";
+  const last = p? lastContactFor(p.id) : null;
+  document.getElementById("editLastDate").value = last? fmtDateInput(last.time) : fmtDateInput();
+  // tier pills
+  const tw=document.getElementById("editTierPills");
+  const sel = p? p.tier : "maintained";
+  tw.innerHTML = TIERS.map(t=>`<button class="pill ${t.id===sel?'active':''}" data-tier="${t.id}" title="${t.note}">${t.name}</button>`).join("");
+  tw.querySelectorAll(".pill").forEach(b=>b.addEventListener("click",()=>{
+    tw.querySelectorAll(".pill").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+  }));
+  // delete button (only when editing)
+  const del=document.getElementById("editDelete");
+  del.style.display = p? "" : "none";
+  document.getElementById("editModal").classList.remove("hidden");
+  setTimeout(()=>document.getElementById("editName").focus(), 50);
+}
+function closeEditModal(){ document.getElementById("editModal").classList.add("hidden"); editingId=null; }
+function saveEdit(){
+  const name=document.getElementById("editName").value.trim();
+  if(!name){ toast("Name is required."); return; }
+  const tier=document.querySelector("#editTierPills .pill.active")?.dataset.tier || "maintained";
+  const cv=document.getElementById("editCadence").value;
+  const cust = cv===""? null : Math.max(1, +cv);
+  const notes=document.getElementById("editNotes").value.trim();
+  const lastDate=document.getElementById("editLastDate").value;
+  let p;
+  if(editingId){
+    p=STATE.people.find(x=>x.id===editingId);
+    p.name=name; p.tier=tier; p.customCadenceDays=cust; p.notes=notes;
+  }else{
+    p={ id:"p_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+        name, tier, customCadenceDays:cust, notes, paused:false };
+    STATE.people.push(p);
+    // seed a contact at "last connected" date so warmth model has something to work with
+    if(lastDate){
+      const t=new Date(lastDate+"T12:00:00").toISOString();
+      STATE.contacts.push({id:"c_"+Date.now().toString(36)+"a", personId:p.id, type:"quality", time:t});
+    }
+  }
+  saveState(); closeEditModal(); renderAll();
+  toast(editingId?"Updated":"Added "+p.name);
+}
+
+/* =====================================================================
+   RENDER — Settings
+   ===================================================================== */
+function renderTierGrid(){
+  const g=document.getElementById("tierGrid");
+  g.innerHTML=TIERS.map(t=>{
+    const v = (STATE.tierDefaults[t.id]!=null) ? STATE.tierDefaults[t.id] : t.defaultDays;
+    if(t.id==="dormant"){
+      return `<span class="bn">${t.name} <small style="color:var(--faint);font-family:var(--mono);font-size:10px;letter-spacing:.08em;display:block">${t.note}</small></span>
+              <span style="color:var(--faint);font-family:var(--mono);font-size:11px">no cadence</span>`;
+    }
+    return `<span class="bn">${t.name} <small style="color:var(--faint);font-family:var(--mono);font-size:10px;letter-spacing:.08em;display:block">${t.note}</small></span>
+      <span><input type="number" min="1" max="3650" data-tier="${t.id}" value="${v}"><span class="unit">days</span></span>`;
+  }).join("");
+  g.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",e=>{
+    const v=Math.max(1,+e.target.value||1);
+    STATE.tierDefaults[e.target.dataset.tier]=v;
+    e.target.value=v; saveState(); renderAll(); toast("Cadence updated");
+  }));
+}
+function renderSettings(){
+  renderTierGrid();
+  document.getElementById("showPct").checked = !!STATE.settings.showPct;
+}
+
+/* =====================================================================
+   misc
+   ===================================================================== */
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),2000);
+}
+function tickClock(){
+  document.getElementById("clock").textContent =
+    new Date().toLocaleString([], {weekday:"long",month:"long",day:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+function renderAll(){ renderToday(); renderPeople(); renderSettings(); }
+
+/* =====================================================================
+   wiring
+   ===================================================================== */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll("section").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  document.getElementById("tab-"+t.dataset.tab).classList.add("active");
+  if(t.dataset.tab==="today") renderToday();
+  if(t.dataset.tab==="people") renderPeople();
+}));
+document.getElementById("fab").addEventListener("click",()=>openEditModal());
+document.getElementById("editClose").addEventListener("click",closeEditModal);
+document.getElementById("editCancel").addEventListener("click",closeEditModal);
+document.getElementById("editSave").addEventListener("click",saveEdit);
+document.getElementById("editDelete").addEventListener("click",()=>{
+  const p=STATE.people.find(x=>x.id===editingId); if(!p) return;
+  if(!confirm(`Delete ${p.name} and all logged contact history? This cannot be undone.`)) return;
+  deletePerson(editingId); closeEditModal(); renderAll(); toast("Person deleted");
+});
+document.getElementById("editModal").addEventListener("click",e=>{ if(e.target.id==="editModal") closeEditModal(); });
+document.getElementById("personModal").addEventListener("click",e=>{ if(e.target.id==="personModal") closePersonCard(); });
+["sortsel","tierfilt","searchInp"].forEach(id=>document.getElementById(id).addEventListener("input",renderPeople));
+document.getElementById("showPct").addEventListener("change",e=>{
+  STATE.settings.showPct=e.target.checked; saveState(); renderAll();
+});
+document.getElementById("resetTiers").addEventListener("click",()=>{
+  if(!confirm("Reset all tier cadences to defaults?")) return;
+  STATE.tierDefaults={}; saveState(); renderSettings(); renderAll(); toast("Cadences reset");
+});
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(STATE,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="people-export-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+});
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+  rd.onload=()=>{ try{ const o=JSON.parse(rd.result);
+    STATE=migrate({people:o.people||[], contacts:o.contacts||[], tierDefaults:o.tierDefaults||{}, settings:o.settings||{}});
+    saveState(); renderAll(); toast("Data imported");
+  }catch(err){ toast("Import failed — invalid file."); } };
+  rd.readAsText(f);
+});
+document.getElementById("wipeBtn").addEventListener("click",()=>{
+  if(confirm("Erase ALL people, contacts, and overrides? This cannot be undone.")){
+    STATE={people:[], contacts:[], tierDefaults:{}, settings:{}, schemaVersion:SCHEMA};
+    saveState(); renderAll(); toast("All data erased");
+  }
+});
+
+/* boot */
+tickClock(); renderAll();
+setInterval(()=>{ tickClock(); if(document.getElementById("tab-today").classList.contains("active")) renderToday(); }, 60000);
+</script>
+</body>
+</html>
