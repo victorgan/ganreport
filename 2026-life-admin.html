@@ -133,11 +133,9 @@
   .tl-progress .bar i{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--patina),var(--brass));border-radius:2px}
   .tl-progress .bar .now{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(200,162,75,.16)}
   .tl-progress .pct{font-family:var(--mono);font-size:11px;color:var(--ink-dim);white-space:nowrap}
-  .tl-scroll{display:flex;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding:6px 8px 18px}
-  .tl-scroll::-webkit-scrollbar{height:6px}
-  .tl-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
-  .month{flex:0 0 clamp(190px,46vw,214px);scroll-snap-align:center;padding:10px 11px;border-left:1px solid var(--line-2)}
-  .month:first-child{border-left:0}
+  .tl-scroll{padding:4px 6px 10px}
+  .month{padding:16px 16px 18px;border-top:1px solid var(--line-2)}
+  .month:first-child{border-top:0}
   .month.past{opacity:.5}
   .month.now{background:linear-gradient(180deg,rgba(200,162,75,.06),transparent 60%)}
   .m-h{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;padding-left:2px}
@@ -145,7 +143,7 @@
   .month.now .m-h .mo{color:var(--brass)}
   .m-h .badge{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dial);background:var(--brass);padding:2px 6px;border-radius:99px}
   .m-empty{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);padding:6px 2px}
-  .m-cards{display:flex;flex-direction:column;gap:10px}
+  .m-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
   .m-tags{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:7px}
   .chip{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:99px;border:1px solid transparent}
   .chip.money{color:var(--brass);border-color:rgba(200,162,75,.3)}
@@ -733,10 +731,9 @@ function renderTimeline(animate,center){
     chains.forEach(d=>d.chain.forEach((step,idx)=>{if(step.m===m)cards+=chainStepHTML(d,idx,animate);}));
     const cls=m<curM?'past':(m===curM?'now':'');const badge=m===curM?'<span class="badge">now</span>':'';
     const inner=cards?('<div class="m-cards">'+cards+'</div>'):'<div class="m-empty">nothing here</div>';
-    html+=`<div class="month ${cls}" data-month="${m}"><div class="m-h"><span class="mo">${MONTHS_S[m]}</span>${badge}</div>${inner}</div>`;
+    html+=`<div class="month ${cls}" data-month="${m}"><div class="m-h"><span class="mo">${MONTHS[m]}</span>${badge}</div>${inner}</div>`;
   }
   scroll.innerHTML=html;
-  if(center!==false){const nowEl=scroll.querySelector('.month.now');if(nowEl&&scroll.clientWidth>0)scroll.scrollLeft=nowEl.offsetLeft-scroll.clientWidth/2+nowEl.clientWidth/2;}
 }
 
 function renderHeader(){
@@ -781,7 +778,7 @@ const TIERS=[['need','Need'],['upkeep','Upkeep'],['want','Want']];
 function tierButtons(cur){return TIERS.map(t=>`<button class="preset ${t[0]===cur?'sel':''}" data-tier="${t[0]}">${t[1]}</button>`).join('');}
 
 /* re-render everything, keeping the calendar's horizontal scroll position */
-function rerender(){const sc=document.getElementById('tlScroll');const sx=sc?sc.scrollLeft:0;renderHeader();renderStrip();renderTimeline(false,false);renderRhythms(false);const sc2=document.getElementById('tlScroll');if(sc2)sc2.scrollLeft=sx;}
+function rerender(){renderHeader();renderStrip();renderTimeline(false);renderRhythms(false);}
 function removeDial(d){if(d.custom)state.custom=state.custom.filter(c=>c.id!==d.id);else if(!state.removed.includes(d.id))state.removed.push(d.id);delete state.dials[d.id];}
 function applyResets(d){(d.resets||[]).forEach(rid=>{const x=findDial(rid);if(x&&x.mode!=='date'&&!x.chain){const st=state.dials[rid]||{};state.dials[rid]={...st,last:todayISO(),interval:st.interval==null?x.interval:st.interval};}});}
 function markDone(id){
@@ -930,7 +927,6 @@ function setTab(t){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   document.getElementById('rhythmSec').classList.toggle('active',t==='rhythms');
   document.getElementById('yearSec').classList.toggle('active',t==='year');
-  if(t==='year'){const sc=document.getElementById('tlScroll');const el=sc.querySelector('.month.now');if(el&&sc.clientWidth>0)sc.scrollLeft=el.offsetLeft-sc.clientWidth/2+el.clientWidth/2;}
 }
 document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);});
 
