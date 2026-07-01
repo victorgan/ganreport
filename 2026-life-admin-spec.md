@@ -77,6 +77,55 @@ telemetry. Defaults ship pre-seeded so the board looks lived-in on first open.
 
 ---
 
+## How recurring and calendar tasks relate
+
+The recurring rhythms and the calendar jobs are not two different features — they are the
+**same card and the same idea** (a ring that discharges and recharges), split only by
+*what drives the recharge*: relative time versus absolute time.
+
+| | **Recurring** (interval) | **Calendar** (date-anchored) |
+|---|---|---|
+| Recharge is measured… | from the last time you did it | toward a fixed point in the year |
+| Formula | `reserve = 1 − daysSince(lastDone)/interval` | fills when far off, empties over the final ~120 days to the due date |
+| The clock… | **floats** — resets every time you act | **is pinned** — resets annually on Jan 1 |
+| "Done" means | did it just now; do it again in `interval` days | handled for this year; comes back next year |
+| Times per year | as many as you complete it | once per anchor |
+| Good for | upkeep where only elapsed time matters (haircut, clean) | jobs tied to a moment (tax deadline, benefits window, seasonal) |
+
+**What they share.** One `dials` record with a `mode` field; the identical ring card; the
+same tap-to-complete gesture; the same colour/urgency scale (patina → brass → ember); and
+the same priority layer — tiers, `leadDays` warm-up, and the "Needs attention" strip all
+apply to both.
+
+**How to tell which a task is.** Ask whether *missing a specific date* is the point. If the
+cost is tied to a calendar moment (the 401k window closes, the FSA expires), it's a
+calendar task. If only *time since last* matters and the exact date is irrelevant, it's
+recurring. The **Add** sheet makes this the one real choice — "Every N days" vs "By a
+date."
+
+**Where each lives** (the view mapping — see *How the two surfaces relate*, below):
+- Recurring tasks live **only** in *On repeat*.
+- Calendar tasks live in **both**: laid out by month in *The calendar year*, and mixed
+  into their area under *On repeat*. So *On repeat* is the full set; the calendar is the
+  time-anchored subset.
+
+**Where they meet.** Two constructs bridge the models:
+- A **chain** is recurring at the top level (a yearly cooldown) but its steps can carry
+  calendar anchors (`m`), so one task can have a floating overall cadence with pinned step
+  placement — e.g. the Backdoor Roth recharges yearly yet drops "contribute" in January
+  and "file 8606" in April.
+- A **date-anchored one-off** (a birthday, a passport renewal) sits at the edge: it's on
+  the calendar model (pinned to a date) but conceptually a recurring yearly event. The
+  `once` flag is the true one-shot; a 365-day interval and a yearly date anchor look alike
+  but differ in whether the clock floats or pins.
+
+The two models are deliberately **not** merged into one. Forcing a haircut onto a fixed
+date would invent pressure the app exists to avoid; floating a tax deadline would hide a
+real cliff. Keeping both — relative for upkeep, absolute for deadlines — is what lets the
+same calm card serve laundry and the 401k without either feeling wrong.
+
+---
+
 ## How the two surfaces relate
 
 The two tabs are **two projections of one task set**, not two separate lists. Every task
