@@ -387,8 +387,8 @@ const DEFAULT_DIALS=[
   // craft & hobbies
   // rest
   {id:'dayoff',   area:'rest',   label:'Take a real day off',   icon:'moon',    interval:62,  seed:44},
-  {id:'longwknd', area:'rest',   label:'Long weekend away',     icon:'sun',     interval:90,  seed:60},
-  {id:'trip',     area:'rest',   label:'A proper trip',         icon:'plane',   interval:180, seed:130},
+  {id:'longwknd', area:'rest',   label:'Long weekend away',     icon:'sun',     interval:90,  chain:[{label:'Book transportation'},{label:'Book lodging'},{label:'Book events'},{label:'Take trip'}]},
+  {id:'trip',     area:'rest',   label:'A proper trip',         icon:'plane',   interval:180, chain:[{label:'Book transportation'},{label:'Book lodging'},{label:'Book events'},{label:'Take trip'}]},
   {id:'offline',  area:'rest',   label:'A day fully offline',   icon:'moon',    interval:30,  seed:18},
   // cascades: a gated task and a multi-step chain
   {id:'glasses',  area:'health', label:'Order new glasses',     icon:'eye',     interval:365, seed:0, requires:['eye']},
