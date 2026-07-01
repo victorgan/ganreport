@@ -219,8 +219,10 @@ today** (a light momentum count). It's a live snapshot — no history, no streak
 ## Persistence & portability
 
 State lives in `localStorage` (key `theyear.v5`), with JSON **Export/Import** for backup
-and for moving to a hosted copy. No account, no network, no telemetry. Defaults ship
-pre-seeded so the board looks lived-in on first open.
+and for moving to a hosted copy. No account, no network, no telemetry — fully local today.
+`localStorage` is the source of truth *for now*; a designed-but-unbuilt sync layer (see
+*Sync & persistence*) would demote it to a write-through cache in front of a durable store.
+Defaults ship pre-seeded so the board looks lived-in on first open.
 
 ## Data model (storage shapes)
 
@@ -443,10 +445,152 @@ action, so it — and only it — gets an explicit reversal.
 
 ---
 
+# Sync & persistence (designed, not built)
+
+**Status: designed, not built** — a plan, not shipped behaviour. Supersedes the old
+"Cloudflare Worker adapter" backlog note.
+
+## The problem
+
+`localStorage` is a cache masquerading as a source of truth: browser-scoped, wiped by
+"clear browsing data," evicted under storage pressure, empty in private windows, per-origin.
+The fix isn't a better local store — it's to **demote `localStorage` to a cache and put the
+truth in a durable store you can inspect and back up.** Target: a truth that (1) survives a
+browser wipe, (2) follows you across devices, (3) is readable *without the app existing*,
+and (4) doesn't break the local-first, offline, no-friction feel.
+
+## Invariants this must not break
+
+- **Local-first / offline.** Sync is additive; off or unreachable → everything still works.
+- **Losing `localStorage` is a non-event.** With no cache, the app re-hydrates from the
+  truth on next load. The truth is never `localStorage`.
+- **The UI never waits on the network.** Reads instant from cache; writes go local first,
+  push after.
+- **Config is not data.** Connection settings live under their own key (`theyear.sync`);
+  losing them is harmless — re-enter, your log is untouched.
+
+## Approach: a private Google Sheet behind an Apps Script Web App
+
+A private Sheet is the truth; a bound Apps Script (`doGet` returns state, `doPost` writes
+it), published as a Web App, exposes a URL the app calls — the app never handles a Google
+credential. Chosen over alternatives because the truth is **human-legible**, needs **no
+per-device login** (the script runs as you), lives in an ecosystem already in use, is ~20
+lines to stand up, and gets **version history for free**. Fallbacks if it sours:
+GitHub-repo-via-Worker (git as truth, more plumbing, a JSON blob) or a File System Access
+API file in a synced folder (no backend, desktop-Chrome only). `IndexedDB` is rejected —
+same trust class as `localStorage`.
+
+## Architecture: write-through cache + debounce + flush
+
+- **Read** cache-first (instant); if empty, pull from the Sheet and populate.
+- **Write** to cache immediately (instant UI), then debounce ~2s and push the whole state
+  in one call.
+- **One adapter module** is the only code that knows the store is a Sheet; swapping stores
+  later rewrites only the adapter.
+- **[fix — durability] Flush on the way out.** A debounced fire-and-forget push can
+  *silently drop the most recent change* — tap once and close the tab before the timer
+  fires, or a failed push with no later change to "retry on." So flush the pending push on
+  `visibilitychange`/`pagehide`, and retry failed pushes on a timer, not only "on next
+  change." Losing the last write is the one unacceptable failure for a source of truth.
+
+## Auth & security
+
+- **One-time setup:** you grant the script permission to edit the Sheet (one Google consent,
+  in your browser); thereafter it runs *as you*, holding that permission server-side. Deploy
+  as **"execute as: me" + "access: anyone"** — that's what makes it login-free. ("Execute
+  as: user" forces a Google login on every caller; the token'd URL is the right default for
+  a solo tool.)
+- **The URL + token is a bearer credential** — whoever holds it can read/write that one
+  Sheet, as you. **Blast radius is contained** to the bound Sheet: a leak is "one
+  recoverable spreadsheet," not your account, Drive, or Gmail.
+- **Mitigations, cheapest first:** (1) a **token check in the script** (~5 lines) turns "URL
+  is the key" into "URL + secret"; (2) **never hardcode URL+token in published source**
+  (view-source hands out write access) — enter once per device, keep in `localStorage`, out
+  of shipped JS; (3) keep the script scoped to the one Sheet.
+- **Pattern-of-life caveat.** A full log of when you're at the gym, out of town, or at
+  appointments is worth more than any single row. "Low sensitivity" is your call; if it
+  bothers you, drop the bearer-URL mode and pay the login-per-device tax for real auth.
+
+## Data model & schema — updated to the current v5 state
+
+The draft's schema (`id | interval | lastDone | tier` rows + a `timeline` blob) is **stale**:
+v5 dropped `timeline` (date done-state moved to `state.dials[id].doneYear`), and
+`state.dials[id]` is now a discriminated union — `{last, interval, tier}` (interval),
+`{doneYear, dueM, dueD, tier}` (date), `{step, last}` (chain) — plus `mode` / `chain` /
+`resets` / `requires` overrides, `state.custom[]`, `state.removed[]`, and `state.ui`. A flat
+task row can no longer represent all of that.
+
+- **[fix — schema] Blob-as-truth, rows-as-projection.** Instead of "rows are the truth and
+  the script reconstructs nested state" (lossy against the discriminated shapes), make the
+  **canonical JSON blob the truth** (one cell / a hidden tab — lossless), and have the
+  script *also* regenerate a **read-only human view tab** (`label | area | last done | due /
+  done-this-year | tier`) that's never read back. Keeps the eyeball-the-log legibility with
+  zero reconstruction risk. (If the log stays row-authoritative instead, it must carry every
+  field above or silently lose date due-dates, chain progress, and mode/link overrides.)
+- **Config** (`theyear.sync`): `{ url, token, lastSync }`.
+
+## First connect & multi-device merge
+
+- **[fix — first-connect] Gate the first push.** The app seeds ~100 defaults into
+  `localStorage` on first boot, so a fresh device is never "empty." Connect must
+  **pull-and-adopt before it may push**, or a fresh device's seeded defaults clobber the
+  Sheet (re-adding tasks you'd removed elsewhere). First connect: Sheet empty → seed from
+  this device; Sheet has data → adopt it; don't enable the debounced push until that
+  resolves.
+- **Steady state:** push local → Sheet on change (debounced + flushed); pull on load. Once
+  multi-device, boot-pull must **reconcile, not blindly replace** — a hard `state = remote`
+  can drop a tap made between boot and pull completing.
+- **[fix — merge] The drafted merge is too thin.** Field-level last-writer-wins on
+  `lastDone` ignores the app's other mutations — interval edits, tier changes, mode
+  conversions, chain resets, un-dones, and **removals** (absence has no timestamp). Doing it
+  right needs the *client* to stamp a per-task `updatedAt` in state at mutation time (not the
+  script stamping every row "now" on a whole-state push), plus **tombstones** for removals so
+  a delete isn't resurrected by a stale device. Add the timestamp now (cheap); defer the
+  merge logic until a second device exists.
+
+## The implementation gotcha that will bite
+
+**CORS.** Don't set `Content-Type: application/json` on the POST — a plain-string body sends
+as `text/plain`, which skips the preflight Apps Script can't answer. Put the token *in the
+body* (`e.postData.contents`); `doGet` reads it from `e.parameter.token`. Get this wrong and
+every write fails silently. (Full Apps Script / client-adapter sketches omitted here; the
+load-bearing detail is this gotcha plus the debounce + flush.)
+
+## UI
+
+Reuse the existing bottom-sheet component: a **Sync** button beside Add / Export / Import
+opens a modal with a status subtitle ("Not connected — data stays on this device only" /
+"Connected"), the Apps Script URL, a masked token (show/hide), and **Test / Save**
+(+ **Disconnect**). Test does a live GET; Save stores config and kicks off the gated first
+connect.
+
+## Decisions
+
+**Truth = a Google Sheet via an Apps Script Web App; `localStorage` = write-through cache.**
+Legible, inspectable, in-ecosystem, login-free at runtime, ~20 lines, versioned for free.
+*Invalidated if:* you go seriously multi-device (whole-blob LWW strains — need per-task
+`updatedAt`) or the pattern-of-life sensitivity matters (bearer-URL is the wrong dial).
+
+**Bearer-token URL over per-device OAuth.** One setup grant vs a login on every device.
+*Invalidated if:* the URL+token ends up in public source — then it isn't a secret and the
+model collapses.
+
+## Open questions
+
+- Merge now or later (add `updatedAt` up front, defer the merge logic).
+- Schema versioning — blob-as-truth makes a new field a client-only migration, part of why
+  it's preferable.
+- Conflict UX — silent LWW vs "this device is behind." Probably silent, per the calm ethos.
+- Backup-of-the-backup — is Sheet version history enough, or also keep periodic JSON export?
+
+---
+
 # Backlog (explored, not built)
 
-- **Lightweight multi-device sync** — a thin load/save adapter (e.g. a Cloudflare Worker)
-  behind the existing export/import, so state follows across devices.
+- **Sync & durable persistence** *(designed — see the section above)* — put the truth in a
+  Google Sheet via an Apps Script Web App and demote `localStorage` to a write-through
+  cache. **TODO:** build the adapter (pull/push), the Sync settings modal, flush-on-unload,
+  the gated first-connect, and per-task `updatedAt` stamping for future merge.
 - **Snooze without penalty** — an explicit "not now" that quiets one item for N days,
   distinct from skipping and still guilt-free.
 - **Calendar / vault integration** — optionally mirror hard-deadline items to a real
