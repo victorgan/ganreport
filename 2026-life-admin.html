@@ -191,6 +191,8 @@
   .preset{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);background:var(--dial);border:1px solid var(--line);padding:6px 10px;border-radius:99px;cursor:pointer;transition:.15s}
   .preset:hover,.preset.sel{color:var(--dial);background:var(--brass);border-color:var(--brass)}
   .sh-note{color:var(--ink-dim);font-size:14px;line-height:1.55;margin:0 0 6px}
+  .sh-note a{color:var(--brass);text-decoration:underline;text-underline-offset:2px}
+  .sh-note a:hover{color:var(--ember)}
   .sheet-actions{display:flex;gap:10px;margin-top:22px}
   .btn{flex:1;font-family:var(--sans);font-size:14px;font-weight:600;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--raised-2);color:var(--ink);cursor:pointer;transition:.16s}
   .btn:hover{border-color:rgba(238,240,234,.26)}
@@ -1018,7 +1020,7 @@ function openSync(){
   const last=c.lastSync?('synced '+new Date(c.lastSync).toLocaleString()):'';
   openSheet(`<h3>Sync</h3>
     <div class="sh-sub" id="syStat">${on?('Connected'+(last?' · '+last:'')):'Not connected — data stays on this device only'}</div>
-    <p class="sh-note">Your data lives in a private Google Sheet; this browser keeps a cache. One-time setup: make a Sheet → Extensions → Apps Script, paste the sync script, Deploy as a Web App (execute as <b>me</b>, access <b>anyone</b>), then paste its <b>/exec</b> URL and your token below.</p>
+    <p class="sh-note">Your data lives in a private Google Sheet; this browser keeps a cache. One-time setup: make a Sheet → Extensions → Apps Script, paste <a href="https://gan.report/2026-life-admin-sync.gs" target="_blank" rel="noopener">the sync script</a>, set your token, Deploy as a Web App (execute as <b>me</b>, access <b>anyone</b>), then paste its <b>/exec</b> URL and your token below.</p>
     <div class="field"><label>Apps Script URL</label><input type="url" id="syUrl" placeholder="https://script.google.com/macros/s/…/exec" value="${escHtml(c.url||'')}"></div>
     <div class="field"><label>Token</label><div class="tok-row"><input type="password" id="syTok" value="${escHtml(c.token||'')}"><button type="button" class="linklike" id="syShow">show</button></div></div>
     <div class="sheet-actions">${on?'<button class="btn ghost" id="syOff">Disconnect</button>':''}<button class="btn" id="syTest">Test</button><button class="btn primary" id="sySave">Save &amp; sync</button></div>`);
