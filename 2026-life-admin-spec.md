@@ -51,8 +51,7 @@ is a **mental model you glance at**, not a system of record you're accountable t
   a streak. An empty ring is an invitation, not a debt.
 - **No notifications.** A passive dashboard you choose to look at, never a nag.
 - **Recharge-based, not one-off.** Everything recurs — on a rolling interval, or toward a
-  date each year. Pure one-shots don't belong here (narrow exception: opt-in follow-ups
-  spawned by an Offer, which retire on completion).
+  date each year. Pure one-shots don't belong here at all.
 - **Priority changes lead time and prominence, never loudness.** Higher-stakes tasks
   surface earlier and more visibly; they never shout.
 
@@ -71,8 +70,8 @@ is a **mental model you glance at**, not a system of record you're accountable t
   a "Needs attention" strip, and sort order.
 - A live **summary snapshot** on the On-repeat tab (counts by ring state + "done today").
   A snapshot, not history — see the streaks row in *Out of scope*.
-- **Cascades** — chain / reset / gate / offer (see below). Shipped as four light relations,
-  not a dependency graph.
+- **Cascades** — chain / reset / gate (see below). Shipped as three light relations,
+  not a dependency graph, and authorable in the Add/Edit sheet.
 - Local persistence (`localStorage`) + JSON export/import; optional lightweight sync later
   (e.g. a Cloudflare Worker acting as a load/save adapter behind export/import).
 
@@ -81,7 +80,7 @@ is a **mental model you glance at**, not a system of record you're accountable t
 | Rejected | Why |
 |---|---|
 | **Execution help** (portal links, checklists, holding docs) | The tool logs and orients; it does not do the work. Adding "doing" explodes scope and turns a dashboard into a workflow tool — optimizing the hard 95% is a different product. |
-| **Pure one-off / non-recurring tasks** | No recharge → no state in the cooldown model. One-offs want deadlines and nagging, which drag the calm board back into a to-do list. They belong in existing capture (Obsidian, Reminders). *Narrow exception:* opt-in follow-ups from an Offer, which retire on completion. |
+| **Pure one-off / non-recurring tasks** | No recharge → no state in the cooldown model. One-offs want deadlines and nagging, which drag the calm board back into a to-do list. They belong in existing capture (Obsidian, Reminders). |
 | **Day-precision alerting** (bill/renewal/birthday pings, "3 days left") | The app date-*anchors* recharge (the ring empties toward a date, calmly, no alert) but will not *alert* on day-precision deadlines. That's the notification behaviour it deliberately won't build; a calendar app does it better. |
 | **Seasonality / condition-based intervals** | The real cue (weather, an event, guests coming) is a condition the app can't see. Modeling it means modeling the world; out. |
 | **Notifications / reminders** | Deliberately none. Solving notification fatigue by not participating. This also defines the user (below). |
@@ -97,11 +96,12 @@ is a **mental model you glance at**, not a system of record you're accountable t
 Two things in the shipped build go beyond the strict "calm, recurring-only board" the
 scope originally described. Both were deliberate, and both were kept inside the invariants:
 
-- **Cascades** (chain / reset / gate / offer). Sequencing and dependencies pull toward a
-  task manager. Shipped anyway, because a few real jobs genuinely have shape (the backdoor
-  Roth is a sequence; a deep clean subsumes the weekly one). Contained by modeling the
-  *four lightest relations* rather than a graph, and by holding the line that no cascade
-  ever manufactures backlog or a nag. This is the extension most worth watching for creep.
+- **Cascades** (chain / reset / gate). Sequencing and dependencies pull toward a task
+  manager. Shipped anyway, because a few real jobs genuinely have shape (the backdoor Roth
+  is a sequence; a deep clean subsumes the weekly one). Contained by modeling the *three
+  lightest relations* rather than a graph, and by holding the line that no cascade ever
+  manufactures backlog or a nag. A fourth (*Offer*) was built and then cut for crossing
+  that line — the pruning this row warns to keep doing.
 - **Date-anchored recharge.** The calendar windows needed a notion of "due around a date,"
   which a pure elapsed-time model can't express. Shipped as a second *recharge mode*
   (fills toward a date, empties over ~120 days, resets Jan 1) — still calm, still no
@@ -237,7 +237,7 @@ interface Seed {
   interval?: number; seed?: number;  // interval mode
   dueM?: number; dueD?: number; hard?: boolean; note?: string; tags?: string[]; // date mode
   tier?: Tier;                       // else derived from id-sets
-  chain?: ChainStep[]; resets?: string[]; requires?: string[]; onDoneOffer?: FollowUp[]; once?: boolean;
+  chain?: ChainStep[]; resets?: string[]; requires?: string[];
 }
 
 // stored per task (state.dials[id])
@@ -315,24 +315,26 @@ interface Task {
 
 ---
 
-# Cascades — four light relations
+# Cascades — three light relations
 
-"Tasks cascade" is really four distinct relationships. Naming them is most of the design;
+"Tasks cascade" is really three distinct relationships. Naming them is most of the design;
 each is modeled with the lightest thing that fits, and they compose. A dependency graph was
-rejected as betraying the calm, recurring-only core.
+rejected as betraying the calm, recurring-only core. (A fourth, *Offer* — a prompt to spawn
+a follow-up on completion — was built and then removed: it was the only relation that
+interrupted with a modal, and the only source of one-off tasks, so it fought the
+calm/recurring core it was bolted onto. See *Alternatives considered*.)
 
 | Shape | Meaning | Example |
 |---|---|---|
 | **Chain** | one job that walks through ordered steps | backdoor Roth: contribute → convert → file 8606 |
 | **Reset** | doing the big one refills the small one | deep-clean bathroom refills the weekly clean |
 | **Gate** | B is dormant until A is *fresh* | order glasses — dormant until the eye exam is done |
-| **Offer** | finishing A *may* spawn B, by human judgment | physical → maybe book a specialist |
 
 ## Chains — one advancing card, optionally cross-surface
 
 A chain is **one card**, not N. It shows only the active step plus a step pip row; tapping
-advances it — same tap, same refill. Completing the last step puts a recurring chain on a
-whole-chain cooldown (re-arming step 1 after `interval`); a one-shot chain retires.
+advances it — same tap, same refill. Completing the last step puts the chain on a
+whole-chain cooldown, re-arming step 1 after `interval`.
 
 Chains are **cross-surface**: a step carrying a month anchor (`m`) also appears in that
 month on the calendar, **locked until the prior step is done** — a chain on the calendar is
@@ -340,15 +342,12 @@ a series of gates along the timeline. Both surfaces drive the same `state.dials[
 counter. Steps with no `m` appear only in On repeat. There is no separate calendar card for
 a chained task — the steps *are* its calendar presence, which is why nothing duplicates.
 
-## Reset / Gate / Offer
+## Reset / Gate
 
-- **Reset** — `resets: [ids]`: marking done also refills the listed tasks. No new UI.
+- **Reset** — `resets: [ids]`: marking done also refills the listed tasks. No new card UI.
 - **Gate** — `requires: [ids]`: a task stays dormant (dim, non-glowing, "after eye exam")
   until its prerequisites are *fresh* (their own ring isn't empty), then behaves per its
   tier. A dormant task never nags — that's how ordering coexists with no-penalty.
-- **Offer** — `onDoneOffer: [...]`: on completing certain tasks, a small **dismissable**
-  prompt suggests one-off follow-ups. Opt-in only, so it never creates backlog you didn't
-  choose. This is the one place one-shots (`once`) enter the app.
 
 ## Data model
 
@@ -357,11 +356,8 @@ interface Task {
   chain?: ChainStep[];      // ordered; only the active step renders as a card
   resets?: string[];        // ids refilled on completion
   requires?: string[];      // ids that must be "fresh" before this is eligible
-  onDoneOffer?: FollowUp[]; // opt-in follow-ups offered on completion
-  once?: boolean;           // retire on completion instead of recharging
 }
 interface ChainStep { label: string; m?: number; hard?: boolean; tier?: Tier; }
-interface FollowUp { label: string; interval?: number; tier?: Tier; area?: string; icon?: string; }
 ```
 
 Freshness for a gate: a required task is fresh while `daysSince(lastDone) < interval` (a
@@ -378,17 +374,18 @@ date prerequisite while it's checked off for the year; a chain while completed).
 - **Deep-clean / full bike service (reset):** `resets: ['bathroom']` / `resets:
   ['bikeclean']` refill the weekly versions.
 - **New glasses (gate):** `requires: ['eye']` — dormant until the eye exam is fresh.
-- **Annual physical (offer):** `onDoneOffer: [ {book specialist, once}, {redo bloodwork,
-  interval:90} ]` — asks on completion; you keep what's relevant.
 
 ## Alternatives considered
 
-- **Full dependency DAG / PM view** — betrays the calm ethos, imposes setup cost; the four
+- **Full dependency DAG / PM view** — betrays the calm ethos, imposes setup cost; the three
   light relations cover the real cases without a graph editor.
 - **Checklist inside every card** — hides the calendar spread of steps weeks apart and
   turns a calm ring into a to-do list. Chains-with-just-in-time-reveal keep one-thing-at-a-time.
-- **Auto-spawning follow-ups** — auto-created tasks you didn't choose are exactly the
-  backlog/guilt the app avoids. Spawns must be opt-in.
+- **Conditional-spawn follow-ups (the old *Offer* relation)** — built, then removed. It was
+  the only relation that interrupted (a modal at completion) and the only source of one-off
+  tasks. Its whole value was reminding you at the right moment — the notification behaviour
+  the app refuses — and this user can just add the follow-up themselves. Cutting it also
+  deleted the `once` flag and restored a clean "everything recharges" invariant.
 
 ---
 
@@ -413,7 +410,7 @@ be urgent right now.
 ordinary priority with the hard-deadline exception; named tiers stay legible where
 numbers/ranking don't. *Revisit if almost everything lands in one tier.*
 
-**Cascades are four light relations, not a DAG.** Covers the real cases while preserving
+**Cascades are three light relations, not a DAG.** Covers the real cases while preserving
 "one card = one actionable thing" and zero manufactured backlog. *Revisit if real usage
 needs branching or many-to-many prerequisites.*
 

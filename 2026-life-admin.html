@@ -611,8 +611,7 @@ function fmtDateObj(dt){return dt.toLocaleDateString(undefined,{month:'short',da
 const META={
   bathdeep:{resets:['bathroom']},
   bikeservice:{resets:['bikeclean']},
-  bedding:{resets:['sheets']},
-  physical:{onDoneOffer:[{label:'Book a specialist',area:'health',icon:'heart',once:true},{label:'Redo bloodwork',area:'health',icon:'vial',interval:90}]}
+  bedding:{resets:['sheets']}
 };
 const NEED_IDS=new Set(['physical','bloodwork','hormones','dental','eye','derm','flu','dexa','backups','passwords','credit','glasses']);
 const WANT_IDS=new Set(['recipe','teatime','read','wins','plan','outside','shoot','edit','massage']);
@@ -828,7 +827,6 @@ function markDone(id){
     const cs=chainState(d);if(cs.completed){undoSnap=null;return;}   // charging; ignore taps
     const step=(state.dials[id]&&state.dials[id].step||0)+1;
     if(step>=d.chain.length){
-      if(d.once){removeDial(d);save();rerender();toast('Completed — '+d.label,true);return;}
       state.dials[id]={step:d.chain.length,last:todayISO()};applyResets(d);save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Completed — '+d.label,true);
     }else{
       state.dials[id]={...(state.dials[id]||{}),step};save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Step done — next: '+d.chain[step].label,true);
@@ -837,29 +835,11 @@ function markDone(id){
   }
   if(d.mode==='date'){
     const nowDone=!isDateDone(d,curYear());setDateDone(d,nowDone);if(nowDone)applyResets(d);save();rerender();popCard('.dial[data-card="'+id+'"]');
-    toast(nowDone?('Done — '+d.label):('Reopened — '+d.label),true);if(nowDone)maybeOffer(d);return;
+    toast(nowDone?('Done — '+d.label):('Reopened — '+d.label),true);return;
   }
-  if(d.once){removeDial(d);save();rerender();toast('Done — '+d.label,true);return;}
   const prev=state.dials[id]||{};
   state.dials[id]={...prev,last:todayISO(),interval:prev.interval==null?d.interval:prev.interval};
   applyResets(d);save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Done — '+d.label,true);
-  maybeOffer(d);
-}
-/* conditional follow-ups: opt-in, dismissable — never auto-created */
-function maybeOffer(d){if(!d.onDoneOffer||!d.onDoneOffer.length)return;
-  const rows=d.onDoneOffer.map((f,i)=>`<button class="preset" style="text-align:left" data-off="${i}">+ ${f.label}${f.interval?' · every '+f.interval+'d':' · once'}</button>`).join('');
-  openSheet(`<h3>Nice — ${d.label} done</h3>
-    <div class="sh-sub">Anything to line up from it? Add what's relevant, ignore the rest.</div>
-    <div class="presets" style="flex-direction:column;align-items:stretch;gap:8px">${rows}</div>
-    <div class="sheet-actions"><button class="btn primary" id="offClose">No follow-ups</button></div>`);
-  sheet.querySelectorAll('[data-off]').forEach(b=>b.addEventListener('click',()=>{
-    const f=d.onDoneOffer[+b.dataset.off];const id='c'+Date.now()+'-'+b.dataset.off;
-    const dd={id,area:f.area||d.area,label:f.label,icon:f.icon||d.icon,mode:'interval',interval:f.interval||365};
-    if(f.tier)dd.tier=f.tier;if(!f.interval)dd.once=true;
-    state.custom.push(dd);state.dials[id]={last:seedISO(dd.interval),interval:dd.interval};   // starts ready
-    b.disabled=true;b.classList.add('sel');b.textContent='Added: '+f.label;save();rerender();
-  }));
-  sheet.querySelector('#offClose').addEventListener('click',closeSheet);
 }
 /* one edit sheet for every task. chains keep their step list; every other task
    gets a recharge toggle so it can switch between rolling-interval and by-a-date. */
