@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Year</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dial:#12161c; --dial-2:#161b22; --raised:#1b212a; --raised-2:#20272f;
+    --ink:#eef0ea; --ink-dim:#9aa2ac; --ink-faint:#5c646d;
+    --brass:#c8a24b; --patina:#67a89f; --ember:#d18a56;
+    --line:rgba(238,240,234,.10); --line-2:rgba(238,240,234,.05); --glow:rgba(209,138,86,.35);
+    --serif:"Instrument Serif",Georgia,serif;
+    --sans:"Instrument Sans",system-ui,-apple-system,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:radial-gradient(120% 90% at 50% -10%, #1a212b 0%, var(--dial) 55%, #0d1116 100%);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+  ::selection{background:rgba(200,162,75,.25)}
+  .wrap{max-width:1160px;margin:0 auto;padding:clamp(20px,4vw,44px) clamp(16px,4vw,40px) 120px}
+
+  header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap}
+  .brand h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,7vw,68px);line-height:.95;margin:0;letter-spacing:-.01em}
+  .brand h1 .yr{color:var(--brass);font-style:italic}
+  .brand .today{font-family:var(--mono);font-size:12.5px;color:var(--ink-dim);margin-top:14px;letter-spacing:.02em}
+  .brand .today b{color:var(--ink);font-weight:500}
+  .tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .tbtn{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);background:var(--raised);border:1px solid var(--line);padding:8px 13px;border-radius:999px;cursor:pointer;transition:.18s;white-space:nowrap}
+  .tbtn:hover{color:var(--ink);border-color:rgba(238,240,234,.24);background:var(--raised-2)}
+  .tbtn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  section{margin-top:clamp(38px,6vw,60px)}
+  .shead{display:flex;align-items:baseline;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+  .shead h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4vw,34px);margin:0;letter-spacing:-.01em}
+  .shead .sub{font-size:13px;color:var(--ink-dim);margin-left:auto;max-width:48ch;text-align:right}
+
+  .area{margin-top:30px}
+  .area:first-of-type{margin-top:4px}
+  .area-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .area-h .tag{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-dim)}
+  .area-h .rule{flex:1;height:1px;background:var(--line-2)}
+  .area-h .cnt{font-family:var(--mono);font-size:10px;color:var(--ink-faint)}
+  .rhythm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(152px,1fr));gap:13px}
+
+  /* card — the whole face is the DONE button */
+  .dial{position:relative;background:linear-gradient(180deg,var(--raised),var(--dial-2));border:1px solid var(--line);border-radius:16px;transition:transform .16s ease,border-color .18s,box-shadow .2s,opacity .2s;--c:var(--patina)}
+  .dial:hover{transform:translateY(-2px);border-color:rgba(238,240,234,.22)}
+  .dial.is-ready{box-shadow:0 0 0 1px rgba(209,138,86,.25),0 0 28px -8px var(--glow)}
+  .dial.is-ready.breathe .gauge-fill{animation:breathe 3.4s ease-in-out infinite}
+  .dial.is-done{opacity:.5}
+  @keyframes breathe{0%,100%{opacity:.85}50%{opacity:.45}}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:scale(1)}}
+  .dial.just-done{animation:pop .5s ease}
+
+  .ddone{display:flex;flex-direction:column;align-items:center;width:100%;background:none;border:0;color:var(--ink);cursor:pointer;padding:16px 12px 13px;font-family:inherit;text-align:center;border-radius:16px}
+  .ddone:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .dedit{position:absolute;top:7px;right:7px;z-index:2;width:26px;height:26px;display:grid;place-items:center;border-radius:8px;background:transparent;border:0;color:var(--ink-faint);cursor:pointer;transition:.15s}
+  .dedit:hover{background:var(--raised-2);color:var(--ink)}
+  .dedit:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+  .dedit svg{width:15px;height:15px}
+
+  .gauge{position:relative;width:82px;height:82px;margin:2px auto 10px}
+  .gauge svg{transform:rotate(-90deg);width:100%;height:100%;overflow:visible}
+  .gauge-track{fill:none;stroke:rgba(238,240,234,.08);stroke-width:5}
+  .gauge-fill{fill:none;stroke:var(--c);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1),stroke .6s}
+  .gauge-ico{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+  .gauge-ico svg{width:21px;height:21px;color:var(--c);transform:none}
+  .gauge-pct{font-family:var(--mono);font-size:10px;color:var(--ink-faint);letter-spacing:.03em}
+  .dial.is-ready .gauge-pct{color:var(--ember)}
+  .dlabel{color:var(--ink);font-size:14px;font-weight:600;line-height:1.22;margin-bottom:3px}
+  .dmeta{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);letter-spacing:.01em;min-height:14px}
+  .dial.is-ready .dmeta{color:var(--ember)}
+  .dhint{margin-top:11px;padding-top:9px;border-top:1px solid var(--line-2);width:100%;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;justify-content:center;gap:6px;transition:color .15s}
+  .dhint svg{width:12px;height:12px}
+  .dial:hover .dhint,.ddone:focus-visible .dhint{color:var(--brass)}
+  .dial.is-ready .dhint{color:var(--ember)}
+
+  /* year timeline */
+  .tl-outer{position:relative;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--dial-2),#10141a);overflow:hidden}
+  .tl-progress{padding:16px 20px 6px;display:flex;align-items:center;gap:14px}
+  .tl-progress .bar{flex:1;height:3px;background:rgba(238,240,234,.08);border-radius:2px;position:relative;overflow:visible}
+  .tl-progress .bar i{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--patina),var(--brass));border-radius:2px}
+  .tl-progress .bar .now{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(200,162,75,.16)}
+  .tl-progress .pct{font-family:var(--mono);font-size:11px;color:var(--ink-dim);white-space:nowrap}
+  .tl-scroll{display:flex;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding:6px 8px 18px}
+  .tl-scroll::-webkit-scrollbar{height:6px}
+  .tl-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  .month{flex:0 0 clamp(190px,46vw,214px);scroll-snap-align:center;padding:10px 11px;border-left:1px solid var(--line-2)}
+  .month:first-child{border-left:0}
+  .month.past{opacity:.5}
+  .month.now{background:linear-gradient(180deg,rgba(200,162,75,.06),transparent 60%)}
+  .m-h{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;padding-left:2px}
+  .m-h .mo{font-family:var(--serif);font-size:22px;line-height:1;color:var(--ink)}
+  .month.now .m-h .mo{color:var(--brass)}
+  .m-h .badge{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dial);background:var(--brass);padding:2px 6px;border-radius:99px}
+  .m-empty{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);padding:6px 2px}
+  .m-cards{display:flex;flex-direction:column;gap:10px}
+  .m-tags{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:7px}
+  .chip{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:99px;border:1px solid transparent}
+  .chip.money{color:var(--brass);border-color:rgba(200,162,75,.3)}
+  .chip.health{color:var(--patina);border-color:rgba(103,168,159,.32)}
+  .chip.employer{color:var(--ink);background:rgba(238,240,234,.08);border-color:var(--line)}
+
+  /* sheet */
+  .scrim{position:fixed;inset:0;background:rgba(6,8,11,.62);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+  .scrim.on{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;z-index:50;left:50%;bottom:0;transform:translate(-50%,110%);width:min(460px,100%);background:linear-gradient(180deg,var(--raised),var(--dial-2));border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;padding:22px 22px 26px;transition:transform .28s cubic-bezier(.22,1,.36,1);max-height:88vh;overflow-y:auto}
+  .sheet.on{transform:translate(-50%,0)}
+  @media(min-width:560px){
+    .sheet{bottom:auto;top:50%;border-radius:20px;border-bottom:1px solid var(--line);transform:translate(-50%,-50%) scale(.96);opacity:0}
+    .sheet.on{transform:translate(-50%,-50%) scale(1);opacity:1}
+  }
+  .sheet .grab{width:38px;height:4px;background:var(--line);border-radius:99px;margin:0 auto 16px}
+  @media(min-width:560px){.sheet .grab{display:none}}
+  .sheet h3{font-family:var(--serif);font-weight:400;font-size:26px;margin:0 0 2px;color:var(--ink)}
+  .sheet .sh-sub{font-family:var(--mono);font-size:11px;color:var(--ink-dim);margin-bottom:20px;letter-spacing:.02em}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px}
+  .field input,.field select{width:100%;background:var(--dial);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:var(--sans);font-size:14px;padding:10px 12px}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--brass)}
+  .presets{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+  .preset{font-family:var(--mono);font-size:10.5px;color:var(--ink-dim);background:var(--dial);border:1px solid var(--line);padding:6px 10px;border-radius:99px;cursor:pointer;transition:.15s}
+  .preset:hover,.preset.sel{color:var(--dial);background:var(--brass);border-color:var(--brass)}
+  .sh-note{color:var(--ink-dim);font-size:14px;line-height:1.55;margin:0 0 6px}
+  .sheet-actions{display:flex;gap:10px;margin-top:22px}
+  .btn{flex:1;font-family:var(--sans);font-size:14px;font-weight:600;padding:13px;border-radius:12px;border:1px solid var(--line);background:var(--raised-2);color:var(--ink);cursor:pointer;transition:.16s}
+  .btn:hover{border-color:rgba(238,240,234,.26)}
+  .btn.primary{background:var(--brass);color:#1a1206;border-color:var(--brass)}
+  .btn.primary:hover{filter:brightness(1.06)}
+  .btn.ghost{flex:0 0 auto;color:var(--ink-faint);background:transparent;border-color:transparent}
+  .btn.ghost:hover{color:var(--ember)}
+  .btn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--raised-2);border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:12px;letter-spacing:.03em;padding:11px 18px;border-radius:99px;opacity:0;pointer-events:none;transition:.24s;z-index:60}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  .foot{margin-top:70px;padding-top:22px;border-top:1px solid var(--line-2);color:var(--ink-faint);font-family:var(--mono);font-size:11px;line-height:1.7;letter-spacing:.02em}
+  .foot b{color:var(--ink-dim);font-weight:500}
+
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <h1>The Year <span class="yr" id="yrLabel">2026</span></h1>
+      <div class="today" id="todayLine">—</div>
+    </div>
+    <div class="tools">
+      <button class="tbtn" id="addBtn">+ Add</button>
+      <button class="tbtn" id="expBtn">Export</button>
+      <button class="tbtn" id="impBtn">Import</button>
+      <input type="file" id="impFile" accept="application/json" hidden>
+    </div>
+  </header>
+
+  <section id="yearSec">
+    <div class="shead">
+      <h2>The calendar year</h2>
+      <span class="sub">The jobs that are tied to a time of year — tax moves, benefits deadlines, seasonal work. Tap a card once you've handled it; tap the dots to read what it involves.</span>
+    </div>
+    <div class="tl-outer">
+      <div class="tl-progress"><div class="bar"><i id="tlFill"></i><span class="now" id="tlNow"></span></div><span class="pct" id="tlPct">—</span></div>
+      <div class="tl-scroll" id="tlScroll"></div>
+    </div>
+  </section>
+
+  <section id="rhythmSec">
+    <div class="shead">
+      <h2>On repeat</h2>
+      <span class="sub">Everything you do over and over. Tap a card when it's done and the ring fills back up. Skip whatever you want — nothing stacks up and nothing goes overdue.</span>
+    </div>
+    <div id="rhythms"></div>
+  </section>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const S='stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+const ICON={
+  heart:`<svg viewBox="0 0 24 24"><path ${S} d="M12 20s-7-4.5-9-9c-1.3-3 .8-6 3.8-6 2 0 3.2 1.4 3.2 1.4S11.2 5 13.2 5c3 0 5.1 3 3.8 6-2 4.5-9 9-9 9z"/></svg>`,
+  vial:`<svg viewBox="0 0 24 24"><path ${S} d="M8 3h8M9 3v13a3 3 0 0 0 6 0V3M9 10h6"/></svg>`,
+  pulse:`<svg viewBox="0 0 24 24"><path ${S} d="M3 12h4l2-6 4 12 2-6h6"/></svg>`,
+  pill:`<svg viewBox="0 0 24 24"><path ${S} d="M10.5 3.8a4 4 0 0 1 5.7 5.7l-6.7 6.7a4 4 0 0 1-5.7-5.7zM7 7l6 6"/></svg>`,
+  tooth:`<svg viewBox="0 0 24 24"><path ${S} d="M7 3c1.5 0 2 1 3 1s1.5-1 3-1c2.8 0 4 2.2 4 5 0 3-1 5-1.5 8-.4 2.4-1 3-1.7 3-1 0-1-2-1.5-4-.3-1.2-.6-2-1.3-2s-1 .8-1.3 2C11.4 20 11.4 22 10.5 22c-.7 0-1.3-.6-1.7-3C8.3 16 7 14 7 11 7 8 5 3 7 3z"/></svg>`,
+  eye:`<svg viewBox="0 0 24 24"><path ${S} d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"/><circle ${S} cx="12" cy="12" r="2.6"/></svg>`,
+  scan:`<svg viewBox="0 0 24 24"><circle ${S} cx="11" cy="11" r="6"/><path ${S} d="M20 20l-4.2-4.2"/></svg>`,
+  syringe:`<svg viewBox="0 0 24 24"><path ${S} d="M16 3l5 5M18 6l-9 9-4 1 1-4 9-9M8 16l2 2"/></svg>`,
+  bone:`<svg viewBox="0 0 24 24"><path ${S} d="M8 8a2 2 0 1 1-2 2l6 6a2 2 0 1 1 2 2 2 2 0 0 1 2-2l-6-6a2 2 0 0 1-2-2 2 2 0 0 1-2-2z"/></svg>`,
+  lungs:`<svg viewBox="0 0 24 24"><path ${S} d="M12 3v8M9 11c-2 1-3 3-3 6v2a2 2 0 0 0 3 1c1-1 2-2 2-4v-3a2 2 0 0 0-2-2zM15 11c2 1 3 3 3 6v2a2 2 0 0 1-3 1c-1-1-2-2-2-4v-3a2 2 0 0 1 2-2z"/></svg>`,
+  dumbbell:`<svg viewBox="0 0 24 24"><path ${S} d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></svg>`,
+  brain:`<svg viewBox="0 0 24 24"><path ${S} d="M12 5a2.5 2.5 0 0 0-4.6 1.3A2.5 2.5 0 0 0 5 11a2.5 2.5 0 0 0 2 4 2.3 2.3 0 0 0 3 1.6V5zM12 5a2.5 2.5 0 0 1 4.6 1.3A2.5 2.5 0 0 1 19 11a2.5 2.5 0 0 1-2 4 2.3 2.3 0 0 1-3 1.6"/></svg>`,
+  scissors:`<svg viewBox="0 0 24 24"><circle ${S} cx="6" cy="7" r="2.4"/><circle ${S} cx="6" cy="17" r="2.4"/><path ${S} d="M8 9l12 8M8 15l12-8"/></svg>`,
+  droplet:`<svg viewBox="0 0 24 24"><path ${S} d="M12 3s6 6.4 6 10.5A6 6 0 1 1 6 13.5C6 9.4 12 3 12 3z"/></svg>`,
+  sparkles:`<svg viewBox="0 0 24 24"><path ${S} d="M12 4l1.6 4.4L18 10l-4.4 1.6L12 16l-1.6-4.4L6 10l4.4-1.6L12 4zM18 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2z"/></svg>`,
+  sun:`<svg viewBox="0 0 24 24"><circle ${S} cx="12" cy="12" r="4"/><path ${S} d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>`,
+  spray:`<svg viewBox="0 0 24 24"><path ${S} d="M9 9h5v11H8a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1zM9 9V5h3M12 5V3M16 5h1M18 4h1M17 8h1M19 8h1M18 6h1"/></svg>`,
+  shirt:`<svg viewBox="0 0 24 24"><path ${S} d="M9 3l3 2 3-2 5 3-2 3-2-1v10H8V8L6 9 4 6z"/></svg>`,
+  air:`<svg viewBox="0 0 24 24"><path ${S} d="M3 8h11a2.5 2.5 0 1 0-2.5-2.5M3 12h15a2.5 2.5 0 1 1-2.5 2.5M3 16h9a2 2 0 1 1-2 2"/></svg>`,
+  fridge:`<svg viewBox="0 0 24 24"><rect ${S} x="6" y="3" width="12" height="18" rx="2"/><path ${S} d="M6 10h12M9 6v2M9 13v3"/></svg>`,
+  tea:`<svg viewBox="0 0 24 24"><path ${S} d="M5 8h11v4a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5zM16 9h2a2 2 0 0 1 0 4h-2M7 3v2M10 3v2M13 3v2"/></svg>`,
+  refresh:`<svg viewBox="0 0 24 24"><path ${S} d="M20 8a8 8 0 0 0-14-3L4 7M4 4v3h3M4 16a8 8 0 0 0 14 3l2-2M20 20v-3h-3"/></svg>`,
+  window:`<svg viewBox="0 0 24 24"><rect ${S} x="4" y="4" width="16" height="16" rx="1.5"/><path ${S} d="M12 4v16M4 12h16"/></svg>`,
+  box:`<svg viewBox="0 0 24 24"><path ${S} d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path ${S} d="M3 7l9 4 9-4M12 11v10"/></svg>`,
+  bed:`<svg viewBox="0 0 24 24"><path ${S} d="M3 7v13M3 13h18v7M21 20v-4a3 3 0 0 0-3-3h-6V9M7 12a1.6 1.6 0 1 0 0-.01"/></svg>`,
+  hanger:`<svg viewBox="0 0 24 24"><path ${S} d="M12 6.2A2 2 0 1 1 14 8c-1 0-2 .6-2 1.6v1L19.2 15A2 2 0 0 1 18 19H6a2 2 0 0 1-1.2-4L12 10.6"/></svg>`,
+  chart:`<svg viewBox="0 0 24 24"><path ${S} d="M4 20V4M4 20h16M8 16l3-4 3 2 5-6"/></svg>`,
+  wallet:`<svg viewBox="0 0 24 24"><path ${S} d="M4 7a2 2 0 0 1 2-2h12v4M4 7v10a2 2 0 0 0 2 2h14V9H6a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="13" r="1.1" fill="currentColor"/></svg>`,
+  card:`<svg viewBox="0 0 24 24"><rect ${S} x="3" y="5" width="18" height="14" rx="2"/><path ${S} d="M3 10h18M7 15h4"/></svg>`,
+  doc:`<svg viewBox="0 0 24 24"><path ${S} d="M6 3h8l4 4v14H6V3z"/><path ${S} d="M14 3v4h4M9 12h6M9 16h6"/></svg>`,
+  briefcase:`<svg viewBox="0 0 24 24"><rect ${S} x="3" y="8" width="18" height="12" rx="2"/><path ${S} d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg>`,
+  target:`<svg viewBox="0 0 24 24"><circle ${S} cx="12" cy="12" r="8"/><circle ${S} cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>`,
+  compass:`<svg viewBox="0 0 24 24"><circle ${S} cx="12" cy="12" r="9"/><path ${S} d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>`,
+  book:`<svg viewBox="0 0 24 24"><path ${S} d="M6 4h9a3 3 0 0 1 3 3v13H8a2 2 0 0 0-2 2V4zM18 17H8"/></svg>`,
+  bike:`<svg viewBox="0 0 24 24"><circle ${S} cx="5.5" cy="17" r="3.2"/><circle ${S} cx="18.5" cy="17" r="3.2"/><path ${S} d="M5.5 17l4-7h5l-2.5 7M9 10h5M14.5 10l4 7"/></svg>`,
+  clock:`<svg viewBox="0 0 24 24"><circle ${S} cx="12" cy="12" r="8"/><path ${S} d="M12 8v4l3 2"/></svg>`,
+  camera:`<svg viewBox="0 0 24 24"><path ${S} d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle ${S} cx="12" cy="13" r="3"/></svg>`,
+  cloud:`<svg viewBox="0 0 24 24"><path ${S} d="M7 17a4 4 0 0 1 .3-8A5 5 0 0 1 17 9.5 3.5 3.5 0 0 1 17 17zM12 13v5M10 15l2-2 2 2"/></svg>`,
+  lock:`<svg viewBox="0 0 24 24"><rect ${S} x="5" y="10" width="14" height="10" rx="2"/><path ${S} d="M8 10V8a4 4 0 0 1 8 0v2M12 14v3"/></svg>`,
+  moon:`<svg viewBox="0 0 24 24"><path ${S} d="M20 14A8 8 0 1 1 10 4a6.5 6.5 0 0 0 10 10z"/></svg>`,
+  plane:`<svg viewBox="0 0 24 24"><path ${S} d="M10 14l-7 2 1-3 5-2-3-6 2-1 6 5 5-2c1-.4 2 .6 1.6 1.6l-2 5 5 6-1 2-6-3-2 5-3 1 2-7z"/></svg>`,
+  phone:`<svg viewBox="0 0 24 24"><path ${S} d="M6 3h4l1 5-3 2a11 11 0 0 0 5 5l2-3 5 1v4a2 2 0 0 1-2 2A16 16 0 0 1 4 5 2 2 0 0 1 6 3z"/></svg>`,
+  check:`<svg viewBox="0 0 24 24"><path ${S} d="M5 12l5 5L19 7"/></svg>`
+};
+const ico=k=>ICON[k]||ICON.clock;
+const CHECK_SM='<svg viewBox="0 0 24 24"><path stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" d="M4 12l5 5L20 6"/></svg>';
+const DOTS='<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>';
+
+const AREAS=[
+  {id:'health',    label:'Health'},
+  {id:'fitness',   label:'Fitness'},
+  {id:'nutrition', label:'Nutrition'},
+  {id:'mind',      label:'Mind'},
+  {id:'body',      label:'Grooming'},
+  {id:'home',      label:'Home & cleaning'},
+  {id:'money',     label:'Money'},
+  {id:'career',    label:'Career & planning'},
+  {id:'gear',      label:'Gear & upkeep'},
+  {id:'people',    label:'People'},
+  {id:'craft',     label:'Craft & hobbies'},
+  {id:'rest',      label:'Rest'}
+];
+const DEFAULT_DIALS=[
+  // health (medical checkups)
+  {id:'physical', area:'health', label:'Annual physical',       icon:'heart',   interval:365, seed:250},
+  {id:'bloodwork',area:'health', label:'Full blood panel',      icon:'vial',    interval:180, seed:150},
+  {id:'hormones', area:'health', label:'Hormone & thyroid panel',icon:'pulse',  interval:365, seed:300},
+  {id:'micros',   area:'health', label:'Vit D & micronutrients',icon:'pill',    interval:180, seed:90},
+  {id:'dental',   area:'health', label:'Dental cleaning',       icon:'tooth',   interval:182, seed:150},
+  {id:'eye',      area:'health', label:'Eye exam',              icon:'eye',     interval:365, seed:200},
+  {id:'derm',     area:'health', label:'Skin & mole check',     icon:'scan',    interval:365, seed:330},
+  {id:'flu',      area:'health', label:'Flu shot',              icon:'syringe', interval:365, seed:280},
+  {id:'dexa',     area:'health', label:'DEXA body scan',        icon:'bone',    interval:365, seed:120},
+  {id:'physio',   area:'health', label:'Physio / mobility check',icon:'dumbbell',interval:180,seed:100},
+  // fitness (training)
+  {id:'program',  area:'fitness',label:'Review training program',icon:'chart',  interval:28,  seed:20},
+  {id:'deload',   area:'fitness',label:'Deload week',           icon:'moon',    interval:42,  seed:30},
+  {id:'vo2',      area:'fitness',label:'VO2max / lactate test', icon:'lungs',   interval:365, seed:240},
+  {id:'prtest',   area:'fitness',label:'Test benchmark lifts',  icon:'dumbbell',interval:90,  seed:55},
+  {id:'longride', area:'fitness',label:'Long ride or run',      icon:'bike',    interval:14,  seed:9},
+  {id:'mobility', area:'fitness',label:'Mobility & stretch',    icon:'air',     interval:7,   seed:5},
+  // nutrition (logistics, no targets)
+  {id:'groceries',area:'nutrition',label:'Grocery restock',     icon:'box',     interval:7,   seed:5},
+  {id:'mealprep', area:'nutrition',label:'Batch cook / meal prep',icon:'fridge',interval:7,   seed:5},
+  {id:'supps',    area:'nutrition',label:'Restock supplements',  icon:'pill',    interval:30,  seed:20},
+  {id:'protein',  area:'nutrition',label:'Restock protein & creatine',icon:'pill',interval:30,seed:22},
+  {id:'stack',    area:'nutrition',label:'Review supplement stack',icon:'doc',  interval:90,  seed:55},
+  {id:'recipe',   area:'nutrition',label:'Try a new recipe',    icon:'sparkles',interval:21,  seed:14},
+  // mind
+  {id:'therapy',  area:'mind',   label:'Therapy / reflection',  icon:'brain',   interval:14,  seed:9},
+  {id:'journal',  area:'mind',   label:'Weekly review & journal',icon:'doc',    interval:7,   seed:5},
+  {id:'meditate', area:'mind',   label:'Meditation / breathwork',icon:'moon',   interval:7,   seed:4},
+  {id:'wins',     area:'mind',   label:'Note wins & gratitude', icon:'sparkles',interval:21,  seed:14},
+  // grooming
+  {id:'haircut',  area:'body',   label:'Haircut',               icon:'scissors',interval:35,  seed:27},
+  {id:'skincare', area:'body',   label:'Skincare restock',      icon:'droplet', interval:75,  seed:55},
+  {id:'exfoliate',area:'body',   label:'Exfoliate / mask',      icon:'sparkles',interval:7,   seed:5},
+  {id:'sunscreen',area:'body',   label:'Sunscreen restock',     icon:'sun',     interval:60,  seed:40},
+  {id:'nails',    area:'body',   label:'Nails',                 icon:'scissors',interval:21,  seed:14},
+  {id:'massage',  area:'body',   label:'Massage / bodywork',    icon:'sparkles',interval:30,  seed:26},
+  // home & cleaning
+  {id:'reset',    area:'home',   label:'Weekly reset & tidy',   icon:'sparkles',interval:7,   seed:4},
+  {id:'bathroom', area:'home',   label:'Clean the bathroom',    icon:'droplet', interval:7,   seed:6},
+  {id:'floors',   area:'home',   label:'Vacuum & mop',          icon:'spray',   interval:7,   seed:5},
+  {id:'sheets',   area:'home',   label:'Wash sheets & towels',  icon:'shirt',   interval:12,  seed:8},
+  {id:'dust',     area:'home',   label:'Dust & wipe surfaces',  icon:'air',     interval:14,  seed:10},
+  {id:'kitchen',  area:'home',   label:'Deep-wipe the kitchen', icon:'spray',   interval:30,  seed:20},
+  {id:'fridge2',  area:'home',   label:'Clear out the fridge',  icon:'fridge',  interval:30,  seed:24},
+  {id:'descale',  area:'home',   label:'Descale kettle & teaware',icon:'tea',   interval:30,  seed:18},
+  {id:'appliances',area:'home',  label:'Clean dishwasher & washer',icon:'refresh',interval:45,seed:30},
+  {id:'baseboards',area:'home',  label:'Baseboards & door handles',icon:'spray',interval:45,  seed:25},
+  {id:'bathdeep', area:'home',   label:'Deep-clean the bathroom',icon:'droplet',interval:90,  seed:60},
+  {id:'windows',  area:'home',   label:'Windows & mirrors',     icon:'window',  interval:90,  seed:70},
+  {id:'filters',  area:'home',   label:'Change air filters',    icon:'air',     interval:90,  seed:55},
+  {id:'purge',    area:'home',   label:'Purge things you don’t use',icon:'box', interval:90,  seed:30},
+  {id:'declutter',area:'home',   label:'Sort out a problem drawer',icon:'box',  interval:60,  seed:40},
+  {id:'bedding',  area:'home',   label:'Wash pillows & duvet',  icon:'shirt',   interval:120, seed:80},
+  {id:'mattress', area:'home',   label:'Flip / rotate the mattress',icon:'bed', interval:180, seed:120},
+  {id:'closet',   area:'home',   label:'Swap the seasonal closet',icon:'hanger',interval:180, seed:90},
+  // money
+  {id:'networth', area:'money',  label:'Update net worth',      icon:'chart',   interval:30,  seed:20},
+  {id:'rebalance',area:'money',  label:'Rebalance the portfolio',icon:'refresh',interval:90,  seed:65},
+  {id:'budget',   area:'money',  label:'Review spending',       icon:'wallet',  interval:30,  seed:16},
+  {id:'subs',     area:'money',  label:'Cancel unused subscriptions',icon:'card',interval:90, seed:50},
+  {id:'credit',   area:'money',  label:'Check your credit report',icon:'doc',   interval:120, seed:95},
+  {id:'thesis',   area:'money',  label:'Review your holdings',  icon:'chart',   interval:90,  seed:55},
+  // career & planning
+  {id:'bragdoc',  area:'career', label:'Update your brag doc',  icon:'doc',     interval:14,  seed:10},
+  {id:'oneonone', area:'career', label:'Prep for your 1:1',     icon:'briefcase',interval:7,  seed:4},
+  {id:'skill',    area:'career', label:'Deliberate skill practice',icon:'dumbbell',interval:7,seed:5},
+  {id:'promo',    area:'career', label:'Move the promo case forward',icon:'target',interval:30,seed:18},
+  {id:'resume',   area:'career', label:'Refresh resume & LinkedIn',icon:'briefcase',interval:120,seed:80},
+  {id:'network',  area:'career', label:'Reach out to someone',  icon:'phone',   interval:21,  seed:15},
+  {id:'goals',    area:'career', label:'Review goals & priorities',icon:'target',interval:30, seed:20},
+  {id:'lifeplan', area:'career', label:'Revisit your life plan',icon:'compass', interval:180, seed:100},
+  // gear & upkeep
+  {id:'bikeclean',area:'gear',   label:'Clean bike drivetrain', icon:'bike',    interval:14,  seed:9},
+  {id:'bikeservice',area:'gear', label:'Full bike service',     icon:'bike',    interval:180, seed:120},
+  {id:'watchcare',area:'gear',   label:'Watch & leather care',  icon:'clock',   interval:30,  seed:20},
+  {id:'cameracare',area:'gear',  label:'Clean camera & gear',   icon:'camera',  interval:90,  seed:45},
+  {id:'backups',  area:'gear',   label:'Back up photos & files',icon:'cloud',   interval:14,  seed:6},
+  {id:'passwords',area:'gear',   label:'Password & security check',icon:'lock', interval:180, seed:100},
+  // people
+  {id:'family',   area:'people', label:'Call family',           icon:'phone',   interval:14,  seed:10},
+  {id:'friend',   area:'people', label:'Catch up with a friend',icon:'phone',   interval:10,  seed:7},
+  {id:'plan',     area:'people', label:'Plan something social', icon:'sun',     interval:21,  seed:12},
+  {id:'checkin',  area:'people', label:'Check in on someone',   icon:'heart',   interval:21,  seed:14},
+  {id:'birthdays',area:'people', label:'Look ahead at birthdays',icon:'sparkles',interval:30, seed:20},
+  // craft & hobbies
+  {id:'shoot',    area:'craft',  label:'Go shoot photos',       icon:'camera',  interval:14,  seed:10},
+  {id:'edit',     area:'craft',  label:'Cull & edit photos',    icon:'camera',  interval:14,  seed:8},
+  {id:'read',     area:'craft',  label:'Read your book',        icon:'book',    interval:7,   seed:4},
+  {id:'teatime',  area:'craft',  label:'A proper tea session',  icon:'tea',     interval:10,  seed:6},
+  // rest
+  {id:'dayoff',   area:'rest',   label:'Take a real day off',   icon:'moon',    interval:62,  seed:44},
+  {id:'longwknd', area:'rest',   label:'Long weekend away',     icon:'sun',     interval:90,  seed:60},
+  {id:'trip',     area:'rest',   label:'A proper trip',         icon:'plane',   interval:180, seed:130},
+  {id:'offline',  area:'rest',   label:'A day fully offline',   icon:'moon',    interval:30,  seed:18},
+  {id:'outside',  area:'rest',   label:'Get outside in nature', icon:'sun',     interval:7,   seed:4}
+];
+
+const DEFAULT_TIMELINE=[
+  {m:0,  icon:'refresh', title:'Do the backdoor Roth', tags:['money'], note:'Put $7,500 (the 2026 cap) of non-deductible money into a traditional IRA, then convert it to Roth. Do it in early January so the whole year compounds tax-free. Get any pre-tax IRA balances to zero first — roll them into your 401(k) — or the pro-rata rule makes the conversion partly taxable.'},
+  {m:0,  icon:'chart',   title:'Set 401(k) + after-tax (mega-backdoor)', tags:['money','employer'], note:'2026 caps: $24,500 employee, $72,000 total. Set after-tax contributions plus automatic in-plan Roth conversion to fill the space above your deferral and Google match. Check the plan offers it, and that it won\'t choke your match if you hit the cap early (true-up).'},
+  {m:0,  icon:'pill',    title:'Max the HSA and invest it', tags:['money','health'], note:'2026 self-only cap is $4,400. If you\'re on the HDHP, treat it as a stealth retirement account: pay medical costs out of pocket, invest the balance, and keep the receipts to reimburse yourself tax-free years from now.'},
+  {m:0,  icon:'doc',     title:'Confirm your benefit elections', tags:['health','employer'], note:'Health plan, HSA/FSA, life and disability. Make sure nothing quietly reset at the plan-year boundary, and re-elect HSA payroll contributions if they didn\'t roll over.'},
+  {m:1,  icon:'doc',     title:'Gather your tax documents', tags:['money'], note:'W-2; 1099-B/DIV/INT; 1098; RSU and ESPP forms with the supplemental cost-basis sheet; charitable and DAF receipts; and your Form 8606 basis for the backdoor Roth.'},
+  {m:1,  icon:'card',    title:'Check RSU withholding', tags:['money','employer'], note:'Default RSU withholding is often about 22%, below your marginal rate. Estimate the shortfall and set money aside so April isn\'t a surprise. Good moment to look at how concentrated you are in employer stock.'},
+  {m:2,  icon:'wallet',  title:'Fund last year\'s IRA/HSA', tags:['money'], note:'You have until the April deadline to contribute for the prior tax year if anything\'s unmaxed. File Form 8606 to record the backdoor basis.'},
+  {m:2,  icon:'chart',   title:'Decide ESPP: hold or sell', tags:['money','employer'], note:'Selling at purchase locks the discount and cuts concentration. Holding 1+ year past purchase and 2+ past the offer gets qualifying treatment. Pick a rule and automate it.'},
+  {m:3,  icon:'doc',     title:'File your taxes (~Apr 15)', tags:['money'], note:'Check Form 8606 shows the backdoor Roth as non-deductible then converted (about $0 taxable). Make sure the broker didn\'t double-count RSU/ESPP cost basis — a very common error that overstates your gains.'},
+  {m:4,  icon:'heart',   title:'Mid-year benefits check', tags:['employer','health'], note:'On pace to use the wellness, education and lifestyle reimbursements before year-end? Check your balances on the benefits portal — the amounts and deadlines change.'},
+  {m:5,  icon:'chart',   title:'Mid-year money review', tags:['money'], note:'Is your savings rate on track? Look at rebalance drift, emergency-fund runway (lean toward 6–12 months given RSU concentration), and asset location.'},
+  {m:6,  icon:'refresh', title:'Harvest tax losses', tags:['money'], note:'Sell paper losers in taxable accounts to offset gains and up to $3,000 of income. Mind the 30-day wash-sale window and don\'t rebuy a near-identical fund.'},
+  {m:7,  icon:'pill',    title:'Size next year\'s FSA/HSA', tags:['health','employer'], note:'Use this year\'s real spend to set next year\'s numbers. Book any care you\'ve been putting off while it\'s on your mind.'},
+  {m:8,  icon:'doc',     title:'Prep for open enrollment', tags:['health','employer'], note:'Model HDHP+HSA versus PPO on total expected cost, not just the premium. Flu-shot season opens.'},
+  {m:9,  icon:'heart',   title:'Open enrollment — lock it in', tags:['health','employer'], note:'The one window you can\'t easily redo. Health plan, HSA/FSA, life and disability, other perks. Re-elect HSA payroll contributions — they often don\'t carry over.'},
+  {m:10, icon:'heart',   title:'Give via a DAF + get the match', tags:['money','employer'], note:'Bunch donations into a donor-advised fund for a bigger deduction this year, and give appreciated shares to skip the capital-gains bill. Submit for Google\'s match before the annual cap resets Dec 31.'},
+  {m:10, icon:'refresh', title:'Harvest losses — final pass', tags:['money'], note:'One more look before year-end while there\'s still time to realize losses and reset the wash-sale clock.'},
+  {m:11, icon:'chart',   title:'Finish the mega-backdoor true-up', tags:['money','employer'], note:'Hit the $72,000 total before the last payroll run. Confirm the after-tax contributions and in-plan Roth conversion actually went through — don\'t assume.'},
+  {m:11, icon:'pill',    title:'Spend down the FSA', tags:['health','employer'], note:'Use-it-or-lose-it (2026 carryover cap is $680 if your plan allows it). Book appointments, restock eligible items, order new glasses or contacts.'},
+  {m:11, icon:'chart',   title:'Check your tax bracket', tags:['money'], note:'In a lower-income year, consider converting pre-tax dollars to Roth up to the top of your bracket. Also worth reviewing estimated taxes if you owed last year.'},
+  {m:11, icon:'heart',   title:'Use leftover perks; book January care', tags:['employer','health'], note:'Wellness, education and EAP allotments usually reset Dec 31. Put next year\'s physical, dental, DEXA and derm on the calendar now, while slots are open.'}
+];
+
+/* storage */
+const KEY='theyear.v3'; let mem=null;
+function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return mem;}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){mem=state;}}
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+function seedISO(days){const d=new Date();d.setDate(d.getDate()-days);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseD(iso){const p=iso.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+function daysSince(iso){if(!iso)return 1e6;return Math.floor((parseD(todayISO())-parseD(iso))/86400000);}
+
+let state=load();
+if(!state){
+  state={version:3,dials:{},custom:[],removed:[],timeline:{}};
+  DEFAULT_DIALS.forEach(d=>{state.dials[d.id]={last:seedISO(d.seed),interval:d.interval};});
+  save();
+}
+state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.removed||[];state.timeline=state.timeline||{};
+
+function allDials(){
+  const base=DEFAULT_DIALS.filter(d=>!state.removed.includes(d.id));
+  const cust=state.custom.map(c=>({...c,custom:true}));
+  return [...base,...cust].map(d=>{const st=state.dials[d.id]||{last:null,interval:d.interval};return {...d,last:st.last,interval:st.interval==null?d.interval:st.interval};});
+}
+function reserveOf(d){return Math.max(0,Math.min(1,1-daysSince(d.last)/d.interval));}
+function stateColor(r){if(r<=0.14)return{c:'var(--ember)',ready:true};if(r<0.45)return{c:'var(--brass)',ready:false};return{c:'var(--patina)',ready:false};}
+function readyInDays(d){return d.interval-daysSince(d.last);}
+function fmtDate(iso){if(!iso)return '—';return parseD(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'});}
+
+const R=39,C=2*Math.PI*R;
+function ringHTML(reserve,color,center,animate){
+  const offset=C*(1-reserve);const start=animate?C:offset;
+  return `<div class="gauge"><svg viewBox="0 0 88 88">
+    <circle class="gauge-track" cx="44" cy="44" r="${R}"></circle>
+    <circle class="gauge-fill" cx="44" cy="44" r="${R}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${start.toFixed(1)}" data-target="${offset.toFixed(1)}"></circle>
+    </svg><div class="gauge-ico" style="--c:${color}">${center}</div></div>`;
+}
+function dialHTML(d,animate){
+  const r=reserveOf(d);const{c,ready}=stateColor(r);
+  const rid=readyInDays(d);const centerTxt=rid<=0?'now':(rid<=99?rid+'d':Math.round(rid/30)+'mo');
+  const center=`${ico(d.icon)}<span class="gauge-pct">${centerTxt}</span>`;
+  const meta=ready?'Ready now':(d.last?'Last done '+fmtDate(d.last):'Not done yet');
+  return `<div class="dial ${ready?'is-ready breathe':''}" style="--c:${c}" data-card="${d.id}">
+    <button class="ddone" data-done="${d.id}" aria-label="Mark ${d.label} done today">
+      ${ringHTML(r,c,center,animate)}
+      <div class="dlabel">${d.label}</div><div class="dmeta">${meta}</div>
+      <div class="dhint">${CHECK_SM} Done</div>
+    </button>
+    <button class="dedit" data-edit="${d.id}" aria-label="Adjust ${d.label}">${DOTS}</button>
+  </div>`;
+}
+function renderRhythms(animate){
+  const host=document.getElementById('rhythms');const dials=allDials();
+  host.innerHTML=AREAS.map(a=>{
+    const items=dials.filter(d=>d.area===a.id);if(!items.length)return '';
+    return `<div class="area"><div class="area-h"><span class="tag">${a.label}</span><span class="rule"></span><span class="cnt">${items.length}</span></div>
+      <div class="rhythm-grid">${items.map(d=>dialHTML(d,animate)).join('')}</div></div>`;
+  }).join('');
+  if(animate)animateGauges();
+}
+
+/* timeline — same card, calendar semantics */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function calCardHTML(t,idx,year,animate){
+  const done=state.timeline['y'+year+'-'+idx]===year;
+  const cm=new Date().getMonth();const mu=t.m-cm;
+  let reserve,c,centerTxt,ready=false,status;
+  if(done){reserve=1;c='var(--patina)';centerTxt='done';status='Done for '+year;}
+  else if(mu<=0){reserve=0;c='var(--ember)';centerTxt='now';ready=true;status=mu===0?'This month':'Any time now';}
+  else{reserve=Math.min(1,mu/6);c=stateColor(reserve).c;centerTxt=MONTHS_S[t.m].toUpperCase();status='Do it in '+MONTHS_S[t.m];}
+  const center=`${done?ico('check'):ico(t.icon)}<span class="gauge-pct">${centerTxt}</span>`;
+  const tags=t.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join('');
+  return `<div class="dial ${ready?'is-ready breathe':''} ${done?'is-done':''}" style="--c:${c}" data-calcard="${idx}">
+    <button class="ddone" data-cal="${idx}" aria-label="${done?'Undo':'Mark done'}: ${t.title}">
+      ${ringHTML(reserve,c,center,animate)}
+      <div class="dlabel">${t.title}</div><div class="dmeta">${status}</div>
+      <div class="m-tags">${tags}</div>
+      <div class="dhint">${CHECK_SM} ${done?'Undo':'Done'}</div>
+    </button>
+    <button class="dedit" data-caledit="${idx}" aria-label="Details: ${t.title}">${DOTS}</button>
+  </div>`;
+}
+function renderTimeline(animate){
+  const now=new Date();const curM=now.getMonth();const yr=now.getFullYear();
+  const start=new Date(yr,0,1),end=new Date(yr+1,0,1);const frac=(now-start)/(end-start);
+  document.getElementById('tlFill').style.width=(frac*100).toFixed(1)+'%';
+  document.getElementById('tlNow').style.left=(frac*100).toFixed(1)+'%';
+  document.getElementById('tlPct').textContent=Math.round(frac*100)+'% through the year';
+  const scroll=document.getElementById('tlScroll');let html='';
+  for(let m=0;m<12;m++){
+    const moments=DEFAULT_TIMELINE.map((t,i)=>({...t,idx:i})).filter(t=>t.m===m);
+    const cls=m<curM?'past':(m===curM?'now':'');const badge=m===curM?'<span class="badge">now</span>':'';
+    const inner=moments.length?('<div class="m-cards">'+moments.map(t=>calCardHTML(t,t.idx,yr,animate)).join('')+'</div>'):'<div class="m-empty">nothing here</div>';
+    html+=`<div class="month ${cls}" data-month="${m}"><div class="m-h"><span class="mo">${MONTHS_S[m]}</span>${badge}</div>${inner}</div>`;
+  }
+  scroll.innerHTML=html;
+  const nowEl=scroll.querySelector('.month.now');
+  if(nowEl)scroll.scrollLeft=nowEl.offsetLeft-scroll.clientWidth/2+nowEl.clientWidth/2;
+}
+
+function renderHeader(){
+  const d=new Date();document.getElementById('yrLabel').textContent=d.getFullYear();
+  const n=allDials().filter(x=>reserveOf(x)<=0.14).length;
+  const phrase=n===0?'nothing needs doing today':n===1?'one thing’s come due':n+' things have come due';
+  document.getElementById('todayLine').innerHTML=`<b>${d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</b> · ${phrase}`;
+}
+function animateGauges(){
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('.gauge-fill').forEach(f=>f.setAttribute('stroke-dashoffset',f.dataset.target));return;}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll('.gauge-fill').forEach(f=>f.setAttribute('stroke-dashoffset',f.dataset.target));}));
+}
+function renderAll(animate){renderHeader();renderTimeline(animate);renderRhythms(animate);}
+
+/* interactions */
+const scrim=document.getElementById('scrim'),sheet=document.getElementById('sheet');
+function openSheet(html){sheet.innerHTML='<div class="grab"></div>'+html;scrim.classList.add('on');sheet.classList.add('on');}
+function closeSheet(){scrim.classList.remove('on');sheet.classList.remove('on');}
+scrim.addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1900);}
+const reduced=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function popCard(sel){const c=document.querySelector(sel);if(c&&!reduced()){c.classList.add('just-done');setTimeout(()=>c.classList.remove('just-done'),500);}}
+const PRESETS=[['Weekly',7],['Bi-weekly',14],['Monthly',30],['62-day rest',62],['Quarterly',90],['Semi-annual',182],['Annual',365]];
+
+function markDone(id){
+  const d=allDials().find(x=>x.id===id);if(!d)return;const prev=state.dials[id]||{};
+  state.dials[id]={last:todayISO(),interval:prev.interval==null?d.interval:prev.interval};
+  save();renderHeader();renderRhythms(false);popCard('.dial[data-card="'+id+'"]');toast('Done — '+d.label);
+}
+function toggleMoment(idx){
+  const yr=new Date().getFullYear();const k='y'+yr+'-'+idx;const t=DEFAULT_TIMELINE[idx];
+  const scroll=document.getElementById('tlScroll');const sx=scroll.scrollLeft;
+  const nowDone=state.timeline[k]!==yr;
+  if(nowDone)state.timeline[k]=yr;else delete state.timeline[k];
+  save();renderTimeline(false);document.getElementById('tlScroll').scrollLeft=sx;
+  popCard('[data-calcard="'+idx+'"]');toast(nowDone?('Done — '+t.title):('Reopened — '+t.title));
+}
+
+function editDial(id){
+  const d=allDials().find(x=>x.id===id);if(!d)return;
+  const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
+  openSheet(`<h3>${d.label}</h3>
+    <div class="sh-sub">Last done ${d.last?fmtDate(d.last):'not yet'} · every ${d.interval} days</div>
+    <div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
+    <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets">${chips}</div></div>
+    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">Done today</button></div>`);
+  sheet.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('.preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
+  sheet.querySelector('#edDone').addEventListener('click',()=>{state.dials[id]={last:todayISO(),interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();renderHeader();renderRhythms(false);toast('Done — '+d.label);});
+  sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={last:sheet.querySelector('#edLast').value||d.last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();renderHeader();renderRhythms(false);toast('Saved.');});
+  sheet.querySelector('#edDel').addEventListener('click',()=>{if(d.custom)state.custom=state.custom.filter(c=>c.id!==id);else if(!state.removed.includes(id))state.removed.push(id);delete state.dials[id];save();closeSheet();renderHeader();renderRhythms(false);toast('Removed.');});
+}
+function addDial(){
+  const areaOpts=AREAS.map(a=>`<option value="${a.id}">${a.label}</option>`).join('');
+  const iconOpts=Object.keys(ICON).filter(k=>k!=='check').map(k=>`<option value="${k}">${k}</option>`).join('');
+  openSheet(`<h3>Add a routine</h3>
+    <div class="sh-sub">Anything you do on a repeat. No deadlines — the ring refills when you mark it done.</div>
+    <div class="field"><label>Name</label><input type="text" id="adName" placeholder="e.g. Service the bike, call home"></div>
+    <div class="field"><label>Area</label><select id="adArea">${areaOpts}</select></div>
+    <div class="field"><label>Icon</label><select id="adIcon">${iconOpts}</select></div>
+    <div class="field"><label>Repeat every (days)</label><input type="number" id="adInt" min="1" max="1460" value="30"><div class="presets">${PRESETS.map(p=>`<button class="preset" data-int="${p[1]}">${p[0]}</button>`).join('')}</div></div>
+    <div class="sheet-actions"><button class="btn" id="adCancel">Cancel</button><button class="btn primary" id="adCreate">Add</button></div>`);
+  sheet.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#adInt').value=b.dataset.int;}));
+  sheet.querySelector('#adCancel').addEventListener('click',closeSheet);
+  sheet.querySelector('#adCreate').addEventListener('click',()=>{
+    const name=sheet.querySelector('#adName').value.trim();if(!name){toast('Give it a name first.');return;}
+    const id='c'+Date.now();const dd={id,area:sheet.querySelector('#adArea').value,label:name,icon:sheet.querySelector('#adIcon').value,interval:Math.max(1,parseInt(sheet.querySelector('#adInt').value)||30)};
+    state.custom.push(dd);state.dials[id]={last:todayISO(),interval:dd.interval};save();closeSheet();renderHeader();renderRhythms(false);toast('Added.');
+  });
+}
+function openMoment(idx){
+  const t=DEFAULT_TIMELINE[idx];if(!t)return;const yr=new Date().getFullYear();
+  const done=state.timeline['y'+yr+'-'+idx]===yr;const tags=t.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join(' ');
+  openSheet(`<h3>${t.title}</h3><div class="sh-sub">${MONTHS[t.m]} · ${yr}</div>
+    <div class="m-tags" style="justify-content:flex-start;margin-bottom:16px">${tags}</div>
+    <p class="sh-note">${t.note}</p>
+    <div class="sheet-actions"><button class="btn" id="mmClose">Close</button><button class="btn ${done?'':'primary'}" id="mmToggle">${done?'Mark not done':'Check off for '+yr}</button></div>`);
+  sheet.querySelector('#mmClose').addEventListener('click',closeSheet);
+  sheet.querySelector('#mmToggle').addEventListener('click',()=>{closeSheet();toggleMoment(idx);});
+}
+
+document.getElementById('rhythms').addEventListener('click',e=>{
+  const ed=e.target.closest('[data-edit]');if(ed){editDial(ed.dataset.edit);return;}
+  const dn=e.target.closest('[data-done]');if(dn)markDone(dn.dataset.done);
+});
+document.getElementById('tlScroll').addEventListener('click',e=>{
+  const ce=e.target.closest('[data-caledit]');if(ce){openMoment(parseInt(ce.dataset.caledit));return;}
+  const cc=e.target.closest('[data-cal]');if(cc)toggleMoment(parseInt(cc.dataset.cal));
+});
+document.getElementById('addBtn').addEventListener('click',addDial);
+
+document.getElementById('expBtn').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='the-year-'+todayISO()+'.json';a.click();URL.revokeObjectURL(url);toast('Exported your data.');
+});
+document.getElementById('impBtn').addEventListener('click',()=>document.getElementById('impFile').click());
+document.getElementById('impFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const j=JSON.parse(r.result);state=Object.assign({dials:{},custom:[],removed:[],timeline:{}},j);save();renderAll(true);toast('Imported.');}catch(err){toast('Could not read that file.');}};
+  r.readAsText(f);e.target.value='';
+});
+
+document.getElementById('foot').innerHTML=
+  `<b>How it works.</b> Tap a card to mark it done — the ring fills up, then slowly empties again over its interval. Nothing ever goes overdue or piles up, so skip whatever you like. Tap the dots on a card to change how often it repeats, fix the last-done date, or remove it.<br>`+
+  `<b>The money numbers</b> use 2026 IRS limits (401k $24,500, total $72,000, IRA $7,500, HSA $4,400, FSA $3,400). Anything Google-specific — the match, reimbursements, exact dates — changes, so check your benefits portal. None of this is financial advice.<br>`+
+  `<b>Everything saves to this browser.</b> Export a copy if you want a backup.`;
+
+renderAll(true);
+</script>
+</body>
+</html>
