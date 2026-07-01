@@ -77,6 +77,38 @@ telemetry. Defaults ship pre-seeded so the board looks lived-in on first open.
 
 ---
 
+## How the two surfaces relate
+
+The two tabs are **two projections of one task set**, not two separate lists. Every task
+lives once; the surfaces differ only in what they show and how they lay it out.
+
+- **On repeat is the *doing* view.** Every task as a single card, grouped by area,
+  collapsed to one actionable state. A chain is one advancing card here; a date-anchored
+  job is mixed into its area (tax → Money, benefits → Health).
+- **The calendar year is the *when* view.** Only time-anchored things, spread across the
+  12 months so you can read the shape of the year. A date-anchored job sits in its month;
+  a chain's steps sit in their anchored months, each **locked until the prior step is
+  done** — a chain on the calendar is literally a series of gates along the timeline.
+
+Two rules keep them coherent:
+
+1. **Shared state — one source of truth.** Completion is stored once. Checking a date job
+   off in either tab reflects in the other; advancing a chain step on the calendar
+   advances the same `step` counter the On-repeat card reads. There is no per-view copy to
+   keep in sync.
+2. **Single ownership — no duplication.** A task is owned by exactly one construct. A
+   chain *owns* its calendar slots: the former standalone "Do the backdoor Roth" timeline
+   entry is now tagged `owner:'roth'` and suppressed as an independent card, so the task
+   renders as chain steps on the calendar and as one collapsed card under On repeat —
+   never as both a chain *and* a separate date card. This ownership rule is what removed
+   the earlier Backdoor-Roth duplication.
+
+So the same Backdoor Roth appears as: one advancing card in On repeat; "Contribute" and
+"Convert" in January (Convert locked until Contribute is done); and "File Form 8606" (a
+hard Apr 15 deadline) in April — all driven by a single `step` counter.
+
+---
+
 ## Principles these features must not break
 
 - **No manufactured pressure.** The app never nags, shames, or accumulates a backlog.
@@ -219,11 +251,13 @@ undone, so there is nothing to feel behind on. Each step can carry its own `tier
 `hardDeadline`, so a chain that spans the calendar (Roth) can have step 1 warm in January
 and step 3 warm as April approaches.
 
-**Rendering by surface:**
-- In **On repeat** (no month anchor): the chain collapses to a single advancing card.
-- In **the calendar year** (month-anchored): each step sits in its own month but stays
-  dim/locked until the previous step is done — i.e. a chain in the calendar *is* a series
-  of gates along the timeline.
+**Rendering by surface** *(shipped — cross-surface):*
+- In **On repeat**: the chain collapses to a single advancing card.
+- In **the calendar year**: each step carrying a month anchor (`m`) sits in that month
+  but stays dim/locked until the previous step is done — i.e. a chain in the calendar *is*
+  a series of gates along the timeline. Steps with no `m` appear only in On repeat.
+- Both surfaces read and write the **same** `state.dials[id].step` counter, so completing
+  a step from either place advances the one chain. See *How the two surfaces relate* above.
 
 ### 2. Reset — `resets: [ids]`
 
@@ -260,9 +294,10 @@ interface Task {
 
 interface ChainStep {
   label: string;
+  m?: number;              // 0–11 month anchor for the calendar; omit → On repeat only
+  hard?: boolean;          // this step is a true cliff (e.g. file 8606 by Apr 15)
   tier?: Tier;
-  hardDeadline?: { month: number; day: number };
-  done?: boolean;          // advancing sets this; active = first !done step
+  // progress is not stored per-step; the chain's active step = state.dials[id].step
 }
 
 interface FollowUp {
@@ -280,11 +315,14 @@ date-anchored prerequisite, "fresh" means checked off for the current year.
 
 ## Worked examples
 
-- **Backdoor Roth (recurring chain):**
-  `chain: [ {contribute, need}, {convert, need}, {file 8606, need, hardDeadline Apr 15} ]`,
-  `interval: 365`. Shows only "contribute" first. Marking it done advances to "convert,"
-  then "file 8606." Completing the last step puts the whole chain on a yearly cooldown;
-  it re-arms the first step next January.
+- **Backdoor Roth (recurring, cross-surface chain):**
+  `chain: [ {contribute, m:0}, {convert, m:0}, {file 8606, m:3, hard:true} ]`,
+  `interval: 365`, `tier: need`. On repeat shows one advancing card. The calendar shows
+  "Contribute" and "Convert" in January (Convert locked until Contribute is done) and
+  "File Form 8606" in April as a hard deadline (locked until Convert is done). Completing
+  the last step puts the whole chain on a yearly cooldown; it re-arms next January. The
+  standalone January calendar reminder it replaced is tagged `owner:'roth'`, so nothing
+  duplicates.
 - **Deep-clean bathroom (reset):** `resets: ['bathroom']`. Doing it refills the weekly clean.
 - **Full bike service (reset):** `resets: ['bikeclean']`.
 - **New glasses (gate):** `requires: ['eye']`. Dormant until the eye exam is fresh, then
@@ -312,8 +350,10 @@ date-anchored prerequisite, "fresh" means checked off for the current year.
   collects offered follow-ups? (Shipped v1: inline prompt at completion.)
 - Should chains ever branch, or stay strictly linear in v1? (Shipped v1: linear.)
 - Are cross-surface chains (a step in the calendar, a step in On repeat) worth supporting,
-  or should a chain live entirely in one surface? (Shipped v1: chain lives in On repeat;
-  the calendar keeps its independent month markers. Cross-surface deferred.)
+  or should a chain live entirely in one surface? **(Shipped: chains are cross-surface —
+  one collapsed card in On repeat, steps placed by month on the calendar, one shared
+  `step` counter. Steps without an `m` anchor appear only in On repeat. Single-ownership
+  (`owner`) prevents any duplicate calendar card.)**
 
 ---
 
