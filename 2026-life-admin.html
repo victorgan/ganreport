@@ -205,6 +205,11 @@
   .toast-undo{margin-left:14px;background:none;border:0;color:var(--brass);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:0;pointer-events:auto}
   .toast-undo:hover{color:var(--ember)}
   .toast.on{pointer-events:auto}
+  /* sync */
+  .tok-row{display:flex;gap:8px;align-items:center}
+  .tok-row input{flex:1;min-width:0}
+  #syncBtn.sync-ok{border-color:rgba(103,168,159,.5);color:var(--patina)}
+  #syncBtn.sync-err{border-color:rgba(209,138,86,.5);color:var(--ember)}
 
   .foot{margin-top:70px;padding-top:22px;border-top:1px solid var(--line-2);color:var(--ink-faint);font-family:var(--mono);font-size:11px;line-height:1.7;letter-spacing:.02em}
   .foot b{color:var(--ink-dim);font-weight:500}
@@ -224,6 +229,7 @@
       <button class="tbtn" id="addBtn">+ Add</button>
       <button class="tbtn" id="expBtn">Export</button>
       <button class="tbtn" id="impBtn">Import</button>
+      <button class="tbtn" id="syncBtn">Sync</button>
       <input type="file" id="impFile" accept="application/json" hidden>
     </div>
   </header>
@@ -560,8 +566,13 @@ function howTo(d){const n=d.note||NOTES[d.id];return n?`<p class="sh-note" style
 
 /* storage */
 const KEY='theyear.v5'; let mem=null,_cache=null;
+let pushEnabled=false,applyingRemote=false,pushTimer=null;   // sync state (see sync module below)
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return mem;}}
-function save(){_cache=null;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){mem=state;}}
+function save(){
+  if(!applyingRemote)state.updatedAt=Date.now();            // stamp for whole-blob last-writer-wins
+  _cache=null;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){mem=state;}
+  if(pushEnabled&&!applyingRemote)schedulePush();           // write-through to the Sheet (debounced)
+}
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 function seedISO(days){const d=new Date();d.setDate(d.getDate()-days);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function parseD(iso){const p=iso.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
@@ -962,6 +973,73 @@ function setTab(t){
 }
 document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);});
 
+/* ================= sync — Google Sheet via an Apps Script Web App =================
+   localStorage is a write-through cache; the Sheet is the source of truth. The app never
+   waits on the network, works fully offline, and re-hydrates from the Sheet after a wipe. */
+const SYNC_KEY='theyear.sync';
+function loadSync(){try{return JSON.parse(localStorage.getItem(SYNC_KEY))||{};}catch(e){return {};}}
+function saveSync(c){try{localStorage.setItem(SYNC_KEY,JSON.stringify(c));}catch(e){}}
+function syncDot(s){const b=document.getElementById('syncBtn');if(b){b.classList.remove('sync-ok','sync-err');if(s)b.classList.add('sync-'+s);}}
+async function pullFromSheet(){const c=loadSync();if(!c.url||!c.token)return null;const r=await fetch(c.url+'?token='+encodeURIComponent(c.token));if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();if(j&&j.error)throw new Error(j.error);return j;}
+function schedulePush(){if(!pushEnabled)return;clearTimeout(pushTimer);pushTimer=setTimeout(doPush,2000);}
+async function doPush(){
+  const c=loadSync();if(!c.url||!c.token||!pushEnabled)return;
+  clearTimeout(pushTimer);pushTimer=null;const at=state.updatedAt||0;
+  const catalog=allDials().map(d=>({id:d.id,label:d.label,area:d.area}));   // for the human view tab only
+  try{
+    await fetch(c.url,{method:'POST',body:JSON.stringify({token:c.token,state,catalog})});  // text/plain body → no CORS preflight
+    const n=loadSync();n.lastSync=Date.now();n.syncedAt=at;saveSync(n);syncDot('ok');
+  }catch(e){syncDot('err');pushTimer=setTimeout(doPush,15000);}                 // retry on a timer, not just on next change
+}
+/* flush the last change on the way out — a debounced push can otherwise be lost */
+function beaconFlush(){
+  const c=loadSync();if(!c.url||!c.token||!pushEnabled)return;
+  if((state.updatedAt||0)<=(c.syncedAt||0))return;
+  try{navigator.sendBeacon(c.url,JSON.stringify({token:c.token,state}));const n=loadSync();n.syncedAt=state.updatedAt;n.lastSync=Date.now();saveSync(n);}catch(e){}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')beaconFlush();});
+window.addEventListener('pagehide',beaconFlush);
+function adoptRemote(remote){applyingRemote=true;state=Object.assign({dials:{},custom:[],removed:[],ui:{}},remote);save();applyingRemote=false;pushEnabled=true;renderAll(false);setTab((state.ui&&state.ui.tab)||'rhythms');}
+async function connectAndSync(){
+  const c=loadSync();if(!c.url||!c.token)return;
+  let remote=null,online=true;
+  try{remote=await pullFromSheet();}catch(e){online=false;}
+  if(!online){pushEnabled=true;syncDot('err');return;}                          // offline: keep cache, allow later pushes
+  const remoteHas=remote&&remote.dials&&Object.keys(remote.dials).length;
+  const first=!c.everSynced;
+  // first connect: adopt the Sheet if it has data (don't let seeded defaults clobber it),
+  // else seed it from here. reconnect: newer-wins so a failed last push isn't lost.
+  if(remoteHas&&(first||(remote.updatedAt||0)>=(state.updatedAt||0))){adoptRemote(remote);}
+  else{pushEnabled=true;clearTimeout(pushTimer);pushTimer=null;doPush();}
+  const n=loadSync();n.everSynced=true;n.lastSync=Date.now();saveSync(n);syncDot('ok');
+}
+function openSync(){
+  const c=loadSync();const on=!!(c.url&&c.token);
+  const last=c.lastSync?('synced '+new Date(c.lastSync).toLocaleString()):'';
+  openSheet(`<h3>Sync</h3>
+    <div class="sh-sub" id="syStat">${on?('Connected'+(last?' · '+last:'')):'Not connected — data stays on this device only'}</div>
+    <p class="sh-note">Your data lives in a private Google Sheet; this browser keeps a cache. One-time setup: make a Sheet → Extensions → Apps Script, paste the sync script, Deploy as a Web App (execute as <b>me</b>, access <b>anyone</b>), then paste its <b>/exec</b> URL and your token below.</p>
+    <div class="field"><label>Apps Script URL</label><input type="url" id="syUrl" placeholder="https://script.google.com/macros/s/…/exec" value="${escHtml(c.url||'')}"></div>
+    <div class="field"><label>Token</label><div class="tok-row"><input type="password" id="syTok" value="${escHtml(c.token||'')}"><button type="button" class="linklike" id="syShow">show</button></div></div>
+    <div class="sheet-actions">${on?'<button class="btn ghost" id="syOff">Disconnect</button>':''}<button class="btn" id="syTest">Test</button><button class="btn primary" id="sySave">Save &amp; sync</button></div>`);
+  sheet.querySelector('#syShow').addEventListener('click',()=>{const t=sheet.querySelector('#syTok'),h=t.type==='password';t.type=h?'text':'password';sheet.querySelector('#syShow').textContent=h?'hide':'show';});
+  sheet.querySelector('#syTest').addEventListener('click',async()=>{
+    const url=sheet.querySelector('#syUrl').value.trim(),token=sheet.querySelector('#syTok').value.trim(),st=sheet.querySelector('#syStat');
+    if(!url||!token){st.textContent='Enter a URL and token first.';return;}
+    st.textContent='Testing…';
+    try{const r=await fetch(url+'?token='+encodeURIComponent(token));if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();if(j&&j.error)throw new Error(j.error);st.textContent='Test OK — reachable and authorised.';}
+    catch(e){st.textContent='Test failed: '+e.message;}
+  });
+  sheet.querySelector('#sySave').addEventListener('click',()=>{
+    const url=sheet.querySelector('#syUrl').value.trim(),token=sheet.querySelector('#syTok').value.trim();
+    if(!url||!token){toast('Enter a URL and token.');return;}
+    saveSync({url,token});closeSheet();toast('Sync configured.');connectAndSync();   // fresh config → first-connect gating
+  });
+  const off=sheet.querySelector('#syOff');
+  if(off)off.addEventListener('click',()=>{pushEnabled=false;saveSync({});syncDot();closeSheet();toast('Disconnected — data stays on this device.');});
+}
+document.getElementById('syncBtn').addEventListener('click',openSync);
+
 document.getElementById('expBtn').addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='the-year-'+todayISO()+'.json';a.click();URL.revokeObjectURL(url);toast('Exported your data.');
@@ -976,10 +1054,11 @@ document.getElementById('impFile').addEventListener('change',e=>{
 document.getElementById('foot').innerHTML=
   `<b>How it works.</b> Tap a card to mark it done; its ring refills, then empties again — over a rolling interval, or toward a fixed date each year for the tax and benefits jobs. Nothing goes overdue or piles up, so skip whatever you like. <b>Priority</b> is cost-of-skipping: <i>Needs</i> warm up early and surface in the strip up top, <i>Upkeep</i> nudges only when due, <i>Wants</i> stay dim and never glow. Some cards <b>cascade</b> — a chain walks one step at a time, a deep clean refills the weekly one, and a gated task waits until its prerequisite is fresh. Tap the dots to adjust priority, or remove it.<br>`+
   `<b>The money numbers</b> use 2026 IRS limits (401k $24,500, total $72,000, IRA $7,500, HSA $4,400, FSA $3,400). Anything Google-specific — the match, reimbursements, exact dates — changes, so check your benefits portal. None of this is financial advice.<br>`+
-  `<b>Everything saves to this browser.</b> Export a copy if you want a backup.`;
+  `<b>Everything saves to this browser</b> — Export for a backup, or use <b>Sync</b> to keep the truth in a private Google Sheet.`;
 
 renderAll(true);
 setTab((state.ui&&state.ui.tab)||'rhythms');
+if(loadSync().url){syncDot('ok');connectAndSync();}   // sync configured → pull/adopt, then write-through
 </script>
 </body>
 </html>

@@ -220,9 +220,9 @@ today** (a light momentum count). It's a live snapshot — no history, no streak
 
 State lives in `localStorage` (key `theyear.v5`), with JSON **Export/Import** for backup
 and for moving to a hosted copy. No account, no network, no telemetry — fully local today.
-`localStorage` is the source of truth *for now*; a designed-but-unbuilt sync layer (see
-*Sync & persistence*) would demote it to a write-through cache in front of a durable store.
-Defaults ship pre-seeded so the board looks lived-in on first open.
+With the optional **Sync** turned on, `localStorage` becomes a write-through cache and the
+truth lives in a private Google Sheet; with Sync off it's the local source of truth. See
+*Sync & persistence*. Defaults ship pre-seeded so the board looks lived-in on first open.
 
 ## Data model (storage shapes)
 
@@ -445,10 +445,12 @@ action, so it — and only it — gets an explicit reversal.
 
 ---
 
-# Sync & persistence (designed, not built)
+# Sync & persistence
 
-**Status: designed, not built** — a plan, not shipped behaviour. Supersedes the old
-"Cloudflare Worker adapter" backlog note.
+**Status: shipped.** The client adapter, Sync settings modal, flush-on-unload, and gated
+first-connect are built; the Apps Script backend ships as `2026-life-admin-sync.gs`. The
+only manual step is the one-time Google setup (create a Sheet, paste the script, deploy it
+as a Web App). Supersedes the old "Cloudflare Worker adapter" backlog note.
 
 ## The problem
 
@@ -540,13 +542,13 @@ task row can no longer represent all of that.
 - **Steady state:** push local → Sheet on change (debounced + flushed); pull on load. Once
   multi-device, boot-pull must **reconcile, not blindly replace** — a hard `state = remote`
   can drop a tap made between boot and pull completing.
-- **[fix — merge] The drafted merge is too thin.** Field-level last-writer-wins on
-  `lastDone` ignores the app's other mutations — interval edits, tier changes, mode
-  conversions, chain resets, un-dones, and **removals** (absence has no timestamp). Doing it
-  right needs the *client* to stamp a per-task `updatedAt` in state at mutation time (not the
-  script stamping every row "now" on a whole-state push), plus **tombstones** for removals so
-  a delete isn't resurrected by a stale device. Add the timestamp now (cheap); defer the
-  merge logic until a second device exists.
+- **Merge: whole-blob last-writer-wins (shipped) → per-task (deferred).** v1 stamps a single
+  global `state.updatedAt` on every local change; on connect, newer-wins between local and
+  the Sheet, with a first-connect override that always adopts a non-empty Sheet (so a fresh
+  device's seeded defaults can't clobber it). Correct for single-device and coarse for
+  multi-device. The finer fix — a per-task `updatedAt` plus **tombstones** for removals so a
+  stale device can't resurrect a delete — is deferred until two devices are genuinely in use
+  (field-level LWW on `lastDone` alone would silently lose edits, un-dones and removals).
 
 ## The implementation gotcha that will bite
 
@@ -587,10 +589,9 @@ model collapses.
 
 # Backlog (explored, not built)
 
-- **Sync & durable persistence** *(designed — see the section above)* — put the truth in a
-  Google Sheet via an Apps Script Web App and demote `localStorage` to a write-through
-  cache. **TODO:** build the adapter (pull/push), the Sync settings modal, flush-on-unload,
-  the gated first-connect, and per-task `updatedAt` stamping for future merge.
+- **Per-task merge for sync** — sync itself shipped (see *Sync & persistence*); the
+  remaining piece is finer-grained conflict handling (per-task `updatedAt` + removal
+  tombstones), deferred until two devices are genuinely in use.
 - **Snooze without penalty** — an explicit "not now" that quiets one item for N days,
   distinct from skipping and still guilt-free.
 - **Calendar / vault integration** — optionally mirror hard-deadline items to a real
