@@ -437,6 +437,9 @@ action, so it — and only it — gets an explicit reversal.
   sit deep in their intervals). Cosmetic; either soften seeds or tighten the bucket.
 - Whether the Needs strip should ever include *badly* overdue Upkeep, not just Needs +
   hard deadlines. (Currently: strictly Needs + hard deadlines.)
+- **Gate cycle guard.** The `requires` picker only excludes self today; a hand-built loop
+  (A requires B, B requires A) would leave both cards permanently dormant. Add cycle
+  detection (or a save-time warning) so a gate can't create an unresolvable deadlock.
 
 ---
 
