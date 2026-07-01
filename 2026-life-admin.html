@@ -33,6 +33,17 @@
   .tbtn:hover{color:var(--ink);border-color:rgba(238,240,234,.24);background:var(--raised-2)}
   .tbtn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
+  /* needs-attention strip */
+  .needs-strip{margin-top:24px;background:linear-gradient(180deg,rgba(209,138,86,.09),transparent);border:1px solid rgba(209,138,86,.22);border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .needs-strip .ns-label{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ember);white-space:nowrap}
+  .ns-items{display:flex;gap:8px;flex-wrap:wrap}
+  .ns-chip{display:inline-flex;align-items:center;gap:7px;background:var(--raised);border:1px solid var(--line);border-radius:99px;padding:6px 12px 6px 9px;cursor:pointer;color:var(--ink);font-family:var(--sans);font-size:13px;transition:.15s}
+  .ns-chip:hover{border-color:rgba(209,138,86,.5);background:var(--raised-2)}
+  .ns-chip:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+  .ns-chip .ns-ic{display:grid;place-items:center;color:var(--ember)}
+  .ns-chip .ns-ic svg{width:15px;height:15px}
+  .ns-chip .ns-m{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
+
   .tabs{display:flex;gap:0;margin-top:30px;border-bottom:1px solid var(--line-2)}
   .tab{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--ink-dim);background:none;border:0;border-bottom:2px solid transparent;padding:11px 2px;margin-right:22px;cursor:pointer;transition:color .16s,border-color .16s;letter-spacing:-.01em}
   .tab:hover{color:var(--ink)}
@@ -60,6 +71,14 @@
   .dial.is-ready{box-shadow:0 0 0 1px rgba(209,138,86,.25),0 0 28px -8px var(--glow)}
   .dial.is-ready.breathe .gauge-fill{animation:breathe 3.4s ease-in-out infinite}
   .dial.is-done{opacity:.5}
+  .dial.is-dim{opacity:.6}
+  .dial.is-dim:hover{opacity:.85}
+  .dial.is-locked{opacity:.42}
+  .dial.is-locked .ddone{cursor:default}
+  .pips{display:flex;gap:5px;justify-content:center;margin-top:8px}
+  .pip{width:6px;height:6px;border-radius:50%;background:var(--line);transition:.2s}
+  .pip.on{background:var(--patina)}
+  .pip.cur{background:var(--ember);box-shadow:0 0 0 3px rgba(209,138,86,.18)}
   @keyframes breathe{0%,100%{opacity:.85}50%{opacity:.45}}
   @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:scale(1)}}
   .dial.just-done{animation:pop .5s ease}
@@ -167,6 +186,8 @@
       <input type="file" id="impFile" accept="application/json" hidden>
     </div>
   </header>
+
+  <div class="needs-strip" id="needsStrip" hidden></div>
 
   <nav class="tabs" id="tabs">
     <button class="tab" data-tab="rhythms">On repeat</button>
@@ -361,7 +382,10 @@ const DEFAULT_DIALS=[
   {id:'longwknd', area:'rest',   label:'Long weekend away',     icon:'sun',     interval:90,  seed:60},
   {id:'trip',     area:'rest',   label:'A proper trip',         icon:'plane',   interval:180, seed:130},
   {id:'offline',  area:'rest',   label:'A day fully offline',   icon:'moon',    interval:30,  seed:18},
-  {id:'outside',  area:'rest',   label:'Get outside in nature', icon:'sun',     interval:7,   seed:4}
+  {id:'outside',  area:'rest',   label:'Get outside in nature', icon:'sun',     interval:7,   seed:4},
+  // cascades: a gated task and a multi-step chain
+  {id:'glasses',  area:'health', label:'Order new glasses',     icon:'eye',     interval:365, seed:0, requires:['eye']},
+  {id:'roth',     area:'money',  label:'Backdoor Roth',         icon:'refresh', interval:365, tier:'need', chain:[{label:'Contribute to a traditional IRA'},{label:'Convert it to Roth'},{label:'File Form 8606 at tax time'}]}
 ];
 
 const DEFAULT_TIMELINE=[
@@ -373,25 +397,25 @@ const DEFAULT_TIMELINE=[
   {m:1,  icon:'card',    title:'Check RSU withholding', tags:['money','employer'], note:'Default RSU withholding is often about 22%, below your marginal rate. Estimate the shortfall and set money aside so April isn\'t a surprise. Good moment to look at how concentrated you are in employer stock.'},
   {m:2,  icon:'wallet',  title:'Fund last year\'s IRA/HSA', tags:['money'], note:'You have until the April deadline to contribute for the prior tax year if anything\'s unmaxed. File Form 8606 to record the backdoor basis.'},
   {m:2,  icon:'chart',   title:'Decide ESPP: hold or sell', tags:['money','employer'], note:'Selling at purchase locks the discount and cuts concentration. Holding 1+ year past purchase and 2+ past the offer gets qualifying treatment. Pick a rule and automate it.'},
-  {m:3,  icon:'doc',     title:'File your taxes (~Apr 15)', tags:['money'], note:'Check Form 8606 shows the backdoor Roth as non-deductible then converted (about $0 taxable). Make sure the broker didn\'t double-count RSU/ESPP cost basis — a very common error that overstates your gains.'},
+  {m:3,  d:15, hard:true, icon:'doc',     title:'File your taxes (~Apr 15)', tags:['money'], note:'Check Form 8606 shows the backdoor Roth as non-deductible then converted (about $0 taxable). Make sure the broker didn\'t double-count RSU/ESPP cost basis — a very common error that overstates your gains.'},
   {m:4,  icon:'heart',   title:'Mid-year benefits check', tags:['employer','health'], note:'On pace to use the wellness, education and lifestyle reimbursements before year-end? Check your balances on the benefits portal — the amounts and deadlines change.'},
   {m:5,  icon:'chart',   title:'Mid-year money review', tags:['money'], note:'Is your savings rate on track? Look at rebalance drift, emergency-fund runway (lean toward 6–12 months given RSU concentration), and asset location.'},
   {m:6,  icon:'refresh', title:'Harvest tax losses', tags:['money'], note:'Sell paper losers in taxable accounts to offset gains and up to $3,000 of income. Mind the 30-day wash-sale window and don\'t rebuy a near-identical fund.'},
   {m:7,  icon:'pill',    title:'Size next year\'s FSA/HSA', tags:['health','employer'], note:'Use this year\'s real spend to set next year\'s numbers. Book any care you\'ve been putting off while it\'s on your mind.'},
   {m:8,  icon:'doc',     title:'Prep for open enrollment', tags:['health','employer'], note:'Model HDHP+HSA versus PPO on total expected cost, not just the premium. Flu-shot season opens.'},
-  {m:9,  icon:'heart',   title:'Open enrollment — lock it in', tags:['health','employer'], note:'The one window you can\'t easily redo. Health plan, HSA/FSA, life and disability, other perks. Re-elect HSA payroll contributions — they often don\'t carry over.'},
+  {m:9,  d:15, hard:true, icon:'heart',   title:'Open enrollment — lock it in', tags:['health','employer'], note:'The one window you can\'t easily redo. Health plan, HSA/FSA, life and disability, other perks. Re-elect HSA payroll contributions — they often don\'t carry over.'},
   {m:10, icon:'heart',   title:'Give via a DAF + get the match', tags:['money','employer'], note:'Bunch donations into a donor-advised fund for a bigger deduction this year, and give appreciated shares to skip the capital-gains bill. Submit for Google\'s match before the annual cap resets Dec 31.'},
   {m:10, icon:'refresh', title:'Harvest losses — final pass', tags:['money'], note:'One more look before year-end while there\'s still time to realize losses and reset the wash-sale clock.'},
-  {m:11, icon:'chart',   title:'Finish the mega-backdoor true-up', tags:['money','employer'], note:'Hit the $72,000 total before the last payroll run. Confirm the after-tax contributions and in-plan Roth conversion actually went through — don\'t assume.'},
-  {m:11, icon:'pill',    title:'Spend down the FSA', tags:['health','employer'], note:'Use-it-or-lose-it (2026 carryover cap is $680 if your plan allows it). Book appointments, restock eligible items, order new glasses or contacts.'},
+  {m:11, d:31, hard:true, icon:'chart',   title:'Finish the mega-backdoor true-up', tags:['money','employer'], note:'Hit the $72,000 total before the last payroll run. Confirm the after-tax contributions and in-plan Roth conversion actually went through — don\'t assume.'},
+  {m:11, d:31, hard:true, icon:'pill',    title:'Spend down the FSA', tags:['health','employer'], note:'Use-it-or-lose-it (2026 carryover cap is $680 if your plan allows it). Book appointments, restock eligible items, order new glasses or contacts.'},
   {m:11, icon:'chart',   title:'Check your tax bracket', tags:['money'], note:'In a lower-income year, consider converting pre-tax dollars to Roth up to the top of your bracket. Also worth reviewing estimated taxes if you owed last year.'},
   {m:11, icon:'heart',   title:'Use leftover perks; book January care', tags:['employer','health'], note:'Wellness, education and EAP allotments usually reset Dec 31. Put next year\'s physical, dental, DEXA and derm on the calendar now, while slots are open.'}
 ];
 
 /* storage */
-const KEY='theyear.v3'; let mem=null;
+const KEY='theyear.v4'; let mem=null,_cache=null;
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return mem;}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){mem=state;}}
+function save(){_cache=null;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){mem=state;}}
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 function seedISO(days){const d=new Date();d.setDate(d.getDate()-days);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function parseD(iso){const p=iso.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
@@ -399,8 +423,8 @@ function daysSince(iso){if(!iso)return 1e6;return Math.floor((parseD(todayISO())
 
 let state=load();
 if(!state){
-  state={version:3,dials:{},custom:[],removed:[],timeline:{},ui:{}};
-  DEFAULT_DIALS.forEach(d=>{state.dials[d.id]={last:seedISO(d.seed),interval:d.interval};});
+  state={version:4,dials:{},custom:[],removed:[],timeline:{},ui:{}};
+  DEFAULT_DIALS.forEach(d=>{state.dials[d.id]=d.chain?{step:0,last:null}:{last:seedISO(d.seed),interval:d.interval};});
   save();
 }
 state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.removed||[];state.timeline=state.timeline||{};state.ui=state.ui||{};
@@ -408,16 +432,18 @@ state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.re
 const DATE_WINDOW=120;   // a date dial starts emptying this many days before its due date
 const curYear=()=>new Date().getFullYear();
 function tlArea(t){return t.tags.includes('money')?'money':(t.tags.includes('health')?'health':'career');}
-function calDials(){return DEFAULT_TIMELINE.map((t,idx)=>({id:'cal'+idx,tlIdx:idx,area:tlArea(t),label:t.title,icon:t.icon,mode:'date',dueM:t.m,dueD:1,note:t.note,tags:t.tags}));}
+function calDials(){return DEFAULT_TIMELINE.map((t,idx)=>({id:'cal'+idx,tlIdx:idx,area:tlArea(t),label:t.title,icon:t.icon,mode:'date',dueM:t.m,dueD:t.d||1,hard:!!t.hard,note:t.note,tags:t.tags}));}
 function allDials(){
-  const base=DEFAULT_DIALS.map(d=>({...d,mode:'interval'})).filter(d=>!state.removed.includes(d.id));
+  if(_cache)return _cache;
+  const base=DEFAULT_DIALS.map(d=>({...d,...(META[d.id]||{}),mode:'interval'})).filter(d=>!state.removed.includes(d.id));
   const cal=calDials().filter(d=>!state.removed.includes(d.id));
   const cust=state.custom.map(c=>({...c,custom:true,mode:c.mode||'interval'}));
-  return [...base,...cal,...cust].map(d=>{
+  _cache=[...base,...cal,...cust].map(d=>{
     if(d.mode==='date')return {...d};
     const st=state.dials[d.id]||{last:null,interval:d.interval};
-    return {...d,last:st.last,interval:st.interval==null?d.interval:st.interval};
+    return {...d,last:st.last,interval:st.interval==null?d.interval:st.interval,tier:st.tier||d.tier};
   });
+  return _cache;
 }
 function findDial(id){return allDials().find(x=>x.id===id);}
 /* date-anchored dials: recharge toward a fixed calendar date each year */
@@ -432,6 +458,67 @@ function readyInDays(d){return d.interval-daysSince(d.last);}
 function fmtDate(iso){if(!iso)return '—';return parseD(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'});}
 function fmtDateObj(dt){return dt.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
 
+/* ---------- priority (cost of skipping) + cascades ---------- */
+const META={
+  bathdeep:{resets:['bathroom']},
+  bikeservice:{resets:['bikeclean']},
+  bedding:{resets:['sheets']},
+  physical:{onDoneOffer:[{label:'Book a specialist',area:'health',icon:'heart',once:true},{label:'Redo bloodwork',area:'health',icon:'vial',interval:90}]}
+};
+const NEED_IDS=new Set(['physical','bloodwork','hormones','dental','eye','derm','flu','dexa','backups','passwords','credit','glasses']);
+const WANT_IDS=new Set(['recipe','teatime','read','wins','plan','outside','shoot','edit','massage']);
+function tierOf(d){if(d.tier)return d.tier;if(d.mode==='date')return 'need';return NEED_IDS.has(d.id)?'need':WANT_IDS.has(d.id)?'want':'upkeep';}
+function leadDaysOf(d){if(d.leadDays!=null)return d.leadDays;if(tierOf(d)!=='need')return 0;return d.mode==='date'?45:Math.min(60,Math.max(7,Math.round((d.interval||30)*0.15)));}
+/* gate: a prerequisite is "fresh" while its own ring isn't empty */
+function isFresh(id){const x=findDial(id);if(!x)return false;if(x.mode==='date')return isDateDone(x,curYear());if(x.chain)return chainState(x).completed;return x.last!=null&&daysSince(x.last)<x.interval;}
+function isDormant(d){return d.requires&&d.requires.length?!d.requires.every(isFresh):false;}
+function requiresLabel(d){const un=(d.requires||[]).find(id=>!isFresh(id));const x=un&&findDial(un);return x?x.label:'';}
+/* chain: progress stored as {step,last} on state.dials[id]; only the active step renders */
+function chainState(d){
+  const st=state.dials[d.id]||{};const len=d.chain.length;let step=st.step||0;const last=st.last||null;
+  let completed=step>=len,reserve=1;
+  if(completed){
+    if(last&&daysSince(last)>=d.interval){step=0;completed=false;}     // cooldown elapsed → re-arm
+    else reserve=last?Math.max(0,Math.min(1,1-daysSince(last)/d.interval)):1;
+  }
+  return {step,len,completed,reserve};
+}
+function chainPips(chain,active){return `<div class="pips">${chain.map((s,i)=>`<span class="pip${i<active?' on':''}${i===active?' cur':''}"></span>`).join('')}</div>`;}
+/* single source of truth for how a card renders */
+function computeStatus(d){
+  const yr=curYear(),tier=tierOf(d),dormant=isDormant(d);
+  let reserve=1,color='var(--patina)',centerTxt='',meta='',glow=false,done=false,extra='',hint='Done';
+  if(d.chain){
+    const cs=chainState(d);
+    if(!cs.completed){
+      const step=d.chain[cs.step];reserve=cs.len?cs.step/cs.len:0;
+      glow=!dormant&&tier!=='want';color=glow?'var(--ember)':'var(--brass)';
+      centerTxt=(cs.step+1)+'/'+cs.len;meta=step.label;hint='Next';extra=chainPips(d.chain,cs.step);
+    }else{
+      reserve=cs.reserve;color=stateColor(reserve).c;centerTxt='done';meta='Done — recharges';hint='';extra=chainPips(d.chain,cs.len);
+    }
+  }else if(d.mode==='date'){
+    done=isDateDone(d,yr);const days=dateDays(d,yr),lead=leadDaysOf(d);
+    if(done){color='var(--patina)';centerTxt='done';meta='Done for '+yr;hint='Undo';}
+    else if(days<=0){reserve=0;color='var(--ember)';glow=!dormant;centerTxt='now';meta=d.hard?'Overdue':'Due now';}
+    else{reserve=dateReserve(d,yr);glow=!dormant&&days<=(d.hard?Math.max(lead,60):lead);color=glow?'var(--ember)':stateColor(reserve).c;
+      centerTxt=days<=99?days+'d':MONTHS_S[d.dueM].toUpperCase();
+      meta=d.hard?('Closes in '+days+'d'):(d.tlIdx!=null?('In '+MONTHS[d.dueM]):('By '+fmtDateObj(dueDateOf(d,yr))));}
+    if(d.tags&&d.tags.length)extra=`<div class="m-tags">${d.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join('')}</div>`;
+  }else{
+    reserve=reserveOf(d);const rid=readyInDays(d),lead=leadDaysOf(d);
+    if(tier==='want')glow=false;else if(tier==='need')glow=!dormant&&rid<=lead;else glow=!dormant&&reserve<=0.14;
+    color=glow?'var(--ember)':stateColor(reserve).c;
+    centerTxt=rid<=0?'now':(rid<=99?rid+'d':Math.round(rid/30)+'mo');
+    meta=glow?'Ready now':(d.last?'Last done '+fmtDate(d.last):'Not done yet');
+  }
+  if(dormant){glow=false;color='var(--patina)';meta='after '+requiresLabel(d);hint='Locked';}
+  return {reserve,color,centerTxt,meta,glow,done,dormant,dimmed:tier==='want'||dormant,tier,extra,hint};
+}
+/* sort within a group: glowing needs top, wants + dormant + done sink */
+function sortRank(d){const s=computeStatus(d);if(s.dormant)return 5;if(s.done)return 4;if(s.glow)return tierOf(d)==='need'?0:1;if(tierOf(d)==='want')return 3;return 2;}
+function sortDials(arr){return arr.map((d,i)=>[d,i]).sort((a,b)=>(sortRank(a[0])-sortRank(b[0]))||(a[1]-b[1])).map(x=>x[0]);}
+
 const R=39,C=2*Math.PI*R;
 function ringHTML(reserve,color,center,animate){
   const offset=C*(1-reserve);const start=animate?C:offset;
@@ -441,25 +528,15 @@ function ringHTML(reserve,color,center,animate){
     </svg><div class="gauge-ico" style="--c:${color}">${center}</div></div>`;
 }
 function dialHTML(d,animate){
-  const yr=curYear();const isDate=d.mode==='date';const r=reserveOf(d);
-  let c,ready,centerTxt,meta,done=false,tagsRow='';
-  if(isDate){
-    done=isDateDone(d,yr);const days=dateDays(d,yr);
-    if(done){c='var(--patina)';ready=false;centerTxt='done';meta='Done for '+yr;}
-    else if(days<=0){c='var(--ember)';ready=true;centerTxt='now';meta='Due now';}
-    else{const sc=stateColor(r);c=sc.c;ready=sc.ready;centerTxt=days<=99?days+'d':MONTHS_S[d.dueM].toUpperCase();meta=d.tlIdx!=null?('In '+MONTHS[d.dueM]):('By '+fmtDateObj(dueDateOf(d,yr)));}
-    if(d.tags&&d.tags.length)tagsRow=`<div class="m-tags">${d.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join('')}</div>`;
-  }else{
-    const sc=stateColor(r);c=sc.c;ready=sc.ready;
-    const rid=readyInDays(d);centerTxt=rid<=0?'now':(rid<=99?rid+'d':Math.round(rid/30)+'mo');
-    meta=ready?'Ready now':(d.last?'Last done '+fmtDate(d.last):'Not done yet');
-  }
-  const center=`${done?ico('check'):ico(d.icon)}<span class="gauge-pct">${centerTxt}</span>`;
-  return `<div class="dial ${ready?'is-ready breathe':''} ${done?'is-done':''}" style="--c:${c}" data-card="${d.id}">
-    <button class="ddone" data-done="${d.id}" aria-label="${done?'Undo':'Mark done'}: ${d.label}">
-      ${ringHTML(r,c,center,animate)}
-      <div class="dlabel">${d.label}</div><div class="dmeta">${meta}</div>${tagsRow}
-      <div class="dhint">${CHECK_SM} ${done?'Undo':'Done'}</div>
+  const s=computeStatus(d);
+  const cls=['dial',s.glow?'is-ready breathe':'',s.done?'is-done':'',s.dimmed?'is-dim':'',s.dormant?'is-locked':''].filter(Boolean).join(' ');
+  const center=`${s.done?ico('check'):ico(d.icon)}<span class="gauge-pct">${s.centerTxt}</span>`;
+  const hint=s.hint?`<div class="dhint">${CHECK_SM} ${s.hint}</div>`:'';
+  return `<div class="${cls}" style="--c:${s.color}" data-card="${d.id}">
+    <button class="ddone" data-done="${d.id}"${s.dormant?' disabled':''} aria-label="${s.dormant?'Locked':(s.done?'Undo':'Mark done')}: ${d.label}">
+      ${ringHTML(s.reserve,s.color,center,animate)}
+      <div class="dlabel">${d.label}</div><div class="dmeta">${s.meta}</div>${s.extra}
+      ${hint}
     </button>
     <button class="dedit" data-edit="${d.id}" aria-label="Details: ${d.label}">${DOTS}</button>
   </div>`;
@@ -467,7 +544,7 @@ function dialHTML(d,animate){
 function renderRhythms(animate){
   const host=document.getElementById('rhythms');const dials=allDials();
   host.innerHTML=AREAS.map(a=>{
-    const items=dials.filter(d=>d.area===a.id);if(!items.length)return '';
+    const items=sortDials(dials.filter(d=>d.area===a.id));if(!items.length)return '';
     return `<div class="area"><div class="area-h"><span class="tag">${a.label}</span><span class="rule"></span><span class="cnt">${items.length}</span></div>
       <div class="rhythm-grid">${items.map(d=>dialHTML(d,animate)).join('')}</div></div>`;
   }).join('');
@@ -485,7 +562,7 @@ function renderTimeline(animate,center){
   document.getElementById('tlPct').textContent=Math.round(frac*100)+'% through the year';
   const scroll=document.getElementById('tlScroll');const cals=calDials().filter(d=>!state.removed.includes(d.id));let html='';
   for(let m=0;m<12;m++){
-    const items=cals.filter(d=>d.dueM===m);
+    const items=sortDials(cals.filter(d=>d.dueM===m));
     const cls=m<curM?'past':(m===curM?'now':'');const badge=m===curM?'<span class="badge">now</span>':'';
     const inner=items.length?('<div class="m-cards">'+items.map(d=>dialHTML(d,animate)).join('')+'</div>'):'<div class="m-empty">nothing here</div>';
     html+=`<div class="month ${cls}" data-month="${m}"><div class="m-h"><span class="mo">${MONTHS_S[m]}</span>${badge}</div>${inner}</div>`;
@@ -496,15 +573,24 @@ function renderTimeline(animate,center){
 
 function renderHeader(){
   const d=new Date();document.getElementById('yrLabel').textContent=d.getFullYear();
-  const n=allDials().filter(x=>reserveOf(x)<=0.14).length;
+  const n=allDials().filter(x=>computeStatus(x).glow).length;
   const phrase=n===0?'nothing needs doing today':n===1?'one thing’s come due':n+' things have come due';
   document.getElementById('todayLine').innerHTML=`<b>${d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</b> · ${phrase}`;
+}
+/* "Needs attention": the honest shortlist — glowing Needs + closing hard deadlines */
+function needItems(){return allDials().filter(d=>{const s=computeStatus(d);return s.glow&&!s.done&&(tierOf(d)==='need'||d.hard);});}
+function renderStrip(){
+  const el=document.getElementById('needsStrip');const items=needItems();
+  if(!items.length){el.hidden=true;el.innerHTML='';return;}
+  el.hidden=false;
+  el.innerHTML=`<span class="ns-label">Needs attention</span><div class="ns-items">`+
+    items.map(d=>{const s=computeStatus(d);return `<button class="ns-chip" data-strip="${d.id}"><span class="ns-ic">${ico(d.icon)}</span><span class="ns-t">${d.label}</span><span class="ns-m">${s.centerTxt}</span></button>`;}).join('')+`</div>`;
 }
 function animateGauges(){
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('.gauge-fill').forEach(f=>f.setAttribute('stroke-dashoffset',f.dataset.target));return;}
   requestAnimationFrame(()=>requestAnimationFrame(()=>{document.querySelectorAll('.gauge-fill').forEach(f=>f.setAttribute('stroke-dashoffset',f.dataset.target));}));
 }
-function renderAll(animate){renderHeader();renderTimeline(animate);renderRhythms(animate);}
+function renderAll(animate){renderHeader();renderStrip();renderTimeline(animate);renderRhythms(animate);}
 
 /* interactions */
 const scrim=document.getElementById('scrim'),sheet=document.getElementById('sheet');
@@ -516,15 +602,52 @@ let toastT;function toast(m){const t=document.getElementById('toast');t.textCont
 const reduced=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function popCard(sel){const c=document.querySelector(sel);if(c&&!reduced()){c.classList.add('just-done');setTimeout(()=>c.classList.remove('just-done'),500);}}
 const PRESETS=[['Weekly',7],['Bi-weekly',14],['Monthly',30],['62-day rest',62],['Quarterly',90],['Semi-annual',182],['Annual',365]];
+const TIERS=[['need','Need'],['upkeep','Upkeep'],['want','Want']];
+function tierButtons(cur){return TIERS.map(t=>`<button class="preset ${t[0]===cur?'sel':''}" data-tier="${t[0]}">${t[1]}</button>`).join('');}
 
 /* re-render everything, keeping the calendar's horizontal scroll position */
-function rerender(){const sc=document.getElementById('tlScroll');const sx=sc?sc.scrollLeft:0;renderHeader();renderTimeline(false,false);renderRhythms(false);const sc2=document.getElementById('tlScroll');if(sc2)sc2.scrollLeft=sx;}
+function rerender(){const sc=document.getElementById('tlScroll');const sx=sc?sc.scrollLeft:0;renderHeader();renderStrip();renderTimeline(false,false);renderRhythms(false);const sc2=document.getElementById('tlScroll');if(sc2)sc2.scrollLeft=sx;}
+function removeDial(d){if(d.custom)state.custom=state.custom.filter(c=>c.id!==d.id);else if(!state.removed.includes(d.id))state.removed.push(d.id);delete state.dials[d.id];}
+function applyResets(d){(d.resets||[]).forEach(rid=>{const x=findDial(rid);if(x&&x.mode!=='date'&&!x.chain){const st=state.dials[rid]||{};state.dials[rid]={...st,last:todayISO(),interval:st.interval==null?x.interval:st.interval};}});}
 function markDone(id){
   const d=findDial(id);if(!d)return;
-  if(d.mode==='date'){const nowDone=!isDateDone(d,curYear());setDateDone(d,nowDone);save();rerender();popCard('.dial[data-card="'+id+'"]');toast(nowDone?('Done — '+d.label):('Reopened — '+d.label));return;}
+  if(isDormant(d)){toast('Locked — do “'+requiresLabel(d)+'” first');return;}
+  if(d.chain){
+    const cs=chainState(d);if(cs.completed)return;                 // charging; ignore taps
+    const step=(state.dials[id]&&state.dials[id].step||0)+1;
+    if(step>=d.chain.length){
+      if(d.once){removeDial(d);save();rerender();toast('Completed — '+d.label);return;}
+      state.dials[id]={step:d.chain.length,last:todayISO()};applyResets(d);save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Completed — '+d.label);
+    }else{
+      state.dials[id]={...(state.dials[id]||{}),step};save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Step done — next: '+d.chain[step].label);
+    }
+    return;
+  }
+  if(d.mode==='date'){
+    const nowDone=!isDateDone(d,curYear());setDateDone(d,nowDone);if(nowDone)applyResets(d);save();rerender();popCard('.dial[data-card="'+id+'"]');
+    toast(nowDone?('Done — '+d.label):('Reopened — '+d.label));if(nowDone)maybeOffer(d);return;
+  }
+  if(d.once){removeDial(d);save();rerender();toast('Done — '+d.label);return;}
   const prev=state.dials[id]||{};
-  state.dials[id]={last:todayISO(),interval:prev.interval==null?d.interval:prev.interval};
-  save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Done — '+d.label);
+  state.dials[id]={...prev,last:todayISO(),interval:prev.interval==null?d.interval:prev.interval};
+  applyResets(d);save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Done — '+d.label);
+  maybeOffer(d);
+}
+/* conditional follow-ups: opt-in, dismissable — never auto-created */
+function maybeOffer(d){if(!d.onDoneOffer||!d.onDoneOffer.length)return;
+  const rows=d.onDoneOffer.map((f,i)=>`<button class="preset" style="text-align:left" data-off="${i}">+ ${f.label}${f.interval?' · every '+f.interval+'d':' · once'}</button>`).join('');
+  openSheet(`<h3>Nice — ${d.label} done</h3>
+    <div class="sh-sub">Anything to line up from it? Add what's relevant, ignore the rest.</div>
+    <div class="presets" style="flex-direction:column;align-items:stretch;gap:8px">${rows}</div>
+    <div class="sheet-actions"><button class="btn primary" id="offClose">No follow-ups</button></div>`);
+  sheet.querySelectorAll('[data-off]').forEach(b=>b.addEventListener('click',()=>{
+    const f=d.onDoneOffer[+b.dataset.off];const id='c'+Date.now()+'-'+b.dataset.off;
+    const dd={id,area:f.area||d.area,label:f.label,icon:f.icon||d.icon,mode:'interval',interval:f.interval||365};
+    if(f.tier)dd.tier=f.tier;if(!f.interval)dd.once=true;
+    state.custom.push(dd);state.dials[id]={last:seedISO(dd.interval),interval:dd.interval};   // starts ready
+    b.disabled=true;b.classList.add('sel');b.textContent='Added: '+f.label;save();rerender();
+  }));
+  sheet.querySelector('#offClose').addEventListener('click',closeSheet);
 }
 function toggleMoment(idx){
   const yr=curYear();const k='y'+yr+'-'+idx;const t=DEFAULT_TIMELINE[idx];
@@ -535,17 +658,34 @@ function toggleMoment(idx){
 
 function editDial(id){
   const d=findDial(id);if(!d)return;
+  if(d.chain){editChain(d);return;}
   if(d.mode==='date'){editDateDial(d);return;}
+  let curTier=tierOf(d);
   const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">Last done ${d.last?fmtDate(d.last):'not yet'} · every ${d.interval} days</div>
     <div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
-    <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets">${chips}</div></div>
+    <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>
+    <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="edTier">${tierButtons(curTier)}</div></div>
     <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">Done today</button></div>`);
-  sheet.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('.preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
-  sheet.querySelector('#edDone').addEventListener('click',()=>{state.dials[id]={last:todayISO(),interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();rerender();toast('Done — '+d.label);});
-  sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={last:sheet.querySelector('#edLast').value||d.last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();rerender();toast('Saved.');});
-  sheet.querySelector('#edDel').addEventListener('click',()=>{if(d.custom)state.custom=state.custom.filter(c=>c.id!==id);else if(!state.removed.includes(id))state.removed.push(id);delete state.dials[id];save();closeSheet();rerender();toast('Removed.');});
+  sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
+  sheet.querySelectorAll('#edTier .preset').forEach(b=>b.addEventListener('click',()=>{curTier=b.dataset.tier;sheet.querySelectorAll('#edTier .preset').forEach(x=>x.classList.toggle('sel',x===b));}));
+  const write=last=>{state.dials[id]={...(state.dials[id]||{}),last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval),tier:curTier};};
+  sheet.querySelector('#edDone').addEventListener('click',()=>{write(todayISO());save();closeSheet();rerender();toast('Done — '+d.label);});
+  sheet.querySelector('#edSave').addEventListener('click',()=>{write(sheet.querySelector('#edLast').value||d.last);save();closeSheet();rerender();toast('Saved.');});
+  sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
+}
+/* chain edit: shows the steps, never overwrites the {step,last} progress */
+function editChain(d){
+  const cs=chainState(d);
+  const steps=d.chain.map((s,i)=>{const col=i<cs.step?'var(--ink-faint)':(i===cs.step&&!cs.completed?'var(--ember)':'var(--ink-dim)');return `<div class="sh-note" style="margin:0 0 6px;color:${col}">${i+1}. ${s.label}${i<cs.step?' ✓':''}</div>`;}).join('');
+  openSheet(`<h3>${d.label}</h3>
+    <div class="sh-sub">A chain · ${cs.completed?'done for now, recharging':('step '+(cs.step+1)+' of '+cs.len)}</div>
+    <div style="margin-bottom:18px">${steps}</div>
+    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edReset">Reset</button><button class="btn primary" id="edDone">${cs.completed?'Close':'Do this step'}</button></div>`);
+  sheet.querySelector('#edReset').addEventListener('click',()=>{state.dials[d.id]={step:0,last:null};save();closeSheet();rerender();toast('Chain reset.');});
+  sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
+  sheet.querySelector('#edDone').addEventListener('click',()=>{closeSheet();if(!cs.completed)markDone(d.id);});
 }
 /* edit a user-made date dial (built-in calendar items open their note instead) */
 function editDateDial(d){
@@ -570,16 +710,18 @@ function addDial(){
     <div class="field"><label>Recharge</label><div class="presets" id="adMode"><button class="preset sel" data-mode="interval">Every N days</button><button class="preset" data-mode="date">By a date</button></div></div>
     <div class="field" id="adIntWrap"><label>Repeat every (days)</label><input type="number" id="adInt" min="1" max="1460" value="30"><div class="presets">${PRESETS.map(p=>`<button class="preset" data-int="${p[1]}">${p[0]}</button>`).join('')}</div></div>
     <div class="field" id="adDateWrap" style="display:none"><label>Due date (repeats yearly)</label><input type="date" id="adDue" value="${todayISO()}"></div>
+    <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="adTier">${tierButtons('upkeep')}</div></div>
     <div class="sheet-actions"><button class="btn" id="adCancel">Cancel</button><button class="btn primary" id="adCreate">Add</button></div>`);
-  let mode='interval';
+  let mode='interval',tier='upkeep';
+  sheet.querySelectorAll('#adTier .preset').forEach(b=>b.addEventListener('click',()=>{tier=b.dataset.tier;sheet.querySelectorAll('#adTier .preset').forEach(x=>x.classList.toggle('sel',x===b));}));
   sheet.querySelectorAll('#adMode .preset').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;sheet.querySelectorAll('#adMode .preset').forEach(x=>x.classList.toggle('sel',x===b));sheet.querySelector('#adIntWrap').style.display=mode==='interval'?'':'none';sheet.querySelector('#adDateWrap').style.display=mode==='date'?'':'none';}));
   sheet.querySelectorAll('#adIntWrap .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#adInt').value=b.dataset.int;}));
   sheet.querySelector('#adCancel').addEventListener('click',closeSheet);
   sheet.querySelector('#adCreate').addEventListener('click',()=>{
     const name=sheet.querySelector('#adName').value.trim();if(!name){toast('Give it a name first.');return;}
     const id='c'+Date.now();const area=sheet.querySelector('#adArea').value;const icon=sheet.querySelector('#adIcon').value;
-    if(mode==='date'){const v=sheet.querySelector('#adDue').value||todayISO();const p=v.split('-').map(Number);state.custom.push({id,area,label:name,icon,mode:'date',dueM:p[1]-1,dueD:p[2],tags:[]});}
-    else{const interval=Math.max(1,parseInt(sheet.querySelector('#adInt').value)||30);state.custom.push({id,area,label:name,icon,mode:'interval',interval});state.dials[id]={last:todayISO(),interval};}
+    if(mode==='date'){const v=sheet.querySelector('#adDue').value||todayISO();const p=v.split('-').map(Number);state.custom.push({id,area,label:name,icon,mode:'date',dueM:p[1]-1,dueD:p[2],tags:[],tier});}
+    else{const interval=Math.max(1,parseInt(sheet.querySelector('#adInt').value)||30);state.custom.push({id,area,label:name,icon,mode:'interval',interval,tier});state.dials[id]={last:todayISO(),interval,tier};}
     save();closeSheet();rerender();toast('Added.');
   });
 }
@@ -603,6 +745,7 @@ function cardClick(e){
 document.getElementById('rhythms').addEventListener('click',cardClick);
 document.getElementById('tlScroll').addEventListener('click',cardClick);
 document.getElementById('addBtn').addEventListener('click',addDial);
+document.getElementById('needsStrip').addEventListener('click',e=>{const b=e.target.closest('[data-strip]');if(!b)return;const d=findDial(b.dataset.strip);if(d&&d.mode==='date'&&d.tlIdx!=null)openMoment(d.tlIdx);else editDial(b.dataset.strip);});
 
 function setTab(t){
   state.ui=state.ui||{};state.ui.tab=t;save();
@@ -625,7 +768,7 @@ document.getElementById('impFile').addEventListener('change',e=>{
 });
 
 document.getElementById('foot').innerHTML=
-  `<b>How it works.</b> Two kinds of card. Most refill when you tap them, then empty again over a rolling interval. Calendar ones — the tax and benefits jobs — instead recharge toward a fixed date each year and reset in January; they live under <b>The calendar year</b> and again under <b>On repeat</b>, inside their area. Nothing ever goes overdue or piles up, so skip whatever you like. Tap the dots on a card to adjust or remove it.<br>`+
+  `<b>How it works.</b> Tap a card to mark it done; its ring refills, then empties again — over a rolling interval, or toward a fixed date each year for the tax and benefits jobs. Nothing goes overdue or piles up, so skip whatever you like. <b>Priority</b> is cost-of-skipping: <i>Needs</i> warm up early and surface in the strip up top, <i>Upkeep</i> nudges only when due, <i>Wants</i> stay dim and never glow. Some cards <b>cascade</b> — a chain walks one step at a time, a deep clean refills the weekly one, and a gated task waits until its prerequisite is fresh. Tap the dots to adjust priority, or remove it.<br>`+
   `<b>The money numbers</b> use 2026 IRS limits (401k $24,500, total $72,000, IRA $7,500, HSA $4,400, FSA $3,400). Anything Google-specific — the match, reimbursements, exact dates — changes, so check your benefits portal. None of this is financial advice.<br>`+
   `<b>Everything saves to this browser.</b> Export a copy if you want a backup.`;
 
