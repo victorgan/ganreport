@@ -33,6 +33,14 @@
   .tbtn:hover{color:var(--ink);border-color:rgba(238,240,234,.24);background:var(--raised-2)}
   .tbtn:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
+  .tabs{display:flex;gap:0;margin-top:30px;border-bottom:1px solid var(--line-2)}
+  .tab{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--ink-dim);background:none;border:0;border-bottom:2px solid transparent;padding:11px 2px;margin-right:22px;cursor:pointer;transition:color .16s,border-color .16s;letter-spacing:-.01em}
+  .tab:hover{color:var(--ink)}
+  .tab.on{color:var(--ink);border-bottom-color:var(--brass)}
+  .tab:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:4px}
+  .tabsec{display:none;margin-top:26px}
+  .tabsec.active{display:block}
+
   section{margin-top:clamp(38px,6vw,60px)}
   .shead{display:flex;align-items:baseline;gap:16px;margin-bottom:22px;flex-wrap:wrap}
   .shead h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4vw,34px);margin:0;letter-spacing:-.01em}
@@ -160,23 +168,28 @@
     </div>
   </header>
 
-  <section id="yearSec">
-    <div class="shead">
-      <h2>The calendar year</h2>
-      <span class="sub">The jobs that are tied to a time of year — tax moves, benefits deadlines, seasonal work. Tap a card once you've handled it; tap the dots to read what it involves.</span>
-    </div>
-    <div class="tl-outer">
-      <div class="tl-progress"><div class="bar"><i id="tlFill"></i><span class="now" id="tlNow"></span></div><span class="pct" id="tlPct">—</span></div>
-      <div class="tl-scroll" id="tlScroll"></div>
-    </div>
-  </section>
+  <nav class="tabs" id="tabs">
+    <button class="tab" data-tab="rhythms">On repeat</button>
+    <button class="tab" data-tab="year">The calendar year</button>
+  </nav>
 
-  <section id="rhythmSec">
+  <section id="rhythmSec" class="tabsec">
     <div class="shead">
       <h2>On repeat</h2>
       <span class="sub">Everything you do over and over. Tap a card when it's done and the ring fills back up. Skip whatever you want — nothing stacks up and nothing goes overdue.</span>
     </div>
     <div id="rhythms"></div>
+  </section>
+
+  <section id="yearSec" class="tabsec">
+    <div class="shead">
+      <h2>The calendar year</h2>
+      <span class="sub">The jobs tied to a time of year — tax moves, benefits deadlines, seasonal work. These also appear under On repeat, in their area. Tap a card once you've handled it; tap the dots to read what it involves.</span>
+    </div>
+    <div class="tl-outer">
+      <div class="tl-progress"><div class="bar"><i id="tlFill"></i><span class="now" id="tlNow"></span></div><span class="pct" id="tlPct">—</span></div>
+      <div class="tl-scroll" id="tlScroll"></div>
+    </div>
   </section>
 
   <div class="foot" id="foot"></div>
@@ -386,21 +399,38 @@ function daysSince(iso){if(!iso)return 1e6;return Math.floor((parseD(todayISO())
 
 let state=load();
 if(!state){
-  state={version:3,dials:{},custom:[],removed:[],timeline:{}};
+  state={version:3,dials:{},custom:[],removed:[],timeline:{},ui:{}};
   DEFAULT_DIALS.forEach(d=>{state.dials[d.id]={last:seedISO(d.seed),interval:d.interval};});
   save();
 }
-state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.removed||[];state.timeline=state.timeline||{};
+state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.removed||[];state.timeline=state.timeline||{};state.ui=state.ui||{};
 
+const DATE_WINDOW=120;   // a date dial starts emptying this many days before its due date
+const curYear=()=>new Date().getFullYear();
+function tlArea(t){return t.tags.includes('money')?'money':(t.tags.includes('health')?'health':'career');}
+function calDials(){return DEFAULT_TIMELINE.map((t,idx)=>({id:'cal'+idx,tlIdx:idx,area:tlArea(t),label:t.title,icon:t.icon,mode:'date',dueM:t.m,dueD:1,note:t.note,tags:t.tags}));}
 function allDials(){
-  const base=DEFAULT_DIALS.filter(d=>!state.removed.includes(d.id));
-  const cust=state.custom.map(c=>({...c,custom:true}));
-  return [...base,...cust].map(d=>{const st=state.dials[d.id]||{last:null,interval:d.interval};return {...d,last:st.last,interval:st.interval==null?d.interval:st.interval};});
+  const base=DEFAULT_DIALS.map(d=>({...d,mode:'interval'})).filter(d=>!state.removed.includes(d.id));
+  const cal=calDials().filter(d=>!state.removed.includes(d.id));
+  const cust=state.custom.map(c=>({...c,custom:true,mode:c.mode||'interval'}));
+  return [...base,...cal,...cust].map(d=>{
+    if(d.mode==='date')return {...d};
+    const st=state.dials[d.id]||{last:null,interval:d.interval};
+    return {...d,last:st.last,interval:st.interval==null?d.interval:st.interval};
+  });
 }
-function reserveOf(d){return Math.max(0,Math.min(1,1-daysSince(d.last)/d.interval));}
+function findDial(id){return allDials().find(x=>x.id===id);}
+/* date-anchored dials: recharge toward a fixed calendar date each year */
+function dueDateOf(d,yr){return new Date(yr,d.dueM,d.dueD||1);}
+function dateDays(d,yr){return Math.floor((dueDateOf(d,yr)-parseD(todayISO()))/86400000);}
+function isDateDone(d,yr){if(d.tlIdx!=null)return state.timeline['y'+yr+'-'+d.tlIdx]===yr;return (state.dials[d.id]||{}).doneYear===yr;}
+function setDateDone(d,val){const yr=curYear();if(d.tlIdx!=null){const k='y'+yr+'-'+d.tlIdx;if(val)state.timeline[k]=yr;else delete state.timeline[k];}else{const st=state.dials[d.id]||{};if(val)st.doneYear=yr;else delete st.doneYear;state.dials[d.id]=st;}}
+function dateReserve(d,yr){if(isDateDone(d,yr))return 1;const days=dateDays(d,yr);if(days<=0)return 0;return Math.min(1,days/DATE_WINDOW);}
+function reserveOf(d){if(d.mode==='date')return dateReserve(d,curYear());return Math.max(0,Math.min(1,1-daysSince(d.last)/d.interval));}
 function stateColor(r){if(r<=0.14)return{c:'var(--ember)',ready:true};if(r<0.45)return{c:'var(--brass)',ready:false};return{c:'var(--patina)',ready:false};}
 function readyInDays(d){return d.interval-daysSince(d.last);}
 function fmtDate(iso){if(!iso)return '—';return parseD(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'});}
+function fmtDateObj(dt){return dt.toLocaleDateString(undefined,{month:'short',day:'numeric'});}
 
 const R=39,C=2*Math.PI*R;
 function ringHTML(reserve,color,center,animate){
@@ -411,17 +441,27 @@ function ringHTML(reserve,color,center,animate){
     </svg><div class="gauge-ico" style="--c:${color}">${center}</div></div>`;
 }
 function dialHTML(d,animate){
-  const r=reserveOf(d);const{c,ready}=stateColor(r);
-  const rid=readyInDays(d);const centerTxt=rid<=0?'now':(rid<=99?rid+'d':Math.round(rid/30)+'mo');
-  const center=`${ico(d.icon)}<span class="gauge-pct">${centerTxt}</span>`;
-  const meta=ready?'Ready now':(d.last?'Last done '+fmtDate(d.last):'Not done yet');
-  return `<div class="dial ${ready?'is-ready breathe':''}" style="--c:${c}" data-card="${d.id}">
-    <button class="ddone" data-done="${d.id}" aria-label="Mark ${d.label} done today">
+  const yr=curYear();const isDate=d.mode==='date';const r=reserveOf(d);
+  let c,ready,centerTxt,meta,done=false,tagsRow='';
+  if(isDate){
+    done=isDateDone(d,yr);const days=dateDays(d,yr);
+    if(done){c='var(--patina)';ready=false;centerTxt='done';meta='Done for '+yr;}
+    else if(days<=0){c='var(--ember)';ready=true;centerTxt='now';meta='Due now';}
+    else{const sc=stateColor(r);c=sc.c;ready=sc.ready;centerTxt=days<=99?days+'d':MONTHS_S[d.dueM].toUpperCase();meta=d.tlIdx!=null?('In '+MONTHS[d.dueM]):('By '+fmtDateObj(dueDateOf(d,yr)));}
+    if(d.tags&&d.tags.length)tagsRow=`<div class="m-tags">${d.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join('')}</div>`;
+  }else{
+    const sc=stateColor(r);c=sc.c;ready=sc.ready;
+    const rid=readyInDays(d);centerTxt=rid<=0?'now':(rid<=99?rid+'d':Math.round(rid/30)+'mo');
+    meta=ready?'Ready now':(d.last?'Last done '+fmtDate(d.last):'Not done yet');
+  }
+  const center=`${done?ico('check'):ico(d.icon)}<span class="gauge-pct">${centerTxt}</span>`;
+  return `<div class="dial ${ready?'is-ready breathe':''} ${done?'is-done':''}" style="--c:${c}" data-card="${d.id}">
+    <button class="ddone" data-done="${d.id}" aria-label="${done?'Undo':'Mark done'}: ${d.label}">
       ${ringHTML(r,c,center,animate)}
-      <div class="dlabel">${d.label}</div><div class="dmeta">${meta}</div>
-      <div class="dhint">${CHECK_SM} Done</div>
+      <div class="dlabel">${d.label}</div><div class="dmeta">${meta}</div>${tagsRow}
+      <div class="dhint">${CHECK_SM} ${done?'Undo':'Done'}</div>
     </button>
-    <button class="dedit" data-edit="${d.id}" aria-label="Adjust ${d.label}">${DOTS}</button>
+    <button class="dedit" data-edit="${d.id}" aria-label="Details: ${d.label}">${DOTS}</button>
   </div>`;
 }
 function renderRhythms(animate){
@@ -434,44 +474,24 @@ function renderRhythms(animate){
   if(animate)animateGauges();
 }
 
-/* timeline — same card, calendar semantics */
+/* calendar tab — lays the same date dials out by month */
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTHS_S=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function calCardHTML(t,idx,year,animate){
-  const done=state.timeline['y'+year+'-'+idx]===year;
-  const cm=new Date().getMonth();const mu=t.m-cm;
-  let reserve,c,centerTxt,ready=false,status;
-  if(done){reserve=1;c='var(--patina)';centerTxt='done';status='Done for '+year;}
-  else if(mu<=0){reserve=0;c='var(--ember)';centerTxt='now';ready=true;status=mu===0?'This month':'Any time now';}
-  else{reserve=Math.min(1,mu/6);c=stateColor(reserve).c;centerTxt=MONTHS_S[t.m].toUpperCase();status='Do it in '+MONTHS_S[t.m];}
-  const center=`${done?ico('check'):ico(t.icon)}<span class="gauge-pct">${centerTxt}</span>`;
-  const tags=t.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join('');
-  return `<div class="dial ${ready?'is-ready breathe':''} ${done?'is-done':''}" style="--c:${c}" data-calcard="${idx}">
-    <button class="ddone" data-cal="${idx}" aria-label="${done?'Undo':'Mark done'}: ${t.title}">
-      ${ringHTML(reserve,c,center,animate)}
-      <div class="dlabel">${t.title}</div><div class="dmeta">${status}</div>
-      <div class="m-tags">${tags}</div>
-      <div class="dhint">${CHECK_SM} ${done?'Undo':'Done'}</div>
-    </button>
-    <button class="dedit" data-caledit="${idx}" aria-label="Details: ${t.title}">${DOTS}</button>
-  </div>`;
-}
-function renderTimeline(animate){
+function renderTimeline(animate,center){
   const now=new Date();const curM=now.getMonth();const yr=now.getFullYear();
   const start=new Date(yr,0,1),end=new Date(yr+1,0,1);const frac=(now-start)/(end-start);
   document.getElementById('tlFill').style.width=(frac*100).toFixed(1)+'%';
   document.getElementById('tlNow').style.left=(frac*100).toFixed(1)+'%';
   document.getElementById('tlPct').textContent=Math.round(frac*100)+'% through the year';
-  const scroll=document.getElementById('tlScroll');let html='';
+  const scroll=document.getElementById('tlScroll');const cals=calDials().filter(d=>!state.removed.includes(d.id));let html='';
   for(let m=0;m<12;m++){
-    const moments=DEFAULT_TIMELINE.map((t,i)=>({...t,idx:i})).filter(t=>t.m===m);
+    const items=cals.filter(d=>d.dueM===m);
     const cls=m<curM?'past':(m===curM?'now':'');const badge=m===curM?'<span class="badge">now</span>':'';
-    const inner=moments.length?('<div class="m-cards">'+moments.map(t=>calCardHTML(t,t.idx,yr,animate)).join('')+'</div>'):'<div class="m-empty">nothing here</div>';
+    const inner=items.length?('<div class="m-cards">'+items.map(d=>dialHTML(d,animate)).join('')+'</div>'):'<div class="m-empty">nothing here</div>';
     html+=`<div class="month ${cls}" data-month="${m}"><div class="m-h"><span class="mo">${MONTHS_S[m]}</span>${badge}</div>${inner}</div>`;
   }
   scroll.innerHTML=html;
-  const nowEl=scroll.querySelector('.month.now');
-  if(nowEl)scroll.scrollLeft=nowEl.offsetLeft-scroll.clientWidth/2+nowEl.clientWidth/2;
+  if(center!==false){const nowEl=scroll.querySelector('.month.now');if(nowEl&&scroll.clientWidth>0)scroll.scrollLeft=nowEl.offsetLeft-scroll.clientWidth/2+nowEl.clientWidth/2;}
 }
 
 function renderHeader(){
@@ -497,22 +517,25 @@ const reduced=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function popCard(sel){const c=document.querySelector(sel);if(c&&!reduced()){c.classList.add('just-done');setTimeout(()=>c.classList.remove('just-done'),500);}}
 const PRESETS=[['Weekly',7],['Bi-weekly',14],['Monthly',30],['62-day rest',62],['Quarterly',90],['Semi-annual',182],['Annual',365]];
 
+/* re-render everything, keeping the calendar's horizontal scroll position */
+function rerender(){const sc=document.getElementById('tlScroll');const sx=sc?sc.scrollLeft:0;renderHeader();renderTimeline(false,false);renderRhythms(false);const sc2=document.getElementById('tlScroll');if(sc2)sc2.scrollLeft=sx;}
 function markDone(id){
-  const d=allDials().find(x=>x.id===id);if(!d)return;const prev=state.dials[id]||{};
+  const d=findDial(id);if(!d)return;
+  if(d.mode==='date'){const nowDone=!isDateDone(d,curYear());setDateDone(d,nowDone);save();rerender();popCard('.dial[data-card="'+id+'"]');toast(nowDone?('Done — '+d.label):('Reopened — '+d.label));return;}
+  const prev=state.dials[id]||{};
   state.dials[id]={last:todayISO(),interval:prev.interval==null?d.interval:prev.interval};
-  save();renderHeader();renderRhythms(false);popCard('.dial[data-card="'+id+'"]');toast('Done — '+d.label);
+  save();rerender();popCard('.dial[data-card="'+id+'"]');toast('Done — '+d.label);
 }
 function toggleMoment(idx){
-  const yr=new Date().getFullYear();const k='y'+yr+'-'+idx;const t=DEFAULT_TIMELINE[idx];
-  const scroll=document.getElementById('tlScroll');const sx=scroll.scrollLeft;
+  const yr=curYear();const k='y'+yr+'-'+idx;const t=DEFAULT_TIMELINE[idx];
   const nowDone=state.timeline[k]!==yr;
   if(nowDone)state.timeline[k]=yr;else delete state.timeline[k];
-  save();renderTimeline(false);document.getElementById('tlScroll').scrollLeft=sx;
-  popCard('[data-calcard="'+idx+'"]');toast(nowDone?('Done — '+t.title):('Reopened — '+t.title));
+  save();rerender();popCard('.dial[data-card="cal'+idx+'"]');toast(nowDone?('Done — '+t.title):('Reopened — '+t.title));
 }
 
 function editDial(id){
-  const d=allDials().find(x=>x.id===id);if(!d)return;
+  const d=findDial(id);if(!d)return;
+  if(d.mode==='date'){editDateDial(d);return;}
   const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">Last done ${d.last?fmtDate(d.last):'not yet'} · every ${d.interval} days</div>
@@ -520,48 +543,75 @@ function editDial(id){
     <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets">${chips}</div></div>
     <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">Done today</button></div>`);
   sheet.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('.preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
-  sheet.querySelector('#edDone').addEventListener('click',()=>{state.dials[id]={last:todayISO(),interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();renderHeader();renderRhythms(false);toast('Done — '+d.label);});
-  sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={last:sheet.querySelector('#edLast').value||d.last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();renderHeader();renderRhythms(false);toast('Saved.');});
-  sheet.querySelector('#edDel').addEventListener('click',()=>{if(d.custom)state.custom=state.custom.filter(c=>c.id!==id);else if(!state.removed.includes(id))state.removed.push(id);delete state.dials[id];save();closeSheet();renderHeader();renderRhythms(false);toast('Removed.');});
+  sheet.querySelector('#edDone').addEventListener('click',()=>{state.dials[id]={last:todayISO(),interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();rerender();toast('Done — '+d.label);});
+  sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={last:sheet.querySelector('#edLast').value||d.last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval)};save();closeSheet();rerender();toast('Saved.');});
+  sheet.querySelector('#edDel').addEventListener('click',()=>{if(d.custom)state.custom=state.custom.filter(c=>c.id!==id);else if(!state.removed.includes(id))state.removed.push(id);delete state.dials[id];save();closeSheet();rerender();toast('Removed.');});
+}
+/* edit a user-made date dial (built-in calendar items open their note instead) */
+function editDateDial(d){
+  const id=d.id;const yr=curYear();const done=isDateDone(d,yr);
+  const dueVal=yr+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0');
+  openSheet(`<h3>${d.label}</h3>
+    <div class="sh-sub">Recharges toward a date, every year</div>
+    <div class="field"><label>Due date</label><input type="date" id="edDue" value="${dueVal}"></div>
+    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">${done?'Mark not done':'Mark done'}</button></div>`);
+  sheet.querySelector('#edDone').addEventListener('click',()=>{setDateDone(d,!done);save();closeSheet();rerender();toast(done?('Reopened — '+d.label):('Done — '+d.label));});
+  sheet.querySelector('#edSave').addEventListener('click',()=>{const v=sheet.querySelector('#edDue').value;if(v){const p=v.split('-').map(Number);const c=state.custom.find(x=>x.id===id);if(c){c.dueM=p[1]-1;c.dueD=p[2];}}save();closeSheet();rerender();toast('Saved.');});
+  sheet.querySelector('#edDel').addEventListener('click',()=>{state.custom=state.custom.filter(c=>c.id!==id);delete state.dials[id];save();closeSheet();rerender();toast('Removed.');});
 }
 function addDial(){
   const areaOpts=AREAS.map(a=>`<option value="${a.id}">${a.label}</option>`).join('');
   const iconOpts=Object.keys(ICON).filter(k=>k!=='check').map(k=>`<option value="${k}">${k}</option>`).join('');
   openSheet(`<h3>Add a routine</h3>
-    <div class="sh-sub">Anything you do on a repeat. No deadlines — the ring refills when you mark it done.</div>
-    <div class="field"><label>Name</label><input type="text" id="adName" placeholder="e.g. Service the bike, call home"></div>
+    <div class="sh-sub">Anything on a repeat — recharge on a rolling interval, or toward a fixed date each year.</div>
+    <div class="field"><label>Name</label><input type="text" id="adName" placeholder="e.g. Service the bike, renew passport"></div>
     <div class="field"><label>Area</label><select id="adArea">${areaOpts}</select></div>
     <div class="field"><label>Icon</label><select id="adIcon">${iconOpts}</select></div>
-    <div class="field"><label>Repeat every (days)</label><input type="number" id="adInt" min="1" max="1460" value="30"><div class="presets">${PRESETS.map(p=>`<button class="preset" data-int="${p[1]}">${p[0]}</button>`).join('')}</div></div>
+    <div class="field"><label>Recharge</label><div class="presets" id="adMode"><button class="preset sel" data-mode="interval">Every N days</button><button class="preset" data-mode="date">By a date</button></div></div>
+    <div class="field" id="adIntWrap"><label>Repeat every (days)</label><input type="number" id="adInt" min="1" max="1460" value="30"><div class="presets">${PRESETS.map(p=>`<button class="preset" data-int="${p[1]}">${p[0]}</button>`).join('')}</div></div>
+    <div class="field" id="adDateWrap" style="display:none"><label>Due date (repeats yearly)</label><input type="date" id="adDue" value="${todayISO()}"></div>
     <div class="sheet-actions"><button class="btn" id="adCancel">Cancel</button><button class="btn primary" id="adCreate">Add</button></div>`);
-  sheet.querySelectorAll('.preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#adInt').value=b.dataset.int;}));
+  let mode='interval';
+  sheet.querySelectorAll('#adMode .preset').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.mode;sheet.querySelectorAll('#adMode .preset').forEach(x=>x.classList.toggle('sel',x===b));sheet.querySelector('#adIntWrap').style.display=mode==='interval'?'':'none';sheet.querySelector('#adDateWrap').style.display=mode==='date'?'':'none';}));
+  sheet.querySelectorAll('#adIntWrap .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#adInt').value=b.dataset.int;}));
   sheet.querySelector('#adCancel').addEventListener('click',closeSheet);
   sheet.querySelector('#adCreate').addEventListener('click',()=>{
     const name=sheet.querySelector('#adName').value.trim();if(!name){toast('Give it a name first.');return;}
-    const id='c'+Date.now();const dd={id,area:sheet.querySelector('#adArea').value,label:name,icon:sheet.querySelector('#adIcon').value,interval:Math.max(1,parseInt(sheet.querySelector('#adInt').value)||30)};
-    state.custom.push(dd);state.dials[id]={last:todayISO(),interval:dd.interval};save();closeSheet();renderHeader();renderRhythms(false);toast('Added.');
+    const id='c'+Date.now();const area=sheet.querySelector('#adArea').value;const icon=sheet.querySelector('#adIcon').value;
+    if(mode==='date'){const v=sheet.querySelector('#adDue').value||todayISO();const p=v.split('-').map(Number);state.custom.push({id,area,label:name,icon,mode:'date',dueM:p[1]-1,dueD:p[2],tags:[]});}
+    else{const interval=Math.max(1,parseInt(sheet.querySelector('#adInt').value)||30);state.custom.push({id,area,label:name,icon,mode:'interval',interval});state.dials[id]={last:todayISO(),interval};}
+    save();closeSheet();rerender();toast('Added.');
   });
 }
 function openMoment(idx){
-  const t=DEFAULT_TIMELINE[idx];if(!t)return;const yr=new Date().getFullYear();
+  const t=DEFAULT_TIMELINE[idx];if(!t)return;const yr=curYear();const id='cal'+idx;
   const done=state.timeline['y'+yr+'-'+idx]===yr;const tags=t.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join(' ');
   openSheet(`<h3>${t.title}</h3><div class="sh-sub">${MONTHS[t.m]} · ${yr}</div>
     <div class="m-tags" style="justify-content:flex-start;margin-bottom:16px">${tags}</div>
     <p class="sh-note">${t.note}</p>
-    <div class="sheet-actions"><button class="btn" id="mmClose">Close</button><button class="btn ${done?'':'primary'}" id="mmToggle">${done?'Mark not done':'Check off for '+yr}</button></div>`);
+    <div class="sheet-actions"><button class="btn ghost" id="mmDel">Remove</button><button class="btn" id="mmClose">Close</button><button class="btn ${done?'':'primary'}" id="mmToggle">${done?'Mark not done':'Check off for '+yr}</button></div>`);
   sheet.querySelector('#mmClose').addEventListener('click',closeSheet);
+  sheet.querySelector('#mmDel').addEventListener('click',()=>{if(!state.removed.includes(id))state.removed.push(id);save();closeSheet();rerender();toast('Removed.');});
   sheet.querySelector('#mmToggle').addEventListener('click',()=>{closeSheet();toggleMoment(idx);});
 }
 
-document.getElementById('rhythms').addEventListener('click',e=>{
-  const ed=e.target.closest('[data-edit]');if(ed){editDial(ed.dataset.edit);return;}
+function cardClick(e){
+  const ed=e.target.closest('[data-edit]');
+  if(ed){const id=ed.dataset.edit;const d=findDial(id);if(d&&d.mode==='date'&&d.tlIdx!=null)openMoment(d.tlIdx);else editDial(id);return;}
   const dn=e.target.closest('[data-done]');if(dn)markDone(dn.dataset.done);
-});
-document.getElementById('tlScroll').addEventListener('click',e=>{
-  const ce=e.target.closest('[data-caledit]');if(ce){openMoment(parseInt(ce.dataset.caledit));return;}
-  const cc=e.target.closest('[data-cal]');if(cc)toggleMoment(parseInt(cc.dataset.cal));
-});
+}
+document.getElementById('rhythms').addEventListener('click',cardClick);
+document.getElementById('tlScroll').addEventListener('click',cardClick);
 document.getElementById('addBtn').addEventListener('click',addDial);
+
+function setTab(t){
+  state.ui=state.ui||{};state.ui.tab=t;save();
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  document.getElementById('rhythmSec').classList.toggle('active',t==='rhythms');
+  document.getElementById('yearSec').classList.toggle('active',t==='year');
+  if(t==='year'){const sc=document.getElementById('tlScroll');const el=sc.querySelector('.month.now');if(el&&sc.clientWidth>0)sc.scrollLeft=el.offsetLeft-sc.clientWidth/2+el.clientWidth/2;}
+}
+document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab);});
 
 document.getElementById('expBtn').addEventListener('click',()=>{
   const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);
@@ -575,11 +625,12 @@ document.getElementById('impFile').addEventListener('change',e=>{
 });
 
 document.getElementById('foot').innerHTML=
-  `<b>How it works.</b> Tap a card to mark it done — the ring fills up, then slowly empties again over its interval. Nothing ever goes overdue or piles up, so skip whatever you like. Tap the dots on a card to change how often it repeats, fix the last-done date, or remove it.<br>`+
+  `<b>How it works.</b> Two kinds of card. Most refill when you tap them, then empty again over a rolling interval. Calendar ones — the tax and benefits jobs — instead recharge toward a fixed date each year and reset in January; they live under <b>The calendar year</b> and again under <b>On repeat</b>, inside their area. Nothing ever goes overdue or piles up, so skip whatever you like. Tap the dots on a card to adjust or remove it.<br>`+
   `<b>The money numbers</b> use 2026 IRS limits (401k $24,500, total $72,000, IRA $7,500, HSA $4,400, FSA $3,400). Anything Google-specific — the match, reimbursements, exact dates — changes, so check your benefits portal. None of this is financial advice.<br>`+
   `<b>Everything saves to this browser.</b> Export a copy if you want a backup.`;
 
 renderAll(true);
+setTab((state.ui&&state.ui.tab)||'rhythms');
 </script>
 </body>
 </html>
