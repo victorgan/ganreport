@@ -515,7 +515,7 @@ const NOTES={
 function howTo(d){const n=d.note||NOTES[d.id];return n?`<p class="sh-note" style="margin:0 0 18px">${n}</p>`:'';}
 
 /* storage */
-const KEY='theyear.v5'; let mem=null,_cache=null;
+const KEY='theyear.v6'; let mem=null,_cache=null;
 let pushEnabled=false,applyingRemote=false,pushTimer=null;   // sync state (see sync module below)
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return mem;}}
 function save(){
@@ -530,7 +530,7 @@ function daysSince(iso){if(!iso)return 1e6;return Math.floor((parseD(todayISO())
 
 let state=load();
 if(!state){
-  state={version:5,dials:{},custom:[],removed:[],ui:{}};
+  state={version:6,dials:{},custom:[],removed:[],ui:{}};
   DEFAULT_DIALS.forEach(d=>{state.dials[d.id]=d.chain?{step:0,last:null}:{last:seedISO(d.seed),interval:d.interval};});
   save();
 }
