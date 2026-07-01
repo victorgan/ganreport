@@ -1,411 +1,394 @@
 ---
 date: 2026-07-01
 model: Claude Opus 4.8
-tags: [life-admin, product-spec, personal-tools, ux, cooldown-timer]
-summary: "Priority tiers (need / upkeep / want) and task cascades for The Year, plus open questions"
-status: draft
+tags: [the-year, life-admin, product-spec, design-doc, scope, ux, cooldown-timer]
+summary: "Design record and scope for The Year — a calm single-page dashboard for recurring personal upkeep: recharge models, two surfaces, priority tiers, cascades, undo, and what's deliberately out of scope"
+status: living — reflects the shipped build
 ---
 
-# The Year — Feature spec: priority & cascades
+# The Year — Design & Scope
 
-## Context
+*The Year* is a single-page, offline-first life-admin dashboard. Everything you maintain on
+a repeat is a **ring card**: the ring drains over time and refills when you tap it done.
+Nothing goes overdue, nothing accrues a backlog, and skipping costs nothing.
 
-*The Year* is a single-page, offline-first life-admin app. Everything you do on a
-repeat is a **ring card**: the ring drains over the task's interval and refills when
-you tap it done. Nothing goes overdue, nothing stacks up, and skipping costs nothing —
-state is a pure function of `lastDone + interval`. A second surface, **the calendar
-year**, holds jobs tied to a time of year (taxes, benefits deadlines, seasonal work) as
-the same card shape.
-
-This document specs two additions that the current model can't express:
-
-1. **Priority** — some tasks matter far more than others, and the app currently treats
-   maxing the 401k and restocking supplements identically.
-2. **Cascades** — some tasks unlock, reset, or depend on others, and the app currently
-   treats every task as independent.
+This document is the **living design record of what's built** — not a proposal. Where a
+feature was once "planned," it is described in the present tense because it shipped. The
+one place the build deliberately stretched the original scope (cascades and
+date-anchoring) is called out honestly in *Scope → The extensions that stretched scope*.
 
 ---
 
-## Foundation — what's already built (the decisions these features extend)
+# Scope
 
-Before specifying the new work, this is the model as it stands, because priority and
-cascades have to fit inside it rather than replace it.
+## Problem
 
-### Two recharge models, one card
+Recurring personal maintenance — checkups, cleaning, grooming, money reviews, fitness,
+staying in touch — is easy to lose track of, and normal task tools make it worse by adding
+guilt, backlog, and notification noise. Miss a recurring to-do and it turns red, stacks up
+"missed" instances, breaks a streak, and pings you until you avoid the app entirely.
 
-Every task is the same ring card, but a ring can drain in one of two ways:
+**The Year solves the orientation and emotional problem of recurring upkeep — "what am I
+maintaining, and roughly where do I stand?" — not the work of doing any of it.** It is a
+calm dashboard where every task shows how long since (or until) it's due, and the only
+interaction is a one-tap log that you did it.
 
-- **Interval (rolling cooldown).** `reserve = 1 − daysSince(lastDone) / interval`,
-  clamped to `[0,1]`. Tapping done resets `lastDone` to today; the ring refills and
-  starts draining again. This is the default for the ~84 repeating tasks.
-- **Date (calendar-anchored).** The ring recharges *toward a fixed date each year*
-  rather than a rolling interval: it sits full when the date is far off, empties over
-  the final ~120 days (`DATE_WINDOW`), reads "now" when due, shows "done" once checked,
-  and resets automatically in January. This is how the calendar-year jobs work, and
-  users can create their own date-anchored tasks (passport renewal, birthdays) via the
-  same **Add** sheet with an **Every N days / By a date** toggle.
+## What it is
 
-Both modes share `stateColor()`: teal (`patina`, charged) → gold (`brass`, getting low)
-→ amber (`ember`, ready). Ready cards get a soft glow and a slow "breathe" pulse;
-reduced-motion is respected.
+A tuneable board of recharge-based tasks, grouped by life area, plus a calendar-year view
+of the time-anchored ones. Each task is a ring that drains and refills when you tap it
+done. Nothing ever goes overdue, nothing accrues a backlog, and skipping costs nothing. It
+is a **mental model you glance at**, not a system of record you're accountable to.
 
-### Two tabs, overlapping data
+## The core model (invariants — do not break)
+
+- **State is a pure function of the recharge inputs.** A rhythm's state derives from
+  `last done + interval`; a calendar task's from `target date + doneYear`. There is no
+  stored "overdue," no accrued backlog, no phantom missed occurrences.
+- **One primary action per card: tap = done.** The ring refills and drains again. Rare
+  edits (interval/date, back-date, priority, remove) live one layer down in the `⋯` sheet.
+- **No penalty, ever.** A drained ring never turns red, never counts misses, never breaks
+  a streak. An empty ring is an invitation, not a debt.
+- **No notifications.** A passive dashboard you choose to look at, never a nag.
+- **Recharge-based, not one-off.** Everything recurs — on a rolling interval, or toward a
+  date each year. Pure one-shots don't belong here (narrow exception: opt-in follow-ups
+  spawned by an Offer, which retire on completion).
+- **Priority changes lead time and prominence, never loudness.** Higher-stakes tasks
+  surface earlier and more visibly; they never shout.
+
+## In scope (all shipped unless noted)
+
+- Recurring, elapsed-time tasks ("rhythms") grouped into 12 life areas.
+- Calendar-anchored tasks that recharge *toward a date each year* (tax and benefits
+  windows, seasonal work), shown both on a month timeline and mixed into their area.
+  *(This grew from the originally-scoped "narrow reference ribbon" into a full second
+  surface with a real date-recharge model — see below.)*
+- One-tap logging, with **undo** for the mis-tap — the one silent, destructive, in-app
+  error.
+- Add / edit / remove any card; editable intervals and due dates; back-date via `⋯`. One
+  edit sheet, identical across every task type.
+- Priority tiers — **need / upkeep / want**, by *cost of skipping* — driving lead time,
+  a "Needs attention" strip, and sort order.
+- A live **summary snapshot** on the On-repeat tab (counts by ring state + "done today").
+  A snapshot, not history — see the streaks row in *Out of scope*.
+- **Cascades** — chain / reset / gate / offer (see below). Shipped as four light relations,
+  not a dependency graph.
+- Local persistence (`localStorage`) + JSON export/import; optional lightweight sync later
+  (e.g. a Cloudflare Worker acting as a load/save adapter behind export/import).
+
+## Out of scope, and why
+
+| Rejected | Why |
+|---|---|
+| **Execution help** (portal links, checklists, holding docs) | The tool logs and orients; it does not do the work. Adding "doing" explodes scope and turns a dashboard into a workflow tool — optimizing the hard 95% is a different product. |
+| **Pure one-off / non-recurring tasks** | No recharge → no state in the cooldown model. One-offs want deadlines and nagging, which drag the calm board back into a to-do list. They belong in existing capture (Obsidian, Reminders). *Narrow exception:* opt-in follow-ups from an Offer, which retire on completion. |
+| **Day-precision alerting** (bill/renewal/birthday pings, "3 days left") | The app date-*anchors* recharge (the ring empties toward a date, calmly, no alert) but will not *alert* on day-precision deadlines. That's the notification behaviour it deliberately won't build; a calendar app does it better. |
+| **Seasonality / condition-based intervals** | The real cue (weather, an event, guests coming) is a condition the app can't see. Modeling it means modeling the world; out. |
+| **Notifications / reminders** | Deliberately none. Solving notification fatigue by not participating. This also defines the user (below). |
+| **Auto interval calibration** (Anki/FSRS-style) | Overengineering for ~100 hand-tuned cards. Manual `⋯` edit *is* the calibration loop; the annoyance is the signal. |
+| **Bulk-edit / onboarding UI** | The data is trivial JSON. Seeding, retagging, and generating a starter set are an LLM prompt, not a feature. |
+| **Load-leveling / anti-bunching** | Coincidental pile-ups are livable and hand-fixable by staggering seeds. Algorithmic spreading is complexity for a non-problem at this scale. |
+| **Per-category ranking / numeric priority** | Can't express cross-bucket priority and invites fiddling. Three named tiers replace it. |
+| **Streaks / rich history / trends** | Streak mechanics cause the guilt death-spiral the app exists to remove. Keep only current state. (The On-repeat stat row is a *live snapshot* — counts right now, plus a light "done today" — not a retained history or streak.) |
+| **Multi-person / shared / delegated cards** | Solo tool by design. |
+
+## The extensions that stretched the original scope
+
+Two things in the shipped build go beyond the strict "calm, recurring-only board" the
+scope originally described. Both were deliberate, and both were kept inside the invariants:
+
+- **Cascades** (chain / reset / gate / offer). Sequencing and dependencies pull toward a
+  task manager. Shipped anyway, because a few real jobs genuinely have shape (the backdoor
+  Roth is a sequence; a deep clean subsumes the weekly one). Contained by modeling the
+  *four lightest relations* rather than a graph, and by holding the line that no cascade
+  ever manufactures backlog or a nag. This is the extension most worth watching for creep.
+- **Date-anchored recharge.** The calendar windows needed a notion of "due around a date,"
+  which a pure elapsed-time model can't express. Shipped as a second *recharge mode*
+  (fills toward a date, empties over ~120 days, resets Jan 1) — still calm, still no
+  alerts, still a ring. It stayed within the model rather than becoming a calendar app.
+
+## Scoping principle
+
+**A problem is only in scope if it's a problem for *this* user, given the tools they
+already have.** Many "problems" of recurring-task apps (setup UI, calibration, bulk edit,
+portability) evaporate because the user has an LLM, is fluent in the JSON data model, and
+will open the `⋯` sheet. Score against this user, not a generic one. Most rejections above
+follow from this.
+
+## Who it's for
+
+Someone already inclined to glance at a dashboard and tune a system — not someone whose
+deficit is "I forget these categories exist." The no-notification stance is a deliberate
+choice of *calm over prompting*: the tool serves the already-organized and does not try to
+rescue the unorganized. That trade is intentional.
+
+## One-line summary
+
+> A calm, single-page dashboard of recurring personal upkeep, where the only action is a
+> one-tap "done." It answers *where do I stand* on the things I maintain — and deliberately
+> refuses to help me *do* them, remind me, or track anything that happens only once.
+
+---
+
+# How it works
+
+## Two recharge models, one card
+
+Every task is the same ring card; a ring drains in one of two ways:
+
+- **Interval (rolling cooldown).** `reserve = 1 − daysSince(lastDone) / interval`, clamped
+  to `[0,1]`. Tapping done resets `lastDone` to today. The default for the recurring
+  rhythms.
+- **Date (calendar-anchored).** The ring recharges *toward a fixed date each year*: full
+  when far off, emptying over the final ~120 days (`DATE_WINDOW`), "now" at the date,
+  "done" once checked, resetting automatically in January. Used by the calendar-year jobs,
+  and available to any task the user creates ("By a date" in the Add sheet).
+
+Both modes share one colour/urgency scale — teal (`patina`, charged) → gold (`brass`,
+getting low) → amber (`ember`, ready). Ready cards glow and breathe; reduced-motion is
+respected.
+
+## Two surfaces — On repeat and the calendar year
 
 - **On repeat** — every task, grouped into 12 areas (Health, Fitness, Nutrition, Mind,
-  Grooming, Home, Money, Career, Gear, People, Craft, Rest).
-- **The calendar year** — a horizontal month strip; the date-anchored jobs laid out in
-  the month they fall due, with a "% through the year" progress bar and a now-marker.
+  Grooming, Home, Money, Career, Gear, People, Craft, Rest), with a summary stat row on
+  top.
+- **The calendar year** — a horizontal month strip; the date-anchored jobs laid out in the
+  month they fall due, with a "% through the year" progress bar and a now-marker.
 
-The calendar jobs appear in **both** tabs: in their month on the calendar, and mixed
-into their area (tax → Money, benefits → Health) under On repeat. Completion is shared
-state, so checking a job off in one place reflects instantly in the other.
-
-### Persistence & portability
-
-State lives in `localStorage` (key `theyear.v*`), with JSON **Export/Import** for
-backup and for moving to a hosted copy on gan.report. No account, no network, no
-telemetry. Defaults ship pre-seeded so the board looks lived-in on first open.
-
-### Design decisions already locked
-
-- **The whole card face is the done button.** One tap = done. The `⋯` corner button
-  opens detail/adjust (or, for calendar built-ins, the explanatory note).
-- **Prunability.** Any task — including the 84 defaults and the 20 calendar jobs — can
-  be removed (`state.removed`), not just user-created ones.
-- **No red, no overdue, no backlog.** An empty ring is a nudge, not a debt. This is the
-  load-bearing constraint everything below must respect.
-
----
+Calendar jobs appear in **both** surfaces (their month on the calendar; mixed into their
+area under On repeat). Completion is shared state, so checking a job off in one place
+reflects instantly in the other.
 
 ## How recurring and calendar tasks relate
 
-The recurring rhythms and the calendar jobs are not two different features — they are the
-**same card and the same idea** (a ring that discharges and recharges), split only by
-*what drives the recharge*: relative time versus absolute time.
+They are the **same card and the same idea** (a ring that discharges and recharges), split
+only by *what drives the recharge*: relative time vs absolute time.
 
 | | **Recurring** (interval) | **Calendar** (date-anchored) |
 |---|---|---|
-| Recharge is measured… | from the last time you did it | toward a fixed point in the year |
-| Formula | `reserve = 1 − daysSince(lastDone)/interval` | fills when far off, empties over the final ~120 days to the due date |
-| The clock… | **floats** — resets every time you act | **is pinned** — resets annually on Jan 1 |
-| "Done" means | did it just now; do it again in `interval` days | handled for this year; comes back next year |
+| Recharge measured… | from the last time you did it | toward a fixed point in the year |
+| The clock… | **floats** — resets when you act | **is pinned** — resets Jan 1 |
+| "Done" means | did it now; do it again in `interval` days | handled this year; back next year |
 | Times per year | as many as you complete it | once per anchor |
-| Good for | upkeep where only elapsed time matters (haircut, clean) | jobs tied to a moment (tax deadline, benefits window, seasonal) |
+| Good for | upkeep where only elapsed time matters | jobs tied to a moment (deadlines, windows) |
 
-**What they share.** One authored shape — both `DEFAULT_DIALS` (recurring) and
-`DEFAULT_DATED` (calendar) use the same envelope keys (`id, area, label, icon`) plus their
-mode-specific fields (`interval`/`seed` vs `dueM`/`dueD`/`note`), normalised through one
-`allDials()`. From there: the identical ring card; the same tap-to-complete gesture; one
-edit sheet (only the recharge control differs — interval field vs date picker); the same
-colour/urgency scale (patina → brass → ember); and the same priority layer — tiers,
-`leadDays` warm-up, and the "Needs attention" strip all apply to both.
+**What they share.** Both `DEFAULT_DIALS` (recurring) and `DEFAULT_DATED` (calendar) use
+the same authored envelope keys (`id, area, label, icon`) plus their mode-specific fields
+(`interval`/`seed` vs `dueM`/`dueD`/`note`), normalised through one `allDials()`. From
+there: one ring card, one tap-to-complete gesture, one edit sheet, one colour scale, and
+one priority layer.
 
-**How to tell which a task is.** Ask whether *missing a specific date* is the point. If the
-cost is tied to a calendar moment (the 401k window closes, the FSA expires), it's a
-calendar task. If only *time since last* matters and the exact date is irrelevant, it's
-recurring. The **Add** sheet makes this the one real choice — "Every N days" vs "By a
-date."
+**How to tell which a task is.** Ask whether *missing a specific date* is the point. Tied
+to a calendar moment (the 401k window, the FSA expiry) → calendar. Only *time since last*
+matters → recurring. The Add sheet makes this the one real choice ("Every N days" / "By a
+date").
 
-**Where each lives** (the view mapping — see *How the two surfaces relate*, below):
-- Recurring tasks live **only** in *On repeat*.
-- Calendar tasks live in **both**: laid out by month in *The calendar year*, and mixed
-  into their area under *On repeat*. So *On repeat* is the full set; the calendar is the
-  time-anchored subset.
+The two models are deliberately **not** merged. Forcing a haircut onto a fixed date would
+invent pressure; floating a tax deadline would hide a real cliff.
 
-**Where they meet.** Two constructs bridge the models:
-- A **chain** is recurring at the top level (a yearly cooldown) but its steps can carry
-  calendar anchors (`m`), so one task can have a floating overall cadence with pinned step
-  placement — e.g. the Backdoor Roth recharges yearly yet drops "contribute" in January
-  and "file 8606" in April.
-- A **date-anchored one-off** (a birthday, a passport renewal) sits at the edge: it's on
-  the calendar model (pinned to a date) but conceptually a recurring yearly event. The
-  `once` flag is the true one-shot; a 365-day interval and a yearly date anchor look alike
-  but differ in whether the clock floats or pins.
+## One card, one edit sheet
 
-The two models are deliberately **not** merged into one. Forcing a haircut onto a fixed
-date would invent pressure the app exists to avoid; floating a tax deadline would hide a
-real cliff. Keeping both — relative for upkeep, absolute for deadlines — is what lets the
-same calm card serve laundry and the 401k without either feeling wrong.
+Tapping a card's face = done. The `⋯` opens the detail/adjust sheet, which is **identical
+across all task types** — interval, date, and chain — with these sections in order:
 
----
+1. a **how-to note** (from the task's own `note` for calendar items, or a `NOTES` map for
+   rhythms — a plain-language "how to accomplish this");
+2. a **recharge control** — the one thing that differs: interval → days + presets; date →
+   a date picker; chain → whole-chain interval (plus a read-only step list);
+3. a **priority** tier selector;
+4. actions: **Remove / Save / Done**.
 
-## How the two surfaces relate
+A chain's Done button reads "Do this step" and advances the same counter its card uses; a
+completed chain shows a disabled "Recharging…". There is no bespoke per-type sheet.
 
-The two tabs are **two projections of one task set**, not two separate lists. Every task
-lives once; the surfaces differ only in what they show and how they lay it out.
+## One-tap done, with undo
 
-- **On repeat is the *doing* view.** Every task as a single card, grouped by area,
-  collapsed to one actionable state. A chain is one advancing card here; a date-anchored
-  job is mixed into its area (tax → Money, benefits → Health).
-- **The calendar year is the *when* view.** Only time-anchored things, spread across the
-  12 months so you can read the shape of the year. A date-anchored job sits in its month;
-  a chain's steps sit in their anchored months, each **locked until the prior step is
-  done** — a chain on the calendar is literally a series of gates along the timeline.
+The whole card face is the done button — the common gesture is completion, and detail is
+one layer down. Because a mis-tap is the one silent, destructive, in-app error, every
+completion snapshots state first and offers **Undo** in the toast (single-level). Undo
+restores every completion type — interval (`last`), calendar (`doneYear`), chain (`step`),
+and reset side-effects (undoing a deep-clean un-refills the weekly task it reset).
 
-Two rules keep them coherent:
+## Summary stats (On repeat)
 
-1. **Shared state — one source of truth.** Completion is stored once. Checking a date job
-   off in either tab reflects in the other; advancing a chain step on the calendar
-   advances the same `step` counter the On-repeat card reads. There is no per-view copy to
-   keep in sync.
-2. **Single ownership — no duplication.** A task is owned by exactly one construct. A
-   chain owns its calendar presence: there is no separate "Do the backdoor Roth" date
-   card — the chain's month-anchored steps *are* how it appears on the calendar. So the
-   task renders as chain steps on the calendar and as one collapsed card under On repeat,
-   never as both a chain *and* a separate date card. Dropping that standalone entry is
-   what removed the earlier Backdoor-Roth duplication.
+A stat row at the top of On repeat, tied to the ring colours and recomputed every render:
+**Ready now** (glowing), **Getting low** (brass band), **Charged** (patina), and **Done
+today** (a light momentum count). It's a live snapshot — no history, no streaks.
 
-So the same Backdoor Roth appears as: one advancing card in On repeat; "Contribute" and
-"Convert" in January (Convert locked until Contribute is done); and "File Form 8606" (a
-hard Apr 15 deadline) in April — all driven by a single `step` counter.
+## Persistence & portability
 
----
+State lives in `localStorage` (key `theyear.v5`), with JSON **Export/Import** for backup
+and for moving to a hosted copy. No account, no network, no telemetry. Defaults ship
+pre-seeded so the board looks lived-in on first open.
 
-## Principles these features must not break
+## Data model (storage shapes)
 
-- **No manufactured pressure.** The app never nags, shames, or accumulates a backlog.
-  A skipped task is an invitation you declined, not a debt.
-- **One card = one thing you can act on now.** Never show a step you can't yet do.
-- **State is derived, not managed.** Prefer rules that fall out of `lastDone + interval`
-  over hand-maintained status.
-- **Low setup burden.** Defaults ship pre-configured. The user should almost never *have*
-  to label or wire anything; overrides are available but optional.
-
----
-
-# Feature 1 — Priority
-
-## The real axis: cost of skipping
-
-"Importance" is too abstract to act on. The thing that actually separates the 401k from
-supplements is **what it costs you to skip it**:
-
-- Miss the 401k window → you permanently lose tax-advantaged space and match. Irreversible.
-- Miss a supplement restock → mildly annoying for a day. Fully recoverable.
-
-So priority is modelled as **cost of skipping**, which maps cleanly onto a need/want
-instinct but keeps the useful middle.
-
-## Three tiers
-
-| Tier | Meaning | Cost of skipping | Examples |
-|---|---|---|---|
-| **Need** | Real, often irreversible consequences | High / permanent | 401k, taxes, physical, dental, insurance, backups |
-| **Upkeep** | Keeps life running; fully recoverable | Low / temporary | cleaning, haircut, budget review, supplements |
-| **Want** | Pure enrichment | None | try a recipe, tea session, reading, plan something fun |
-
-Most of the ~84 default tasks are Upkeep. Needs are a small set; Wants are the calm tail.
-
-## The key mechanic: priority controls lead time and prominence, **not loudness**
-
-This is what keeps it from becoming a guilt machine. Priority changes *when* and *how
-visibly* a task surfaces — never how aggressively it nags.
-
-- **Needs warm up early.** A Need starts glowing amber *before* it is strictly due
-  (`leadDays` ahead), so it can't quietly slip past. For a hard deadline like the 401k,
-  that lead is weeks.
-- **Upkeep nudges at due.** Standard behaviour — glows only when the ring empties.
-- **Wants stay calm.** Rendered dimmer and smaller; they never glow. They sit there as
-  an option and are never scolded for being ignored.
-
-## "Needs attention" strip
-
-A small strip at the top of the page: the honest shortlist of **Needs that are due or
-warming up**, plus any hard-deadline calendar item whose window is closing. This is the
-4-item "don't let these slip" view versus the 84-item board. (It earns back the slot of
-the old "ready when you are" section, but filtered by real stakes rather than showing
-everything.)
-
-## Sort
-
-Within any group, once something is due: **Needs float up, Wants sink.** Untriggered
-items keep their normal grouping. Dormant (gated) tasks sink to the bottom; done items
-below them.
-
-## The one honest exception to no-penalty: hard deadlines
-
-The no-guilt philosophy exists so the app doesn't invent pressure for laundry. It should
-**not** hide a cliff that is actually real. Calendar items with a true expiry — 401k,
-FSA spend-down, tax filing — get genuine urgency as the window closes: a real "closes in
-N days" countdown instead of the calm "any time now" everything else gets. Letting these
-feel urgent is serving the user, not nagging them.
-
-## Data model
+Runtime dials are a discriminated union on `mode`; per-task mutable state lives in
+`state.dials[id]`, shaped by kind:
 
 ```ts
 type Tier = 'need' | 'upkeep' | 'want';
 
-interface Task {
-  // ...existing fields: id, area, label, icon, interval, lastDone, mode, dueM/dueD
-  tier: Tier;                 // ships pre-tagged on every default
-  leadDays?: number;          // how early a Need warms; default derived from tier + interval
-  hardDeadline?: { month: number; day: number }; // real cliff (calendar items only)
+// authored (same envelope for both source arrays)
+interface Seed {
+  id: string; area: string; label: string; icon: string;
+  mode?: 'interval' | 'date';        // absent ⇒ interval
+  interval?: number; seed?: number;  // interval mode
+  dueM?: number; dueD?: number; hard?: boolean; note?: string; tags?: string[]; // date mode
+  tier?: Tier;                       // else derived from id-sets
+  chain?: ChainStep[]; resets?: string[]; requires?: string[]; onDoneOffer?: FollowUp[]; once?: boolean;
 }
+
+// stored per task (state.dials[id])
+type Stored =
+  | { last: string; interval: number; tier?: Tier }   // interval
+  | { doneYear?: number; dueM?: number; dueD?: number; tier?: Tier }  // date (overrides + done)
+  | { step: number; last: string | null };            // chain progress
 ```
 
-`leadDays` default: for Upkeep, `0`. For Need, proportional to interval (~15% of the
-interval, clamped to 7–60 days) so an annual Need warms ~6–8 weeks out and a monthly
-Need a few days out. Date-anchored Needs default to ~45 days. Overridable per task in the
-`⋯` sheet.
-
-## Alternatives considered
-
-- **Per-category ranking (drag to reorder within a bucket).** Rejected. High manual
-  effort, and structurally can't say the thing that matters — that the 401k beats
-  *everything* in Home. Ranking inside a bucket can't express cross-bucket priority.
-- **Binary need/want only.** Rejected. Throws away the middle, where most tasks live.
-  Everything collapses into "critical" or "trivial," which is false.
-- **Numeric priority (1–5 / weights).** Rejected. Invites fiddling and false precision;
-  three named tiers are legible at a glance.
-
-## Open questions
-
-- Two tiers vs three. Leaning three, but Need/Want with Upkeep folded into Want is a
-  viable simpler cut.
-- Exact `leadDays` curve (proportional vs fixed steps per interval band).
-- Should Wants live in a separate, collapsed section rather than just being dimmer?
-- Does the "Needs attention" strip include Upkeep items that are *badly* overdue, or
-  strictly Needs + hard deadlines? (Shipped v1: strictly Needs + hard deadlines.)
+Plus `state.custom[]` (user-made dials), `state.removed[]` (hidden defaults), and
+`state.ui` (active tab).
 
 ---
 
-# Feature 2 — Cascades
+# Priority — cost of skipping
 
-## The problem, and the four shapes it actually takes
+## The real axis, and three tiers
 
-"Some tasks cascade from one to another" is really four distinct relationships. Naming
-them is most of the design:
+"Importance" is too abstract; **cost of skipping** is what actually separates the 401k from
+supplements. Modeled as three named tiers:
 
-| Shape | Meaning | Example |
+| Tier | Cost of skipping | Examples |
 |---|---|---|
-| **Chain (sequence)** | B can't start until A is done; the whole thing is one job | Backdoor Roth: contribute → convert → file Form 8606 |
-| **Reset (subsume)** | Doing the big one refills the small one | Deep-clean bathroom refills the weekly bathroom clean |
-| **Gate (prerequisite)** | B stays dormant until A is *fresh* | Order new glasses — dormant until the eye exam is done |
-| **Offer (conditional spawn)** | Finishing A *might* create B, depending on a human judgment | Physical → maybe book a specialist; bike service → maybe replace a worn chain |
+| **Need** | High / often irreversible | 401k, taxes, physical, dental, backups |
+| **Upkeep** | Low / recoverable | cleaning, haircut, budget review, supplements |
+| **Want** | None | try a recipe, tea session, reading |
 
-A single dependency-graph feature can't serve all four well without becoming a project
-tool. So: model each shape with the lightest thing that fits, and let them compose.
+Most of the ~100 tasks are Upkeep. Tiers ship **derived from id-sets** (small curated Need
+and Want sets; everything else Upkeep; calendar tasks default Need), overridable per task
+in the `⋯` sheet. This keeps setup burden near zero.
 
-## Recommended model
+## Lead time and prominence, not loudness
 
-### 1. Chains — one card that walks through its steps *(primary construct)*
+Priority changes *when* and *how visibly* a task surfaces — never how hard it nags.
 
-A chain is **one card**, not N cards. It shows only the **active step** plus a small
-"step 2 of 3" pip row. Tapping done completes the current step and advances to the next —
-same tap, same satisfying refill. Completing the last step:
+- **Needs warm up early.** A Need glows before it's strictly due (`leadDays` ahead:
+  ~15% of the interval, clamped 7–60 days; ~45 days for date-anchored Needs).
+- **Upkeep nudges at due** (glows when the ring empties).
+- **Wants stay calm** — rendered dimmer, never glow, never scolded.
 
-- **one-shot chain** → the card retires (archives / disappears);
-- **recurring chain** → the whole chain goes on cooldown and re-arms the first step when
-  the interval elapses.
+## Needs-attention strip
 
-This is the calm way to do sequences: you are never shown step 3 while step 1 is
-undone, so there is nothing to feel behind on. Each step can carry its own `tier` and
-`hardDeadline`, so a chain that spans the calendar (Roth) can have step 1 warm in January
-and step 3 warm as April approaches.
+A strip above the tabs: the honest shortlist of **Needs that are due or warming**, plus any
+hard-deadline calendar item whose window is closing. The "don't let these slip" view versus
+the full board. Tapping an item opens its sheet.
 
-**Rendering by surface** *(shipped — cross-surface):*
-- In **On repeat**: the chain collapses to a single advancing card.
-- In **the calendar year**: each step carrying a month anchor (`m`) sits in that month
-  but stays dim/locked until the previous step is done — i.e. a chain in the calendar *is*
-  a series of gates along the timeline. Steps with no `m` appear only in On repeat.
-- Both surfaces read and write the **same** `state.dials[id].step` counter, so completing
-  a step from either place advances the one chain. See *How the two surfaces relate* above.
+## Sort
 
-### 2. Reset — `resets: [ids]`
+Within any group: glowing Needs float to the top, Wants sink, dormant (gated) and done
+items sink to the bottom.
 
-Marking a task done also refills the listed tasks. Prevents redundant nagging: after a
-deep clean you shouldn't be prompted to do the weekly clean the next day. Cheap,
-high-value, no new UI.
+## Hard deadlines — the one honest exception to no-penalty
 
-### 3. Gate — `requires: [ids]`
-
-A task stays dormant (dim, non-glowing, labelled "after eye exam") until its
-prerequisites are **fresh** — i.e. the required task's ring isn't itself empty. When the
-prerequisite is done, the gated task unlocks and behaves per its own tier. A dormant task
-never nags; that's how ordering coexists with no-penalty.
-
-### 4. Offer — `onDoneOffer: [suggestions]`
-
-Some cascades depend on a judgment the app can't make (did the physical flag anything?).
-On completing such a task, surface a small, **dismissable** prompt: "Add a follow-up?"
-with suggested one-offs. The user keeps the ones they need and ignores the rest. Spawned
-follow-ups are opt-in, so they never create a backlog you didn't choose — which is the
-line that keeps this inside the no-penalty rule.
+Calm is for laundry, not for a real cliff. Calendar items with a true expiry (tax filing
+Apr 15, open enrollment, FSA spend-down and mega-backdoor true-up on Dec 31) get genuine
+urgency — a real "closes in N days" countdown and an earlier warm — instead of the calm
+"any time now." Surfacing a real, irreversible deadline serves the user; it isn't a nag.
 
 ## Data model
 
 ```ts
 interface Task {
-  // ...existing + tier fields
-  chain?: ChainStep[];     // ordered; only the active step renders
-  resets?: string[];       // ids this refills when marked done
-  requires?: string[];     // ids that must be "fresh" before this is eligible
-  onDoneOffer?: FollowUp[]; // optional one-offs offered on completion
-  once?: boolean;          // retire on completion instead of recharging
-}
-
-interface ChainStep {
-  label: string;
-  m?: number;              // 0–11 month anchor for the calendar; omit → On repeat only
-  hard?: boolean;          // this step is a true cliff (e.g. file 8606 by Apr 15)
-  tier?: Tier;
-  // progress is not stored per-step; the chain's active step = state.dials[id].step
-}
-
-interface FollowUp {
-  label: string;
-  interval?: number;       // omit → one-shot "do once" task (once:true)
-  tier?: Tier;
-  area?: string;
-  icon?: string;
+  // ...id, area, label, icon, mode, interval|dueM/dueD
+  tier: Tier;                 // ships derived; override in ⋯
+  leadDays?: number;          // else derived from tier + interval
+  hard?: boolean;             // real calendar cliff (date tasks)
 }
 ```
 
-Freshness for a gate: a required task counts as fresh while `daysSince(lastDone) <
-interval` (its own ring isn't empty), unless a task specifies `requireWithin` days. For a
-date-anchored prerequisite, "fresh" means checked off for the current year.
+## Alternatives considered
+
+- **Per-category drag-ranking** — can't express that the 401k beats *everything* in Home.
+- **Binary need/want** — throws away the middle, where most tasks live.
+- **Numeric priority (1–5)** — false precision, invites fiddling. Three named tiers win.
+
+---
+
+# Cascades — four light relations
+
+"Tasks cascade" is really four distinct relationships. Naming them is most of the design;
+each is modeled with the lightest thing that fits, and they compose. A dependency graph was
+rejected as betraying the calm, recurring-only core.
+
+| Shape | Meaning | Example |
+|---|---|---|
+| **Chain** | one job that walks through ordered steps | backdoor Roth: contribute → convert → file 8606 |
+| **Reset** | doing the big one refills the small one | deep-clean bathroom refills the weekly clean |
+| **Gate** | B is dormant until A is *fresh* | order glasses — dormant until the eye exam is done |
+| **Offer** | finishing A *may* spawn B, by human judgment | physical → maybe book a specialist |
+
+## Chains — one advancing card, optionally cross-surface
+
+A chain is **one card**, not N. It shows only the active step plus a step pip row; tapping
+advances it — same tap, same refill. Completing the last step puts a recurring chain on a
+whole-chain cooldown (re-arming step 1 after `interval`); a one-shot chain retires.
+
+Chains are **cross-surface**: a step carrying a month anchor (`m`) also appears in that
+month on the calendar, **locked until the prior step is done** — a chain on the calendar is
+a series of gates along the timeline. Both surfaces drive the same `state.dials[id].step`
+counter. Steps with no `m` appear only in On repeat. There is no separate calendar card for
+a chained task — the steps *are* its calendar presence, which is why nothing duplicates.
+
+## Reset / Gate / Offer
+
+- **Reset** — `resets: [ids]`: marking done also refills the listed tasks. No new UI.
+- **Gate** — `requires: [ids]`: a task stays dormant (dim, non-glowing, "after eye exam")
+  until its prerequisites are *fresh* (their own ring isn't empty), then behaves per its
+  tier. A dormant task never nags — that's how ordering coexists with no-penalty.
+- **Offer** — `onDoneOffer: [...]`: on completing certain tasks, a small **dismissable**
+  prompt suggests one-off follow-ups. Opt-in only, so it never creates backlog you didn't
+  choose. This is the one place one-shots (`once`) enter the app.
+
+## Data model
+
+```ts
+interface Task {
+  chain?: ChainStep[];      // ordered; only the active step renders as a card
+  resets?: string[];        // ids refilled on completion
+  requires?: string[];      // ids that must be "fresh" before this is eligible
+  onDoneOffer?: FollowUp[]; // opt-in follow-ups offered on completion
+  once?: boolean;           // retire on completion instead of recharging
+}
+interface ChainStep { label: string; m?: number; hard?: boolean; tier?: Tier; }
+interface FollowUp { label: string; interval?: number; tier?: Tier; area?: string; icon?: string; }
+```
+
+Freshness for a gate: a required task is fresh while `daysSince(lastDone) < interval` (a
+date prerequisite while it's checked off for the year; a chain while completed).
 
 ## Worked examples
 
 - **Backdoor Roth (recurring, cross-surface chain):**
-  `chain: [ {contribute, m:0}, {convert, m:0}, {file 8606, m:3, hard:true} ]`,
-  `interval: 365`, `tier: need`. On repeat shows one advancing card. The calendar shows
-  "Contribute" and "Convert" in January (Convert locked until Contribute is done) and
-  "File Form 8606" in April as a hard deadline (locked until Convert is done). Completing
-  the last step puts the whole chain on a yearly cooldown; it re-arms next January. The
-  chain is the task's only calendar presence — there is no separate January reminder — so
-  nothing duplicates.
-- **Deep-clean bathroom (reset):** `resets: ['bathroom']`. Doing it refills the weekly clean.
-- **Full bike service (reset):** `resets: ['bikeclean']`.
-- **New glasses (gate):** `requires: ['eye']`. Dormant until the eye exam is fresh, then
-  it unlocks and behaves normally.
-- **Annual physical (offer):** `onDoneOffer: [ {book specialist, once}, {redo bloodwork, interval:90} ]`.
-  Completing the physical asks whether to add either; you keep what's relevant.
+  `chain: [ {contribute, m:0}, {convert, m:0}, {file 8606, m:3, hard:true} ]`, `interval:
+  365`, `tier: need`. One advancing card in On repeat; on the calendar, "Contribute" and
+  "Convert" in January (Convert locked until Contribute) and "File 8606" in April as a hard
+  deadline. The chain is the task's only calendar presence — no separate reminder, nothing
+  duplicates. Completing the last step re-arms the chain next January.
+- **Deep-clean / full bike service (reset):** `resets: ['bathroom']` / `resets:
+  ['bikeclean']` refill the weekly versions.
+- **New glasses (gate):** `requires: ['eye']` — dormant until the eye exam is fresh.
+- **Annual physical (offer):** `onDoneOffer: [ {book specialist, once}, {redo bloodwork,
+  interval:90} ]` — asks on completion; you keep what's relevant.
 
 ## Alternatives considered
 
-- **Full dependency DAG / project-management view.** Rejected. It betrays the calm ethos,
-  imposes real setup and cognitive cost, and is overkill for personal admin. The four
-  lightweight relations cover the real cases without a graph editor.
-- **Checklist-inside-every-card.** Rejected as the general model. Fine for a tight
-  same-sitting sequence, but it hides the calendar spread of steps that happen weeks apart
-  (Roth), and it turns one calm ring into a to-do list. Chains-with-JIT-reveal keep the
-  one-thing-at-a-time feel.
-- **Auto-spawning follow-ups (no dismiss).** Rejected. Auto-created tasks you didn't
-  choose are exactly the backlog/guilt the app exists to avoid. Spawns must be opt-in.
-
-## Open questions
-
-- Recurring chains: does finishing the last step start a single whole-chain cooldown, or
-  does each step keep its own interval? (Shipped v1: whole-chain cooldown.)
-- Conditional-spawn UI: an inline prompt at completion, or a small "loose ends" tray that
-  collects offered follow-ups? (Shipped v1: inline prompt at completion.)
-- Should chains ever branch, or stay strictly linear in v1? (Shipped v1: linear.)
-- Are cross-surface chains (a step in the calendar, a step in On repeat) worth supporting,
-  or should a chain live entirely in one surface? **(Shipped: chains are cross-surface —
-  one collapsed card in On repeat, steps placed by month on the calendar, one shared
-  `step` counter. Steps without an `m` anchor appear only in On repeat. The chain's steps
-  are its only calendar presence, so no duplicate date card exists.)**
+- **Full dependency DAG / PM view** — betrays the calm ethos, imposes setup cost; the four
+  light relations cover the real cases without a graph editor.
+- **Checklist inside every card** — hides the calendar spread of steps weeks apart and
+  turns a calm ring into a to-do list. Chains-with-just-in-time-reveal keep one-thing-at-a-time.
+- **Auto-spawning follow-ups** — auto-created tasks you didn't choose are exactly the
+  backlog/guilt the app avoids. Spawns must be opt-in.
 
 ---
 
@@ -415,67 +398,59 @@ They're orthogonal and reinforce each other:
 
 - A **chain step** carries its own tier, so "file Form 8606" warms early as a Need while
   "try a new recipe" never glows.
-- A **gated** task inherits the priority behaviour the moment it unlocks.
-- The **"Needs attention" strip** naturally surfaces the *currently active* step of any
-  Need-tier chain, and hard-deadline chain steps as their window closes.
+- A **gated** task inherits its priority behaviour the moment it unlocks.
+- The **Needs-attention strip** surfaces the currently-active step of any Need-tier chain,
+  and hard-deadline steps as their window closes.
 
-So the two features share one vocabulary: *cost of skipping* drives urgency; *cascade
-links* drive what's eligible to be urgent right now.
+One vocabulary: *cost of skipping* drives urgency; *cascade links* drive what's eligible to
+be urgent right now.
 
 ---
 
 # Decisions (log)
 
-**Priority is modelled as cost-of-skipping, in three named tiers.**
-- *Why:* it's the only framing that's both actionable and able to unify ordinary priority
-  with the hard-deadline exception. Named tiers stay legible; numbers/ranking don't.
-- *Assumptions that could invalidate:* if in practice almost everything lands in one tier,
-  the tiers add ceremony without signal — revisit as two tiers.
+**Priority is cost-of-skipping, in three derived tiers.** The only framing that unifies
+ordinary priority with the hard-deadline exception; named tiers stay legible where
+numbers/ranking don't. *Revisit if almost everything lands in one tier.*
 
-**Cascades are four light relations (chain / reset / gate / offer), not a DAG.**
-- *Why:* covers the real cases while preserving "one card = one actionable thing" and
-  zero manufactured backlog.
-- *Assumptions that could invalidate:* if real usage needs branching or many-to-many
-  prerequisites often, the light model will strain and a proper graph may be warranted.
+**Cascades are four light relations, not a DAG.** Covers the real cases while preserving
+"one card = one actionable thing" and zero manufactured backlog. *Revisit if real usage
+needs branching or many-to-many prerequisites.*
 
-**One honest exception to no-penalty: true calendar cliffs feel urgent.**
-- *Why:* hiding a real, irreversible deadline would harm the user; calm is for laundry,
-  not for the 401k window.
-- *Assumptions that could invalidate:* if urgency here starts bleeding stress into the
-  rest of the app, tighten it to a distinct, contained treatment.
+**One honest exception to no-penalty: true calendar cliffs feel urgent.** Hiding a real,
+irreversible deadline would harm the user. *Tighten if urgency bleeds stress into the rest.*
 
-**Priority is derived from id-sets and tier, not hand-tagged on 84 rows.**
-- *Why:* keeps the low-setup-burden principle. Needs/Wants ship as small curated sets;
-  everything else is Upkeep by default. Per-task override lives in the `⋯` sheet.
-- *Assumptions that could invalidate:* if users want to re-tier many tasks, promote tier
-  to a first-class stored field on every dial.
+**Two recharge models, kept separate.** Relative time for upkeep, absolute for deadlines;
+merging either way would break one of them.
+
+**One unified dial shape and one edit sheet.** Both source arrays share an envelope;
+interval/date/chain edit through the same scaffold. Keeps the model legible and the UI
+consistent.
+
+**Single-level undo on completions.** The mis-tap is the only silent destructive in-app
+action, so it — and only it — gets an explicit reversal.
 
 ---
 
-# Future discussions / backlog
+# Still open / to tune
 
-Captured so they aren't lost; not scoped here.
+- The `leadDays` curve (proportional vs fixed steps per interval band) is a guess worth
+  tuning against real use.
+- On seed data at mid-year, the On-repeat "Getting low" count dominates (most seeded dates
+  sit deep in their intervals). Cosmetic; either soften seeds or tighten the bucket.
+- Whether the Needs strip should ever include *badly* overdue Upkeep, not just Needs +
+  hard deadlines. (Currently: strictly Needs + hard deadlines.)
 
-- **Reminders / notifications.** None today, by design. If added: opt-in, digest-style
-  (a weekly "here's what's warming up"), never per-task pings.
-- **Multi-device sync.** Today: `localStorage` + JSON export/import, hostable on gan.report.
-  Later: a thin sync layer or file-based sync so state follows across devices.
-- **Calendar integration.** Push hard-deadline items to Google Calendar; optionally read a
-  "done" signal back.
-- **Obsidian / vault integration.** Log completions to the vault; fits the existing
-  "package this up" workflow and gan.report publishing.
-- **Seasonal / context awareness.** Don't surface "clean the windows" in a Seattle
-  January; shift some intervals by season.
-- **Snooze without penalty.** An explicit "not now" that quiets one item for N days —
-  distinct from skipping, and still guilt-free.
-- **Gentle history.** Optional, no streaks and no guilt: "you've done this ~N times this
-  year." Must not reintroduce the failure states the app removes.
-- **Batching / body-doubling.** Group tasks you tend to do together (a "Sunday reset," an
-  "errands" run) so they surface as one sitting.
-- **Date-anchored one-offs.** Birthdays, renewals, passport expiry — yearly-recurring but
-  pinned to a date rather than an interval. *(Partially shipped: the date-recharge mode
-  covers yearly-recurring date anchors; true one-shots ride the `once` flag.)*
-- **Benefits-portal verification.** A recurring nudge to confirm the Google-specific
-  numbers (match %, reimbursements, exact deadlines), since those change and the app's
-  defaults can't be trusted blind.
-- **Shareable configs / personas.** Export a starter set someone else can import.
+---
+
+# Backlog (explored, not built)
+
+- **Lightweight multi-device sync** — a thin load/save adapter (e.g. a Cloudflare Worker)
+  behind the existing export/import, so state follows across devices.
+- **Snooze without penalty** — an explicit "not now" that quiets one item for N days,
+  distinct from skipping and still guilt-free.
+- **Calendar / vault integration** — optionally mirror hard-deadline items to a real
+  calendar, or log completions to an Obsidian vault. Kept at arm's length so the app stays
+  a dashboard, not an integration hub.
+- **Shareable starter configs** — export a starter set someone else can import (the export
+  format already makes this nearly free).
