@@ -389,28 +389,29 @@ const DEFAULT_DIALS=[
   {id:'roth',     area:'money',  label:'Backdoor Roth',         icon:'refresh', interval:365, tier:'need', chain:[{label:'Contribute to a traditional IRA', m:0},{label:'Convert it to Roth', m:0},{label:'File Form 8606 at tax time', m:3, hard:true}]}
 ];
 
-const DEFAULT_TIMELINE=[
-  {m:0,  owner:'roth', icon:'refresh', title:'Do the backdoor Roth', tags:['money'], note:'Put $7,500 (the 2026 cap) of non-deductible money into a traditional IRA, then convert it to Roth. Do it in early January so the whole year compounds tax-free. Get any pre-tax IRA balances to zero first — roll them into your 401(k) — or the pro-rata rule makes the conversion partly taxable.'},
-  {m:0,  icon:'chart',   title:'Set 401(k) + after-tax (mega-backdoor)', tags:['money','employer'], note:'2026 caps: $24,500 employee, $72,000 total. Set after-tax contributions plus automatic in-plan Roth conversion to fill the space above your deferral and Google match. Check the plan offers it, and that it won\'t choke your match if you hit the cap early (true-up).'},
-  {m:0,  icon:'pill',    title:'Max the HSA and invest it', tags:['money','health'], note:'2026 self-only cap is $4,400. If you\'re on the HDHP, treat it as a stealth retirement account: pay medical costs out of pocket, invest the balance, and keep the receipts to reimburse yourself tax-free years from now.'},
-  {m:0,  icon:'doc',     title:'Confirm your benefit elections', tags:['health','employer'], note:'Health plan, HSA/FSA, life and disability. Make sure nothing quietly reset at the plan-year boundary, and re-elect HSA payroll contributions if they didn\'t roll over.'},
-  {m:1,  icon:'doc',     title:'Gather your tax documents', tags:['money'], note:'W-2; 1099-B/DIV/INT; 1098; RSU and ESPP forms with the supplemental cost-basis sheet; charitable and DAF receipts; and your Form 8606 basis for the backdoor Roth.'},
-  {m:1,  icon:'card',    title:'Check RSU withholding', tags:['money','employer'], note:'Default RSU withholding is often about 22%, below your marginal rate. Estimate the shortfall and set money aside so April isn\'t a surprise. Good moment to look at how concentrated you are in employer stock.'},
-  {m:2,  icon:'wallet',  title:'Fund last year\'s IRA/HSA', tags:['money'], note:'You have until the April deadline to contribute for the prior tax year if anything\'s unmaxed. File Form 8606 to record the backdoor basis.'},
-  {m:2,  icon:'chart',   title:'Decide ESPP: hold or sell', tags:['money','employer'], note:'Selling at purchase locks the discount and cuts concentration. Holding 1+ year past purchase and 2+ past the offer gets qualifying treatment. Pick a rule and automate it.'},
-  {m:3,  d:15, hard:true, icon:'doc',     title:'File your taxes (~Apr 15)', tags:['money'], note:'Check Form 8606 shows the backdoor Roth as non-deductible then converted (about $0 taxable). Make sure the broker didn\'t double-count RSU/ESPP cost basis — a very common error that overstates your gains.'},
-  {m:4,  icon:'heart',   title:'Mid-year benefits check', tags:['employer','health'], note:'On pace to use the wellness, education and lifestyle reimbursements before year-end? Check your balances on the benefits portal — the amounts and deadlines change.'},
-  {m:5,  icon:'chart',   title:'Mid-year money review', tags:['money'], note:'Is your savings rate on track? Look at rebalance drift, emergency-fund runway (lean toward 6–12 months given RSU concentration), and asset location.'},
-  {m:6,  icon:'refresh', title:'Harvest tax losses', tags:['money'], note:'Sell paper losers in taxable accounts to offset gains and up to $3,000 of income. Mind the 30-day wash-sale window and don\'t rebuy a near-identical fund.'},
-  {m:7,  icon:'pill',    title:'Size next year\'s FSA/HSA', tags:['health','employer'], note:'Use this year\'s real spend to set next year\'s numbers. Book any care you\'ve been putting off while it\'s on your mind.'},
-  {m:8,  icon:'doc',     title:'Prep for open enrollment', tags:['health','employer'], note:'Model HDHP+HSA versus PPO on total expected cost, not just the premium. Flu-shot season opens.'},
-  {m:9,  d:15, hard:true, icon:'heart',   title:'Open enrollment — lock it in', tags:['health','employer'], note:'The one window you can\'t easily redo. Health plan, HSA/FSA, life and disability, other perks. Re-elect HSA payroll contributions — they often don\'t carry over.'},
-  {m:10, icon:'heart',   title:'Give via a DAF + get the match', tags:['money','employer'], note:'Bunch donations into a donor-advised fund for a bigger deduction this year, and give appreciated shares to skip the capital-gains bill. Submit for Google\'s match before the annual cap resets Dec 31.'},
-  {m:10, icon:'refresh', title:'Harvest losses — final pass', tags:['money'], note:'One more look before year-end while there\'s still time to realize losses and reset the wash-sale clock.'},
-  {m:11, d:31, hard:true, icon:'chart',   title:'Finish the mega-backdoor true-up', tags:['money','employer'], note:'Hit the $72,000 total before the last payroll run. Confirm the after-tax contributions and in-plan Roth conversion actually went through — don\'t assume.'},
-  {m:11, d:31, hard:true, icon:'pill',    title:'Spend down the FSA', tags:['health','employer'], note:'Use-it-or-lose-it (2026 carryover cap is $680 if your plan allows it). Book appointments, restock eligible items, order new glasses or contacts.'},
-  {m:11, icon:'chart',   title:'Check your tax bracket', tags:['money'], note:'In a lower-income year, consider converting pre-tax dollars to Roth up to the top of your bracket. Also worth reviewing estimated taxes if you owed last year.'},
-  {m:11, icon:'heart',   title:'Use leftover perks; book January care', tags:['employer','health'], note:'Wellness, education and EAP allotments usually reset Dec 31. Put next year\'s physical, dental, DEXA and derm on the calendar now, while slots are open.'}
+// calendar-anchored tasks — same shape as DEFAULT_DIALS, distinguished only by mode:'date'
+// (the January backdoor-Roth reminder lives as the `roth` chain, so it's not duplicated here)
+const DEFAULT_DATED=[
+  {id:'k401',        area:'money',  label:'Set 401(k) + after-tax (mega-backdoor)', icon:'chart',   mode:'date', dueM:0,  tags:['money','employer'], note:'2026 caps: $24,500 employee, $72,000 total. Set after-tax contributions plus automatic in-plan Roth conversion to fill the space above your deferral and Google match. Check the plan offers it, and that it won\'t choke your match if you hit the cap early (true-up).'},
+  {id:'hsa',         area:'money',  label:'Max the HSA and invest it',              icon:'pill',    mode:'date', dueM:0,  tags:['money','health'],   note:'2026 self-only cap is $4,400. If you\'re on the HDHP, treat it as a stealth retirement account: pay medical costs out of pocket, invest the balance, and keep the receipts to reimburse yourself tax-free years from now.'},
+  {id:'benelect',    area:'health', label:'Confirm your benefit elections',         icon:'doc',     mode:'date', dueM:0,  tags:['health','employer'],note:'Health plan, HSA/FSA, life and disability. Make sure nothing quietly reset at the plan-year boundary, and re-elect HSA payroll contributions if they didn\'t roll over.'},
+  {id:'taxdocs',     area:'money',  label:'Gather your tax documents',              icon:'doc',     mode:'date', dueM:1,  tags:['money'],            note:'W-2; 1099-B/DIV/INT; 1098; RSU and ESPP forms with the supplemental cost-basis sheet; charitable and DAF receipts; and your Form 8606 basis for the backdoor Roth.'},
+  {id:'rsu',         area:'money',  label:'Check RSU withholding',                  icon:'card',    mode:'date', dueM:1,  tags:['money','employer'], note:'Default RSU withholding is often about 22%, below your marginal rate. Estimate the shortfall and set money aside so April isn\'t a surprise. Good moment to look at how concentrated you are in employer stock.'},
+  {id:'prioryear',   area:'money',  label:'Fund last year\'s IRA/HSA',              icon:'wallet',  mode:'date', dueM:2,  tags:['money'],            note:'You have until the April deadline to contribute for the prior tax year if anything\'s unmaxed. File Form 8606 to record the backdoor basis.'},
+  {id:'espp',        area:'money',  label:'Decide ESPP: hold or sell',              icon:'chart',   mode:'date', dueM:2,  tags:['money','employer'], note:'Selling at purchase locks the discount and cuts concentration. Holding 1+ year past purchase and 2+ past the offer gets qualifying treatment. Pick a rule and automate it.'},
+  {id:'taxfile',     area:'money',  label:'File your taxes (~Apr 15)',              icon:'doc',     mode:'date', dueM:3,  dueD:15, hard:true, tags:['money'], note:'Check Form 8606 shows the backdoor Roth as non-deductible then converted (about $0 taxable). Make sure the broker didn\'t double-count RSU/ESPP cost basis — a very common error that overstates your gains.'},
+  {id:'midbenefits', area:'health', label:'Mid-year benefits check',               icon:'heart',   mode:'date', dueM:4,  tags:['employer','health'],note:'On pace to use the wellness, education and lifestyle reimbursements before year-end? Check your balances on the benefits portal — the amounts and deadlines change.'},
+  {id:'midmoney',    area:'money',  label:'Mid-year money review',                  icon:'chart',   mode:'date', dueM:5,  tags:['money'],            note:'Is your savings rate on track? Look at rebalance drift, emergency-fund runway (lean toward 6–12 months given RSU concentration), and asset location.'},
+  {id:'tlh1',        area:'money',  label:'Harvest tax losses',                     icon:'refresh', mode:'date', dueM:6,  tags:['money'],            note:'Sell paper losers in taxable accounts to offset gains and up to $3,000 of income. Mind the 30-day wash-sale window and don\'t rebuy a near-identical fund.'},
+  {id:'sizefsa',     area:'health', label:'Size next year\'s FSA/HSA',              icon:'pill',    mode:'date', dueM:7,  tags:['health','employer'],note:'Use this year\'s real spend to set next year\'s numbers. Book any care you\'ve been putting off while it\'s on your mind.'},
+  {id:'oeprep',      area:'health', label:'Prep for open enrollment',              icon:'doc',     mode:'date', dueM:8,  tags:['health','employer'],note:'Model HDHP+HSA versus PPO on total expected cost, not just the premium. Flu-shot season opens.'},
+  {id:'oe',          area:'health', label:'Open enrollment — lock it in',          icon:'heart',   mode:'date', dueM:9,  dueD:15, hard:true, tags:['health','employer'], note:'The one window you can\'t easily redo. Health plan, HSA/FSA, life and disability, other perks. Re-elect HSA payroll contributions — they often don\'t carry over.'},
+  {id:'daf',         area:'money',  label:'Give via a DAF + get the match',        icon:'heart',   mode:'date', dueM:10, tags:['money','employer'], note:'Bunch donations into a donor-advised fund for a bigger deduction this year, and give appreciated shares to skip the capital-gains bill. Submit for Google\'s match before the annual cap resets Dec 31.'},
+  {id:'tlh2',        area:'money',  label:'Harvest losses — final pass',           icon:'refresh', mode:'date', dueM:10, tags:['money'],            note:'One more look before year-end while there\'s still time to realize losses and reset the wash-sale clock.'},
+  {id:'trueup',      area:'money',  label:'Finish the mega-backdoor true-up',      icon:'chart',   mode:'date', dueM:11, dueD:31, hard:true, tags:['money','employer'], note:'Hit the $72,000 total before the last payroll run. Confirm the after-tax contributions and in-plan Roth conversion actually went through — don\'t assume.'},
+  {id:'fsaspend',    area:'health', label:'Spend down the FSA',                    icon:'pill',    mode:'date', dueM:11, dueD:31, hard:true, tags:['health','employer'], note:'Use-it-or-lose-it (2026 carryover cap is $680 if your plan allows it). Book appointments, restock eligible items, order new glasses or contacts.'},
+  {id:'bracket',     area:'money',  label:'Check your tax bracket',                icon:'chart',   mode:'date', dueM:11, tags:['money'],            note:'In a lower-income year, consider converting pre-tax dollars to Roth up to the top of your bracket. Also worth reviewing estimated taxes if you owed last year.'},
+  {id:'perks',       area:'health', label:'Use leftover perks; book January care', icon:'heart',   mode:'date', dueM:11, tags:['employer','health'],note:'Wellness, education and EAP allotments usually reset Dec 31. Put next year\'s physical, dental, DEXA and derm on the calendar now, while slots are open.'}
 ];
 
 /* how to accomplish each rhythm task — shown in the ⋯ sheet (calendar items carry their own note) */
@@ -514,10 +515,10 @@ const NOTES={
   offline:"Spend a day off the internet. Tell people beforehand, park the phone, and do the analogue things you keep meaning to.",
   outside:"Get outside in nature — a walk, a park, a trail. Even 30 minutes of green and daylight; leave the earbuds out sometimes."
 };
-function howTo(d){const n=NOTES[d.id];return n?`<p class="sh-note" style="margin:0 0 18px">${n}</p>`:'';}
+function howTo(d){const n=d.note||NOTES[d.id];return n?`<p class="sh-note" style="margin:0 0 18px">${n}</p>`:'';}
 
 /* storage */
-const KEY='theyear.v4'; let mem=null,_cache=null;
+const KEY='theyear.v5'; let mem=null,_cache=null;
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return mem;}}
 function save(){_cache=null;try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){mem=state;}}
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
@@ -527,25 +528,23 @@ function daysSince(iso){if(!iso)return 1e6;return Math.floor((parseD(todayISO())
 
 let state=load();
 if(!state){
-  state={version:4,dials:{},custom:[],removed:[],timeline:{},ui:{}};
+  state={version:5,dials:{},custom:[],removed:[],ui:{}};
   DEFAULT_DIALS.forEach(d=>{state.dials[d.id]=d.chain?{step:0,last:null}:{last:seedISO(d.seed),interval:d.interval};});
   save();
 }
-state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.removed||[];state.timeline=state.timeline||{};state.ui=state.ui||{};
+state.dials=state.dials||{};state.custom=state.custom||[];state.removed=state.removed||[];state.ui=state.ui||{};
 
 const DATE_WINDOW=120;   // a date dial starts emptying this many days before its due date
 const curYear=()=>new Date().getFullYear();
-function tlArea(t){return t.tags.includes('money')?'money':(t.tags.includes('health')?'health':'career');}
-function calDials(){return DEFAULT_TIMELINE.map((t,idx)=>({id:'cal'+idx,tlIdx:idx,area:tlArea(t),label:t.title,icon:t.icon,mode:'date',dueM:t.m,dueD:t.d||1,hard:!!t.hard,owner:t.owner,note:t.note,tags:t.tags})).filter(d=>!d.owner);}
 function allDials(){
   if(_cache)return _cache;
-  const base=DEFAULT_DIALS.map(d=>({...d,...(META[d.id]||{}),mode:'interval'})).filter(d=>!state.removed.includes(d.id));
-  const cal=calDials().filter(d=>!state.removed.includes(d.id));
+  const base=DEFAULT_DIALS.map(d=>({...d,...(META[d.id]||{}),mode:d.mode||'interval'}));
+  const dated=DEFAULT_DATED.map(d=>({...d,mode:'date'}));
   const cust=state.custom.map(c=>({...c,custom:true,mode:c.mode||'interval'}));
-  _cache=[...base,...cal,...cust].map(d=>{
-    if(d.mode==='date')return {...d};
-    const st=state.dials[d.id]||{last:null,interval:d.interval};
-    return {...d,last:st.last,interval:st.interval==null?d.interval:st.interval,tier:st.tier||d.tier};
+  _cache=[...base,...dated,...cust].filter(d=>!state.removed.includes(d.id)).map(d=>{
+    const st=state.dials[d.id]||{};
+    if(d.mode==='date')return {...d,dueM:st.dueM==null?d.dueM:st.dueM,dueD:st.dueD==null?d.dueD:st.dueD,tier:st.tier||d.tier};
+    return {...d,last:st.last==null?null:st.last,interval:st.interval==null?d.interval:st.interval,tier:st.tier||d.tier};
   });
   return _cache;
 }
@@ -553,8 +552,8 @@ function findDial(id){return allDials().find(x=>x.id===id);}
 /* date-anchored dials: recharge toward a fixed calendar date each year */
 function dueDateOf(d,yr){return new Date(yr,d.dueM,d.dueD||1);}
 function dateDays(d,yr){return Math.floor((dueDateOf(d,yr)-parseD(todayISO()))/86400000);}
-function isDateDone(d,yr){if(d.tlIdx!=null)return state.timeline['y'+yr+'-'+d.tlIdx]===yr;return (state.dials[d.id]||{}).doneYear===yr;}
-function setDateDone(d,val){const yr=curYear();if(d.tlIdx!=null){const k='y'+yr+'-'+d.tlIdx;if(val)state.timeline[k]=yr;else delete state.timeline[k];}else{const st=state.dials[d.id]||{};if(val)st.doneYear=yr;else delete st.doneYear;state.dials[d.id]=st;}}
+function isDateDone(d,yr){return (state.dials[d.id]||{}).doneYear===yr;}
+function setDateDone(d,val){const yr=curYear();const st=state.dials[d.id]||{};if(val)st.doneYear=yr;else delete st.doneYear;state.dials[d.id]=st;}
 function dateReserve(d,yr){if(isDateDone(d,yr))return 1;const days=dateDays(d,yr);if(days<=0)return 0;return Math.min(1,days/DATE_WINDOW);}
 function reserveOf(d){if(d.mode==='date')return dateReserve(d,curYear());return Math.max(0,Math.min(1,1-daysSince(d.last)/d.interval));}
 function stateColor(r){if(r<=0.14)return{c:'var(--ember)',ready:true};if(r<0.45)return{c:'var(--brass)',ready:false};return{c:'var(--patina)',ready:false};}
@@ -607,7 +606,7 @@ function computeStatus(d){
     else if(days<=0){reserve=0;color='var(--ember)';glow=!dormant;centerTxt='now';meta=d.hard?'Overdue':'Due now';}
     else{reserve=dateReserve(d,yr);glow=!dormant&&days<=(d.hard?Math.max(lead,60):lead);color=glow?'var(--ember)':stateColor(reserve).c;
       centerTxt=days<=99?days+'d':MONTHS_S[d.dueM].toUpperCase();
-      meta=d.hard?('Closes in '+days+'d'):(d.tlIdx!=null?('In '+MONTHS[d.dueM]):('By '+fmtDateObj(dueDateOf(d,yr))));}
+      meta=d.hard?('Closes in '+days+'d'):(d.note?('In '+MONTHS[d.dueM]):('By '+fmtDateObj(dueDateOf(d,yr))));}
     if(d.tags&&d.tags.length)extra=`<div class="m-tags">${d.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join('')}</div>`;
   }else{
     reserve=reserveOf(d);const rid=readyInDays(d),lead=leadDaysOf(d);
@@ -690,7 +689,7 @@ function renderTimeline(animate,center){
   document.getElementById('tlFill').style.width=(frac*100).toFixed(1)+'%';
   document.getElementById('tlNow').style.left=(frac*100).toFixed(1)+'%';
   document.getElementById('tlPct').textContent=Math.round(frac*100)+'% through the year';
-  const scroll=document.getElementById('tlScroll');const cals=calDials().filter(d=>!state.removed.includes(d.id));const chains=allDials().filter(d=>d.chain);let html='';
+  const scroll=document.getElementById('tlScroll');const all=allDials();const cals=all.filter(d=>d.mode==='date');const chains=all.filter(d=>d.chain);let html='';
   for(let m=0;m<12;m++){
     const items=sortDials(cals.filter(d=>d.dueM===m));
     let cards=items.map(d=>dialHTML(d,animate)).join('');
@@ -781,32 +780,39 @@ function maybeOffer(d){if(!d.onDoneOffer||!d.onDoneOffer.length)return;
   }));
   sheet.querySelector('#offClose').addEventListener('click',closeSheet);
 }
-function toggleMoment(idx){
-  const yr=curYear();const k='y'+yr+'-'+idx;const t=DEFAULT_TIMELINE[idx];
-  const nowDone=state.timeline[k]!==yr;
-  if(nowDone)state.timeline[k]=yr;else delete state.timeline[k];
-  save();rerender();popCard('.dial[data-card="cal'+idx+'"]');toast(nowDone?('Done — '+t.title):('Reopened — '+t.title));
-}
-
+/* one edit sheet for every task; only the recharge control differs by mode */
 function editDial(id){
   const d=findDial(id);if(!d)return;
   if(d.chain){editChain(d);return;}
-  if(d.mode==='date'){editDateDial(d);return;}
-  let curTier=tierOf(d);
-  const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
+  const isDate=d.mode==='date';let curTier=tierOf(d);
+  const sub=isDate?'Recharges toward a date each year':('Last done '+(d.last?fmtDate(d.last):'not yet')+' · every '+d.interval+' days');
+  let recharge;
+  if(isDate){
+    const dueVal=curYear()+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0');
+    recharge=`<div class="field"><label>Due date · recharges toward this</label><input type="date" id="edDue" value="${dueVal}"></div>`;
+  }else{
+    const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
+    recharge=`<div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
+    <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>`;
+  }
+  const doneLbl=isDate?(isDateDone(d,curYear())?'Mark not done':'Mark done'):'Done today';
   openSheet(`<h3>${d.label}</h3>
-    <div class="sh-sub">Last done ${d.last?fmtDate(d.last):'not yet'} · every ${d.interval} days</div>
+    <div class="sh-sub">${sub}</div>
     ${howTo(d)}
-    <div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
-    <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>
+    ${recharge}
     <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="edTier">${tierButtons(curTier)}</div></div>
-    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">Done today</button></div>`);
-  sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
+    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">${doneLbl}</button></div>`);
   sheet.querySelectorAll('#edTier .preset').forEach(b=>b.addEventListener('click',()=>{curTier=b.dataset.tier;sheet.querySelectorAll('#edTier .preset').forEach(x=>x.classList.toggle('sel',x===b));}));
-  const write=last=>{state.dials[id]={...(state.dials[id]||{}),last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval),tier:curTier};};
-  sheet.querySelector('#edDone').addEventListener('click',()=>{write(todayISO());save();closeSheet();rerender();toast('Done — '+d.label);});
-  sheet.querySelector('#edSave').addEventListener('click',()=>{write(sheet.querySelector('#edLast').value||d.last);save();closeSheet();rerender();toast('Saved.');});
   sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
+  if(isDate){
+    sheet.querySelector('#edDone').addEventListener('click',()=>{const nd=!isDateDone(d,curYear());setDateDone(d,nd);save();closeSheet();rerender();toast(nd?('Done — '+d.label):('Reopened — '+d.label));});
+    sheet.querySelector('#edSave').addEventListener('click',()=>{const st=state.dials[id]||{};const v=sheet.querySelector('#edDue').value;if(v){const p=v.split('-').map(Number);st.dueM=p[1]-1;st.dueD=p[2];}st.tier=curTier;state.dials[id]=st;save();closeSheet();rerender();toast('Saved.');});
+  }else{
+    sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
+    const write=last=>{state.dials[id]={...(state.dials[id]||{}),last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval),tier:curTier};};
+    sheet.querySelector('#edDone').addEventListener('click',()=>{write(todayISO());save();closeSheet();rerender();toast('Done — '+d.label);});
+    sheet.querySelector('#edSave').addEventListener('click',()=>{write(sheet.querySelector('#edLast').value||d.last);save();closeSheet();rerender();toast('Saved.');});
+  }
 }
 /* chain edit: shows the steps, never overwrites the {step,last} progress */
 function editChain(d){
@@ -820,19 +826,6 @@ function editChain(d){
   sheet.querySelector('#edReset').addEventListener('click',()=>{state.dials[d.id]={step:0,last:null};save();closeSheet();rerender();toast('Chain reset.');});
   sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
   sheet.querySelector('#edDone').addEventListener('click',()=>{closeSheet();if(!cs.completed)markDone(d.id);});
-}
-/* edit a user-made date dial (built-in calendar items open their note instead) */
-function editDateDial(d){
-  const id=d.id;const yr=curYear();const done=isDateDone(d,yr);
-  const dueVal=yr+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0');
-  openSheet(`<h3>${d.label}</h3>
-    <div class="sh-sub">Recharges toward a date, every year</div>
-    ${howTo(d)}
-    <div class="field"><label>Due date</label><input type="date" id="edDue" value="${dueVal}"></div>
-    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">${done?'Mark not done':'Mark done'}</button></div>`);
-  sheet.querySelector('#edDone').addEventListener('click',()=>{setDateDone(d,!done);save();closeSheet();rerender();toast(done?('Reopened — '+d.label):('Done — '+d.label));});
-  sheet.querySelector('#edSave').addEventListener('click',()=>{const v=sheet.querySelector('#edDue').value;if(v){const p=v.split('-').map(Number);const c=state.custom.find(x=>x.id===id);if(c){c.dueM=p[1]-1;c.dueD=p[2];}}save();closeSheet();rerender();toast('Saved.');});
-  sheet.querySelector('#edDel').addEventListener('click',()=>{state.custom=state.custom.filter(c=>c.id!==id);delete state.dials[id];save();closeSheet();rerender();toast('Removed.');});
 }
 function addDial(){
   const areaOpts=AREAS.map(a=>`<option value="${a.id}">${a.label}</option>`).join('');
@@ -860,27 +853,14 @@ function addDial(){
     save();closeSheet();rerender();toast('Added.');
   });
 }
-function openMoment(idx){
-  const t=DEFAULT_TIMELINE[idx];if(!t)return;const yr=curYear();const id='cal'+idx;
-  const done=state.timeline['y'+yr+'-'+idx]===yr;const tags=t.tags.map(g=>`<span class="chip ${g}">${g}</span>`).join(' ');
-  openSheet(`<h3>${t.title}</h3><div class="sh-sub">${MONTHS[t.m]} · ${yr}</div>
-    <div class="m-tags" style="justify-content:flex-start;margin-bottom:16px">${tags}</div>
-    <p class="sh-note">${t.note}</p>
-    <div class="sheet-actions"><button class="btn ghost" id="mmDel">Remove</button><button class="btn" id="mmClose">Close</button><button class="btn ${done?'':'primary'}" id="mmToggle">${done?'Mark not done':'Check off for '+yr}</button></div>`);
-  sheet.querySelector('#mmClose').addEventListener('click',closeSheet);
-  sheet.querySelector('#mmDel').addEventListener('click',()=>{if(!state.removed.includes(id))state.removed.push(id);save();closeSheet();rerender();toast('Removed.');});
-  sheet.querySelector('#mmToggle').addEventListener('click',()=>{closeSheet();toggleMoment(idx);});
-}
-
 function cardClick(e){
-  const ed=e.target.closest('[data-edit]');
-  if(ed){const id=ed.dataset.edit;const d=findDial(id);if(d&&d.mode==='date'&&d.tlIdx!=null)openMoment(d.tlIdx);else editDial(id);return;}
+  const ed=e.target.closest('[data-edit]');if(ed){editDial(ed.dataset.edit);return;}
   const dn=e.target.closest('[data-done]');if(dn)markDone(dn.dataset.done);
 }
 document.getElementById('rhythms').addEventListener('click',cardClick);
 document.getElementById('tlScroll').addEventListener('click',cardClick);
 document.getElementById('addBtn').addEventListener('click',addDial);
-document.getElementById('needsStrip').addEventListener('click',e=>{const b=e.target.closest('[data-strip]');if(!b)return;const d=findDial(b.dataset.strip);if(d&&d.mode==='date'&&d.tlIdx!=null)openMoment(d.tlIdx);else editDial(b.dataset.strip);});
+document.getElementById('needsStrip').addEventListener('click',e=>{const b=e.target.closest('[data-strip]');if(b)editDial(b.dataset.strip);});
 
 function setTab(t){
   state.ui=state.ui||{};state.ui.tab=t;save();
@@ -898,7 +878,7 @@ document.getElementById('expBtn').addEventListener('click',()=>{
 document.getElementById('impBtn').addEventListener('click',()=>document.getElementById('impFile').click());
 document.getElementById('impFile').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;const r=new FileReader();
-  r.onload=()=>{try{const j=JSON.parse(r.result);state=Object.assign({dials:{},custom:[],removed:[],timeline:{}},j);save();renderAll(true);toast('Imported.');}catch(err){toast('Could not read that file.');}};
+  r.onload=()=>{try{const j=JSON.parse(r.result);state=Object.assign({dials:{},custom:[],removed:[],ui:{}},j);save();renderAll(true);setTab(state.ui&&state.ui.tab||'rhythms');toast('Imported.');}catch(err){toast('Could not read that file.');}};
   r.readAsText(f);e.target.value='';
 });
 

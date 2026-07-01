@@ -92,10 +92,13 @@ The recurring rhythms and the calendar jobs are not two different features — t
 | Times per year | as many as you complete it | once per anchor |
 | Good for | upkeep where only elapsed time matters (haircut, clean) | jobs tied to a moment (tax deadline, benefits window, seasonal) |
 
-**What they share.** One `dials` record with a `mode` field; the identical ring card; the
-same tap-to-complete gesture; the same colour/urgency scale (patina → brass → ember); and
-the same priority layer — tiers, `leadDays` warm-up, and the "Needs attention" strip all
-apply to both.
+**What they share.** One authored shape — both `DEFAULT_DIALS` (recurring) and
+`DEFAULT_DATED` (calendar) use the same envelope keys (`id, area, label, icon`) plus their
+mode-specific fields (`interval`/`seed` vs `dueM`/`dueD`/`note`), normalised through one
+`allDials()`. From there: the identical ring card; the same tap-to-complete gesture; one
+edit sheet (only the recharge control differs — interval field vs date picker); the same
+colour/urgency scale (patina → brass → ember); and the same priority layer — tiers,
+`leadDays` warm-up, and the "Needs attention" strip all apply to both.
 
 **How to tell which a task is.** Ask whether *missing a specific date* is the point. If the
 cost is tied to a calendar moment (the 401k window closes, the FSA expires), it's a
@@ -146,11 +149,11 @@ Two rules keep them coherent:
    advances the same `step` counter the On-repeat card reads. There is no per-view copy to
    keep in sync.
 2. **Single ownership — no duplication.** A task is owned by exactly one construct. A
-   chain *owns* its calendar slots: the former standalone "Do the backdoor Roth" timeline
-   entry is now tagged `owner:'roth'` and suppressed as an independent card, so the task
-   renders as chain steps on the calendar and as one collapsed card under On repeat —
-   never as both a chain *and* a separate date card. This ownership rule is what removed
-   the earlier Backdoor-Roth duplication.
+   chain owns its calendar presence: there is no separate "Do the backdoor Roth" date
+   card — the chain's month-anchored steps *are* how it appears on the calendar. So the
+   task renders as chain steps on the calendar and as one collapsed card under On repeat,
+   never as both a chain *and* a separate date card. Dropping that standalone entry is
+   what removed the earlier Backdoor-Roth duplication.
 
 So the same Backdoor Roth appears as: one advancing card in On repeat; "Contribute" and
 "Convert" in January (Convert locked until Contribute is done); and "File Form 8606" (a
@@ -370,8 +373,8 @@ date-anchored prerequisite, "fresh" means checked off for the current year.
   "Contribute" and "Convert" in January (Convert locked until Contribute is done) and
   "File Form 8606" in April as a hard deadline (locked until Convert is done). Completing
   the last step puts the whole chain on a yearly cooldown; it re-arms next January. The
-  standalone January calendar reminder it replaced is tagged `owner:'roth'`, so nothing
-  duplicates.
+  chain is the task's only calendar presence — there is no separate January reminder — so
+  nothing duplicates.
 - **Deep-clean bathroom (reset):** `resets: ['bathroom']`. Doing it refills the weekly clean.
 - **Full bike service (reset):** `resets: ['bikeclean']`.
 - **New glasses (gate):** `requires: ['eye']`. Dormant until the eye exam is fresh, then
@@ -401,8 +404,8 @@ date-anchored prerequisite, "fresh" means checked off for the current year.
 - Are cross-surface chains (a step in the calendar, a step in On repeat) worth supporting,
   or should a chain live entirely in one surface? **(Shipped: chains are cross-surface —
   one collapsed card in On repeat, steps placed by month on the calendar, one shared
-  `step` counter. Steps without an `m` anchor appear only in On repeat. Single-ownership
-  (`owner`) prevents any duplicate calendar card.)**
+  `step` counter. Steps without an `m` anchor appear only in On repeat. The chain's steps
+  are its only calendar presence, so no duplicate date card exists.)**
 
 ---
 
