@@ -561,13 +561,16 @@ const DATE_WINDOW=120;   // a date dial starts emptying this many days before it
 const curYear=()=>new Date().getFullYear();
 function allDials(){
   if(_cache)return _cache;
-  const base=DEFAULT_DIALS.map(d=>({...d,...(META[d.id]||{}),mode:d.mode||'interval'}));
+  const base=DEFAULT_DIALS.map(d=>({...d,...(META[d.id]||{})}));
   const dated=DEFAULT_DATED.map(d=>({...d,mode:'date'}));
-  const cust=state.custom.map(c=>({...c,custom:true,mode:c.mode||'interval'}));
+  const cust=state.custom.map(c=>({...c,custom:true}));
   _cache=[...base,...dated,...cust].filter(d=>!state.removed.includes(d.id)).map(d=>{
     const st=state.dials[d.id]||{};
-    if(d.mode==='date')return {...d,dueM:st.dueM==null?d.dueM:st.dueM,dueD:st.dueD==null?d.dueD:st.dueD,tier:st.tier||d.tier};
-    return {...d,last:st.last==null?null:st.last,interval:st.interval==null?d.interval:st.interval,tier:st.tier||d.tier};
+    const mode=st.mode||d.mode||'interval';   // a stored mode override wins (lets a task switch kinds)
+    if(mode==='date'){
+      return {...d,mode,dueM:st.dueM==null?(d.dueM==null?new Date().getMonth():d.dueM):st.dueM,dueD:st.dueD==null?(d.dueD||1):st.dueD,tier:st.tier||d.tier};
+    }
+    return {...d,mode,last:st.last==null?(d.last||null):st.last,interval:st.interval==null?(d.interval||30):st.interval,tier:st.tier||d.tier};
   });
   return _cache;
 }
@@ -822,52 +825,70 @@ function maybeOffer(d){if(!d.onDoneOffer||!d.onDoneOffer.length)return;
   }));
   sheet.querySelector('#offClose').addEventListener('click',closeSheet);
 }
-/* one edit sheet for every task — same scaffold for interval, date and chain;
-   only the recharge control (and a chain's read-only step list) differ by mode */
+/* one edit sheet for every task. chains keep their step list; every other task
+   gets a recharge toggle so it can switch between rolling-interval and by-a-date. */
 function editDial(id){
   const d=findDial(id);if(!d)return;
-  const isChain=!!d.chain,isDate=d.mode==='date';let curTier=tierOf(d);
-  const cs=isChain?chainState(d):null;
-  const sub=isChain?('A chain · '+(cs.completed?'done for now, recharging':('step '+(cs.step+1)+' of '+cs.len)))
-    :isDate?'Recharges toward a date each year'
-    :('Last done '+(d.last?fmtDate(d.last):'not yet')+' · every '+d.interval+' days');
-  const stepsBlock=isChain?(`<div class="field"><label>Steps</label><div class="chain-steps">`+
+  let curTier=tierOf(d);
+  if(d.chain){
+    const cs=chainState(d);
+    const stepsBlock=`<div class="field"><label>Steps</label><div class="chain-steps">`+
       d.chain.map((s,i)=>{const cl=(cs.completed||i<cs.step)?'done':(i===cs.step?'cur':'wait');return `<div class="cstep ${cl}">${cl==='done'?CHECK_SM:('<span class="cnum">'+(i+1)+'</span>')}<span>${s.label}</span></div>`;}).join('')
-      +`</div><button class="linklike" id="edReset">Reset progress</button></div>`):'';
-  let recharge;
-  if(isDate){
-    const dueVal=curYear()+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0');
-    recharge=`<div class="field"><label>Due date · recharges toward this</label><input type="date" id="edDue" value="${dueVal}"></div>`;
-  }else{
+      +`</div><button class="linklike" id="edReset">Reset progress</button></div>`;
     const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
-    const lastField=isChain?'':`<div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>`;
-    recharge=lastField+`<div class="field"><label>${isChain?'Repeat the whole chain every (days)':'Repeat every (days)'}</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>`;
+    openSheet(`<h3>${d.label}</h3>
+      <div class="sh-sub">A chain · ${cs.completed?'done for now, recharging':('step '+(cs.step+1)+' of '+cs.len)}</div>
+      ${howTo(d)}
+      ${stepsBlock}
+      <div class="field"><label>Repeat the whole chain every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>
+      <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="edTier">${tierButtons(curTier)}</div></div>
+      <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone"${cs.completed?' disabled':''}>${cs.completed?'Recharging…':'Do this step'}</button></div>`);
+    sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
+    sheet.querySelectorAll('#edTier .preset').forEach(b=>b.addEventListener('click',()=>{curTier=b.dataset.tier;sheet.querySelectorAll('#edTier .preset').forEach(x=>x.classList.toggle('sel',x===b));}));
+    const rInt=()=>Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval);
+    sheet.querySelector('#edReset').addEventListener('click',()=>{markUndoPoint();state.dials[id]={step:0,last:null,interval:rInt(),tier:curTier};save();closeSheet();rerender();toast('Chain reset.',true);});
+    sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
+    sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={...(state.dials[id]||{}),interval:rInt(),tier:curTier};save();closeSheet();rerender();toast('Saved.');});
+    if(!cs.completed)sheet.querySelector('#edDone').addEventListener('click',()=>{closeSheet();markDone(id);});
+    return;
   }
-  const doneLbl=isChain?(cs.completed?'Recharging…':'Do this step'):isDate?(isDateDone(d,curYear())?'Mark not done':'Mark done'):'Done today';
-  const doneDis=isChain&&cs.completed?' disabled':'';
+  /* interval / date — with a toggle to convert between the two */
+  let mode=d.mode;
+  const chips=PRESETS.map(p=>`<button class="preset ${p[1]==(d.interval||30)?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
+  const dueVal=d.mode==='date'?(curYear()+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0')):(curYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0')+'-01');
+  const dl=m=>m==='date'?(isDateDone(d,curYear())?'Mark not done':'Mark done'):'Done today';
+  const sub=d.mode==='date'?'Recharges toward a date each year':('Last done '+(d.last?fmtDate(d.last):'not yet')+' · every '+d.interval+' days');
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">${sub}</div>
     ${howTo(d)}
-    ${stepsBlock}
-    ${recharge}
+    <div class="field"><label>Recharge</label><div class="presets" id="edMode"><button class="preset ${mode==='interval'?'sel':''}" data-mode="interval">Every N days</button><button class="preset ${mode==='date'?'sel':''}" data-mode="date">By a date</button></div></div>
+    <div id="edIntWrap"${mode==='date'?' style="display:none"':''}>
+      <div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
+      <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval||30}"><div class="presets" id="edInts">${chips}</div></div>
+    </div>
+    <div class="field" id="edDateWrap"${mode==='interval'?' style="display:none"':''}><label>Due date · recharges toward this</label><input type="date" id="edDue" value="${dueVal}"></div>
     <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="edTier">${tierButtons(curTier)}</div></div>
-    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone"${doneDis}>${doneLbl}</button></div>`);
+    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">${dl(mode)}</button></div>`);
+  const setMode=m=>{mode=m;sheet.querySelectorAll('#edMode .preset').forEach(x=>x.classList.toggle('sel',x.dataset.mode===m));sheet.querySelector('#edIntWrap').style.display=m==='interval'?'':'none';sheet.querySelector('#edDateWrap').style.display=m==='date'?'':'none';sheet.querySelector('#edDone').textContent=dl(m);};
+  sheet.querySelectorAll('#edMode .preset').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+  sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
   sheet.querySelectorAll('#edTier .preset').forEach(b=>b.addEventListener('click',()=>{curTier=b.dataset.tier;sheet.querySelectorAll('#edTier .preset').forEach(x=>x.classList.toggle('sel',x===b));}));
+  const readInt=()=>Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval||30);
+  // write state for the currently-selected mode; complete=true also marks it done
+  const writeState=complete=>{
+    if(mode==='date'){
+      const p=(sheet.querySelector('#edDue').value||dueVal).split('-').map(Number);
+      const st={mode:'date',dueM:p[1]-1,dueD:p[2],tier:curTier};
+      const doneNow=complete?!isDateDone(d,curYear()):isDateDone(d,curYear());
+      if(doneNow)st.doneYear=curYear();
+      state.dials[id]=st;return doneNow;
+    }
+    const last=complete?todayISO():(sheet.querySelector('#edLast').value||d.last||todayISO());
+    state.dials[id]={mode:'interval',last,interval:readInt(),tier:curTier};return true;
+  };
   sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
-  if(!isDate)sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
-  const readInt=()=>Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval);
-  if(isChain){
-    sheet.querySelector('#edReset').addEventListener('click',()=>{markUndoPoint();state.dials[id]={step:0,last:null,interval:readInt(),tier:curTier};save();closeSheet();rerender();toast('Chain reset.',true);});
-    sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={...(state.dials[id]||{}),interval:readInt(),tier:curTier};save();closeSheet();rerender();toast('Saved.');});
-    if(!cs.completed)sheet.querySelector('#edDone').addEventListener('click',()=>{closeSheet();markDone(id);});
-  }else if(isDate){
-    sheet.querySelector('#edDone').addEventListener('click',()=>{markUndoPoint();const nd=!isDateDone(d,curYear());setDateDone(d,nd);save();closeSheet();rerender();toast(nd?('Done — '+d.label):('Reopened — '+d.label),true);});
-    sheet.querySelector('#edSave').addEventListener('click',()=>{const st=state.dials[id]||{};const v=sheet.querySelector('#edDue').value;if(v){const p=v.split('-').map(Number);st.dueM=p[1]-1;st.dueD=p[2];}st.tier=curTier;state.dials[id]=st;save();closeSheet();rerender();toast('Saved.');});
-  }else{
-    const write=last=>{state.dials[id]={...(state.dials[id]||{}),last,interval:readInt(),tier:curTier};};
-    sheet.querySelector('#edDone').addEventListener('click',()=>{markUndoPoint();write(todayISO());save();closeSheet();rerender();toast('Done — '+d.label,true);});
-    sheet.querySelector('#edSave').addEventListener('click',()=>{write(sheet.querySelector('#edLast').value||d.last);save();closeSheet();rerender();toast('Saved.');});
-  }
+  sheet.querySelector('#edSave').addEventListener('click',()=>{writeState(false);save();closeSheet();rerender();toast('Saved.');});
+  sheet.querySelector('#edDone').addEventListener('click',()=>{markUndoPoint();const done=writeState(true);save();closeSheet();rerender();toast(mode==='date'?(done?('Done — '+d.label):('Reopened — '+d.label)):('Done — '+d.label),true);});
 }
 function addDial(){
   const areaOpts=AREAS.map(a=>`<option value="${a.id}">${a.label}</option>`).join('');
