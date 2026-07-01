@@ -413,6 +413,109 @@ const DEFAULT_TIMELINE=[
   {m:11, icon:'heart',   title:'Use leftover perks; book January care', tags:['employer','health'], note:'Wellness, education and EAP allotments usually reset Dec 31. Put next year\'s physical, dental, DEXA and derm on the calendar now, while slots are open.'}
 ];
 
+/* how to accomplish each rhythm task — shown in the ⋯ sheet (calendar items carry their own note) */
+const NOTES={
+  // health
+  physical:"Book a yearly check-up with your GP. Ask for blood pressure, a basic metabolic panel, and bring a short list of anything you've been meaning to raise.",
+  bloodwork:"Book a fasting draw (CBC, lipids, metabolic, HbA1c). Fast 10–12h, go in the morning, and save the PDF so you can compare year over year.",
+  hormones:"Ask your doctor for a thyroid (TSH, free T3/T4) and hormone panel. Draw before 10am for testosterone and cortisol; note any symptoms driving it.",
+  micros:"Check vitamin D, B12, ferritin and magnesium — add them to a routine draw, then adjust supplements to the numbers instead of guessing.",
+  dental:"Book a clean and check-up with the hygienist. Flag anything sensitive, and get X-rays if it's been a while.",
+  eye:"See an optometrist for a sight test and retinal photo. Bring your current glasses; update the prescription if it's drifted.",
+  derm:"Get a full-body mole and skin check with a dermatologist. Photograph anything you're watching and flag new or changing spots.",
+  flu:"Walk into a pharmacy or clinic for the seasonal shot — ten minutes. Best in early autumn, before the season peaks.",
+  dexa:"Book a DEXA scan for body composition and bone density. Go fasted and at a consistent time of day so scans stay comparable.",
+  physio:"See a physio for a movement screen. Bring your niggles and training load; leave with 2–3 corrective drills and actually do them.",
+  glasses:"With the fresh prescription, order glasses or contacts online or in store. Spend down FSA dollars on them if you have any.",
+  // fitness
+  program:"Sit down with your training log. Are you progressing? Adjust volume, swap stale lifts, and set the next block's focus.",
+  deload:"Take a lighter week — roughly half the volume, nothing to failure. Let fatigue clear; keep sleep and food normal.",
+  vo2:"Book a lab VO2max/lactate test, or run a field test like a Cooper. Use the zones it gives to set your cardio for the next few months.",
+  prtest:"Warm up thoroughly, then work up to a heavy single or rep-max on your main lifts. Record the numbers and reset your training maxes.",
+  longride:"Block a half-day for a long ride or run. Plan the route, fuel and hydrate, and keep the effort mostly easy.",
+  mobility:"Spend 10–15 minutes on the tight spots — hips, ankles, T-spine. Follow a saved routine so you're not improvising.",
+  // nutrition
+  groceries:"Check what's low, write a list against your usual meals, and shop once so you're not back midweek.",
+  mealprep:"Batch a couple of proteins, a grain and some veg. Cook once, portion into containers, and label anything for the freezer.",
+  supps:"Reorder what's running low before you're out. Put the daily stack in one basket to save on shipping.",
+  protein:"Reorder protein and creatine before the tub's empty — buy the size you actually get through so it stays fresh.",
+  stack:"Review the stack against recent bloodwork. Drop anything not earning its place; confirm doses and timing still make sense.",
+  recipe:"Pick one new recipe and actually cook it. Add the ingredients to your grocery list, and keep it if it was good.",
+  // mind
+  therapy:"Book or attend the session. Between appointments, spend the slot journalling on what's on your mind and what you want to work on.",
+  journal:"Do a weekly review — what happened, what mattered, what's next. Fifteen minutes with your calendar and notes open.",
+  meditate:"Sit for ten minutes — breath focus or a guided app. Same time each day (mornings are easiest) so it sticks.",
+  wins:"Write down a few wins and things you're grateful for. Keep a running list — it's fuel for reviews and low days.",
+  // grooming
+  haircut:"Book the barber or salon before it gets shaggy. Rebook your usual person and save their number if you keep forgetting.",
+  skincare:"Restock what's low — cleanser, moisturiser, actives. Reorder together and check nothing's expired.",
+  exfoliate:"Exfoliate or do a mask — about ten minutes. Follow with moisturiser and don't overdo the frequency.",
+  sunscreen:"Reorder before the bottle's done. Keep one by the door and one in your bag so you actually use it.",
+  nails:"Trim and tidy fingernails and toenails — five minutes after a shower when they're soft.",
+  massage:"Book a massage or bodywork session. Tell them where you hold tension, and rebook the next one before you leave.",
+  // home
+  reset:"Quick whole-home reset — surfaces cleared, things back where they live, a load of laundry on. 20–30 minutes.",
+  bathroom:"Wipe the sink, toilet, mirror and shower. Keep spray and cloths under the sink so it's a ten-minute job.",
+  floors:"Clear the floor, then vacuum and mop the main areas. Do the whole level while you're at it.",
+  sheets:"Strip and wash the bed linen and towels. Remake the bed the same day so you're not on a bare mattress.",
+  dust:"Dust surfaces, shelves and screens with a microfibre cloth, top-down so you're not re-dusting. Don't skip the tech.",
+  kitchen:"Clear the counters, then deep-wipe worktops, stovetop, splashback and sink. Hit the handles and the bin lid.",
+  fridge2:"Toss anything past it, wipe the shelves, take stock. Do it the night before grocery day so you know what to buy.",
+  descale:"Descale the kettle and teaware with citric acid or vinegar — fill, sit, rinse well. Monthly keeps limescale off.",
+  appliances:"Run a hot empty cycle on the dishwasher and washer with cleaner. Clear the filters and leave the doors ajar to dry.",
+  baseboards:"Wipe skirting boards, door handles and light switches with a damp cloth — the high-touch spots that get missed.",
+  bathdeep:"Set aside an hour: grout, tiles, extractor fan, behind the loo. Proper products and some elbow grease.",
+  windows:"Clean windows and mirrors inside (and out where you can reach). A cloudy day means they won't streak.",
+  filters:"Swap or wash the air/HVAC filters. Note the size, keep a spare, and set the next date so you don't forget.",
+  purge:"Pick a category and clear what you don't use — clothes, cables, kitchen clutter. Bag it for donation the same day.",
+  declutter:"Empty one problem drawer or shelf, bin the junk, and put the rest back with intent. One spot, start to finish.",
+  bedding:"Wash the pillows and duvet (check the care label). Dry them fully — tennis balls help fluff — before they go back.",
+  mattress:"Flip or rotate the mattress so it wears evenly. Vacuum it while it's exposed and air the room.",
+  closet:"Swap the seasonal wardrobe. Store the off-season stuff and set aside anything you didn't wear to donate.",
+  // money
+  networth:"Pull balances across accounts, log the total in your tracker, and note what moved and why.",
+  rebalance:"Check allocation drift against your targets. Rebalance if a band's off — prefer steering new contributions over selling.",
+  budget:"Review last month's spending by category. Flag surprises, cancel waste, and adjust next month's plan.",
+  subs:"Scan card and app-store statements for subscriptions. Cancel what you don't use; note the renewal dates for the rest.",
+  credit:"Pull your free credit report. Scan for errors or unknown accounts, dispute anything wrong, and check the score trend.",
+  thesis:"Revisit each holding: does the reason you bought it still hold? Trim, add or leave — and write down why.",
+  roth:"Three steps: contribute non-deductible money to a traditional IRA, convert it to Roth, then file Form 8606. Zero any pre-tax IRA balance first to dodge the pro-rata rule.",
+  // career
+  bragdoc:"Add recent wins while they're fresh — impact, numbers, who noticed. Future-you writing reviews will thank you.",
+  oneonone:"Jot a short agenda — blockers, wins, asks. Send it ahead if your manager likes that.",
+  skill:"Spend focused time deliberately practising one skill, not just doing the job. Pick the edge of your ability and drill it.",
+  promo:"Move the case one step: gather evidence, align with your manager, or close a gap the rubric names.",
+  resume:"Refresh your resume and LinkedIn with recent work — easiest while it's fresh, even if you're not looking.",
+  network:"Reach out to one person — a coffee, a reply, a genuine check-in. No agenda; just keep the relationship warm.",
+  goals:"Review your goals and priorities. Are you spending time on what matters? Cut or reorder for the next stretch.",
+  lifeplan:"Zoom out — career, money, health, relationships. Are the current defaults still the right ones?",
+  // gear
+  bikeclean:"Degrease and re-lube the drivetrain and wipe the frame. Twenty minutes keeps shifting crisp and parts lasting.",
+  bikeservice:"Book a full service (or do it): brakes, gears, bearings, bolts to torque. Before a big trip or at season's change.",
+  watchcare:"Wipe down watches and leather, condition the straps, wind or set anything mechanical, and store them properly.",
+  cameracare:"Clean the sensor and lenses, blow out dust, charge batteries and format cards — before a shoot, not during.",
+  backups:"Back up photos and files to a second place (drive plus cloud). Verify the last backup actually ran and can restore.",
+  passwords:"Security pass: check the password manager for weak or reused logins, rotate the important ones, confirm 2FA and recovery codes.",
+  // people
+  family:"Call family — not a text. Put it in the calendar if it slips, and ask about them, not just logistics.",
+  friend:"Reach out and actually catch up. Suggest a specific time; a short call beats another 'we should hang.'",
+  plan:"Plan something social — dinner, a trip, a game night. Pick a date and send the invite; someone has to be the one.",
+  checkin:"Check in on someone who's had a lot on. A simple 'thinking of you, how are you really?' goes a long way.",
+  birthdays:"Look at the month's birthdays and get ahead — cards, gifts, plans. Set reminders so none sneak up.",
+  // craft
+  shoot:"Go out and shoot with intent — a location, a subject, a constraint. Leave the phone and come back with something you like.",
+  edit:"Cull and edit a recent shoot. Ruthless first pass, then edit the keepers, export, and back up the finals.",
+  read:"Read your current book — a real session, not a page. Same slot each day (before bed or with coffee) builds the habit.",
+  teatime:"Brew properly and sit with it, no screen. Right leaf, right water, a few steeps — a small ritual to slow down.",
+  // rest
+  dayoff:"Take a real day off — no work, no chores dressed up as rest. Plan nothing, or plan something purely for you.",
+  longwknd:"Book a long weekend away, somewhere a short hop out. Even one night resets more than you'd think.",
+  trip:"Plan a proper trip — time off booked, somewhere that's actually a break. Sort the big rocks (flights, dates) first.",
+  offline:"Spend a day off the internet. Tell people beforehand, park the phone, and do the analogue things you keep meaning to.",
+  outside:"Get outside in nature — a walk, a park, a trail. Even 30 minutes of green and daylight; leave the earbuds out sometimes."
+};
+function howTo(d){const n=NOTES[d.id];return n?`<p class="sh-note" style="margin:0 0 18px">${n}</p>`:'';}
+
 /* storage */
 const KEY='theyear.v4'; let mem=null,_cache=null;
 function load(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return mem;}}
@@ -693,6 +796,7 @@ function editDial(id){
   const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">Last done ${d.last?fmtDate(d.last):'not yet'} · every ${d.interval} days</div>
+    ${howTo(d)}
     <div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
     <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>
     <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="edTier">${tierButtons(curTier)}</div></div>
@@ -710,6 +814,7 @@ function editChain(d){
   const steps=d.chain.map((s,i)=>{const col=i<cs.step?'var(--ink-faint)':(i===cs.step&&!cs.completed?'var(--ember)':'var(--ink-dim)');return `<div class="sh-note" style="margin:0 0 6px;color:${col}">${i+1}. ${s.label}${i<cs.step?' ✓':''}</div>`;}).join('');
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">A chain · ${cs.completed?'done for now, recharging':('step '+(cs.step+1)+' of '+cs.len)}</div>
+    ${howTo(d)}
     <div style="margin-bottom:18px">${steps}</div>
     <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edReset">Reset</button><button class="btn primary" id="edDone">${cs.completed?'Close':'Do this step'}</button></div>`);
   sheet.querySelector('#edReset').addEventListener('click',()=>{state.dials[d.id]={step:0,last:null};save();closeSheet();rerender();toast('Chain reset.');});
@@ -722,6 +827,7 @@ function editDateDial(d){
   const dueVal=yr+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0');
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">Recharges toward a date, every year</div>
+    ${howTo(d)}
     <div class="field"><label>Due date</label><input type="date" id="edDue" value="${dueVal}"></div>
     <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">${done?'Mark not done':'Mark done'}</button></div>`);
   sheet.querySelector('#edDone').addEventListener('click',()=>{setDateDone(d,!done);save();closeSheet();rerender();toast(done?('Reopened — '+d.label):('Done — '+d.label));});
