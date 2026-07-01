@@ -52,6 +52,15 @@
   .tabsec{display:none;margin-top:26px}
   .tabsec.active{display:block}
 
+  /* on-repeat summary stats */
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 30px}
+  .stat{flex:1;min-width:96px;background:linear-gradient(180deg,var(--raised),var(--dial-2));border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .stat .n{font-family:var(--serif);font-size:31px;line-height:1;color:var(--ink)}
+  .stat .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-top:9px}
+  .stat.ready .n{color:var(--ember)}
+  .stat.low .n{color:var(--brass)}
+  .stat.charged .n{color:var(--patina)}
+
   section{margin-top:clamp(38px,6vw,60px)}
   .shead{display:flex;align-items:baseline;gap:16px;margin-bottom:22px;flex-wrap:wrap}
   .shead h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,4vw,34px);margin:0;letter-spacing:-.01em}
@@ -200,6 +209,7 @@
       <h2>On repeat</h2>
       <span class="sub">Everything you do over and over. Tap a card when it's done and the ring fills back up. Skip whatever you want — nothing stacks up and nothing goes overdue.</span>
     </div>
+    <div class="stats" id="rhythmStats"></div>
     <div id="rhythms"></div>
   </section>
 
@@ -644,7 +654,18 @@ function dialHTML(d,animate){
     <button class="dedit" data-edit="${d.id}" aria-label="Details: ${d.label}">${DOTS}</button>
   </div>`;
 }
+function renderStats(){
+  const ds=allDials();const today=todayISO();let ready=0,low=0,charged=0,doneToday=0;
+  ds.forEach(d=>{
+    const s=computeStatus(d);
+    if(!s.dormant&&!s.done){if(s.glow)ready++;else if(s.reserve<0.45)low++;else charged++;}
+    if(d.mode!=='date'&&!d.chain&&d.last===today)doneToday++;
+  });
+  const cells=[['ready',ready,'Ready now'],['low',low,'Getting low'],['charged',charged,'Charged'],['done',doneToday,'Done today']];
+  document.getElementById('rhythmStats').innerHTML=cells.map(c=>`<div class="stat ${c[0]}"><div class="n">${c[1]}</div><div class="l">${c[2]}</div></div>`).join('');
+}
 function renderRhythms(animate){
+  renderStats();
   const host=document.getElementById('rhythms');const dials=allDials();
   host.innerHTML=AREAS.map(a=>{
     const items=sortDials(dials.filter(d=>d.area===a.id));if(!items.length)return '';
@@ -729,7 +750,14 @@ function openSheet(html){sheet.innerHTML='<div class="grab"></div>'+html;scrim.c
 function closeSheet(){scrim.classList.remove('on');sheet.classList.remove('on');}
 scrim.addEventListener('click',closeSheet);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
-let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1900);}
+let toastT,undoSnap=null;
+function markUndoPoint(){undoSnap=JSON.stringify(state);}
+function undo(){if(undoSnap==null)return;state=JSON.parse(undoSnap);undoSnap=null;save();rerender();toast('Undone.');}
+function toast(m,undoable){
+  const t=document.getElementById('toast');t.textContent=m;
+  if(undoable&&undoSnap!=null){const b=document.createElement('button');b.className='toast-undo';b.textContent='Undo';b.addEventListener('click',()=>{t.classList.remove('on');clearTimeout(toastT);undo();});t.appendChild(b);}
+  t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),undoable?4400:1900);
+}
 const reduced=()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 function popCard(sel){const c=document.querySelector(sel);if(c&&!reduced()){c.classList.add('just-done');setTimeout(()=>c.classList.remove('just-done'),500);}}
 const PRESETS=[['Weekly',7],['Bi-weekly',14],['Monthly',30],['62-day rest',62],['Quarterly',90],['Semi-annual',182],['Annual',365]];
