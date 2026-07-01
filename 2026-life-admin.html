@@ -89,6 +89,16 @@
   .pip.on{background:var(--patina)}
   .pip.cur{background:var(--ember);box-shadow:0 0 0 3px rgba(209,138,86,.18)}
   .chain-tag{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+  .chain-steps{display:flex;flex-direction:column;gap:9px}
+  .cstep{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-dim)}
+  .cstep.done{color:var(--ink-faint)}
+  .cstep.done svg{width:15px;height:15px;color:var(--patina);flex:none}
+  .cstep.cur{color:var(--ember)}
+  .cstep .cnum{flex:none;display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;border:1px solid var(--line);font-family:var(--mono);font-size:9px;color:var(--ink-faint)}
+  .cstep.cur .cnum{border-color:var(--ember);color:var(--ember)}
+  .linklike{background:none;border:0;color:var(--ink-faint);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:10px 0 0;margin:0}
+  .linklike:hover{color:var(--ember)}
+  .linklike:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:3px}
   @keyframes breathe{0%,100%{opacity:.85}50%{opacity:.45}}
   @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:scale(1)}}
   .dial.just-done{animation:pop .5s ease}
@@ -812,52 +822,52 @@ function maybeOffer(d){if(!d.onDoneOffer||!d.onDoneOffer.length)return;
   }));
   sheet.querySelector('#offClose').addEventListener('click',closeSheet);
 }
-/* one edit sheet for every task; only the recharge control differs by mode */
+/* one edit sheet for every task — same scaffold for interval, date and chain;
+   only the recharge control (and a chain's read-only step list) differ by mode */
 function editDial(id){
   const d=findDial(id);if(!d)return;
-  if(d.chain){editChain(d);return;}
-  const isDate=d.mode==='date';let curTier=tierOf(d);
-  const sub=isDate?'Recharges toward a date each year':('Last done '+(d.last?fmtDate(d.last):'not yet')+' · every '+d.interval+' days');
+  const isChain=!!d.chain,isDate=d.mode==='date';let curTier=tierOf(d);
+  const cs=isChain?chainState(d):null;
+  const sub=isChain?('A chain · '+(cs.completed?'done for now, recharging':('step '+(cs.step+1)+' of '+cs.len)))
+    :isDate?'Recharges toward a date each year'
+    :('Last done '+(d.last?fmtDate(d.last):'not yet')+' · every '+d.interval+' days');
+  const stepsBlock=isChain?(`<div class="field"><label>Steps</label><div class="chain-steps">`+
+      d.chain.map((s,i)=>{const cl=(cs.completed||i<cs.step)?'done':(i===cs.step?'cur':'wait');return `<div class="cstep ${cl}">${cl==='done'?CHECK_SM:('<span class="cnum">'+(i+1)+'</span>')}<span>${s.label}</span></div>`;}).join('')
+      +`</div><button class="linklike" id="edReset">Reset progress</button></div>`):'';
   let recharge;
   if(isDate){
     const dueVal=curYear()+'-'+String(d.dueM+1).padStart(2,'0')+'-'+String(d.dueD||1).padStart(2,'0');
     recharge=`<div class="field"><label>Due date · recharges toward this</label><input type="date" id="edDue" value="${dueVal}"></div>`;
   }else{
     const chips=PRESETS.map(p=>`<button class="preset ${p[1]==d.interval?'sel':''}" data-int="${p[1]}">${p[0]}</button>`).join('');
-    recharge=`<div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>
-    <div class="field"><label>Repeat every (days)</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>`;
+    const lastField=isChain?'':`<div class="field"><label>Last done</label><input type="date" id="edLast" value="${d.last||todayISO()}" max="${todayISO()}"></div>`;
+    recharge=lastField+`<div class="field"><label>${isChain?'Repeat the whole chain every (days)':'Repeat every (days)'}</label><input type="number" id="edInt" min="1" max="1460" value="${d.interval}"><div class="presets" id="edInts">${chips}</div></div>`;
   }
-  const doneLbl=isDate?(isDateDone(d,curYear())?'Mark not done':'Mark done'):'Done today';
+  const doneLbl=isChain?(cs.completed?'Recharging…':'Do this step'):isDate?(isDateDone(d,curYear())?'Mark not done':'Mark done'):'Done today';
+  const doneDis=isChain&&cs.completed?' disabled':'';
   openSheet(`<h3>${d.label}</h3>
     <div class="sh-sub">${sub}</div>
     ${howTo(d)}
+    ${stepsBlock}
     ${recharge}
     <div class="field"><label>Priority · cost of skipping</label><div class="presets" id="edTier">${tierButtons(curTier)}</div></div>
-    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone">${doneLbl}</button></div>`);
+    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edSave">Save</button><button class="btn primary" id="edDone"${doneDis}>${doneLbl}</button></div>`);
   sheet.querySelectorAll('#edTier .preset').forEach(b=>b.addEventListener('click',()=>{curTier=b.dataset.tier;sheet.querySelectorAll('#edTier .preset').forEach(x=>x.classList.toggle('sel',x===b));}));
   sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
-  if(isDate){
+  if(!isDate)sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
+  const readInt=()=>Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval);
+  if(isChain){
+    sheet.querySelector('#edReset').addEventListener('click',()=>{markUndoPoint();state.dials[id]={step:0,last:null,interval:readInt(),tier:curTier};save();closeSheet();rerender();toast('Chain reset.',true);});
+    sheet.querySelector('#edSave').addEventListener('click',()=>{state.dials[id]={...(state.dials[id]||{}),interval:readInt(),tier:curTier};save();closeSheet();rerender();toast('Saved.');});
+    if(!cs.completed)sheet.querySelector('#edDone').addEventListener('click',()=>{closeSheet();markDone(id);});
+  }else if(isDate){
     sheet.querySelector('#edDone').addEventListener('click',()=>{markUndoPoint();const nd=!isDateDone(d,curYear());setDateDone(d,nd);save();closeSheet();rerender();toast(nd?('Done — '+d.label):('Reopened — '+d.label),true);});
     sheet.querySelector('#edSave').addEventListener('click',()=>{const st=state.dials[id]||{};const v=sheet.querySelector('#edDue').value;if(v){const p=v.split('-').map(Number);st.dueM=p[1]-1;st.dueD=p[2];}st.tier=curTier;state.dials[id]=st;save();closeSheet();rerender();toast('Saved.');});
   }else{
-    sheet.querySelectorAll('#edInts .preset').forEach(b=>b.addEventListener('click',()=>{sheet.querySelector('#edInt').value=b.dataset.int;sheet.querySelectorAll('#edInts .preset').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}));
-    const write=last=>{state.dials[id]={...(state.dials[id]||{}),last,interval:Math.max(1,parseInt(sheet.querySelector('#edInt').value)||d.interval),tier:curTier};};
+    const write=last=>{state.dials[id]={...(state.dials[id]||{}),last,interval:readInt(),tier:curTier};};
     sheet.querySelector('#edDone').addEventListener('click',()=>{markUndoPoint();write(todayISO());save();closeSheet();rerender();toast('Done — '+d.label,true);});
     sheet.querySelector('#edSave').addEventListener('click',()=>{write(sheet.querySelector('#edLast').value||d.last);save();closeSheet();rerender();toast('Saved.');});
   }
-}
-/* chain edit: shows the steps, never overwrites the {step,last} progress */
-function editChain(d){
-  const cs=chainState(d);
-  const steps=d.chain.map((s,i)=>{const col=i<cs.step?'var(--ink-faint)':(i===cs.step&&!cs.completed?'var(--ember)':'var(--ink-dim)');return `<div class="sh-note" style="margin:0 0 6px;color:${col}">${i+1}. ${s.label}${i<cs.step?' ✓':''}</div>`;}).join('');
-  openSheet(`<h3>${d.label}</h3>
-    <div class="sh-sub">A chain · ${cs.completed?'done for now, recharging':('step '+(cs.step+1)+' of '+cs.len)}</div>
-    ${howTo(d)}
-    <div style="margin-bottom:18px">${steps}</div>
-    <div class="sheet-actions"><button class="btn ghost" id="edDel">Remove</button><button class="btn" id="edReset">Reset</button><button class="btn primary" id="edDone">${cs.completed?'Close':'Do this step'}</button></div>`);
-  sheet.querySelector('#edReset').addEventListener('click',()=>{state.dials[d.id]={step:0,last:null};save();closeSheet();rerender();toast('Chain reset.');});
-  sheet.querySelector('#edDel').addEventListener('click',()=>{removeDial(d);save();closeSheet();rerender();toast('Removed.');});
-  sheet.querySelector('#edDone').addEventListener('click',()=>{closeSheet();if(!cs.completed)markDone(d.id);});
 }
 function addDial(){
   const areaOpts=AREAS.map(a=>`<option value="${a.id}">${a.label}</option>`).join('');
