@@ -339,13 +339,13 @@ const AREAS=[
 ];
 const DEFAULT_DIALS=[
   // health (medical checkups)
-  {id:'physical', area:'health', label:'Annual physical',       icon:'heart',   interval:365, seed:250},
-  {id:'bloodwork',area:'health', label:'Full blood + hormone panel',      icon:'vial',    interval:180, seed:150},
-  {id:'dental',   area:'health', label:'Dental cleaning',       icon:'tooth',   interval:100, seed:80},
-  {id:'eye',      area:'health', label:'Eye exam',              icon:'eye',     interval:365, seed:200},
+  {id:'physical', area:'health', label:'Annual physical',       icon:'heart',   interval:365, chain:[{label:'Book'},{label:'Take'}]},
+  {id:'bloodwork',area:'health', label:'Full blood + hormone panel',      icon:'vial',    interval:180, chain:[{label:'Book'},{label:'Take'}]},
+  {id:'dental',   area:'health', label:'Dental cleaning',       icon:'tooth',   interval:100, chain:[{label:'Book'},{label:'Take'}]},
+  {id:'eye',      area:'health', label:'Eye exam',              icon:'eye',     interval:365, chain:[{label:'Book'},{label:'Take'}]},
   {id:'derm',     area:'health', label:'Skin & mole check',     icon:'scan',    interval:365, seed:330},
-  {id:'flu',      area:'health', label:'Flu shot',              icon:'syringe', interval:365, seed:280},
-  {id:'dexa',     area:'health', label:'DEXA body scan',        icon:'bone',    interval:365, seed:120},
+  {id:'flu',      area:'health', label:'Flu shot',              icon:'syringe', interval:365, chain:[{label:'Book'},{label:'Take'}]},
+  {id:'dexa',     area:'health', label:'DEXA body scan',        icon:'bone',    interval:365, chain:[{label:'Book'},{label:'Take'}]},
   {id:'physio',   area:'health', label:'Physio / mobility check',icon:'dumbbell',interval:180,seed:100},
   // fitness (training)
   {id:'vo2',      area:'fitness',label:'VO2max / lactate test', icon:'lungs',   interval:365, seed:240},
@@ -355,7 +355,7 @@ const DEFAULT_DIALS=[
   // mind
   {id:'journal',  area:'mind',   label:'Weekly review & journal',icon:'doc',    interval:14,  seed:9},
   // grooming
-  {id:'haircut',  area:'body',   label:'Haircut',               icon:'scissors',interval:35,  seed:27},
+  {id:'haircut',  area:'body',   label:'Haircut',               icon:'scissors',interval:35,  chain:[{label:'Book'},{label:'Take'}]},
   {id:'skincare', area:'home',   label:'Restock sunscreen & skincare',icon:'droplet',interval:60, seed:45},
   {id:'nails',    area:'body',   label:'Nails',                 icon:'scissors',interval:21,  seed:14},
   // home & cleaning
@@ -397,7 +397,7 @@ const DEFAULT_DIALS=[
   {id:'hsa',      area:'money',  label:'Max & move the HSA',    icon:'pill',    interval:365, tier:'need', chain:[{label:'Max the HSA', m:0},{label:'Move to Fidelity', m:0}]},
   {id:'taxes',    area:'money',  label:'Do taxes',              icon:'doc',     interval:365, tier:'need', chain:[{label:'Gather tax documents', m:1},{label:'File taxes', m:3, hard:true}]},
   {id:'carreg',   area:'car',    label:'Car registration',      icon:'card',    interval:365, tier:'need', chain:[{label:'Register', m:6},{label:'Pick up plates/tags', m:6}]},
-  {id:'oilchange',area:'car',    label:'Oil change',            icon:'refresh', interval:365, seed:200},
+  {id:'oilchange',area:'car',    label:'Oil change',            icon:'refresh', interval:365, chain:[{label:'Book'},{label:'Take'}]},
   {id:'tires',    area:'car',    label:'Rotate tires',          icon:'clock',   interval:180, seed:90},
   {id:'carwash',  area:'car',    label:'Wash the car',          icon:'droplet', interval:30,  seed:20}
 ];
