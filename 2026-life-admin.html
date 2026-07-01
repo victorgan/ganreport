@@ -329,6 +329,7 @@ const AREAS=[
   {id:'mind',      label:'Mind'},
   {id:'body',      label:'Grooming'},
   {id:'home',      label:'Home & cleaning'},
+  {id:'inventory', label:'Home inventory'},
   {id:'money',     label:'Money'},
   {id:'career',    label:'Career & planning'},
   {id:'gear',      label:'Gear & upkeep'},
@@ -351,25 +352,26 @@ const DEFAULT_DIALS=[
   {id:'vo2',      area:'fitness',label:'VO2max / lactate test', icon:'lungs',   interval:365, seed:240},
   {id:'longride', area:'fitness',label:'Long ride or run',      icon:'bike',    interval:14,  seed:9},
   // nutrition (logistics, no targets)
-  {id:'supps',    area:'nutrition',label:'Restock & review supplements',  icon:'pill',    interval:30,  seed:20},
+  {id:'supps',    area:'inventory',label:'Restock & review supplements',  icon:'pill',    interval:30,  seed:20},
   // mind
   {id:'journal',  area:'mind',   label:'Weekly review & journal',icon:'doc',    interval:14,  seed:9},
   // grooming
   {id:'haircut',  area:'body',   label:'Haircut',               icon:'scissors',interval:35,  chain:[{label:'Book'},{label:'Take'}]},
-  {id:'skincare', area:'home',   label:'Restock sunscreen & skincare',icon:'droplet',interval:60, seed:45},
+  {id:'skincare', area:'inventory',label:'Restock sunscreen & skincare',icon:'droplet',interval:60, seed:45},
   {id:'nails',    area:'body',   label:'Nails',                 icon:'scissors',interval:21,  seed:14},
   // home & cleaning
   {id:'sheets',   area:'home',   label:'Wash sheets & towels',  icon:'shirt',   interval:12,  seed:8},
   {id:'dust',     area:'home',   label:'Dust & wipe surfaces',  icon:'air',     interval:14,  seed:10},
   {id:'kitchen',  area:'home',   label:'Deep-wipe the kitchen', icon:'spray',   interval:30,  seed:20},
+  {id:'island',   area:'home',   label:'Clean the kitchen island',icon:'spray', interval:14,  seed:9},
+  {id:'toiletries',area:'inventory',label:'Restock toiletries',  icon:'spray',   interval:30,  seed:20},
   {id:'fridge2',  area:'home',   label:'Clear out the fridge',  icon:'fridge',  interval:30,  seed:24},
-  {id:'descale',  area:'home',   label:'Descale kettle & teaware',icon:'tea',   interval:30,  seed:18},
   {id:'baseboards',area:'home',  label:'Baseboards & door handles',icon:'spray',interval:45,  seed:25},
   {id:'bathdeep', area:'home',   label:'Deep-clean the bathroom',icon:'droplet',interval:90,  seed:60},
   {id:'windows',  area:'home',   label:'Windows & mirrors',     icon:'window',  interval:90,  seed:70},
   {id:'purge',    area:'home',   label:'Purge things you don’t use',icon:'box', interval:90,  seed:30},
   {id:'declutter',area:'home',   label:'Organize for 20 minutes',icon:'box',    interval:60,  seed:40},
-  {id:'mattress', area:'home',   label:'Flip / rotate the mattress',icon:'bed', interval:180, seed:120},
+  {id:'mattress', area:'home',   label:'Flip / rotate the mattress',icon:'bed', interval:365, seed:240},
   // money
   {id:'networth', area:'money',  label:'Update net worth',      icon:'chart',   interval:30,  seed:20},
   {id:'budget',   area:'money',  label:'Review spending',       icon:'wallet',  interval:30,  seed:16},
