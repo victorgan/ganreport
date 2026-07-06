@@ -13,8 +13,8 @@
 */
 const TOKEN = 'change-me-to-something-secret';
 
-const ITEM_COLS = ['id','name','category','locId','place','qty','value','condition','min','added','warranty','lentTo','tags','notes'];
-const LOC_COLS  = ['id','parentId','name','path'];
+const ITEM_COLS = ['id','name','category','locId','place','currentLocId','currentlyAt','qty','value','condition','min','added','warranty','lentTo','tags','notes'];
+const LOC_COLS  = ['id','parentId','name','kind','status','path'];
 
 function doGet(e){
   if(!e || !e.parameter || e.parameter.token !== TOKEN) return json({error:'bad token'});
@@ -23,14 +23,16 @@ function doGet(e){
     updatedAt: Number(metaSheet(ss).getRange('B1').getValue()) || 0,
     items: readRows(ss,'Items',ITEM_COLS).map(function(r){ return {
       id:Number(r.id), name:String(r.name||''), category:String(r.category||''),
-      locId:String(r.locId||''), qty:Number(r.qty)||0, value:Number(r.value)||0,
+      locId:String(r.locId||''), currentLocId:String(r.currentLocId||'')||undefined,
+      qty:Number(r.qty)||0, value:Number(r.value)||0,
       condition:String(r.condition||'Good'), min:Number(r.min)||0,
       added:isoDate(r.added), warranty:isoDate(r.warranty),
       lentTo:String(r.lentTo||''), notes:String(r.notes||''),
       tags:String(r.tags||'').split(',').map(function(t){return t.trim();}).filter(String)
     };}).filter(function(i){return i.id && i.name;}),
     locs: readRows(ss,'Places',LOC_COLS).map(function(r){ return {
-      id:String(r.id), parentId:r.parentId?String(r.parentId):null, name:String(r.name||'')
+      id:String(r.id), parentId:r.parentId?String(r.parentId):null, name:String(r.name||''),
+      kind:String(r.kind||'')||undefined, status:String(r.status||'')||undefined
     };}).filter(function(l){return l.id && l.name;})
   });
 }
@@ -41,10 +43,12 @@ function doPost(e){
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const pathOf = mkPathOf(body.locs||[]);
   writeRows(ss,'Items',ITEM_COLS,(body.items||[]).map(function(i){ return [
-    i.id, i.name, i.category, i.locId, pathOf(i.locId), i.qty, i.value, i.condition, i.min,
+    i.id, i.name, i.category, i.locId, pathOf(i.locId),
+    i.currentLocId||'', i.currentLocId?pathOf(i.currentLocId):'',
+    i.qty, i.value, i.condition, i.min,
     i.added||'', i.warranty||'', i.lentTo||'', (i.tags||[]).join(', '), i.notes||''
   ];}));
-  writeRows(ss,'Places',LOC_COLS,(body.locs||[]).map(function(l){ return [l.id, l.parentId||'', l.name, pathOf(l.id)];}));
+  writeRows(ss,'Places',LOC_COLS,(body.locs||[]).map(function(l){ return [l.id, l.parentId||'', l.name, l.kind||'', l.status||'', pathOf(l.id)];}));
   metaSheet(ss).getRange('A1:B1').setValues([['updatedAt', body.updatedAt||Date.now()]]);
   return json({ok:true});
 }
