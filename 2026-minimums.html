@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paceline — a weak-link audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter+Tight:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* tarmac & road paint */
+  --tarmac:#12171A;
+  --tarmac-2:#1A2126;
+  --tarmac-3:#222B31;
+  --kerb:#2B353B;
+  --paint:#EDEDE8;
+  --paint-dim:#96A1A5;
+  --paint-faint:#5F6C70;
+  --jaune:#F0CE2E;
+  --jaune-deep:#6E5D14;
+  --flamme:#D9432B;
+  --verge:#6FA88C;
+
+  --t0:#7FA3B5; --t1:#9DBAC8; --t2:#BACFD9; --t3:#D7E3E9;
+
+  --sp:clamp(16px,4vw,30px);
+  --disp:'Barlow Condensed',Impact,sans-serif;
+  --body:'Inter Tight',system-ui,-apple-system,sans-serif;
+  --data:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--tarmac);color:var(--paint);
+  font-family:var(--body);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 var(--sp) 80px}
+
+.mono{font-family:var(--data)}
+.eyebrow{font-family:var(--data);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--paint-faint)}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:24px 0 16px;border-bottom:2px solid var(--paint);margin-bottom:28px}
+.logo{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+.logo span{color:var(--jaune)}
+.tagline{font-size:12.5px;color:var(--paint-faint);flex:1;min-width:200px}
+.hbtns{display:flex;gap:8px;margin-left:auto}
+
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background:none;color:inherit}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--jaune);outline-offset:2px}
+.btn{font-family:var(--data);font-size:10.5px;font-weight:500;letter-spacing:.11em;text-transform:uppercase;padding:9px 13px;border:1px solid var(--kerb);color:var(--paint-dim);background:var(--tarmac-2);transition:all .15s}
+.btn:hover{border-color:var(--paint-faint);color:var(--paint);background:var(--tarmac-3)}
+.btn-primary{background:var(--jaune);color:#171205;border-color:var(--jaune);font-weight:600}
+.btn-primary:hover{background:#FFE04A;border-color:#FFE04A;color:#171205}
+.btn-ghost{background:none}
+
+/* ---------- verdict: the board ---------- */
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:0 30px;align-items:end;padding:2px 0 24px;border-bottom:1px solid var(--kerb);margin-bottom:24px}
+.stats{display:flex;gap:clamp(20px,6vw,44px);align-items:flex-end}
+.bignum{font-family:var(--disp);font-weight:700;font-size:clamp(70px,18vw,112px);line-height:.78;color:var(--jaune);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.bignum small{font-size:.3em;color:var(--paint-faint);font-weight:600;margin-left:3px}
+.midnum{font-family:var(--disp);font-weight:700;font-size:clamp(44px,11vw,66px);line-height:.78;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.statlab{font-family:var(--data);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--paint-faint);line-height:1.55;margin-top:10px}
+.statlab b{color:var(--paint-dim);font-weight:500}
+.vtext{padding-bottom:5px}
+.vhead{font-size:clamp(17px,4.2vw,22px);font-weight:500;line-height:1.3;margin-bottom:9px;color:var(--paint)}
+.vhead b{color:var(--flamme);font-weight:600}
+.vsub{font-size:13px;color:var(--paint-dim);line-height:1.55}
+.vsub b{color:var(--paint);font-weight:500}
+.queue{grid-column:1/-1;margin-top:22px;padding-top:18px;border-top:1px solid var(--kerb)}
+.qrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.qchip{font-family:var(--data);font-size:10.5px;padding:4px 9px;border:1px solid var(--kerb);color:var(--paint-dim);white-space:nowrap}
+.qchip.now{border-color:var(--flamme);color:var(--flamme)}
+.qarrow{color:var(--paint-faint);font-size:11px}
+
+/* ---------- focus ---------- */
+.focus{border-left:3px solid var(--jaune);background:linear-gradient(100deg,rgba(240,206,46,.07),transparent 70%);padding:18px 22px;margin-bottom:38px}
+.focus h3{font-family:var(--disp);font-size:30px;font-weight:600;letter-spacing:.005em;line-height:1.05;margin:8px 0 12px;text-transform:uppercase}
+.reasons{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:15px}
+.reason{font-family:var(--data);font-size:10px;padding:4px 9px;border:1px solid var(--jaune-deep);color:var(--jaune);letter-spacing:.03em}
+.focus p{font-size:13.5px;color:var(--paint-dim);margin-bottom:13px;max-width:64ch}
+.focus p:last-child{margin-bottom:0}
+.focus p b{color:var(--paint);font-weight:500}
+
+/* ---------- collapse clock ---------- */
+.clockbar{position:relative;height:52px;margin-top:16px}
+.cseg{position:absolute;top:0;bottom:18px;display:flex;align-items:center;justify-content:center;font-family:var(--data);font-size:9.5px;letter-spacing:.09em;color:var(--tarmac);font-weight:500;overflow:hidden;white-space:nowrap;transition:filter .15s}
+.cseg:hover{filter:brightness(1.12)}
+.ctick{position:absolute;bottom:0;font-family:var(--data);font-size:9px;color:var(--paint-faint);transform:translateX(-50%);white-space:nowrap}
+
+/* ---------- the road ---------- */
+.board{margin-bottom:38px}
+.boardhead{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:0 0 12px;flex-wrap:wrap;border-bottom:1px solid var(--kerb)}
+.legend{display:flex;gap:16px;flex-wrap:wrap}
+.lg{display:flex;align-items:center;gap:7px;font-size:10px;font-family:var(--data);color:var(--paint-faint);letter-spacing:.05em}
+.lg i{width:16px;height:3px;display:block;flex:0 0 auto}
+.lg i.dash{background:repeating-linear-gradient(90deg,var(--paint) 0 4px,transparent 4px 8px)}
+.lg i.ghost{background:var(--paint);opacity:.2}
+
+.riders{
+  --namecol:clamp(102px,25%,208px);--gapcol:26px;--valcol:26px;--colgap:11px;
+  position:relative;padding:0 0 8px;
+  background:linear-gradient(180deg,var(--tarmac-2),var(--tarmac) 70%);
+}
+.rrow,.paceoverlay,.rhead{display:grid;grid-template-columns:var(--namecol) 1fr var(--gapcol) var(--valcol);gap:var(--colgap)}
+
+.rhead{padding:11px 14px 7px;font-family:var(--data);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--paint-faint);position:relative;z-index:5}
+.rhead span:nth-child(3),.rhead span:nth-child(4){text-align:right}
+
+.paceoverlay{position:absolute;top:0;bottom:8px;left:14px;right:14px;pointer-events:none;z-index:3}
+.zonehost{grid-column:2;position:relative}
+/* off the road: colour drains out of anything past the yellow line */
+.surpluszone{
+  position:absolute;top:0;bottom:0;right:0;
+  background:rgba(18,23,26,.5);
+  -webkit-backdrop-filter:grayscale(.8) brightness(.5);
+  backdrop-filter:grayscale(.8) brightness(.5);
+  border-left:3px solid var(--jaune);
+  transition:left .5s cubic-bezier(.4,0,.2,1);
+}
+/* lane marking, drawn with real dash geometry */
+.targetline{position:absolute;top:0;bottom:0;width:2px;background:repeating-linear-gradient(180deg,var(--paint) 0 11px,transparent 11px 22px);opacity:.5}
+.plab,.tlab{position:absolute;font-family:var(--data);font-size:8.5px;letter-spacing:.14em;padding:2px 5px;white-space:nowrap;background:var(--tarmac)}
+.plab{top:0;left:6px;color:var(--jaune)}
+.tlab{bottom:0;right:5px;color:var(--paint-dim)}
+
+.rrow{align-items:center;min-height:32px;width:100%;text-align:left;padding:3px 14px;transition:background .14s}
+.rname{font-size:13px;font-weight:500;line-height:1.24;overflow-wrap:anywhere}
+.rtrack{position:relative;height:14px;background:rgba(237,237,232,.05)}
+.rbar{position:absolute;left:0;top:0;bottom:0;background:var(--paint);transition:width .25s ease}
+.rrow.under .rbar{background:var(--flamme)}
+.rrow.under .rname{color:var(--flamme)}
+.rrow.dim{opacity:.4}
+.rrow:hover{background:rgba(237,237,232,.05)}
+.rrow.sel{background:rgba(240,206,46,.08);box-shadow:inset 3px 0 0 var(--jaune)}
+.rgap{font-family:var(--data);font-size:10.5px;color:var(--flamme);text-align:right;font-variant-numeric:tabular-nums}
+.rval{font-family:var(--disp);font-weight:600;font-size:16px;color:var(--paint-dim);text-align:right;font-variant-numeric:tabular-nums;line-height:1}
+.rrow.under .rval{color:var(--flamme)}
+
+.tierbar{position:relative;z-index:5;padding:22px 14px 7px;margin-bottom:2px;border-bottom:1px solid var(--kerb)}
+.tbtop{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.tnum{font-family:var(--disp);font-size:26px;font-weight:700;line-height:1}
+.tname{font-family:var(--disp);font-size:15px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--paint)}
+.tclock{font-family:var(--data);font-size:9.5px;color:var(--paint-faint);margin-left:auto;letter-spacing:.04em}
+.tdesc{font-size:12px;color:var(--paint-faint);margin-top:4px;max-width:66ch}
+
+/* ---------- aside ---------- */
+.aside{border-left:2px solid var(--kerb);margin-bottom:30px}
+.aside summary{cursor:pointer;padding:12px 16px;font-family:var(--data);font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--paint-dim);list-style:none;display:flex;align-items:center;gap:10px}
+.aside summary::-webkit-details-marker{display:none}
+.aside summary::before{content:"+";font-size:14px;line-height:1;width:11px;flex:0 0 auto;color:var(--jaune)}
+.aside[open] summary::before{content:"\2013"}
+.aside summary:hover{color:var(--paint);background:rgba(237,237,232,.035)}
+.abody{padding:2px 16px 20px;font-size:13.5px;line-height:1.62;color:var(--paint-dim);max-width:74ch}
+.abody p{margin-bottom:12px}
+.abody p:last-child{margin-bottom:0}
+.abody b{color:var(--paint);font-weight:500}
+.abody h4{font-family:var(--disp);font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--paint);margin:20px 0 8px;font-weight:600}
+.abody .src{font-size:11.5px;color:var(--paint-faint);margin-top:16px;padding-top:11px;border-top:1px solid var(--kerb)}
+.twopix{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 6px}
+.pix{border:1px solid var(--kerb);background:var(--tarmac-2);padding:8px}
+.pix svg{width:100%;height:auto;display:block}
+.pixcap{font-family:var(--data);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--paint-faint);text-align:center;padding:7px 2px 2px}
+
+/* ---------- sheet ---------- */
+.scrim{position:fixed;inset:0;background:rgba(8,11,13,.85);z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:61;background:var(--tarmac-2);border:1px solid var(--kerb);border-top:3px solid var(--jaune);display:flex;flex-direction:column;left:50%;top:50%;transform:translate(-50%,-46%);width:min(620px,calc(100vw - 32px));max-height:min(86vh,860px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.sheet.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.sheethead{padding:18px 20px 15px;border-bottom:1px solid var(--kerb);position:relative;flex:0 0 auto}
+.sheetbody{overflow-y:auto;padding:18px 20px 24px;flex:1 1 auto;overscroll-behavior:contain}
+.closex{position:absolute;top:11px;right:11px;width:32px;height:32px;color:var(--paint-faint);font-size:19px;line-height:1}
+.closex:hover{background:var(--tarmac-3);color:var(--paint)}
+.sheettitle{font-family:var(--disp);font-size:34px;font-weight:600;letter-spacing:.01em;text-transform:uppercase;margin:7px 0 5px;padding-right:38px;line-height:1}
+.sheetjob{font-size:13px;color:var(--paint-dim)}
+.anchorhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:11px;flex-wrap:wrap}
+.anchors{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.anchor{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:11px 13px;border:1px solid var(--kerb);background:var(--tarmac);text-align:left;transition:all .13s;width:100%}
+.anchor:hover{border-color:var(--paint-faint);background:var(--tarmac-3)}
+.anchor.on{border-color:var(--jaune);background:rgba(240,206,46,.10)}
+.anchor.on .alvl{color:var(--jaune)}
+.anchor.targetstep{box-shadow:inset 3px 0 0 var(--paint)}
+.alvl{font-family:var(--data);font-size:9.5px;letter-spacing:.1em;color:var(--paint-faint);text-transform:uppercase;padding-top:2px;min-width:62px}
+.atext{font-size:13.5px;line-height:1.45}
+.anchor.on .atext{color:var(--paint)}
+.targethint{font-family:var(--data);font-size:9.5px;color:var(--paint-dim);letter-spacing:.1em}
+.effect{font-family:var(--data);font-size:11.5px;line-height:1.55;padding:11px 13px;margin:11px 0 20px;background:rgba(240,206,46,.06);border-left:2px solid var(--jaune);color:var(--jaune)}
+.effect.nul{background:rgba(237,237,232,.03);border-left-color:var(--kerb);color:var(--paint-faint)}
+.field{margin-bottom:16px}
+.field .eyebrow{display:block;margin-bottom:5px}
+.field p{font-size:13.5px;line-height:1.55;color:var(--paint-dim)}
+.field p b{color:var(--paint);font-weight:500}
+.couples{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.couple{font-family:var(--data);font-size:10.5px;padding:4px 9px;border:1px solid var(--kerb);color:var(--paint-dim);transition:all .13s}
+.couple:hover{border-color:var(--jaune);color:var(--jaune)}
+.couple.under{border-color:var(--flamme);color:var(--flamme)}
+.sheetnav{display:flex;gap:8px;justify-content:space-between;padding-top:14px;border-top:1px solid var(--kerb);margin-top:4px}
+.progress{height:2px;background:var(--kerb);overflow:hidden;margin-bottom:16px}
+.progress i{display:block;height:100%;background:var(--jaune);transition:width .3s ease}
+.gcount{font-family:var(--data);font-size:10px;color:var(--paint-faint);letter-spacing:.1em}
+
+/* ---------- history ---------- */
+.hist{border-top:1px solid var(--kerb);padding-top:26px}
+.spark{height:110px;width:100%;display:block;margin:14px 0 8px}
+.snaps{display:flex;flex-direction:column;margin-top:10px}
+.snap{display:grid;grid-template-columns:88px 40px 1fr auto;gap:12px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--kerb);font-size:13px}
+.snap .d{font-family:var(--data);font-size:11px;color:var(--paint-faint)}
+.snap .w{font-family:var(--disp);font-size:17px;font-weight:600;color:var(--jaune);line-height:1}
+.snap .m{color:var(--paint-dim);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.delta{font-family:var(--data);font-size:11px}
+.delta.up{color:var(--verge)}
+.delta.down{color:var(--flamme)}
+.delta.flat{color:var(--paint-faint)}
+.empty{font-size:13px;color:var(--paint-faint);padding:16px 0;line-height:1.6;max-width:60ch}
+
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:80;background:var(--tarmac-3);border-left:3px solid var(--jaune);padding:12px 16px;font-size:13px;max-width:min(440px,calc(100vw - 32px));opacity:0;pointer-events:none;transition:all .22s;line-height:1.45;box-shadow:0 12px 36px rgba(0,0,0,.6)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast b{color:var(--jaune);font-weight:500}
+
+.sectiontitle{font-family:var(--disp);font-size:23px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+.sectionnote{font-size:12.5px;color:var(--paint-faint);margin-bottom:14px;max-width:68ch}
+.sectionnote b{color:var(--paint-dim);font-weight:500}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.block{margin-bottom:38px}
+footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--kerb);font-size:12px;color:var(--paint-faint);line-height:1.65;max-width:72ch}
+
+@media (max-width:620px){
+  .verdict{grid-template-columns:1fr;gap:6px}
+  .vtext{padding-bottom:0}
+  .snap{grid-template-columns:74px 38px 1fr;row-gap:2px}
+  .snap .delta{grid-column:2/4}
+  .riders{--namecol:clamp(84px,32%,158px);--gapcol:22px;--valcol:20px;--colgap:9px}
+  .rrow,.rhead,.tierbar{padding-left:12px;padding-right:12px}
+  .paceoverlay{left:12px;right:12px}
+  .rrow{min-height:37px}
+  .rname{font-size:12.5px}
+  .twopix{grid-template-columns:1fr;gap:12px}
+  .sheet{top:auto;bottom:0;transform:translate(-50%,100%);width:100%;max-height:90vh;border-left:none;border-right:none;border-bottom:none}
+  .sheet.on{transform:translate(-50%,0)}
+  .anchor{grid-template-columns:1fr;gap:3px}
+  .alvl{padding-top:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">Pace<span>line</span></div>
+  <div class="tagline">Your group rides at the pace of its slowest rider — and you can't drop anyone.</div>
+  <div class="hbtns">
+    <button class="btn btn-ghost" id="btnGuide">Run audit</button>
+    <button class="btn btn-primary" id="btnSave">Save snapshot</button>
+  </div>
+</header>
+
+<div class="verdict">
+  <div class="stats">
+    <div class="stat"><div class="bignum" id="bigNum">—</div><div class="statlab">group pace<br><b>your ceiling</b></div></div>
+    <div class="stat"><div class="midnum" id="dragNum">—</div><div class="statlab">under target<br><b>your drag</b></div></div>
+  </div>
+  <div class="vtext">
+    <div class="vhead" id="vHead"></div>
+    <div class="vsub" id="vSub"></div>
+  </div>
+  <div class="queue">
+    <div class="eyebrow">Pace order — bring one up, the next rider sets it</div>
+    <div class="qrow" id="qRow"></div>
+  </div>
+</div>
+
+<div class="focus" id="focus"></div>
+
+<div class="block">
+  <div class="sectiontitle">The four tiers</div>
+  <p class="sectionnote">Tiers are not ranked by importance. They're ranked by <b>how fast a deficit becomes acute</b> — how loudly it screams for attention. Bar width is time-to-failure on a log scale.</p>
+  <div class="clockbar" id="clockbar"></div>
+  <p class="sectionnote" style="margin-top:6px">The dangerous tier is 2. Tier 0 and 1 deficits announce themselves. Tier 2 deficits erode silently over years and get misattributed to Tier 3 — riders with a loneliness deficit go looking for a purpose problem.</p>
+</div>
+
+<div class="sectiontitle">The group</div>
+<p class="sectionnote">23 riders, one group. You can't drop anyone — every one of these is yours and comes along. So the group always slows to the weakest, which is why the line sits where it does. Everything to the right of it is <b>surplus</b>: real capacity you hold and cannot spend. Tap any rider to set their pace.</p>
+
+<details class="aside">
+  <summary>Where this comes from &mdash; Liebig's barrel, and why this app isn't one</summary>
+  <div class="abody">
+    <p>The rule underneath both pictures is the <b>law of the minimum</b>: growth is limited by the scarcest resource relative to need, not by the total of all resources available. Pour more nitrogen onto soil that's short of phosphorus and nothing happens. It was first proposed by Carl Sprengel in 1840 and later popularised by Justus von Liebig.</p>
+
+    <p>The famous illustration &mdash; a barrel with staves of unequal length, holding water only as high as the shortest one &mdash; came later, and wasn't Liebig's. It's credited to Dobenecks, who used it to explain Liebig's law. Liebig gave the rule; someone else drew the picture that made it stick.</p>
+
+    <h4>Same function, different verb</h4>
+    <div class="twopix">
+      <div class="pix"><svg viewBox="0 0 240 150" role="img" aria-label="Barrel: six staves of unequal height, water held only to the shortest">
+  <line x1="12" y1="67" x2="228" y2="67" stroke="#EDEDE8" stroke-dasharray="4 4" stroke-width="1" opacity=".7"/>
+  <g>
+    <rect x="20"  y="46"  width="26" height="84" fill="#EDEDE8" opacity=".26"/>
+    <rect x="54"  y="88"  width="26" height="42" fill="#EDEDE8" opacity=".26"/>
+    <rect x="88"  y="25"  width="26" height="105" fill="#EDEDE8" opacity=".26"/>
+    <rect x="122" y="67"  width="26" height="63" fill="#EDEDE8" opacity=".26"/>
+    <rect x="156" y="25"  width="26" height="105" fill="#EDEDE8" opacity=".26"/>
+    <rect x="190" y="46"  width="26" height="84" fill="#EDEDE8" opacity=".26"/>
+  </g>
+  <rect x="12" y="88" width="216" height="42" fill="#F0CE2E" opacity=".20"/>
+  <g fill="#EDEDE8">
+    <rect x="20"  y="88" width="26" height="42"/><rect x="54"  y="88" width="26" height="42"/>
+    <rect x="88"  y="88" width="26" height="42"/><rect x="122" y="88" width="26" height="42"/>
+    <rect x="156" y="88" width="26" height="42"/><rect x="190" y="88" width="26" height="42"/>
+  </g>
+  <line x1="12" y1="88" x2="228" y2="88" stroke="#F0CE2E" stroke-width="2"/>
+  <line x1="12" y1="130" x2="228" y2="130" stroke="#2B353B" stroke-width="1"/>
+  <text x="12" y="83" fill="#F0CE2E" font-family="IBM Plex Mono,monospace" font-size="8" letter-spacing="1">MIN = 2</text>
+  <text x="228" y="63" fill="#EDEDE8" font-family="IBM Plex Mono,monospace" font-size="8" letter-spacing="1" text-anchor="end">TARGET 3</text>
+  <text x="120" y="145" fill="#5F6C70" font-family="IBM Plex Mono,monospace" font-size="8" text-anchor="middle">4 &#183; 2 &#183; 5 &#183; 3 &#183; 5 &#183; 4</text>
+</svg><div class="pixcap">barrel &mdash; a stock</div></div>
+      <div class="pix"><svg viewBox="0 0 240 150" role="img" aria-label="Paceline: the same six values as horizontal bars with one vertical pace line">
+  <defs><pattern id="hx" width="6" height="6" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse">
+    <rect width="6" height="6" fill="#12171A" opacity=".55"/><rect width="3" height="6" fill="#12171A" opacity=".30"/>
+  </pattern></defs>
+  <g fill="#EDEDE8">
+    <rect x="16" y="22"  width="144" height="11" rx="1.5"/>
+    <rect x="16" y="39"  width="72"  height="11" rx="1.5" fill="#D9432B"/>
+    <rect x="16" y="56"  width="180" height="11" rx="1.5"/>
+    <rect x="16" y="73"  width="108" height="11" rx="1.5"/>
+    <rect x="16" y="90"  width="180" height="11" rx="1.5"/>
+    <rect x="16" y="107" width="144" height="11" rx="1.5"/>
+  </g>
+  <rect x="88" y="16" width="120" height="108" fill="url(#hx)"/>
+  <line x1="124" y1="16" x2="124" y2="124" stroke="#EDEDE8" stroke-dasharray="4 4" stroke-width="1" opacity=".75"/>
+  <line x1="88" y1="16" x2="88" y2="124" stroke="#F0CE2E" stroke-width="2"/>
+  <text x="92" y="13" fill="#F0CE2E" font-family="IBM Plex Mono,monospace" font-size="8" letter-spacing="1">MIN = 2</text>
+  <text x="208" y="134" fill="#EDEDE8" font-family="IBM Plex Mono,monospace" font-size="8" letter-spacing="1" text-anchor="end">TARGET 3</text>
+  <text x="120" y="145" fill="#5F6C70" font-family="IBM Plex Mono,monospace" font-size="8" text-anchor="middle">4 &#183; 2 &#183; 5 &#183; 3 &#183; 5 &#183; 4</text>
+</svg><div class="pixcap">paceline &mdash; a rate</div></div>
+    </div>
+    <p>Six identical values, two drawings. Both compute <b>min</b>, never the sum and never the average &mdash; which is the entire claim. The difference is what they measure. A barrel measures a <b>stock</b>: how much a container holds, settled and static. A paceline measures a <b>rate</b>: how fast a group sustains, recomputed continuously. For a life audit the rate framing is the more honest one, because you don't fill your life once and read off the level &mdash; the minimum re-runs every day.</p>
+
+    <h4>Where the barrel quietly lies</h4>
+    <p>The barrel assumes the short stave doesn't <i>affect</i> the others &mdash; it simply caps the total. Agronomists flag exactly this as the analogy's weak point: nutrients interact, and a deficiency in one degrades the uptake and efficiency of the rest, so the tidy assumption usually fails in practice.</p>
+    <p>The objection lands harder on a life. Financial scarcity, chronic pain and untreated depression don't merely set the level &mdash; they <b>tax every other domain</b>, which is the bandwidth cost this whole model turns on. A short stave never shortens its neighbours. A suffering rider genuinely does slow everyone else down. That's the one place the cycling picture isn't just a nicer fit for a phone screen, but a truer account of the failure mode.</p>
+
+    <h4>The cooper</h4>
+    <p>In formal treatments of the law, an adapting system behaves like a cooper: it spends its repair budget on whichever stave is shortest rather than spreading it evenly, because that's the only allocation that raises capacity. That is precisely what the focus card above is doing &mdash; and precisely what most people don't do, because the tall staves are the ones they're good at.</p>
+
+    <h4>Relatives</h4>
+    <p>Leontief's production function is the same rule in economics. Goldratt's Theory of Constraints is the same rule in operations. Different fields, one function.</p>
+
+    <p class="src">Sources: <i>Liebig's law of the minimum</i>, Wikipedia; Whitson &amp; Walster (1912) for the Dobenecks attribution; Nutrien eKonomics on the barrel analogy's limitations.</p>
+  </div>
+</details>
+
+
+<div class="board">
+  <div class="boardhead">
+    <div class="eyebrow">23 riders</div>
+    <div class="legend">
+      <div class="lg"><i style="background:var(--jaune)"></i>group pace</div>
+      <div class="lg"><i style="background:var(--flamme)"></i>under target</div>
+      <div class="lg"><i class="ghost"></i>off the road</div>
+      <div class="lg"><i class="dash"></i>target pace</div>
+    </div>
+  </div>
+  <div class="riders" id="riders"></div>
+</div>
+
+<div class="hist">
+  <div class="sectiontitle">History</div>
+  <p class="sectionnote">Group pace over time. The only line worth tracking — average pace across all 23 riders is a vanity metric, because bringing up a rider who's already ahead changes nothing.</p>
+  <div class="toolbar">
+    <button class="btn" id="btnExport">Export JSON</button>
+    <button class="btn" id="btnReset">Reset all</button>
+  </div>
+  <div id="histBody"></div>
+</div>
+
+<footer>
+  <b style="color:var(--paint-dim)">On using this.</b> Paces are self-reported and the anchors are population-level heuristics with wide variance, not targets. Some riders can't be brought up — chronic illness, caregiving, bereavement, structural poverty can hold one down permanently through no failure of strategy. When that's the case this is describing a constraint, not a to-do list, and the right move is to build around it rather than keep assaulting it. One methodological note: these paces are ordered categories with written anchors, not a measured scale, so the app counts riders and takes minimums but never averages or sums them — the difference between a 4 and a 2 isn't ‘two points’ of anything. Nothing here is medical or financial advice. Data is stored privately to your account and never shared.
+</footer>
+
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheethead">
+    <button class="closex" id="closeSheet" aria-label="Close">&times;</button>
+    <div id="sheetTier"></div>
+    <div class="sheettitle" id="sheetTitle"></div>
+    <div class="sheetjob" id="sheetJob"></div>
+    <div class="progress" id="gProgress" style="display:none;margin-top:14px"><i></i></div>
+  </div>
+  <div class="sheetbody" id="sheetBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const FLOOR = 3;
+const MAX = 5;
+const LVLNAME = ["Crisis","Deficit","Strained","At target","Solid","Abundant"];
+
+const TIERS = [
+  {n:0,name:"Substrate",clock:"fails in hours – days",unit:"hours",tmin:2,tmax:72,
+   desc:"Screams. Impossible to ignore. Below these, nothing else in this document is actionable.",color:"var(--t0)"},
+  {n:1,name:"Structural",clock:"fails in weeks – months",unit:"weeks",tmin:72,tmax:4400,
+   desc:"Grinds rather than screams. Dominates your planning horizon and shrinks it.",color:"var(--t1)"},
+  {n:2,name:"Load-bearing",clock:"erodes over months – years",unit:"years",tmin:4400,tmax:88000,
+   desc:"Fails slowly and silently. The most commonly misdiagnosed deficits in the whole model.",color:"var(--t2)"},
+  {n:3,name:"Multipliers",clock:"no acute failure",unit:"never",tmin:88000,tmax:900000,
+   desc:"Never breaks. Just caps the ceiling. This is where “my life is fine and I feel nothing” lives.",color:"var(--t3)"}
+];
+
+const D = [
+ {id:"sleep",name:"Sleep",short:"sleep",tier:0,bw:3,pay:"days",
+  job:"The single largest input to every other domain",
+  sig:"Presents as a personality. Irritability, low motivation, poor impulse control, blunted pleasure, “I have no discipline.” Chronic short sleep is misdiagnosed as depression more often than the reverse.",
+  dim:"~8.5 hours. Longer isn't better — oversleep usually signals a different unresolved problem.",
+  lever:"Fixed wake time (not bedtime), morning light within an hour of waking, no alcohol within 3 hours of sleep.",
+  couples:["mental","activity","addiction","slack","environment"],
+  a:["Under 5h most nights, or severe insomnia. You feel wrecked daily.",
+     "5–6h, erratic timing. You run on caffeine and crash in the afternoon.",
+     "~6.5h, inconsistent wake times. Fine some days, flattened others.",
+     "7–8h most nights, wake time roughly fixed. Sometimes wake before the alarm.",
+     "7–8.5h consistently, dark quiet room. Rarely need caffeine to function.",
+     "Sleep is a solved background condition you never think about."]},
+
+ {id:"pain",name:"Pain & acute health",short:"pain",tier:0,bw:3,pay:"months",
+  job:"Freedom from chronic pain or an untreated acute condition",
+  sig:"Total attentional capture. The most reliable dominator in the model — pain will collapse a life with every other stave at maximum.",
+  dim:"Absence of intrusion. There is no 'extra credit' beyond not hurting.",
+  lever:"Actually going. Most chronic pain present for years has never been properly worked up.",
+  couples:["sleep","mental","activity","chronic"],
+  a:["Daily pain or an untreated acute condition dominating your attention.",
+     "Frequent pain you've stopped mentioning. You've quietly organized your life around it.",
+     "Recurring flare-ups — investigated but not resolved.",
+     "No pain intrudes on a normal day. Anything chronic is actively managed.",
+     "Physically comfortable. You notice your body only when you use it.",
+     "No pain, good function, and confidence it'll hold."]},
+
+ {id:"safety",name:"Physical safety",short:"safety",tier:0,bw:3,pay:"weeks",
+  job:"No credible ongoing threat of violence",
+  sig:"Hypervigilance, sleep disruption, inability to plan past the short term. Everything downstream is unbuildable.",
+  dim:"Binary in a way most staves aren't. It is not tradeable against anything.",
+  lever:"Distance. Almost every other intervention is downstream of removing proximity to the threat.",
+  couples:["sleep","housing","mental"],
+  a:["Active threat of violence at home, at work, or in your neighbourhood.",
+     "You alter routes, times or behaviour to avoid a specific known danger.",
+     "Low-level unease. You don't feel fully at ease in your own space at night.",
+     "No credible threat. You lock the door and don't think about it again.",
+     "You feel safe everywhere you routinely go.",
+     "Safety has never been a factor in a decision you've made."]},
+
+ {id:"food",name:"Nutrition adequacy",short:"food",tier:0,bw:2,pay:"weeks",
+  job:"Enough calories, protein and micronutrients — reliably",
+  sig:"Fatigue attributed to age or workload. Poor recovery. Frequent minor illness.",
+  dim:"Sufficiency plus consistency. The gap between 'reasonable' and 'optimised' is a rounding error next to the gap between 'chaotic' and 'reasonable'.",
+  lever:"Three or four default meals you don't have to decide on.",
+  couples:["sleep","activity","money"],
+  a:["Skipping meals — from lack of food or lack of function.",
+     "Mostly whatever's fastest. You can't remember your last vegetable.",
+     "Adequate calories, chaotic pattern. Energy swings through the day.",
+     "Reliable meals, enough protein, enough plants, most days.",
+     "Consistently well fed. You cook. You have defaults.",
+     "Eating is effortless, enjoyable, and requires no willpower."]},
+
+ {id:"shelter",name:"Shelter",short:"shelter",tier:0,bw:3,pay:"months",
+  job:"Warmth, dryness, and a door that locks",
+  sig:"Nothing else can be planned. Almost every Tier 1 failure is downstream of housing instability.",
+  dim:"Habitability. Quality above this point is the Housing stave, not this one.",
+  lever:"Emergency housing services exist and are chronically under-used.",
+  couples:["safety","sleep","housing"],
+  a:["Unhoused, or in a place that isn't warm, dry, or lockable.",
+     "Habitable but failing — mould, broken heating, unsafe building.",
+     "Adequate but precarious, or genuinely unpleasant to be in.",
+     "Warm, dry, secure, and yours for the foreseeable future.",
+     "A place you're glad to come home to.",
+     "Your home actively restores you."]},
+
+ {id:"money",name:"Money floor",short:"money",tier:1,bw:3,pay:"months",
+  job:"Income over needs, a buffer against variance, no compounding debt",
+  sig:"Bandwidth tax. Financial scarcity consumed cognitive capacity equivalent to a lost night of sleep in Mani et al.'s field studies — a result usually quoted as 13 IQ points. That figure has drawn replication disputes and deserves less weight than the direction, which has held up across designs. Poverty doesn't make you worse at money; it makes you worse at everything.",
+  dim:"Roughly the point where an unexpected $5k expense is annoying rather than catastrophic. Past that, income buys optionality and time — real goods, but Tier 2 and 3 goods bought with money, not money itself.",
+  lever:"The buffer before the income. Removing variance does more for wellbeing than raising the level.",
+  couples:["housing","slack","autonomy","legal","food"],
+  a:["Can't cover this month. Borrowing to eat or make rent.",
+     "Income covers needs, zero buffer, high-interest debt. One surprise from crisis.",
+     "Under a month of buffer, some debt. Money is a frequent worry.",
+     "3–6 months of expenses liquid. No revolving high-interest debt. Income covers needs with margin.",
+     "About a year of runway. A $5k surprise is annoying, not frightening.",
+     "Money is no longer an input to your decisions."]},
+
+ {id:"housing",name:"Housing quality & commute",short:"housing",tier:1,bw:2,pay:"months",
+  job:"Secure tenure, quiet enough to sleep, close enough to live",
+  sig:"Chronic low-grade depletion with no obvious cause. Noise degrades sleep below conscious awareness. Long commutes are among the most consistently wellbeing-negative variables measured — and unlike most things, people adapt to them poorly.",
+  dim:"Size and prestige. Near-complete hedonic adaptation within about a year.",
+  lever:"Trading square footage for commute minutes. One of the highest-return swaps available.",
+  couples:["sleep","environment","activity","belonging","autonomy"],
+  a:["Eviction risk, or month-to-month with no alternative.",
+     "Secure but loud, dark, or a 60+ minute commute each way.",
+     "Fine, but one significant problem — noise, a 45–60 min commute, or lease uncertainty.",
+     "Secure tenure, quiet enough to sleep, commute under about 45 minutes.",
+     "Quiet, well lit, short commute. You don't think about housing for a year at a time.",
+     "Both the home and the location are actively good for you."]},
+
+ {id:"chronic",name:"Chronic health management",short:"health",tier:1,bw:2,pay:"months",
+  job:"Known conditions actually managed; teeth, eyes, ears addressed",
+  sig:"Slow, invisible drag. Untreated hearing loss is a stealth destroyer — it degrades social participation, which degrades belonging, which degrades mood, and gets attributed to “becoming more introverted”.",
+  dim:"Current and monitored. Beyond that you're buying reassurance, not health.",
+  lever:"The dentist and the audiologist. Both wildly under-prioritised relative to effect size.",
+  couples:["pain","activity","belonging","mental"],
+  a:["A known condition untreated. Haven't seen a doctor in years.",
+     "Aware of issues you're avoiding. Teeth, hearing or vision unaddressed.",
+     "Mostly handled, several things overdue.",
+     "Conditions managed, dentist current, vision and hearing checked, occasional bloodwork.",
+     "Fully current and proactive. You know your numbers.",
+     "Monitored and optimised. No known unaddressed risk."]},
+
+ {id:"mental",name:"Mental health baseline",short:"mental",tier:1,bw:3,pay:"months",
+  job:"No untreated condition shaping daily function",
+  sig:"The great misattributor. Depression convincingly presents itself as an accurate assessment of your life, your relationships and your prospects. Someone in an episode will confidently name their weak link as career, or partner, or meaning — and be wrong.",
+  dim:"Function plus resilience. There's no 'optimising' past a stable baseline.",
+  lever:"Treatment is genuinely effective for most presentations, and the median person waits years.",
+  couples:["sleep","addiction","attach","meaning","pain"],
+  a:["Daily functioning is impaired. You can't reliably do what you intend to do.",
+     "Persistent low mood or anxiety shaping your choices, untreated.",
+     "Manageable but present. Good weeks and bad weeks with no clear cause.",
+     "No untreated condition shaping daily function, and support available if it turns.",
+     "Stable mood, good stress tolerance, you recover from setbacks.",
+     "Resilient. Difficulty is difficult without being destabilising."]},
+
+ {id:"addiction",name:"Freedom from addiction",short:"addiction",tier:1,bw:3,pay:"months",
+  job:"Nothing that overrides your own stated intentions",
+  sig:"Reorganises every other domain around itself while presenting as a coping mechanism for those domains. Alcohol is the common case and the most socially camouflaged — it degrades sleep, mood regulation and money at once.",
+  dim:"Absence. Uniquely, this stave actively saws at the others.",
+  lever:"Removing the supply from the environment beats willpower by a wide margin.",
+  couples:["sleep","mental","money","attach"],
+  a:["A substance or behaviour routinely overrides your intentions, and you know it.",
+     "You've tried to cut back more than once and haven't.",
+     "A habit you're uneasy about and quietly monitor.",
+     "Nothing overrides your stated intentions on a recurring basis.",
+     "No compulsive patterns. Substances are occasional and chosen.",
+     "Complete freedom. The question is uninteresting to you."]},
+
+ {id:"legal",name:"Legal & administrative standing",short:"legal",tier:1,bw:2,pay:"months",
+  job:"Status secure, no exposure, documents in order",
+  sig:"Ambient dread that resists every other intervention. Long-horizon plans can't be built on an uncertain legal foundation. Almost no wellbeing framework includes this, and for the people it affects it dominates absolutely.",
+  dim:"Secure and multi-year. Beyond that it stops being a variable.",
+  lever:"One afternoon of paperwork resolves a surprising share of it.",
+  couples:["money","housing","slack"],
+  a:["Active legal exposure, insecure status, or accounts in collections.",
+     "Unresolved paperwork or status that limits how far ahead you can plan.",
+     "Fine but disorganised. You'd struggle to produce a document you needed.",
+     "Status secure, no exposure, documents in order.",
+     "Everything current and secure for years out.",
+     "Full legal freedom of movement and action."]},
+
+ {id:"care",name:"Caregiving load",short:"caregiving",tier:1,bw:3,pay:"months",
+  job:"Responsibility for another person's needs, at a level you can sustain",
+  sig:"Invisible because it looks like virtue. It draws down sleep, slack, play and attachment at the same time, and the person carrying it is usually the last to name it as a problem \u2014 naming it feels like complaint. Sole carers show the sharpest effects; a shared load with real respite is a different condition entirely, not a milder version of the same one.",
+  dim:"A load you can sustain indefinitely with genuine respite. There is no version of this that keeps improving past \u2018not depleting you\u2019.",
+  lever:"Respite \u2014 actual scheduled hours where someone else holds the responsibility. Beats any efficiency gain in how you deliver the care.",
+  couples:["slack","sleep","play","autonomy","attach"],
+  a:["Sole responsibility for someone dependent, no respite, no end in sight.",
+     "Heavy load, occasional help, and you've stopped planning anything for yourself.",
+     "Real load with some support, but it's the first thing that breaks when anything else goes wrong.",
+     "A load you can sustain, with reliable respite and someone to share the decisions.",
+     "Caring responsibilities that fit inside your life rather than replacing it.",
+     "No dependent-care load, or one that's fully shared and light."]},
+
+ {id:"attach",name:"Secure attachment",short:"attachment",tier:2,bw:2,pay:"months",
+  job:"At least one person you could call at 2am",
+  sig:"The Harvard Study of Adult Development found across ~85 years that relationship quality at midlife predicted late-life health and happiness better than cholesterol, income, or social class. Check the sample before leaning on it: two cohorts of men only — Harvard undergraduates and inner-city Boston boys — recruited around 1940. The finding is echoed widely elsewhere, but that cohort can't carry it alone. Loneliness carries mortality risk comparable to major physiological risk factors. It never produces an acute signal, which is why high-functioning people under-invest here for decades.",
+  dim:"~3–5 close ties. Depth dominates count sharply.",
+  lever:"Reactivating a dormant tie. Far higher yield than forming new ones — dormant ties retain trust and need only initiation.",
+  couples:["belonging","mental","meaning","intimacy"],
+  a:["No one you could call at 2am.",
+     "One tie, strained or one-directional. You'd hesitate to call.",
+     "People who would help — but you don't tell them what's actually happening.",
+     "At least one person you could call at 2am, who'd notice if you vanished for a week.",
+     "Three to five people who know the real situation and would show up.",
+     "Deep, mutual, long-running ties you can't imagine losing."]},
+
+ {id:"belonging",name:"Belonging & weak ties",short:"belonging",tier:2,bw:1,pay:"months",
+  job:"A recurring group where your absence would be noticed",
+  sig:"A specific flavour of flatness that close friendships don't fix. Weak ties do something structurally different from close ties — they supply novelty, identity confirmation, and a sense of being situated in a place.",
+  dim:"Several contexts. Past that it becomes a time cost.",
+  lever:"Anything recurring and unchosen — a class, a league, a volunteer shift. Recurrence and low selectivity are the active ingredients, not the activity.",
+  couples:["attach","play","meaning","housing"],
+  a:["You could go a week without a single unplanned human interaction.",
+     "Work contacts only. No recurring group outside it.",
+     "A group you attend occasionally. Your absence wouldn't be noticed.",
+     "A recurring group where your absence would be noticed, plus regular incidental contact.",
+     "Several contexts where people know your name and expect you.",
+     "Woven into a place — you can't walk anywhere without running into someone."]},
+
+ {id:"autonomy",name:"Autonomy over time",short:"autonomy",tier:2,bw:3,pay:"months",
+  job:"Control over a substantial block of your day, and the ability to say no",
+  sig:"Burnout. Karasek's demand–control model holds that it's demand <i>without control</i> that produces burnout — high demand with high control produces engagement instead. People diagnose “I work too much” when the real reading is “I don't decide.”",
+  dim:"Full discretion. This is the good that money most efficiently buys, and the reason income keeps paying past its nominal floor.",
+  lever:"Often a lateral move rather than a step up. Seniority frequently trades autonomy for status.",
+  couples:["slack","mental","play","money"],
+  a:["No control over your days and no ability to refuse anything.",
+     "High demands, low control. You're executing other people's decisions.",
+     "Some latitude, but the big decisions about your time aren't yours.",
+     "Meaningful control over a substantial block of your day. You can say no.",
+     "You decide what you work on, and mostly when.",
+     "Your time is yours. Obligations are chosen."]},
+
+ {id:"activity",name:"Physical activity",short:"movement",tier:2,bw:2,pay:"weeks",
+  job:"Enough movement to regulate mood, sleep and stress",
+  sig:"Degraded mood regulation, worse sleep, worse stress tolerance — and it presents as psychological, so it gets treated as psychological.",
+  dim:"~5 hours a week for wellbeing purposes. Past that you're training for performance goals, which is a legitimate Tier 3 pursuit but not a floor.",
+  lever:"Walking. Unglamorous, and it clears most of the floor on its own.",
+  couples:["sleep","mental","environment","chronic"],
+  a:["Sedentary. No deliberate movement at all.",
+     "Occasional walks, nothing regular.",
+     "Inconsistent — good weeks, then month-long gaps.",
+     "About 150 min/week moderate activity plus two strength sessions, sustained.",
+     "Consistently active and getting measurably stronger or fitter.",
+     "Training is a settled part of your identity. Fitness is high and stable."]},
+
+ {id:"competence",name:"Competence & progress",short:"competence",tier:2,bw:1,pay:"months",
+  job:"Something you're measurably getting better at, with feedback you can perceive",
+  sig:"Stagnation malaise. Common when a career plateaus into pure maintenance. Self-Determination Theory treats competence as a basic need alongside autonomy and relatedness — and deficits here don't substitute. You can't compensate for stalled competence with more money.",
+  dim:"Operating near your edge. It does not have to be your job. It genuinely does not have to be your job.",
+  lever:"Pick something with a scoreboard. Perceptible feedback is the active ingredient, not difficulty.",
+  couples:["meaning","autonomy","attention"],
+  a:["Nothing you're improving at. Each year is identical to the last.",
+     "Learning nothing. Your skills are maintenance-only.",
+     "A vague sense of progress, but no feedback you can actually perceive.",
+     "Something you're measurably getting better at, with visible feedback.",
+     "Active growth in something that matters to you, with real feedback loops.",
+     "Operating near your edge, improving, and able to see it."]},
+
+ {id:"slack",name:"Cognitive slack",short:"slack",tier:2,bw:3,pay:"days",
+  job:"Enough unallocated bandwidth to absorb a surprise",
+  sig:"Every unexpected event becomes a crisis. Chronic reactivity. Less a domain than a shared resource every other domain draws on — it's the mechanism underneath both the scarcity tax and the burnout literature.",
+  dim:"Substantial reserve. Slack is invisible on a calendar and looks like waste, which is why it's the first thing eliminated.",
+  lever:"Deliberate underscheduling. Defend one unallocated block and treat it as immovable.",
+  couples:["autonomy","attention","sleep","money"],
+  a:["Every surprise is a crisis. Permanently reactive.",
+     "Fully allocated. A single disruption derails a week.",
+     "Some slack, but it vanishes the moment anything goes wrong.",
+     "Enough unallocated bandwidth to absorb a surprise without cascading.",
+     "Regular unscheduled time that you actively protect.",
+     "Substantial reserve. You choose your response to almost everything."]},
+
+ {id:"meaning",name:"Meaning & contribution",short:"meaning",tier:3,bw:1,pay:"years",
+  job:"A credible answer to “who is worse off if I stop?”",
+  sig:"The specific emptiness of a life that satisfies every measurable criterion. Meaning is where the barrel metaphor holds least well — it's more accessible under deprivation than anything else here, and people find it with every other stave broken. Any honest version of this model has to hold that anomaly rather than explain it away.",
+  dim:"There isn't a clear one. This is a genuine ceiling-raiser.",
+  lever:"Contribution to specific people, not finding your passion. The contribution route is available today; the calling route often never resolves.",
+  couples:["attach","belonging","competence"],
+  a:["No credible answer to who is worse off if you stop.",
+     "Going through the motions. Work and life feel arbitrary.",
+     "An occasional sense of point, mostly absent.",
+     "Specific people are better off because of what you do, and you know who they are.",
+     "A clear thread connecting your effort to something you care about.",
+     "A durable sense of contribution that survives bad days."]},
+
+ {id:"environment",name:"Light, noise & nature",short:"environment",tier:3,bw:2,pay:"weeks",
+  job:"Daylight, tolerable noise, some green",
+  sig:"Diffuse low mood that tracks the season or the room. Under-recognised because your environment is invisible by definition — you stop perceiving your own baseline.",
+  dim:"Roughly 120 minutes a week in nature is where the measured association with better self-reported health and wellbeing shows up, and it appears fairly robust to how that time is distributed.",
+  lever:"Light. Morning outdoor light is the highest-leverage environmental intervention, and it's free.",
+  couples:["sleep","activity","housing","play"],
+  a:["No daylight, constant noise, no green, unpleasant to be in.",
+     "Dark or loud. You avoid being at home.",
+     "Neutral space, little nature, some noise.",
+     "Daylight most days, tolerable noise, some green, and around 2h/week outdoors in it.",
+     "Bright, quiet, green nearby — and you actually use it.",
+     "Your environment is a source of pleasure."]},
+
+ {id:"play",name:"Play, novelty & leisure",short:"play",tier:3,bw:1,pay:"weeks",
+  job:"Activity that isn't for health, career or self-improvement",
+  sig:"Time compression. Years feel short. Novelty generates the density of retrievable memory that makes a period of life feel long in retrospect; routine collapses it.",
+  dim:"No clear one — but the moment a hobby acquires metrics it starts functioning as work and stops paying into this stave.",
+  lever:"Anything with no scoreboard, no photo, and no outcome.",
+  couples:["belonging","attention","environment","slack"],
+  a:["Nothing non-instrumental. Everything is for a reason.",
+     "Rare leisure, and it's mostly passive consumption.",
+     "Some fun, but scheduled and thin. Years blur together.",
+     "Regular activity that isn't for health, career or improvement.",
+     "Genuine play, real novelty, new experiences on a regular cadence.",
+     "Full of things you do purely because they're good."]},
+
+ {id:"attention",name:"Attention integrity",short:"attention",tier:3,bw:2,pay:"weeks",
+  job:"The ability to hold sustained focus on one thing, voluntarily",
+  sig:"Fragmentation. Inability to enjoy anything that needs a ramp — books, long-form work, deep conversation. Unlike every other rider here, this one degrades from abundance rather than scarcity. Popular claims about collapsing attention spans across the population run well ahead of the evidence — read this as a claim about your own focus, which you can test directly, not about the era.",
+  dim:"Full voluntary control. Beyond that it's a tool, not a wellbeing input.",
+  lever:"Friction. Environmental changes outperform willpower here by a large margin.",
+  couples:["slack","competence","play"],
+  a:["Can't hold focus for ten minutes. Can't read a book.",
+     "Constantly fragmented. Enjoyment requires stimulation.",
+     "Can focus with effort, but drift back to the phone constantly.",
+     "Can hold sustained voluntary attention on one thing for an hour or more.",
+     "Deep work is routine. You read long things for pleasure.",
+     "Attention is under your control and you can direct it at will."]},
+
+ {id:"intimacy",name:"Intimacy & dignity",short:"dignity",tier:3,bw:2,pay:"months",
+  job:"Not being treated as fungible; a mutually acceptable intimate life",
+  sig:"Corrosive, chronic, and usually rationalised as “that's just the industry.” Status anxiety is a false floor; basic dignity is a real one, and the two get conflated constantly. On the intimacy side, the wellbeing signal tracks concordance between partners far more than frequency.",
+  dim:"Mutual regard. Status beyond dignity is a false floor and pays almost nothing.",
+  lever:"Naming the indignity out loud, to someone, once. It stops being ambient the moment it's specific.",
+  couples:["attach","mental","autonomy"],
+  a:["Routinely humiliated or treated as fungible. Intimacy absent or distressing.",
+     "Chronic disrespect at work or home. Intimacy is a source of unhappiness.",
+     "Tolerable but unsatisfying. Some indignity you've rationalised.",
+     "Basic dignity intact. Intimate life at a mutually acceptable state.",
+     "Respected in your work and relationships. Intimacy good and mutual.",
+     "Treated with real regard. Your intimate life is a source of strength."]}
+];
+
+const BYID = Object.fromEntries(D.map(d=>[d.id,d]));
+const PAYNAME = {days:"pays in ~1 week",weeks:"pays in ~3 weeks",months:"pays in months",years:"pays in years"};
+const PAYSCORE = {days:3,weeks:2.4,months:1.4,years:.6};
+
+/* ---------- state ---------- */
+const KEY = "waterline:v1";   // unchanged on purpose — preserves existing saved data
+let S = {levels:{}, snapshots:[], seen:false};
+let selected = null, guideIdx = -1, memoryOnly = false;
+D.forEach(d=>S.levels[d.id]=3);
+
+async function load(){
+  try{
+    const r = await window.storage.get(KEY);
+    if(r && r.value){
+      const p = JSON.parse(r.value);
+      D.forEach(d=>{ if(typeof p.levels?.[d.id]==="number") S.levels[d.id]=p.levels[d.id]; });
+      S.snapshots = Array.isArray(p.snapshots)?p.snapshots:[];
+      S.seen = !!p.seen;
+    }
+  }catch(e){}
+}
+async function save(){
+  try{ await window.storage.set(KEY, JSON.stringify(S)); }
+  catch(e){ if(!memoryOnly){ memoryOnly=true; toast("Couldn't reach storage — this session won't be remembered."); } }
+}
+
+/* ---------- derived ---------- */
+const vals        = ()=>D.map(d=>S.levels[d.id]);
+const groupPace   = ()=>Math.min(...vals());
+const slowest     = ()=>D.filter(d=>S.levels[d.id]===groupPace());
+const underTarget = ()=>D.filter(d=>S.levels[d.id]<FLOOR);
+// counts, not sums — these levels are ordered categories, so 4 minus 2 is not '2 points' of anything
+const surplus     = ()=>{const p=groupPace();return D.filter(d=>S.levels[d.id]>p).length};
+
+function paceOrder(){
+  return [...new Set(vals())].sort((a,b)=>a-b).slice(0,4)
+    .map(lv=>({lv, names:D.filter(d=>S.levels[d.id]===lv).map(d=>d.name)}));
+}
+
+function recommend(){
+  const under = underTarget();
+  if(!under.length) return null;
+  const t0 = under.filter(d=>d.tier===0);
+  const pool = t0.length ? t0 : under;
+  const tierW=[3,2.2,1.6,1];
+  return pool.map(d=>{
+    const deficit = FLOOR - S.levels[d.id];
+    const coupled = d.couples.filter(c=>S.levels[c]<FLOOR);
+    return {d, coupled, score: deficit*tierW[d.tier] + d.bw*.9 + PAYSCORE[d.pay]*.8 + coupled.length*.5};
+  }).sort((a,b)=>b.score-a.score)[0];
+}
+
+/* ---------- the paceline ---------- */
+function renderRiders(){
+  const host=document.getElementById("riders");
+  const p=groupPace();
+  const anyUnder=underTarget().length>0;
+  host.innerHTML="";
+
+  // ONE overlay for all 22 rows: the pace line, the target marker and the
+  // surplus field are drawn once and span the whole group, uninterrupted.
+  const ov=document.createElement("div");
+  ov.className="paceoverlay";
+  ov.innerHTML=`<span></span>
+    <span class="zonehost">
+      <span class="targetline" style="left:${FLOOR/MAX*100}%"><span class="tlab">TARGET ${FLOOR}</span></span>
+      <span class="surpluszone" style="left:${p/MAX*100}%"><span class="plab">GROUP PACE ${p}</span></span>
+    </span>
+    <span></span>`;
+  host.appendChild(ov);
+
+  const ch=document.createElement("div");
+  ch.className="rhead";
+  ch.innerHTML=`<span>rider</span><span></span><span>gap</span><span>pace</span>`;
+  host.appendChild(ch);
+
+  TIERS.forEach(t=>{
+    const head=document.createElement("div");
+    head.className="tierbar";
+    head.innerHTML=`<div class="tbtop">
+        <span class="tnum" style="color:${t.color}">${t.n}</span>
+        <span class="tname">${t.name}</span>
+        <span class="tclock">${t.clock}</span>
+      </div><div class="tdesc">${t.desc}</div>`;
+    host.appendChild(head);
+
+    D.filter(d=>d.tier===t.n).forEach(d=>{
+      const lv=S.levels[d.id];
+      const dim=anyUnder&&lv>=FLOOR&&selected!==d.id;
+      const b=document.createElement("button");
+      b.className="rrow"+(lv<FLOOR?" under":"")+(selected===d.id?" sel":"")+(dim?" dim":"");
+      b.setAttribute("aria-label",`${d.name}: pace ${lv} of 5, ${LVLNAME[lv]}. Tier ${t.n}, ${t.name}. Group pace is ${p}.`);
+      b.title=`${d.name} — ${lv}/5 · ${LVLNAME[lv]}`;
+      const gap = lv<FLOOR ? `\u2212${FLOOR-lv}` : "";
+      b.innerHTML=`<span class="rname">${d.name}</span>
+        <span class="rtrack"><span class="rbar" style="width:${lv/MAX*100}%"></span></span>
+        <span class="rgap">${gap}</span>
+        <span class="rval">${lv}</span>`;
+      b.onclick=()=>openSheet(d.id);
+      host.appendChild(b);
+    });
+  });
+}
+
+/* ---------- verdict / focus / clock ---------- */
+function renderVerdict(){
+  const p=groupPace(), sl=slowest(), un=underTarget();
+  document.getElementById("bigNum").innerHTML = p+'<small>/5</small>';
+  const dn=document.getElementById("dragNum");
+  dn.textContent=un.length;
+  dn.style.color=un.length?"var(--flamme)":"var(--verge)";
+  const names=sl.map(d=>d.name);
+  const nameStr = names.length>2 ? `${names.slice(0,2).join(", ")} + ${names.length-2} more` : names.join(" and ");
+
+  document.getElementById("vHead").innerHTML =
+    p>=FLOOR
+      ? `Every rider is at target. The group holds <b style="color:var(--verge)">${LVLNAME[p].toLowerCase()}</b>.`
+      : `Your group rides at <b>${LVLNAME[p].toLowerCase()}</b>, held there by <b>${nameStr}</b>.`;
+
+  const sp=surplus();
+  document.getElementById("vSub").innerHTML =
+    p>=FLOOR
+      ? `No rider is under target. From here the model stops applying — floors are weak-link systems where you satisfice and stop; raising a ceiling is strong-link work where excellence actually pays. <b>${sp} riders</b> currently sit ahead of the group.`
+      : `<b>${un.length} of ${D.length}</b> riders are under target, and <b>${sp}</b> sit ahead of the group — capacity you hold and can't spend until the slow ones come up. One rider at 2 with everyone else at 4 is a bottleneck; eight at 2 is a crisis. Same group pace, different problem, different response.`;
+
+  const row=document.getElementById("qRow");
+  row.innerHTML="";
+  paceOrder().forEach((step,i)=>{
+    if(i>0){const a=document.createElement("span");a.className="qarrow";a.textContent="→";row.appendChild(a)}
+    const c=document.createElement("span");
+    c.className="qchip"+(i===0?" now":"");
+    const shown=step.names.slice(0,2).join(", ")+(step.names.length>2?` +${step.names.length-2}`:"");
+    c.textContent=`${shown} · ${step.lv}`;
+    row.appendChild(c);
+  });
+}
+
+function renderFocus(){
+  const el=document.getElementById("focus");
+  const r=recommend();
+  if(!r){
+    el.innerHTML=`<div class="eyebrow">Nobody is under target</div>
+      <h3>Stop pacing. Start racing.</h3>
+      <p>Nothing is holding the group back. Stop satisficing and pick one or two riders to push toward 5 — that's where compounding happens. Being at the 60th percentile in everything is not how anyone gets a good life; clearing every target and then going deep on two things is.</p>
+      <div class="reasons"><span class="reason">audit again in ~3 months</span><span class="reason">re-check after any major life change</span></div>`;
+    return;
+  }
+  const d=r.d, lv=S.levels[d.id], isSetting=lv===groupPace();
+  const reasons=[`tier ${d.tier} · ${TIERS[d.tier].clock}`];
+  if(isSetting) reasons.push("this rider sets the pace");
+  reasons.push(PAYNAME[d.pay]);
+  if(d.bw>=3) reasons.push("high bandwidth return");
+  if(r.coupled.length) reasons.push(`also lifts ${r.coupled.length} coupled rider${r.coupled.length>1?"s":""}`);
+  const next=(()=>{const t={...S.levels};t[d.id]=FLOOR;return Math.min(...D.map(x=>t[x.id]))})();
+
+  el.innerHTML=`
+    <div class="eyebrow">Ride with this one next</div>
+    <h3>${d.name} — currently ${lv}/5, ${LVLNAME[lv].toLowerCase()}</h3>
+    <div class="reasons">${reasons.map(x=>`<span class="reason">${x}</span>`).join("")}</div>
+    <p><b>Cheapest lever:</b> ${d.lever}</p>
+    <p style="font-size:12.5px"><b>How this was picked:</b> a weighted heuristic, not a calculation — Tier 0 first, then deficit size &times; tier weight, plus bandwidth return, payback speed, and how many coupled riders are also under target. The weights are my judgement, not measurements. Override it whenever you know something it doesn't.</p>
+    <p style="margin-bottom:0"><b>Expected effect:</b> bringing this rider to target moves the group from <b>${groupPace()}</b> to <b>${next}</b>${next===groupPace()?" — no change, because another rider is equally slow. Bring them up together, or take them in order.":"."} ${r.coupled.length?`It also shares mechanisms with ${r.coupled.map(c=>BYID[c].name.toLowerCase()).join(", ")}, also under target.`:""}</p>`;
+}
+
+function renderClock(){
+  const bar=document.getElementById("clockbar");
+  bar.innerHTML="";
+  const lo=Math.log(2), hi=Math.log(900000);
+  const pos=v=>(Math.log(v)-lo)/(hi-lo)*100;
+  TIERS.forEach(t=>{
+    const s=document.createElement("div");
+    s.className="cseg";
+    s.style.left=pos(t.tmin)+"%";
+    s.style.width=(pos(t.tmax)-pos(t.tmin))+"%";
+    s.style.background=t.color;
+    s.textContent=`${t.n} ${t.name.toUpperCase()}`;
+    s.title=t.desc;
+    bar.appendChild(s);
+  });
+  [[2,"hours"],[72,"days"],[720,"a month"],[8760,"a year"],[88000,"a decade"],[900000,"never"]].forEach(([v,label])=>{
+    const t=document.createElement("div");
+    t.className="ctick";t.style.left=Math.min(pos(v),99)+"%";t.textContent=label;
+    bar.appendChild(t);
+  });
+}
+
+/* ---------- history ---------- */
+function renderHistory(){
+  const el=document.getElementById("histBody");
+  if(!S.snapshots.length){
+    el.innerHTML=`<p class="empty">No snapshots yet. Set your paces, then save one — the value of this is the trend, not today's number. A useful cadence is quarterly, plus once after any major life change.</p>`;
+    return;
+  }
+  const snaps=[...S.snapshots].sort((a,b)=>a.t-b.t);
+  const W=600,H=110,pad=14;
+  const x=i=>snaps.length<2?W/2:pad+i*(W-pad*2)/(snaps.length-1);
+  const y=v=>H-pad-(v/MAX)*(H-pad*2);
+  const pts=snaps.map((s,i)=>`${x(i)},${y(s.w)}`).join(" ");
+
+  el.innerHTML=`
+   <svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Group pace over time">
+     <line x1="0" y1="${y(FLOOR)}" x2="${W}" y2="${y(FLOOR)}" stroke="var(--paint)" stroke-dasharray="4 4" stroke-width="1" opacity=".65"/>
+     <polyline points="${pts}" fill="none" stroke="var(--jaune)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+     ${snaps.map((s,i)=>`<circle cx="${x(i)}" cy="${y(s.w)}" r="3.5" fill="var(--jaune)"/>`).join("")}
+   </svg>
+   <div class="snaps">${[...snaps].reverse().map((s,i,arr)=>{
+      const prev=arr[i+1], dv=prev?s.w-prev.w:null;
+      const cls=dv===null?"flat":dv>0?"up":dv<0?"down":"flat";
+      const txt=dv===null?"first":dv>0?`+${dv}`:dv<0?`${dv}`:"±0";
+      return `<div class="snap">
+        <span class="d">${new Date(s.t).toISOString().slice(0,10)}</span>
+        <span class="w">${s.w}/5</span>
+        <span class="m">slowest: ${s.min}</span>
+        <span class="delta ${cls}">${txt}</span></div>`;
+   }).join("")}</div>`;
+}
+
+function renderAll(){renderRiders();renderVerdict();renderFocus();renderHistory()}
+
+/* ---------- sheet ---------- */
+const sheet=document.getElementById("sheet"), scrim=document.getElementById("scrim");
+let lastFocus=null;
+
+function openSheet(id,guided=false){
+  const d=BYID[id];
+  selected=id;lastFocus=document.activeElement;
+  document.getElementById("sheetTier").innerHTML=
+    `<span class="eyebrow" style="color:${TIERS[d.tier].color}">Tier ${d.tier} · ${TIERS[d.tier].name} · ${TIERS[d.tier].clock}</span>`;
+  document.getElementById("sheetTitle").textContent=d.name;
+  document.getElementById("sheetJob").textContent=d.job;
+  const gp=document.getElementById("gProgress");
+  if(guided){gp.style.display="block";gp.firstElementChild.style.width=((guideIdx+1)/D.length*100)+"%"}
+  else gp.style.display="none";
+  paintSheet(d,guided);
+  scrim.classList.add("on");sheet.classList.add("on");
+  document.body.style.overflow="hidden";
+  setTimeout(()=>sheet.querySelector(".anchor.on,.anchor")?.focus(),60);
+  renderRiders();
+}
+
+function paintSheet(d,guided){
+  const lv=S.levels[d.id], p=groupPace();
+  const other=Math.min(...D.filter(x=>x.id!==d.id).map(x=>S.levels[x.id]));
+  const setting = lv<=other;
+
+  const effect = setting
+    ? `<div class="effect">This rider <b>is</b> setting the group pace. Every point you add here brings the whole group up — as far as ${other}, where <b>${D.filter(x=>x.id!==d.id&&S.levels[x.id]===other).map(x=>x.name).slice(0,2).join(" / ")}</b> takes over.</div>`
+    : `<div class="effect nul">Bringing this rider up changes the group pace by <b>0</b>. They're already ${lv-p} point${lv-p>1?"s":""} ahead of the group — that's surplus. Real gains here are ceiling gains, not pace gains.</div>`;
+
+  document.getElementById("sheetBody").innerHTML=`
+    <div class="anchorhead">
+      <span class="eyebrow">Pick the one that's true — don't rate yourself</span>
+      <span class="targethint">▌ ${FLOOR} = target pace</span>
+    </div>
+    <div class="anchors">
+      ${d.a.map((txt,i)=>`<button class="anchor${i===lv?" on":""}${i===FLOOR?" targetstep":""}" data-lv="${i}">
+          <span class="alvl">${i} ${LVLNAME[i]}</span><span class="atext">${txt}</span></button>`).join("")}
+    </div>
+    ${effect}
+    <div class="field"><span class="eyebrow">How the deficit shows up</span><p>${d.sig}</p></div>
+    <div class="field"><span class="eyebrow">Diminishing returns past</span><p>${d.dim}</p></div>
+    <div class="field"><span class="eyebrow">Cheapest lever</span><p>${d.lever}</p></div>
+    <div class="field"><span class="eyebrow">Rides together with</span>
+      <div class="couples">${d.couples.map(c=>`<button class="couple${S.levels[c]<FLOOR?" under":""}" data-go="${c}">${BYID[c].name} · ${S.levels[c]}/5</button>`).join("")}</div>
+    </div>
+    <div class="sheetnav">
+      ${guided
+        ? `<button class="btn" data-nav="-1" ${guideIdx===0?"disabled style=opacity:.35":""}>← Back</button>
+           <span class="gcount" style="align-self:center">${guideIdx+1} / ${D.length}</span>
+           <button class="btn btn-primary" data-nav="1">${guideIdx===D.length-1?"Finish":"Next →"}</button>`
+        : `<button class="btn" data-nav="-1">← Prev rider</button>
+           <button class="btn" data-nav="1">Next rider →</button>`}
+    </div>`;
+
+  const body=document.getElementById("sheetBody");
+  body.querySelectorAll(".anchor").forEach(b=>b.onclick=()=>setLevel(d.id,+b.dataset.lv,guided));
+  body.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>openSheet(b.dataset.go,false));
+  body.querySelectorAll("[data-nav]").forEach(b=>b.onclick=()=>step(+b.dataset.nav,guided));
+}
+
+function setLevel(id,v,guided){
+  const before=groupPace();
+  S.levels[id]=v;save();
+  const after=groupPace();
+  paintSheet(BYID[id],guided);renderAll();
+  if(after>before) toast(`Group pace up to <b>${after}</b>. ${slowest().map(d=>d.name).slice(0,2).join(" / ")} sets it now.`);
+  else if(after<before) toast(`Group pace dropped to <b>${after}</b>.`);
+  else if(v>FLOOR&&before<FLOOR) toast(`Noted — but the group still rides at <b>${after}</b>. Riders ahead of the line don't count.`);
+}
+
+function step(dir,guided){
+  const i=D.findIndex(d=>d.id===selected), n=i+dir;
+  if(guided){
+    if(n>=D.length){closeSheet();S.seen=true;save();toast("Audit complete. Save a snapshot to start a trend.");return}
+    if(n<0)return;
+    guideIdx=n;openSheet(D[n].id,true);
+  }else openSheet(D[(n+D.length)%D.length].id,false);
+}
+
+function closeSheet(){
+  scrim.classList.remove("on");sheet.classList.remove("on");
+  document.body.style.overflow="";
+  selected=null;guideIdx=-1;renderRiders();lastFocus?.focus?.();
+}
+
+/* ---------- actions ---------- */
+let toastT;
+function toast(html){
+  const t=document.getElementById("toast");
+  t.innerHTML=html;t.classList.add("on");
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("on"),4200);
+}
+
+document.getElementById("closeSheet").onclick=closeSheet;
+scrim.onclick=closeSheet;
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&sheet.classList.contains("on"))closeSheet();
+  if(sheet.classList.contains("on")&&/^[0-5]$/.test(e.key)&&selected) setLevel(selected,+e.key,guideIdx>=0);
+});
+document.getElementById("btnGuide").onclick=()=>{guideIdx=0;openSheet(D[0].id,true)};
+
+document.getElementById("btnSave").onclick=async()=>{
+  const p=groupPace();
+  S.snapshots.push({t:Date.now(),w:p,min:slowest().map(d=>d.name).slice(0,2).join(", "),levels:{...S.levels}});
+  if(S.snapshots.length>60)S.snapshots=S.snapshots.slice(-60);
+  await save();renderHistory();
+  const prev=S.snapshots.length>1?S.snapshots[S.snapshots.length-2].w:null;
+  toast(prev===null?`Snapshot saved at group pace <b>${p}</b>. Come back in about three months.`
+        :`Snapshot saved. Group pace <b>${p}</b> — ${p>prev?`up ${p-prev} since last time`:p<prev?`down ${prev-p} since last time`:"unchanged since last time"}.`);
+};
+
+document.getElementById("btnExport").onclick=()=>{
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`paceline-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();URL.revokeObjectURL(a.href);
+  toast("Exported. Drop it in your vault next to the framework note.");
+};
+
+document.getElementById("btnReset").onclick=async()=>{
+  if(!confirm("Reset every rider and delete all snapshots? This can't be undone."))return;
+  D.forEach(d=>S.levels[d.id]=3);S.snapshots=[];S.seen=false;
+  await save();renderAll();toast("Reset. Run the audit to start again.");
+};
+
+(async()=>{
+  await load();
+  renderClock();renderAll();
+  if(!S.seen&&!S.snapshots.length){
+    setTimeout(()=>toast(`Every rider starts at target. Tap <b>Run audit</b> to set them honestly — or tap any rider directly.`),700);
+  }
+})();
+</script>
+</body>
+</html>
