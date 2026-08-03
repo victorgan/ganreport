@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First Plan · 2027–2031</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E4E3DA; --card:#F1F0E9; --card-2:#FAFAF6;
+  --ink:#15181A; --ink-2:#414B4C; --ink-3:#78807C;
+  --rule:#C6C5B8; --rule-2:#D8D7CB;
+  --bind:#0F5C63; --antic:#A85B18; --decide:#4B3F72; --warn:#8E2F20;
+  --t1:#6C7A72; --t2:#0F5C63; --t3:#7A2E12;
+  --f-d:"Space Grotesk",-apple-system,"Segoe UI",sans-serif;
+  --f-m:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --f-s:"Source Serif 4",Georgia,serif;
+  --gut:clamp(16px,3.4vw,44px);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-d);font-size:15px;line-height:1.5}
+.wrap{max-width:1220px;margin:0 auto;padding:0 var(--gut)}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.08}
+p{margin:0 0 .8em}
+button{font:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+.eyebrow{font-family:var(--f-m);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+::selection{background:var(--bind);color:#fff}
+
+header{border-bottom:2px solid var(--ink);padding:clamp(18px,4vw,38px) 0 0}
+.htop{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:clamp(28px,6vw,58px);font-weight:700;letter-spacing:-.04em;text-transform:uppercase;margin:6px 0 2px}
+h1 span{color:var(--bind)}
+.sub{font-family:var(--f-s);font-size:16px;color:var(--ink-2);max-width:70ch;margin-bottom:15px}
+.clock{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:16px}
+@media(min-width:760px){.clock{grid-template-columns:repeat(6,1fr)}}
+@media(min-width:420px) and (max-width:759px){.clock{grid-template-columns:repeat(3,1fr)}}
+.ck{background:var(--card);padding:9px 11px 11px}
+.ck b{display:block;font-size:clamp(17px,2.5vw,25px);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.ck span{font-family:var(--f-m);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.ck.hot b{color:var(--warn)}
+.track{height:7px;background:var(--rule-2);border:1px solid var(--rule);position:relative;overflow:hidden}
+.track i{position:absolute;inset:0 auto 0 0;background:var(--bind)}
+.track em{position:absolute;top:0;bottom:0;width:2px;background:var(--warn)}
+.tracklab{display:flex;justify-content:space-between;font-family:var(--f-m);font-size:9px;color:var(--ink-3);letter-spacing:.05em;padding:5px 0 14px}
+
+nav{position:sticky;top:0;z-index:40;background:rgba(228,227,218,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--ink)}
+nav .wrap{display:flex;overflow-x:auto;scrollbar-width:none;align-items:center}
+nav .wrap::-webkit-scrollbar{display:none}
+nav a{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);
+  text-decoration:none;padding:10px 12px;white-space:nowrap;border-right:1px solid var(--rule-2)}
+nav a:first-child{padding-left:0}
+nav a:hover{color:var(--bind)}
+nav .sp{flex:1}
+nav .io{display:flex;gap:5px;padding:6px 0 6px 10px}
+nav .io button{background:transparent;border:1px solid var(--rule);color:var(--ink-2);font-size:10.5px;
+  font-family:var(--f-m);letter-spacing:.05em;padding:4px 8px}
+nav .io button:hover{border-color:var(--ink);color:var(--ink)}
+
+section{padding:clamp(26px,4.5vw,48px) 0 0;scroll-margin-top:44px}
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  border-bottom:1px solid var(--ink);padding-bottom:7px;margin-bottom:14px}
+.sh h2{font-size:clamp(19px,3vw,28px);text-transform:uppercase;letter-spacing:-.025em}
+.sh .note{font-family:var(--f-s);font-size:14px;color:var(--ink-2);max-width:60ch;flex:1 1 300px}
+
+/* horizons */
+.hz{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+@media(min-width:860px){.hz{grid-template-columns:repeat(3,1fr)}}
+.hzc{background:var(--card);padding:13px 14px}
+.hzc.a{border-top:4px solid var(--bind)}
+.hzc.b{border-top:4px solid var(--antic)}
+.hzc.c{border-top:4px solid var(--t3)}
+.hzc .yr{font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-.04em;line-height:.95}
+.hzc .lb{font-family:var(--f-m);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);margin:3px 0 8px}
+.hzc textarea{width:100%;min-height:96px;background:var(--card-2);border:1px solid var(--rule);
+  padding:7px 9px;font-family:var(--f-s);font-size:14px;resize:vertical}
+.hzc .hint{font-family:var(--f-m);font-size:10px;color:var(--ink-3);margin-top:5px;letter-spacing:.03em}
+
+/* catalogue */
+.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px;align-items:center}
+.filters button{background:transparent;border:1px solid var(--rule);color:var(--ink-2);
+  font-size:11px;font-weight:600;letter-spacing:.05em;padding:4px 9px}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filters .t1[aria-pressed="true"]{background:var(--t1);border-color:var(--t1)}
+.filters .t2[aria-pressed="true"]{background:var(--t2);border-color:var(--t2)}
+.filters .t3[aria-pressed="true"]{background:var(--t3);border-color:var(--t3)}
+.filters input{background:var(--card-2);border:1px solid var(--rule);padding:4px 8px;font-size:12.5px;min-width:150px}
+.cat{display:grid;gap:9px}
+@media(min-width:720px){.cat{grid-template-columns:1fr 1fr}}
+@media(min-width:1080px){.cat{grid-template-columns:1fr 1fr 1fr}}
+.cg{background:var(--card);border:1px solid var(--rule);padding:10px 11px 11px;display:flex;flex-direction:column;gap:5px}
+.cg.tier1{border-left:4px solid var(--t1)}
+.cg.tier2{border-left:4px solid var(--t2)}
+.cg.tier3{border-left:4px solid var(--t3)}
+.cg .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.cg .dm{font-family:var(--f-m);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.cg .tg{font-family:var(--f-m);font-size:9px;letter-spacing:.09em;padding:1px 5px;border:1px solid currentColor}
+.cg.tier1 .tg{color:var(--t1)}.cg.tier2 .tg{color:var(--t2)}.cg.tier3 .tg{color:var(--t3)}
+.cg h4{font-family:var(--f-s);font-size:16px;font-weight:600;letter-spacing:0;line-height:1.25}
+.cg .mech{font-family:var(--f-s);font-size:13.5px;color:var(--ink-2)}
+.cg .inp{font-family:var(--f-m);font-size:10.5px;color:var(--bind);letter-spacing:.02em;line-height:1.4}
+.cg .adopt{margin-top:auto;align-self:flex-start;background:transparent;border:1px solid var(--ink);
+  color:var(--ink);font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:4px 10px}
+.cg .adopt:hover{background:var(--ink);color:var(--paper)}
+.cg.taken{opacity:.5}
+.cg.taken .adopt{border-color:var(--rule);color:var(--ink-3);pointer-events:none}
+.catcount{font-family:var(--f-m);font-size:10.5px;color:var(--ink-3);letter-spacing:.05em;margin-bottom:9px}
+
+/* plan targets */
+.ceil{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--f-m);font-size:10.5px;letter-spacing:.05em;
+  color:var(--ink-3);margin-bottom:10px}
+.ceil b{color:var(--ink)} .ceil .over{color:var(--warn);font-weight:700}
+.dom{border:1px solid var(--rule);background:var(--card);margin-bottom:9px}
+.dom-h{display:flex;align-items:center;gap:9px;padding:8px 11px;border-bottom:1px solid var(--rule-2);flex-wrap:wrap}
+.dom-h .id{font-family:var(--f-m);font-size:10.5px;font-weight:700;color:#fff;background:var(--ink);padding:2px 5px}
+.dom-h h3{font-size:16px}
+.dom-h .th{font-family:var(--f-s);font-size:12.5px;color:var(--ink-3);flex:1 1 200px}
+.t{display:grid;grid-template-columns:1fr;gap:4px 12px;padding:9px 11px;border-bottom:1px solid var(--rule-2)}
+.t:last-child{border-bottom:0}
+@media(min-width:780px){.t{grid-template-columns:1fr 220px 96px}}
+.t.bind{border-left:4px solid var(--bind)}
+.t.antic{border-left:4px solid var(--antic)}
+.t .stmt{font-family:var(--f-s);font-size:15px}
+.t .meta{font-family:var(--f-m);font-size:10px;color:var(--ink-3);letter-spacing:.03em;margin-top:3px;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.kind{font-family:var(--f-m);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;padding:1px 4px;border:1px solid currentColor}
+.kind.b{color:var(--bind)} .kind.a{color:var(--antic)}
+.kind.tr1{color:var(--t1)} .kind.tr2{color:var(--t2)} .kind.tr3{color:var(--t3)}
+.prog{align-self:center}
+.pbar{height:6px;background:var(--rule-2);border:1px solid var(--rule);position:relative;overflow:hidden}
+.pbar i{position:absolute;inset:0 auto 0 0}
+.t.bind .pbar i{background:var(--bind)} .t.antic .pbar i{background:var(--antic)}
+.pnum{font-family:var(--f-m);font-size:10px;color:var(--ink-3);display:flex;justify-content:space-between;margin-top:3px}
+.tctl{display:flex;gap:4px;align-items:center;align-self:center;justify-content:flex-end}
+.tctl input{width:52px;background:var(--card-2);border:1px solid var(--rule);padding:3px 5px;
+  font-family:var(--f-m);font-size:12px;text-align:right}
+.tctl button{background:none;border:1px solid var(--rule);color:var(--ink-3);width:23px;height:23px;line-height:1;font-size:13px;padding:0}
+.tctl button:hover{border-color:var(--warn);color:var(--warn)}
+.mechlink{font-family:var(--f-m);font-size:9.5px;color:var(--bind);letter-spacing:.02em;margin-top:3px}
+.miss{color:var(--warn);font-weight:700}
+.addbar{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.addbar input,.addbar select{background:var(--card-2);border:1px solid var(--rule);padding:5px 7px;font-size:12.5px}
+.addbar input.grow{flex:1 1 220px}
+.addbar button{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:5px 11px;
+  font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.rulebox{border-left:3px solid var(--antic);background:var(--card);padding:9px 12px;font-family:var(--f-s);
+  font-size:14px;color:var(--ink-2);margin-top:10px}
+.rulebox b{font-family:var(--f-d);color:var(--ink)}
+
+/* calc + rhythm */
+.two{display:grid;gap:14px}
+@media(min-width:900px){.two{grid-template-columns:1.35fr 1fr}}
+.calc{border:1px solid var(--ink);background:var(--card)}
+.calc-in{display:grid;gap:1px;background:var(--rule-2)}
+@media(min-width:560px){.calc-in{grid-template-columns:repeat(4,1fr)}}
+.ci{background:var(--card);padding:8px 10px}
+.ci label{display:block;font-family:var(--f-m);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+.ci input{width:100%;background:var(--card-2);border:1px solid var(--rule);padding:5px 6px;font-family:var(--f-m);font-size:14px}
+.calc-out{border-top:1px solid var(--ink);padding:12px;background:var(--card-2)}
+.calc-out .big{font-size:clamp(20px,3.4vw,30px);font-weight:700;letter-spacing:-.03em;color:var(--bind)}
+.calc-out p{font-family:var(--f-s);font-size:13.5px;color:var(--ink-2);margin:5px 0 0}
+.rhy{border:1px solid var(--ink);background:var(--card);padding:13px 14px}
+.rhy .n{font-size:clamp(34px,6vw,54px);font-weight:700;letter-spacing:-.045em;line-height:.9}
+.rhy .n.low{color:var(--warn)} .rhy .n.ok{color:var(--bind)} .rhy .n.high{color:var(--antic)}
+.rhy .band{display:flex;gap:2px;margin:11px 0 7px}
+.rhy .band i{flex:1;height:16px;background:var(--rule-2);border:1px solid var(--rule)}
+.rhy .band i.on{background:var(--bind);border-color:var(--bind)}
+.rhy .band i.on.warn{background:var(--warn);border-color:var(--warn)}
+.rhy .band i.on.hi{background:var(--antic);border-color:var(--antic)}
+.rhy p{font-family:var(--f-s);font-size:13.5px;color:var(--ink-2);margin:0}
+.rhy .ctl{display:flex;gap:6px;margin-top:9px;align-items:center}
+.rhy .ctl button{border:1px solid var(--rule);background:transparent;width:28px;height:26px;font-size:15px;line-height:1;padding:0}
+
+/* grid */
+.gwrap{border:1px solid var(--ink);background:var(--card);overflow-x:auto}
+table.eg{border-collapse:collapse;width:100%;min-width:600px}
+table.eg th,table.eg td{border:1px solid var(--rule-2);padding:0}
+table.eg thead th{background:var(--rule-2);font-family:var(--f-m);font-size:11px;font-weight:700;height:31px}
+table.eg thead th.bad{background:var(--warn);color:#fff}
+table.eg th.rh{text-align:left;padding:5px 9px;font-size:12.5px;font-weight:600;min-width:168px;max-width:168px;
+  background:var(--card);border-right:1px solid var(--ink);position:sticky;left:0;z-index:2}
+table.eg th.rh small{display:block;font-family:var(--f-m);font-size:8.5px;color:var(--ink-3);letter-spacing:.05em;font-weight:400}
+table.eg thead th.cn{position:sticky;left:0;z-index:3;background:var(--rule-2);text-align:left;padding-left:9px;
+  min-width:168px;max-width:168px;border-right:1px solid var(--ink);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+td.ec{height:34px;cursor:pointer;text-align:center;position:relative}
+td.ec span{position:absolute;inset:3px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--f-m);font-size:11px;font-weight:700}
+td.ec.l0 span{background:transparent;border:1px dashed var(--rule);color:var(--ink-3)}
+td.ec.l1 span{background:rgba(15,92,99,.16);color:var(--bind)}
+td.ec.l2 span{background:rgba(15,92,99,.45);color:#fff}
+td.ec.l3 span{background:var(--bind);color:#fff;box-shadow:inset 0 0 0 2px var(--ink)}
+td.ec:hover span{outline:2px solid var(--warn)}
+.viol{margin-top:9px;display:grid;gap:4px}
+.viol div{font-family:var(--f-m);font-size:11px;letter-spacing:.02em;color:var(--warn);
+  border-left:3px solid var(--warn);padding:3px 9px;background:var(--card)}
+.viol div.ok{color:var(--bind);border-color:var(--bind)}
+.glegend{display:flex;gap:13px;flex-wrap:wrap;font-family:var(--f-m);font-size:10px;color:var(--ink-3);letter-spacing:.04em;margin-top:8px}
+
+/* decisions */
+.dec{display:grid;gap:10px}
+@media(min-width:860px){.dec{grid-template-columns:1fr 1fr}}
+.dcard{border:1px solid var(--rule);border-left:4px solid var(--decide);background:var(--card);padding:11px 12px}
+.dcard h4{font-size:17px;margin-bottom:3px}
+.dcard .due{font-family:var(--f-m);font-size:10.5px;letter-spacing:.05em;color:var(--decide)}
+.dcard .due b{color:var(--warn)}
+.dcard p{font-family:var(--f-s);font-size:13.5px;color:var(--ink-2);margin:6px 0 0}
+.dcard .gates{font-family:var(--f-m);font-size:10px;color:var(--ink-3);margin-top:5px;letter-spacing:.03em}
+.dcard .res{margin-top:8px;display:flex;gap:5px}
+.dcard .res input{flex:1;background:var(--card-2);border:1px solid var(--rule);padding:4px 7px;font-size:12.5px}
+.dcard .res button{background:var(--decide);color:#fff;border:0;padding:4px 10px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.dcard.done{border-left-color:var(--bind);opacity:.72}
+
+/* reviews */
+.rev{border:1px solid var(--rule);background:var(--card);padding:11px 12px;margin-bottom:8px}
+.rev .rh{display:flex;justify-content:space-between;gap:10px;font-family:var(--f-m);font-size:10.5px;letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
+.rev p{font-family:var(--f-s);font-size:14px;margin:5px 0 0}
+.rev .cls{display:inline-block;font-family:var(--f-m);font-size:9.5px;letter-spacing:.07em;border:1px solid var(--warn);color:var(--warn);padding:1px 5px;margin-top:6px}
+.revform{border:1px solid var(--ink);background:var(--card);padding:11px 12px;display:grid;gap:6px}
+.revform .row{display:flex;gap:5px;flex-wrap:wrap}
+.revform input,.revform select,.revform textarea{background:var(--card-2);border:1px solid var(--rule);padding:5px 7px;font-size:13px}
+.revform textarea{width:100%;min-height:58px;font-family:var(--f-s);resize:vertical}
+.revform button{background:var(--ink);color:var(--paper);border:0;padding:6px 13px;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;justify-self:start}
+.classkey{display:grid;gap:2px;font-family:var(--f-m);font-size:10.5px;color:var(--ink-2);margin-top:7px}
+.classkey b{color:var(--warn)}
+
+footer{margin-top:40px;border-top:2px solid var(--ink);padding:15px 0 46px;font-family:var(--f-s);font-size:13.5px;color:var(--ink-2)}
+footer b{font-family:var(--f-d)}
+.hidden{display:none}
+@media print{nav,.tctl,.addbar,.revform,.dcard .res,.filters,.cg .adopt{display:none}body{background:#fff}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="htop">
+      <span class="eyebrow">Personal development programme · outline &amp; long-range objectives</span>
+      <span class="eyebrow" id="phaseTag">—</span>
+    </div>
+    <h1>First <span>Plan</span></h1>
+    <div class="sub">Drafting Aug–Dec 2026. Adopted 31 December 2026. Runs 2027–2031, under long-range objectives to 2036 and a line to 2051. Binding targets depend on nobody but you. Anticipatory targets are outcomes other people participate in — they get mechanisms, never blame.</div>
+    <div class="clock" id="clock"></div>
+    <div class="track" id="track"><i></i><em></em></div>
+    <div class="tracklab"><span>Aug 2026</span><span>Adoption</span><span>Dec 2031</span></div>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <a href="#horizons">Horizons</a>
+  <a href="#catalogue">Catalogue</a>
+  <a href="#plan">The plan</a>
+  <a href="#mech">Mechanism</a>
+  <a href="#grid">Emphasis</a>
+  <a href="#decisions">Decisions</a>
+  <a href="#reviews">Reviews</a>
+  <span class="sp"></span>
+  <span class="io">
+    <button id="btnExport">Export</button>
+    <button id="btnImport">Import</button>
+    <button id="btnReset">Reset</button>
+  </span>
+</div></nav>
+
+<main class="wrap">
+
+<section id="horizons">
+  <div class="sh"><h2>Three horizons</h2>
+    <div class="note">The plan is disciplined by the horizon above it. Without a +10 layer, five-year targets drift toward whatever is achievable in five years — the filter that removes exactly the goals worth having.</div></div>
+  <div class="hz">
+    <div class="hzc a"><div class="yr">2031</div><div class="lb">The plan · what must be true</div>
+      <textarea id="h1t" placeholder="The five-year thesis, in three sentences. What is different about your life at the end of this that isn't now."></textarea>
+      <div class="hint">Revised only at the mid-term.</div></div>
+    <div class="hzc b"><div class="yr">2036</div><div class="lb">Long-range objectives · +10</div>
+      <textarea id="h2t" placeholder="Where the lofty tier resolves. Outcomes, not plans. Three or four sentences."></textarea>
+      <div class="hint">Fixed by 15 Nov 2026. Revised only at the terminal review.</div></div>
+    <div class="hzc c"><div class="yr">2051</div><div class="lb">The line · +25</div>
+      <textarea id="h3t" placeholder="One paragraph. What the whole thing is for. Written once, read at every annual review, changed almost never."></textarea>
+      <div class="hint">Due 30 Sep 2026. If it never changes a decision, it was decorative.</div></div>
+  </div>
+</section>
+
+<section id="catalogue">
+  <div class="sh"><h2>Goal catalogue</h2>
+    <div class="note">A menu, not a checklist. Thresholds for domains currently below the line are in scope now. Four to six ambitious goals across five years. Exactly three lofty ones, across uncorrelated failure modes. Adopting a goal creates its anticipatory target and a binding stub you then have to quantify.</div></div>
+  <div class="filters" id="filters"></div>
+  <div class="catcount" id="catcount"></div>
+  <div class="cat" id="cat"></div>
+</section>
+
+<section id="plan">
+  <div class="sh"><h2>The plan</h2>
+    <div class="note">Ceilings: eight active binding targets, three lofty goals, four domains at major emphasis or above. These are limits, not objectives.</div></div>
+  <div class="ceil" id="ceil"></div>
+  <div id="domains"></div>
+  <div class="addbar">
+    <select id="nDom"></select>
+    <select id="nKind"><option value="binding">Binding</option><option value="anticipatory">Anticipatory</option></select>
+    <select id="nTier"><option value="1">T1 threshold</option><option value="2">T2 ambitious</option><option value="3">T3 lofty</option></select>
+    <input class="grow" id="nStmt" placeholder="Statement — for binding, a rate or an action count">
+    <input id="nBase" type="number" step="any" placeholder="now" style="width:62px">
+    <input id="nTarget" type="number" step="any" placeholder="target" style="width:70px">
+    <input id="nBy" type="date">
+    <button id="btnAdd">Add</button>
+  </div>
+  <div class="rulebox"><b>The rule that does the work:</b> never set a binding target on another person's behaviour. Friendship, love, recognition and audience are all consumption-share problems — they matter most, cannot be commanded, and the only honest move is to command the exposure and initiation that make them likely.</div>
+</section>
+
+<section id="mech">
+  <div class="sh"><h2>Mechanism &amp; rhythm</h2>
+    <div class="note">Left: converts an outcome into the input rate that produces it. Right: the one cross-cutting number — standing weekly commitments involving other people that would be noticed if missed.</div></div>
+  <div class="two">
+    <div class="calc">
+      <div class="calc-in">
+        <div class="ci"><label>Outcome wanted</label><input id="cWant" type="number" step="any" value="5"></div>
+        <div class="ci"><label>Have now</label><input id="cHave" type="number" step="any" value="2"></div>
+        <div class="ci"><label>Conversion (1 in N)</label><input id="cConv" type="number" step="any" value="8"></div>
+        <div class="ci"><label>Months available</label><input id="cMon" type="number" step="any" value="36"></div>
+      </div>
+      <div class="calc-out"><div class="big" id="cOut">—</div><p id="cNote"></p></div>
+    </div>
+    <div class="rhy">
+      <div class="lb eyebrow">Standing weekly commitments</div>
+      <div class="n" id="rhyN">0</div>
+      <div class="band" id="rhyBand"></div>
+      <p id="rhyNote"></p>
+      <div class="ctl"><button id="rhyDown">−</button><button id="rhyUp">+</button>
+        <span class="eyebrow" style="margin-left:6px">target band 4–6</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="grid">
+  <div class="sh"><h2>Emphasis</h2>
+    <div class="note">Click to cycle 0–3. Constraints are shown, not enforced — the point is to see the trade-off, not to be prevented from making it. With twelve domains, most cells should be 0 or 1.</div></div>
+  <div class="gwrap"><table class="eg" id="eg"></table></div>
+  <div class="glegend"><span>0 · dormant, deliberately</span><span>1 · maintained</span><span>2 · major</span><span>3 · defining</span></div>
+  <div class="viol" id="viol"></div>
+</section>
+
+<section id="decisions">
+  <div class="sh"><h2>Gating decisions</h2>
+    <div class="note">A question without a date isn't open, it's avoided. Any decision gating three or more domains is forced in Year 1 — the carrying cost of deferral compounds; the cost of choosing wrong is bounded.</div></div>
+  <div class="dec" id="dec"></div>
+</section>
+
+<section id="reviews">
+  <div class="sh"><h2>Reviews</h2>
+    <div class="note">Ninety minutes, four times a year, hard stop. A missed target cannot be left unclassified. Retire at least one target at every review — a plan that only grows gets abandoned whole rather than pruned.</div></div>
+  <div id="revList"></div>
+  <div class="revform">
+    <div class="row">
+      <input id="rDate" type="date">
+      <select id="rType"><option>quarterly</option><option>annual</option><option>midterm</option><option>terminal</option></select>
+      <select id="rTarget"><option value="">— no missed target —</option></select>
+      <select id="rClass">
+        <option value="">class…</option>
+        <option value="A">A · target was wrong</option>
+        <option value="B">B · inputs insufficient</option>
+        <option value="C">C · conditions changed</option>
+        <option value="D">D · it was avoided</option>
+      </select>
+    </div>
+    <textarea id="rNote" placeholder="What happened, and the next quarter's single binding commitment."></textarea>
+    <button id="btnRev">Record review</button>
+    <div class="classkey">
+      <span><b>A</b> — delete the target, one sentence on why it looked right.</span>
+      <span><b>B</b> — recompute the input rate. Raise it or extend the deadline. Not both.</span>
+      <span><b>C</b> — log the assumption that broke, then reset.</span>
+      <span><b>D</b> — change nothing about the target. Reduce the number of active binding targets instead.</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <p><b>Infrastructure cap:</b> four hours per quarter on the plan's own machinery, including this page. Exceeding it is a Class D failure against the plan itself.</p>
+  <p><b>Deliberately absent:</b> streaks, notifications, a composite life score, anything rewarding you for opening the app. Four times a year is correct. Export keeps the JSON beside the spec.</p>
+</div></footer>
+
+<input type="file" id="fileIn" accept="application/json" class="hidden">
+
+<script>
+const KEY="plan-v2";
+
+const DOMAINS=[
+ {id:"D1",name:"Place",thr:"Somewhere you'd be content to remain five years",comp:"Slow, high — everything is downstream"},
+ {id:"D2",name:"Belonging",thr:"Three people callable on a random Tuesday",comp:"Yes — 12–24 month ignition delay"},
+ {id:"D3",name:"Partnership",thr:"Actively dating at real frequency",comp:"Yes, with a long delay"},
+ {id:"D4",name:"Kin",thr:"Real contact cadence with those whose time is finite",comp:"Non-linear — windows close"},
+ {id:"D5",name:"Craft",thr:"Unambiguously strong at your current level",comp:"Yes, strongly"},
+ {id:"D6",name:"Sovereignty",thr:"Runway to say no for a year",comp:"Yes; gates on Capital"},
+ {id:"D7",name:"Capital",thr:"Reserve funded, no consumer debt, tax understood",comp:"Yes, mechanically"},
+ {id:"D8",name:"Body",thr:"Training you'd keep in a bad month",comp:"Yes — and the only one that decays"},
+ {id:"D9",name:"Mind",thr:"One subject past the introductory layer",comp:"Yes, slowly"},
+ {id:"D10",name:"Making",thr:"Something published on a cadence",comp:"Yes — audience compounds harder than skill"},
+ {id:"D11",name:"World",thr:"One place known well that isn't home",comp:"Barely — mostly consumption, and that's fine"},
+ {id:"D12",name:"Stewardship",thr:"Standing giving; one person mentored properly",comp:"Yes, invisibly"}
+];
+
+/* [domain, tier, goal, mechanism, binding input] */
+const CAT=[
+["D1",1,"Live somewhere you'd be content to remain five years","Ends the option-carrying cost that suppresses four other domains","Decision deadline: choose by a fixed date"],
+["D1",1,"A home you're glad to return to","Space configured for the life you want, not the one you had","Protected block: one weekend per quarter on the home"],
+["D1",1,"Know your neighbourhood — by name, by face, by shop","Repetition on foot inside a fifteen-minute radius","Attendance: 3 local walks or errands per week, same route"],
+["D1",2,"Own, or hold long tenure, in a chosen city","Commitment converts a residence into a base","Savings rate toward the deposit; decision deadline"],
+["D1",2,"Residency optionality in a second country established","Visa pathways take years — start before you need it","Shipping cadence: one application milestone per quarter"],
+["D1",2,"A home built for hosting","Hosting is the cheapest engine of belonging there is","Attendance: host N times per month"],
+["D1",3,"Build or gut-renovate a house to your own specification","The largest physical artifact most people ever make","Protected block N hrs/week; savings rate"],
+["D1",3,"Two bases on two continents, with a working rhythm between them","Requires income independent of location — gates on Sovereignty","Runway floor; decision deadline"],
+["D1",3,"Become genuinely of a place — language, civic role, ten-year neighbours","Belonging to a place is a decade project, not a move","Attendance: one civic role held continuously"],
+
+["D2",1,"Three people you can call on a random Tuesday","Repeated unplanned contact in fixed-membership contexts","Attendance: ≥2 recurring contexts per week"],
+["D2",1,"A weekly context where the same faces return","Stable membership is the entire mechanism","Attendance: one fixed weekly commitment, never skipped"],
+["D2",1,"Someone who'd notice within 48 hours if you vanished","Mutual visibility, not intensity","Contact cadence: N check-ins per week with the same people"],
+["D2",2,"A group of six or more that convenes without you organising it","Hand over the organising — a group you run isn't a group you belong to","Initiation: N invitations per month until someone else starts"],
+["D2",2,"Be the host — a standing dinner, ride, or game night","Recurrence beats quality; the same night every month","Attendance: host on a fixed monthly date"],
+["D2",2,"Two friendships older than five years, actively maintained","Old friendships decay silently and cannot be replaced","Contact cadence: N calls per month to named people"],
+["D2",3,"Found an institution — a club, supper society, race, residency","Institutions outlive enthusiasm; that is the point","Shipping cadence: run it N times before judging it"],
+["D2",3,"A chosen family: people with keys to your home and a claim on your time","Mutual obligation, deliberately accepted","Attendance: shared standing commitments per week"],
+
+["D3",1,"Actively dating at real frequency, not theoretically available","Volume precedes selectivity — you cannot filter an empty pipeline","Exposure hours N/month; initiation: N first meetings/month"],
+["D3",1,"Know what you're looking for, written down","Unwritten criteria get rewritten to fit whoever is present","Protected block: write and revise it once per quarter"],
+["D3",1,"Be someone a good partner would choose — the honest inventory","Most of the work is upstream, in the other eleven domains","Retirement rate: fix one honest deficiency per year"],
+["D3",2,"A committed relationship of substance","Repeated exposure to compatible pools, then time","Exposure hours; attendance in mixed shared-interest contexts"],
+["D3",2,"A relationship in which both people's ambitions grow","Selected for trajectory compatibility, not comfort","Contact cadence: explicit ambition conversations per quarter"],
+["D3",3,"A shared life — home, finances, a joint project bigger than either","Commitment is the mechanism, not the reward","Decision deadline"],
+["D3",3,"A partnership you'd choose again at sixty","Sustained repair capacity, not sustained agreement","Protected block: N hrs/week undivided"],
+
+["D4",1,"A real contact cadence with the people whose time is finite","Frequency, not depth — the call matters more than what's said","Contact cadence: N calls per week"],
+["D4",1,"Know your family's history before the people holding it are gone","Nobody else will do this and it is unrecoverable","Shipping cadence: one recorded conversation per quarter"],
+["D4",1,"One relationship repaired that has been left broken","Unilateral initiation, without a guarantee","Initiation: one approach, then patience"],
+["D4",2,"An oral history of the older generation, recorded and kept","Structured interviews, transcribed, stored where others will find them","Shipping cadence: N hours recorded per year"],
+["D4",2,"Live within reach of the family whose remaining years are countable","Proximity is the only thing that reliably converts to time together","Decision deadline — gates on Place"],
+["D4",2,"An annual gathering that happens because you make it happen","Someone has to be the node; it is a role, not a feeling","Attendance: one convened gathering per year, same window"],
+["D4",3,"Children, if wanted — or the honest decision not to","Deferral resolves this by default, the one outcome nobody chooses","Decision deadline"],
+["D4",3,"Be the node holding an extended family together across countries","Sustained logistical labour nobody thanks you for","Contact cadence; one convening per year"],
+
+["D5",1,"Unambiguously strong at your current level","Visible output others depend on, not perceived effort","Shipping cadence: N shipped things per quarter"],
+["D5",1,"A lane — the thing you are the person for","Narrow beats broad; the lane is chosen, not discovered","Publication cadence inside the lane"],
+["D5",2,"Reach the next level","Scope and influence, evidenced in writing before anyone asks","Shipping cadence; outreach to sponsors N/month"],
+["D5",2,"Known outside your employer for a specific competence","External surface: talks, writing, open source, a public artifact","Publication cadence: N per month"],
+["D5",2,"Ship something used by people who don't know you","Strangers are the only honest test of usefulness","Shipping cadence: one public release per quarter"],
+["D5",3,"One of the recognisable practitioners in a named niche","Sustained public output over years, on one subject","Publication cadence held for five years"],
+["D5",3,"Write the reference work — the book, the standard, the tool","Nobody is assigned this; it is taken","Protected block: N hrs/week, for years"],
+["D5",3,"Train people who go on to exceed you","Deliberate apprenticeship, repeatedly","Contact cadence: N mentees held concurrently"],
+
+["D6",1,"Runway: the ability to say no for a year","Months of expenses held and untouched","Runway floor: N months, never breached"],
+["D6",1,"One income stream that isn't your employer, however small","The existence proof matters more than the size","Shipping cadence: one revenue-generating artifact per quarter"],
+["D6",2,"Leave employment for something owned","Gate: runway, a validated direction, current role resolved","Decision deadline at the mid-term"],
+["D6",2,"A business covering baseline cost of living","Revenue, not funding; customers, not users","Outreach: N sales conversations per month"],
+["D6",2,"A validated direction, chosen from a tested portfolio","Fund several, test each to a shipped artifact, choose on a date","Shipping cadence: one candidate per quarter"],
+["D6",3,"A business that survives a year of your absence","Systems and people, not heroics","Retirement rate: remove yourself from one process per quarter"],
+["D6",3,"Work becomes fully elective, permanently","Assets exceeding real spending, indefinitely","Savings rate; runway floor"],
+["D6",3,"Employ people whose lives are measurably better for it","Payroll is the most concrete good most people can do","Shipping cadence: hire and retain"],
+
+["D7",1,"Emergency reserve fully funded","Automated, separate, boring","Savings rate: automated transfer"],
+["D7",1,"No consumer debt","Ordinary arithmetic, unglamorous","Savings rate"],
+["D7",1,"Tax and cross-border position understood, in writing","One document, reviewed annually","Protected block: annual review with a professional"],
+["D7",2,"A savings rate that buys the exit","The exit is purchased in months of runway, not net worth","Savings rate: X% held for five years"],
+["D7",2,"Assets producing meaningful passive income","Time in market, mechanically","Savings rate; automated deployment"],
+["D7",2,"Cross-border structure resolved before it becomes expensive","Treaty treatment, residency, account placement","Shipping cadence: one structural item per quarter"],
+["D7",3,"Financial independence at your real spending level","Not a lean number — the actual life you want, funded","Savings rate; runway floor"],
+["D7",3,"Capital deployed into things you believe in, not only index funds","Deliberate allocation, accepting worse returns for better ownership","Allocation floor: X% directed"],
+["D7",3,"Enough to change a younger relative's trajectory","Education, a deposit, a runway for someone else","Savings rate; decision deadline"],
+
+["D8",1,"Training you'd keep in a bad month","A frequency floor low enough to survive a bad week","Training frequency: N sessions per week, minimum"],
+["D8",1,"Sleep, bloodwork and dentistry not neglected","The unglamorous half of longevity","Protected block: annual panel; a fixed sleep window"],
+["D8",1,"A body that doesn't limit what you say yes to","Capacity for spontaneous invitations","Training volume: N hrs per week"],
+["D8",2,"A named athletic milestone","One dated event, entered and paid for","Decision deadline (entry); training volume"],
+["D8",2,"Composition held for a full year, not a block","Maintenance is the harder skill and nobody trains it","Training frequency held through the off-season"],
+["D8",2,"Strength standards at bodyweight multiples","Progressive overload, logged","Training frequency; volume"],
+["D8",3,"A landmark requiring years — a continental crossing, a Grand Slam, a major traverse","Multi-year base; the window narrows with age","Training volume held three-plus years"],
+["D8",3,"At fifty, in the shape most people aren't at thirty","Consistency over decades, not intensity over months","Training frequency, never below the floor"],
+
+["D9",1,"One subject taken past the introductory layer","Depth over breadth; the second book is where it starts","Protected block: N hrs per week, same slot"],
+["D9",1,"Read at a real rate, and finish things","Abandonment is fine; drift isn't","Retirement rate: finish or formally abandon"],
+["D9",2,"Conversational fluency in a second language","Daily contact plus a person who won't switch to English","Protected block daily; N conversation hrs per week"],
+["D9",2,"A subject learned to the point where you can teach it","Teaching is the test — find someone to teach","Publication cadence: explain it publicly N times"],
+["D9",2,"An instrument or physical skill past the awkward phase","The awkward phase is six to eighteen months and is the entire filter","Training frequency: N sessions per week"],
+["D9",3,"True literacy in a hard language — read a novel, hold an argument","Years of daily contact plus immersion","Protected block daily for five years; residency abroad"],
+["D9",3,"Formal mastery taken seriously as an adult — a degree, an apprenticeship","External structure supplies what self-study cannot","Decision deadline; protected block"],
+["D9",3,"An original contribution to a field you had no business entering","Amateurs still make real contributions in narrow places","Publication cadence; outreach to the field"],
+
+["D10",1,"Something published on a cadence, anywhere","Publishing badly and regularly beats publishing well and never","Publication cadence: N per month"],
+["D10",1,"One thing finished that you started","Completion is a separate skill from starting","Retirement rate: finish or kill, quarterly"],
+["D10",2,"A body of work with an audience","Volume plus consistency; audience compounds harder than skill","Publication cadence held three-plus years"],
+["D10",2,"A tool or artifact other people rely on","Solve your own problem, then somebody else's","Shipping cadence: N releases per quarter"],
+["D10",2,"A hundred published pieces","The number is arbitrary; the discipline isn't","Publication cadence"],
+["D10",3,"Write the book","Daily words, for years, against no deadline but your own","Protected block: N words per day"],
+["D10",3,"A body of photographic or written work exhibited, collected, or cited","Curation and submission, not only production","Outreach: N submissions per quarter"],
+["D10",3,"Make the thing still in use in twenty years","Durability is a design choice made early and then defended","Shipping cadence; a maintenance commitment"],
+
+["D11",1,"One place known well that isn't home","Return repeatedly to one place instead of collecting new ones","Attendance: return N times to the same place"],
+["D11",1,"Travel with depth rather than count","Longer stays, fewer countries, the same neighbourhoods","Decision deadline: choose depth targets annually"],
+["D11",2,"A defining journey — a long tour, a thru-hike, a crossing","Logistics and leave planned a year ahead","Decision deadline: book it; training volume"],
+["D11",2,"Live in a second country long enough to stop being a visitor","Three months minimum; six is the real threshold","Decision deadline; gates on Sovereignty"],
+["D11",3,"Cross a continent under your own power","Years of base, months of logistics, one window","Training volume; decision deadline"],
+["D11",3,"A decade-long project of return to one place until you belong there","The same place, annually, for ten years","Attendance: annual return, non-negotiable"],
+["D11",3,"See the things that require years of planning — an eclipse, a migration, a place that is closing","Calendar them now; they do not wait","Decision deadline per item"],
+
+["D12",1,"Standing giving, not impulsive giving","Automated, at a level you set once","Giving floor: X% by standing order"],
+["D12",1,"One person mentored properly","Regular and scheduled, not ad hoc","Contact cadence: N sessions per month"],
+["D12",2,"Give at a level you actually notice","The threshold where it changes a decision you'd otherwise make","Giving floor, raised annually"],
+["D12",2,"Serve on something — a board, a committee, a trail crew","Institutional labour: unpaid, recurring, unglamorous","Attendance: N meetings per quarter"],
+["D12",2,"Teach regularly","A class, a workshop, a course, on a schedule","Attendance: N sessions per term"],
+["D12",3,"Fund or found something that exists because of you","Money plus sustained attention over years","Giving floor; shipping cadence"],
+["D12",3,"Change one institution measurably for the better","An insider position, years, and one specific change","Attendance; decision deadline"],
+["D12",3,"A commitment of time large enough to reshape your calendar","The thing you'd be remembered for, and it costs what it costs","Protected block: N hrs per week, for years"]
+];
+CAT.forEach((c,i)=>c.push("c"+i));   // id at index 5
+
+const DEFAULT={
+  meta:{draftFrom:"2026-08-01",adoptBy:"2026-12-31",planFrom:"2027-01-01",planTo:"2031-12-31",midterm:"2029-01-01"},
+  horizons:{h1:"",h2:"",h3:""},
+  rhythm:1,
+  targets:[
+    {id:"b1",domain:"D2",kind:"binding",tier:1,stmt:"Attend ≥2 recurring, fixed-membership contexts per week",unit:"/wk",baseline:0,target:2,current:0,by:"2027-12-31",mechFor:["a1"],status:"active"},
+    {id:"b2",domain:"D2",kind:"binding",tier:1,stmt:"Issue ≥2 first invitations per month",unit:"/mo",baseline:0,target:2,current:0,by:"2027-12-31",mechFor:["a1"],status:"active"},
+    {id:"b3",domain:"D8",kind:"binding",tier:1,stmt:"Four training sessions per week, floor never breached",unit:"/wk",baseline:4,target:4,current:4,by:"2031-12-31",mechFor:[],status:"active"},
+    {id:"b4",domain:"D1",kind:"binding",tier:1,stmt:"Fix location criteria and weights before gathering more information",unit:"done",baseline:0,target:1,current:0,by:"2026-11-30",mechFor:["a4"],status:"active"},
+    {id:"b5",domain:"D4",kind:"binding",tier:1,stmt:"Weekly call to the people whose remaining time is countable",unit:"/wk",baseline:0,target:1,current:0,by:"2027-12-31",mechFor:["a5"],status:"active"},
+    {id:"a1",domain:"D2",kind:"anticipatory",tier:1,stmt:"Three people callable on a random Tuesday",unit:"people",baseline:2,target:3,current:2,by:"2028-12-31",mech:"Repeated unplanned contact in contexts with stable membership. One-off events convert at near zero.",conv:0.125,status:"active"},
+    {id:"a4",domain:"D1",kind:"anticipatory",tier:1,stmt:"Home settled and committed to",unit:"—",baseline:0,target:1,current:0,by:"2027-09-30",mech:"Dominated by its own delay. The option's value is best-minus-second-best city; the carrying cost is five domains suppressed.",conv:null,status:"active"},
+    {id:"a5",domain:"D4",kind:"anticipatory",tier:1,stmt:"Real contact cadence with the people whose time is finite",unit:"—",baseline:0,target:1,current:0,by:"2027-06-30",mech:"Frequency, not depth. The shortest window in the whole plan and the weakest urgency signal.",conv:null,status:"active"}
+  ],
+  emphasis:{D1:[3,1,1,1,1],D2:[2,3,2,1,1],D3:[2,2,3,2,1],D4:[2,1,1,1,1],D5:[1,1,1,2,1],D6:[0,1,2,2,3],
+            D7:[1,1,1,2,2],D8:[1,1,1,1,1],D9:[0,1,1,1,2],D10:[1,2,1,1,1],D11:[0,0,1,1,1],D12:[0,0,1,1,1]},
+  decisions:[
+    {id:"k1",q:"Where is home?",due:"2027-09-30",defUsed:0,defMax:1,gates:"Gates Belonging, Partnership, Kin, World, Rhythm",
+     note:"Criteria and weights fixed before more information is gathered, so they cannot be retrofitted to a conclusion. One deferral, twelve months, logged with a reason.",res:null},
+    {id:"k2",q:"Which direction gets built?",due:"2029-01-01",defUsed:0,defMax:0,gates:"Gates Sovereignty, Capital, Making",
+     note:"A portfolio, not a decision, until the mid-term. Fund several candidates, test each to a shipped artifact, then choose one and delete the others in writing.",res:null},
+    {id:"k3",q:"Employment or independence?",due:"2029-01-01",defUsed:0,defMax:1,gates:"Gates Capital, Craft, Sovereignty, Rhythm",
+     note:"Three gate conditions, all required: runway floor held, one validated direction, current role resolved either way. Failing the gate is legitimate and defers once.",res:null},
+    {id:"k4",q:"Children, or the honest decision not to",due:"2028-06-30",defUsed:0,defMax:0,gates:"Gates Partnership, Kin, Place, Capital",
+     note:"Listed because deferring resolves it by default, which is the one outcome nobody actually chooses. Delete this card outright if it does not apply — that is a decision too.",res:null}
+  ],
+  reviews:[],
+  adopted:[]
+};
+
+let S=load();
+function load(){ try{const r=localStorage.getItem(KEY); if(r) return Object.assign(structuredClone(DEFAULT),JSON.parse(r));}catch(e){} return structuredClone(DEFAULT); }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){} cloudSave(); }
+async function cloudSave(){ try{ if(window.storage) await window.storage.set(KEY,JSON.stringify(S)); }catch(e){} }
+async function cloudLoad(){ try{ if(!window.storage) return; const r=await window.storage.get(KEY);
+  if(r&&r.value){ S=Object.assign(structuredClone(DEFAULT),JSON.parse(r.value)); renderAll(); } }catch(e){} }
+
+const $=s=>document.querySelector(s);
+const D=s=>new Date(s+"T00:00:00");
+const today=new Date(); today.setHours(0,0,0,0);
+const days=(a,b)=>Math.round((b-a)/86400000);
+const fmt=d=>D(d).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});
+const tgt=id=>S.targets.find(t=>t.id===id);
+const dm=id=>DOMAINS.find(d=>d.id===id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const YEARS=[2027,2028,2029,2030,2031];
+const TIER=["","threshold","ambitious","lofty"];
+
+/* clock */
+function renderClock(){
+  const adopt=D(S.meta.adoptBy),pTo=D(S.meta.planTo),mid=D(S.meta.midterm);
+  const drafting=today<=adopt;
+  $("#phaseTag").textContent=drafting?"Drafting period · plan not yet adopted":"Plan in force";
+  const b=S.targets.filter(t=>t.kind==="binding"&&t.status==="active").length;
+  const l=S.targets.filter(t=>t.tier===3&&t.status==="active").length;
+  const cells=[
+    drafting?{b:days(today,adopt),s:"days to adoption",hot:days(today,adopt)<60}
+            :{b:YEARS[Math.min(4,Math.max(0,today.getFullYear()-2027))],s:"plan year"},
+    {b:Math.max(0,days(today,mid)),s:"days to mid-term"},
+    {b:Math.max(0,days(today,pTo)),s:"days to close"},
+    {b:b+" / 8",s:"binding targets",hot:b>8},
+    {b:l+" / 3",s:"lofty goals",hot:l>3},
+    {b:S.rhythm,s:"standing weekly",hot:S.rhythm<3||S.rhythm>8}
+  ];
+  $("#clock").innerHTML=cells.map(c=>`<div class="ck${c.hot?" hot":""}"><b>${c.b}</b><span>${c.s}</span></div>`).join("");
+  const start=D(S.meta.draftFrom),total=days(start,pTo);
+  $("#track").querySelector("i").style.width=Math.max(0,Math.min(100,days(start,today)/total*100))+"%";
+  $("#track").querySelector("em").style.left=(days(start,adopt)/total*100)+"%";
+}
+
+/* catalogue */
+let fDom="all",fTier="all",fQ="";
+function renderFilters(){
+  $("#filters").innerHTML =
+    `<button data-d="all" aria-pressed="${fDom==="all"}">All domains</button>`+
+    DOMAINS.map(d=>`<button data-d="${d.id}" aria-pressed="${fDom===d.id}">${esc(d.name)}</button>`).join("")+
+    `<span style="width:12px"></span>`+
+    [1,2,3].map(t=>`<button class="t${t}" data-t="${t}" aria-pressed="${fTier===t}">T${t} ${TIER[t]}</button>`).join("")+
+    `<button data-t="all" aria-pressed="${fTier==="all"}">All tiers</button>`+
+    `<input id="fq" placeholder="search" value="${esc(fQ)}">`;
+}
+function renderCat(){
+  const rows=CAT.filter(c=>(fDom==="all"||c[0]===fDom)&&(fTier==="all"||c[1]===fTier)
+    &&(!fQ||(c[2]+" "+c[3]+" "+c[4]).toLowerCase().includes(fQ.toLowerCase())));
+  $("#catcount").textContent=`${rows.length} of ${CAT.length} goals · ${S.adopted.length} adopted`;
+  $("#cat").innerHTML=rows.map(c=>{
+    const taken=S.adopted.includes(c[5]);
+    return `<div class="cg tier${c[1]}${taken?" taken":""}">
+      <div class="top"><span class="dm">${esc(dm(c[0]).name)}</span><span class="tg">T${c[1]} ${TIER[c[1]]}</span></div>
+      <h4>${esc(c[2])}</h4>
+      <div class="mech">${esc(c[3])}</div>
+      <div class="inp">↳ ${esc(c[4])}</div>
+      <button class="adopt" data-adopt="${c[5]}">${taken?"Adopted":"Adopt"}</button>
+    </div>`;
+  }).join("");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#filters button"); if(b){
+    if(b.dataset.d!==undefined) fDom=b.dataset.d;
+    if(b.dataset.t!==undefined) fTier=b.dataset.t==="all"?"all":+b.dataset.t;
+    renderFilters(); renderCat(); return;
+  }
+  const id=e.target.dataset.adopt; if(!id) return;
+  const c=CAT.find(x=>x[5]===id); if(!c||S.adopted.includes(id)) return;
+  const aid="a"+Date.now(), bid="b"+(Date.now()+1);
+  S.targets.push({id:aid,domain:c[0],kind:"anticipatory",tier:c[1],stmt:c[2],unit:"—",
+    baseline:0,target:1,current:0,by:"",mech:c[3],conv:null,status:"active"});
+  S.targets.push({id:bid,domain:c[0],kind:"binding",tier:c[1],stmt:c[4],unit:"",
+    baseline:0,target:0,current:0,by:"",mechFor:[aid],status:"active"});
+  S.adopted.push(id); save(); renderCat(); renderTargets(); renderClock();
+});
+document.addEventListener("input",e=>{ if(e.target.id==="fq"){ fQ=e.target.value; renderCat(); } });
+
+/* targets */
+function renderTargets(){
+  const b=S.targets.filter(t=>t.kind==="binding"&&t.status==="active").length;
+  const a=S.targets.filter(t=>t.kind==="anticipatory"&&t.status==="active").length;
+  const l=S.targets.filter(t=>t.tier===3&&t.status==="active").length;
+  const unq=S.targets.filter(t=>t.kind==="binding"&&t.status==="active"&&!t.target).length;
+  $("#ceil").innerHTML=
+    `<span>binding <b class="${b>8?"over":""}">${b}</b> / 8</span>`+
+    `<span>anticipatory <b>${a}</b></span>`+
+    `<span>lofty <b class="${l>3?"over":""}">${l}</b> / 3</span>`+
+    (unq?`<span class="over">${unq} binding target${unq>1?"s":""} unquantified — a rate with no number is not binding</span>`:"");
+  const orphans=S.targets.filter(t=>t.kind==="anticipatory"&&t.status==="active"
+    &&!S.targets.some(x=>x.kind==="binding"&&(x.mechFor||[]).includes(t.id))).map(t=>t.id);
+  $("#domains").innerHTML=DOMAINS.map(d=>{
+    const ts=S.targets.filter(t=>t.domain===d.id&&t.status!=="retired");
+    if(!ts.length) return "";
+    return `<div class="dom"><div class="dom-h">
+      <span class="id">${d.id}</span><h3>${esc(d.name)}</h3>
+      <span class="th">threshold — ${esc(d.thr)}</span></div>
+      ${ts.map(t=>row(t,orphans)).join("")}</div>`;
+  }).join("") || `<div class="dom"><div class="t"><div class="stmt" style="color:var(--ink-3)">Nothing adopted yet. Start from the catalogue above with the thresholds for domains currently below the line.</div></div></div>`;
+  $("#rTarget").innerHTML=`<option value="">— no missed target —</option>`+
+    S.targets.filter(t=>t.status==="active").map(t=>`<option value="${t.id}">${esc(t.stmt.slice(0,58))}</option>`).join("");
+}
+function row(t,orphans){
+  const span=(t.target-t.baseline)||1;
+  const pct=Math.max(0,Math.min(100,((t.current-t.baseline)/span)*100));
+  const late=t.by&&D(t.by)<today&&t.current<t.target;
+  const mech=t.kind==="binding"
+    ?((t.mechFor||[]).length?`mechanism for: ${t.mechFor.map(i=>tgt(i)?tgt(i).stmt.slice(0,40)+"…":i).join(" · ")}`:"no linked outcome")
+    :(t.mech||"");
+  return `<div class="t ${t.kind==="binding"?"bind":"antic"}">
+    <div><div class="stmt">${esc(t.stmt)}</div>
+      <div class="meta">
+        <span class="kind ${t.kind==="binding"?"b":"a"}">${t.kind}</span>
+        <span class="kind tr${t.tier||1}">T${t.tier||1}</span>
+        <span>${t.by?"by "+fmt(t.by):"no date — an aspiration, not a target"}</span>
+        ${late?`<span class="miss">overdue — classify at next review</span>`:""}
+        ${orphans.includes(t.id)?`<span class="miss">no mechanism linked — inadmissible</span>`:""}
+        ${t.kind==="binding"&&!t.target?`<span class="miss">unquantified</span>`:""}
+      </div>
+      ${mech?`<div class="mechlink">${esc(mech)}</div>`:""}</div>
+    <div class="prog"><div class="pbar"><i style="width:${pct}%"></i></div>
+      <div class="pnum"><span>${t.baseline}</span><span>${t.current} ${esc(t.unit||"")}</span><span>${t.target}</span></div></div>
+    <div class="tctl"><input type="number" step="any" value="${t.current}" data-cur="${t.id}" aria-label="current">
+      <button data-del="${t.id}" title="Retire">×</button></div>
+  </div>`;
+}
+document.addEventListener("input",e=>{ const id=e.target.dataset.cur; if(!id) return;
+  const t=tgt(id); if(!t) return; t.current=parseFloat(e.target.value)||0; save(); renderTargets(); });
+document.addEventListener("click",e=>{ const id=e.target.dataset.del; if(!id) return;
+  const t=tgt(id); if(!t) return;
+  if(confirm("Retire this target? Retiring outside a review is the silent deletion the failure protocol exists to prevent.")){
+    t.status="retired"; save(); renderTargets(); renderClock(); } });
+$("#btnAdd").addEventListener("click",()=>{
+  const stmt=$("#nStmt").value.trim(); if(!stmt) return;
+  S.targets.push({id:"t"+Date.now(),domain:$("#nDom").value,kind:$("#nKind").value,tier:+$("#nTier").value,
+    stmt,unit:"",baseline:parseFloat($("#nBase").value)||0,target:parseFloat($("#nTarget").value)||0,
+    current:parseFloat($("#nBase").value)||0,by:$("#nBy").value||"",mechFor:[],mech:"",status:"active"});
+  $("#nStmt").value="";$("#nBase").value="";$("#nTarget").value="";
+  save(); renderTargets(); renderClock();
+});
+
+/* calculator */
+function calc(){
+  const w=+$("#cWant").value,h=+$("#cHave").value,c=+$("#cConv").value,m=+$("#cMon").value;
+  const need=Math.max(0,w-h);
+  if(!c||!m||!need){ $("#cOut").textContent="—";
+    $("#cNote").textContent="A conversion of 1-in-8 means eight acquaintances produce one friend. Measure it for three months; do not guess it."; return; }
+  const inputs=need*c, per=inputs/m;
+  $("#cOut").textContent=per.toFixed(2)+" per month";
+  $("#cNote").textContent=`You need ${need} more. At 1 in ${c}, that is ${Math.ceil(inputs)} inputs over ${m} months — one every ${(30/per).toFixed(0)} days. If that looks trivially achievable, the real binding target sits one level deeper: inputs arise from repeated exposure, so commit to the recurring context, not the count.`;
+}
+["cWant","cHave","cConv","cMon"].forEach(i=>$("#"+i).addEventListener("input",calc));
+
+/* rhythm */
+function renderRhythm(){
+  const n=S.rhythm;
+  const el=$("#rhyN"); el.textContent=n;
+  el.className="n "+(n<3?"low":n>8?"high":"ok");
+  $("#rhyBand").innerHTML=Array.from({length:10},(_,i)=>
+    `<i class="${i<n?"on"+(n<3?" warn":n>8?" hi":""):""}"></i>`).join("");
+  $("#rhyNote").textContent = n<3
+    ? "Below three, days feel empty regardless of how everything else is going. An empty week is a structural property, not a mood."
+    : n>8 ? "Over-committed. Something here is being done badly, and the plan will start returning Class D."
+    : "In band. This is the number that determines whether the week has a shape.";
+}
+$("#rhyUp").addEventListener("click",()=>{S.rhythm=Math.min(12,S.rhythm+1);save();renderRhythm();renderClock();});
+$("#rhyDown").addEventListener("click",()=>{S.rhythm=Math.max(0,S.rhythm-1);save();renderRhythm();renderClock();});
+
+/* emphasis grid */
+function renderGrid(){
+  const bad=YEARS.map((y,i)=>{
+    const lv=DOMAINS.map(d=>(S.emphasis[d.id]||[])[i]||0);
+    return lv.filter(v=>v===3).length>1||lv.filter(v=>v>=2).length>4;
+  });
+  let h=`<thead><tr><th class="cn">Domain ↓ / year →</th>`+
+    YEARS.map((y,i)=>`<th class="${bad[i]?"bad":""}">${y}</th>`).join("")+`</tr></thead><tbody>`;
+  DOMAINS.forEach(d=>{
+    h+=`<tr><th class="rh">${esc(d.name)}<small>${d.id} · ${esc(d.comp)}</small></th>`;
+    (S.emphasis[d.id]||[0,0,0,0,0]).forEach((v,i)=>{ h+=`<td class="ec l${v}" data-d="${d.id}" data-i="${i}"><span>${v}</span></td>`; });
+    h+=`</tr>`;
+  });
+  $("#eg").innerHTML=h+"</tbody>"; checkGrid();
+}
+function checkGrid(){
+  const out=[];
+  YEARS.forEach((y,i)=>{
+    const lv=DOMAINS.map(d=>({d,v:(S.emphasis[d.id]||[])[i]||0}));
+    const th=lv.filter(x=>x.v===3), mj=lv.filter(x=>x.v>=2);
+    if(th.length>1) out.push(`${y} — ${th.length} defining priorities (${th.map(x=>x.d.name).join(", ")}). More than one means none.`);
+    if(mj.length>4) out.push(`${y} — ${mj.length} domains at major or above. Ceiling is four; this is the 120-giant-projects failure.`);
+    if(!th.length&&mj.length) out.push(`${y} — no defining priority. Legitimate in a consolidation year, drift otherwise.`);
+  });
+  ["D2","D3"].forEach(id=>{ if(((S.emphasis[id]||[])[0]||0)<2)
+    out.push(`${dm(id).name} below major in Year 1. Ignition delay is 12–24 months, so starting it later means it does not land inside the plan.`); });
+  if((S.emphasis.D8||[]).some(v=>v<1)) out.push(`Body drops below maintained. It is the only domain that actively decays without input.`);
+  DOMAINS.forEach(d=>{ const a=S.emphasis[d.id]||[]; let r=0,w=0; a.forEach(v=>{r=v===0?r+1:0;w=Math.max(w,r);});
+    if(w>2) out.push(`${d.name} — dormant ${w} consecutive years. That is how a domain falls below threshold unnoticed.`); });
+  S.targets.filter(t=>t.tier===3&&t.status==="active").forEach(t=>{
+    const a=S.emphasis[t.domain]||[];
+    if(a.filter(v=>v>=2).length<2) out.push(`${dm(t.domain).name} carries a lofty goal but reaches major emphasis fewer than twice. Lofty goals that are never resourced are decoration.`);
+  });
+  $("#viol").innerHTML=out.length?out.map(t=>`<div>${esc(t)}</div>`).join(""):`<div class="ok">No constraint violations. Sequencing is admissible.</div>`;
+}
+$("#eg").addEventListener("click",e=>{ const c=e.target.closest("td.ec"); if(!c) return;
+  const d=c.dataset.d,i=+c.dataset.i; S.emphasis[d]=S.emphasis[d]||[0,0,0,0,0];
+  S.emphasis[d][i]=(S.emphasis[d][i]+1)%4; save(); renderGrid(); });
+
+/* decisions */
+function renderDec(){
+  $("#dec").innerHTML=S.decisions.map(k=>{
+    const dd=days(today,D(k.due)), over=dd<0&&!k.res;
+    return `<div class="dcard${k.res?" done":""}">
+      <h4>${esc(k.q)}</h4>
+      <div class="due">${k.res?`Resolved ${fmt(k.resolvedOn)}`:`Due ${fmt(k.due)} · ${over?`<b>${Math.abs(dd)} days overdue</b>`:`${dd} days`}`}
+        ${k.defMax?` · ${k.defUsed}/${k.defMax} deferrals used`:" · no deferrals permitted"}</div>
+      <div class="gates">${esc(k.gates||"")}</div>
+      <p>${esc(k.note)}</p>
+      ${k.res?`<p style="color:var(--bind)"><strong>${esc(k.res)}</strong></p>`
+       :`<div class="res"><input placeholder="Resolution — one sentence" data-res="${k.id}"><button data-resb="${k.id}">Resolve</button></div>`}
+    </div>`;
+  }).join("");
+}
+document.addEventListener("click",e=>{ const id=e.target.dataset.resb; if(!id) return;
+  const inp=document.querySelector(`[data-res="${id}"]`), v=inp.value.trim(); if(!v) return;
+  const k=S.decisions.find(x=>x.id===id); k.res=v; k.resolvedOn=new Date().toISOString().slice(0,10);
+  save(); renderDec(); });
+
+/* reviews */
+function renderRev(){
+  $("#revList").innerHTML=S.reviews.length?S.reviews.slice().reverse().map(r=>`
+    <div class="rev"><div class="rh"><span>${fmt(r.date)} · ${esc(r.type)}</span><span>${r.cls?"classified":"no miss recorded"}</span></div>
+    <p>${esc(r.note)}</p>${r.cls?`<div class="cls">Class ${esc(r.cls)} — ${esc(r.targetStmt||"")}</div>`:""}</div>`).join("")
+    :`<div class="rev"><p style="color:var(--ink-3);margin:0">No reviews recorded. The first is due the first weekend of October 2026.</p></div>`;
+}
+$("#btnRev").addEventListener("click",()=>{
+  const note=$("#rNote").value.trim(); if(!note) return;
+  const tid=$("#rTarget").value, cls=$("#rClass").value;
+  if(tid&&!cls){ alert("A missed target must be classified. Silent deletion is the failure this protocol exists to prevent."); return; }
+  const t=tid?tgt(tid):null;
+  if(t&&cls){ t.failures=t.failures||[]; t.failures.push({date:$("#rDate").value,cls,note}); }
+  S.reviews.push({date:$("#rDate").value||new Date().toISOString().slice(0,10),type:$("#rType").value,
+    note,cls:cls||null,targetStmt:t?t.stmt:null});
+  $("#rNote").value="";$("#rTarget").value="";$("#rClass").value="";
+  save(); renderRev();
+});
+
+/* horizons */
+["h1","h2","h3"].forEach(k=>{
+  const el=$("#"+k+"t");
+  el.addEventListener("input",()=>{ S.horizons[k]=el.value; save(); });
+});
+
+/* io */
+$("#btnExport").addEventListener("click",()=>{
+  const b=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(b);
+  a.download=`first-plan-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href);
+});
+$("#btnImport").addEventListener("click",()=>$("#fileIn").click());
+$("#fileIn").addEventListener("change",e=>{ const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ S=Object.assign(structuredClone(DEFAULT),JSON.parse(r.result)); save(); renderAll(); }
+    catch(err){ alert("Could not read that file."); } };
+  r.readAsText(f); });
+$("#btnReset").addEventListener("click",()=>{
+  if(confirm("Reset to the seeded plan? Everything entered is lost. Export first.")){
+    S=structuredClone(DEFAULT); save(); renderAll(); } });
+
+function renderAll(){
+  $("#nDom").innerHTML=DOMAINS.map(d=>`<option value="${d.id}">${d.id} · ${esc(d.name)}</option>`).join("");
+  $("#h1t").value=S.horizons.h1||""; $("#h2t").value=S.horizons.h2||""; $("#h3t").value=S.horizons.h3||"";
+  renderClock(); renderFilters(); renderCat(); renderTargets(); renderRhythm(); renderGrid(); renderDec(); renderRev(); calc();
+}
+$("#rDate").value=new Date().toISOString().slice(0,10);
+renderAll();
+cloudLoad();
+</script>
+</body>
+</html>
