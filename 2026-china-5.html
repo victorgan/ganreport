@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Five-Year Plan — China's planning cycle, 1953–2030</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E7EBEA;
+  --paper-2:#F4F6F5;
+  --paper-3:#DDE3E2;
+  --ink:#10171B;
+  --ink-2:#3E4C53;
+  --ink-3:#6B7A80;
+  --rule:#C0CACA;
+  --rule-2:#D6DEDD;
+  --seal:#AE3226;
+  --jade:#1C6B5E;
+  --ochre:#9C7420;
+  --indigo:#2B4776;
+  --plum:#68356A;
+  --slate:#47616B;
+  --steel:#155863;
+  --graphite:#262C33;
+  --moss:#2C6647;
+
+  --f-disp:"IBM Plex Sans Condensed",-apple-system,"Segoe UI Semibold","Arial Narrow",sans-serif;
+  --f-body:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --gut:clamp(18px,4vw,56px);
+  --maxw:1240px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);font-size:16.5px;line-height:1.62;
+  font-feature-settings:"kern" 1;
+  background-image:
+    linear-gradient(to right,rgba(43,71,118,.045) 1px,transparent 1px),
+    linear-gradient(to bottom,rgba(43,71,118,.045) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+::selection{background:var(--seal);color:var(--paper-2)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--gut)}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4,.disp{font-family:var(--f-disp);font-weight:600;letter-spacing:-.012em;line-height:1.03;margin:0}
+.eyebrow{
+  font-family:var(--f-mono);font-size:11px;font-weight:500;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.lede{font-size:clamp(17px,2vw,20px);line-height:1.55;color:var(--ink-2);max-width:60ch}
+p{margin:0 0 .95em}
+a{color:var(--indigo)}
+small{font-size:12.5px}
+.mono{font-family:var(--f-mono)}
+.hairline{height:1px;background:var(--rule);border:0;margin:0}
+
+/* ---------- masthead ---------- */
+header.mast{padding:clamp(30px,6vw,74px) 0 0}
+.mast-top{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+  border-bottom:2px solid var(--ink);padding-bottom:10px}
+.mast-cn{font-family:var(--f-disp);font-size:15px;letter-spacing:.42em;color:var(--ink-2);font-weight:500}
+h1.title{
+  font-size:clamp(50px,12.5vw,148px);font-weight:700;letter-spacing:-.035em;
+  text-transform:uppercase;line-height:.86;margin:.22em 0 .1em;
+}
+h1.title em{font-style:normal;color:var(--seal)}
+.subline{display:flex;gap:clamp(14px,3vw,44px);flex-wrap:wrap;align-items:flex-start;
+  border-top:1px solid var(--rule);padding-top:16px;margin-top:6px}
+.subline .lede{flex:1 1 380px}
+.factstack{flex:0 0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:2px 22px;
+  font-family:var(--f-mono);font-size:12px}
+.factstack b{display:block;font-family:var(--f-disp);font-size:24px;font-weight:600;letter-spacing:-.02em}
+.factstack span{color:var(--ink-3);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase}
+
+/* ---------- axis ---------- */
+.axis{margin:clamp(26px,5vw,52px) 0 0;user-select:none}
+.axis-eras{display:flex;height:19px;font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase}
+.axis-eras div{display:flex;align-items:center;padding-left:6px;color:#fff;overflow:hidden;white-space:nowrap}
+.axis-rail{position:relative;height:66px;border-left:1px solid var(--rule);border-right:1px solid var(--rule);
+  display:flex;background:var(--paper-2)}
+.axis-tick{flex:0 0 auto;border-right:1px solid var(--rule-2);position:relative;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:0 0 5px;transition:background .16s}
+.axis-tick:last-child{border-right:0}
+.axis-tick:hover,.axis-tick:focus-visible{background:#fff;outline:none}
+.axis-tick .n{font-family:var(--f-disp);font-weight:700;font-size:clamp(11px,1.5vw,17px);text-align:center;letter-spacing:-.02em}
+.axis-tick .y{font-family:var(--f-mono);font-size:8.5px;color:var(--ink-3);text-align:center;letter-spacing:.02em}
+.axis-tick .bar{position:absolute;left:16%;right:16%;bottom:38px;background:var(--ink-2);opacity:.62}
+.axis-tick.gap{background:repeating-linear-gradient(135deg,transparent,transparent 5px,var(--rule-2) 5px,var(--rule-2) 6px)}
+.axis-tick.now{background:#fff;box-shadow:inset 0 0 0 2px var(--seal)}
+.axis-tick.now .n{color:var(--seal)}
+.axis-legend{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:10px;
+  color:var(--ink-3);padding-top:7px;letter-spacing:.06em}
+
+/* ---------- nav ---------- */
+nav.sticky{position:sticky;top:0;z-index:60;background:rgba(231,235,234,.93);
+  backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+  border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:clamp(30px,5vw,56px)}
+nav.sticky .wrap{display:flex;gap:0;overflow-x:auto;scrollbar-width:none}
+nav.sticky .wrap::-webkit-scrollbar{display:none}
+nav.sticky a{
+  font-family:var(--f-disp);font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-2);text-decoration:none;padding:11px 15px 10px;white-space:nowrap;
+  border-right:1px solid var(--rule-2);position:relative}
+nav.sticky a:first-child{padding-left:0}
+nav.sticky a:hover{color:var(--seal)}
+nav.sticky a.on{color:var(--ink);background:#fff}
+nav.sticky a.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--seal)}
+
+/* ---------- sections ---------- */
+section{padding:clamp(46px,7vw,92px) 0 0;scroll-margin-top:52px}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-bottom:clamp(24px,4vw,42px)}
+@media(min-width:900px){.sec-head{grid-template-columns:minmax(340px,.9fr) minmax(0,1.1fr);gap:0 clamp(28px,5vw,68px);align-items:start}}
+.sec-head h2{font-size:clamp(30px,5.2vw,54px);font-weight:700;letter-spacing:-.032em;text-transform:uppercase}
+.sec-head .rule{grid-column:1/-1;height:1px;background:var(--ink);margin-bottom:16px}
+.sec-note{font-size:15.5px;color:var(--ink-2)}
+.sec-note p:last-child{margin-bottom:0}
+
+/* ---------- machinery ---------- */
+.pipe{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+@media(min-width:760px){.pipe{grid-template-columns:repeat(4,1fr)}}
+.pipe-step{background:var(--paper-2);padding:16px 16px 18px;position:relative}
+.pipe-step .k{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;color:var(--seal);text-transform:uppercase}
+.pipe-step h4{font-size:19px;margin:5px 0 6px;letter-spacing:-.015em}
+.pipe-step p{font-size:14px;color:var(--ink-2);margin:0}
+.pipe-step .when{font-family:var(--f-mono);font-size:11px;color:var(--ink-3);margin-top:8px;display:block}
+
+.binding{display:grid;gap:14px;margin-top:22px}
+@media(min-width:760px){.binding{grid-template-columns:1fr 1fr}}
+.bcard{border:1px solid var(--ink);background:var(--paper-2);padding:16px 17px}
+.bcard.b1{border-left:5px solid var(--seal)}
+.bcard.b2{border-left:5px solid var(--slate)}
+.bcard h4{font-size:17px;text-transform:uppercase;letter-spacing:.02em}
+.bcard .cn{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);margin-bottom:6px}
+.bcard p{font-size:14.5px;color:var(--ink-2);margin:0}
+
+/* ---------- timeline ---------- */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.filters button{
+  font-family:var(--f-disp);font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--rule);color:var(--ink-2);padding:6px 12px;cursor:pointer;
+  border-radius:0;transition:.15s}
+.filters button:hover{border-color:var(--ink-2)}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filters button:focus-visible{outline:2px solid var(--seal);outline-offset:2px}
+
+.plans{border-top:1px solid var(--ink)}
+.plan{border-bottom:1px solid var(--rule);position:relative}
+.plan.is-now{background:linear-gradient(90deg,rgba(174,50,38,.055),transparent 62%)}
+.plan-hd{display:grid;grid-template-columns:64px 1fr;gap:0 14px;align-items:start;width:100%;
+  background:none;border:0;text-align:left;padding:15px 40px 15px 0;cursor:pointer;font:inherit;color:inherit;position:relative}
+@media(min-width:760px){.plan-hd{grid-template-columns:78px 128px 1fr}}
+.plan-hd:hover .pt{color:var(--seal)}
+.plan-hd:focus-visible{outline:2px solid var(--seal);outline-offset:-2px}
+.pn{font-family:var(--f-disp);font-weight:700;font-size:clamp(26px,4vw,40px);letter-spacing:-.045em;line-height:.9;color:var(--ink)}
+.pn small{display:block;font-family:var(--f-mono);font-size:10px;font-weight:400;letter-spacing:.1em;color:var(--ink-3);margin-top:3px}
+.py{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2);padding-top:6px;letter-spacing:.02em}
+@media(max-width:759px){.py{display:none}}
+.pt{font-family:var(--f-disp);font-size:clamp(18px,2.6vw,25px);font-weight:600;letter-spacing:-.02em;padding-top:3px;transition:color .15s}
+.pt .yrs-m{display:block;font-family:var(--f-mono);font-size:11.5px;font-weight:400;letter-spacing:.05em;color:var(--ink-3);margin-top:3px}
+@media(min-width:760px){.pt .yrs-m{display:none}}
+.pt em{display:block;font-family:var(--f-body);font-style:italic;font-size:15px;font-weight:400;
+  letter-spacing:0;color:var(--ink-2);margin-top:5px;line-height:1.4;max-width:64ch}
+.plan-hd .chev{position:absolute;right:2px;top:20px;font-family:var(--f-mono);font-size:16px;color:var(--ink-3);
+  transition:transform .2s}
+.plan[open-state="1"] .chev{transform:rotate(45deg)}
+.plan-body{display:none;padding:2px 0 30px}
+.plan[open-state="1"] .plan-body{display:block}
+@media(min-width:760px){.plan-body{padding-left:220px}}
+.pb-grid{display:grid;gap:22px}
+@media(min-width:900px){.pb-grid{grid-template-columns:1.25fr .95fr}}
+.pb-grid h5{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 8px;padding-bottom:5px;border-bottom:1px solid var(--rule-2);font-weight:500}
+.pb-grid ul{margin:0 0 20px;padding-left:17px}
+.pb-grid li{margin-bottom:5px;font-size:15px}
+.pb-grid li::marker{color:var(--seal)}
+.numbers{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:var(--rule-2);
+  border:1px solid var(--rule-2);margin-bottom:20px}
+.numbers div{background:var(--paper-2);padding:9px 10px}
+.numbers b{display:block;font-family:var(--f-disp);font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.numbers span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-top:2px}
+.verdict{border-left:3px solid var(--seal);padding:2px 0 2px 14px;font-size:15px;color:var(--ink-2);font-style:italic}
+.verdict strong{font-style:normal;font-family:var(--f-disp);text-transform:uppercase;font-size:12px;
+  letter-spacing:.1em;display:block;color:var(--ink);margin-bottom:3px}
+
+/* ---------- matrix ---------- */
+.mx-shell{border:1px solid var(--ink);background:var(--paper-2)}
+.mx-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.mx{border-collapse:collapse;width:100%;min-width:880px;font-family:var(--f-mono)}
+table.mx th,table.mx td{padding:0;border:1px solid var(--rule-2)}
+table.mx thead th{position:sticky;top:0;background:var(--paper-3);z-index:2;
+  font-size:11px;font-weight:600;letter-spacing:.03em;color:var(--ink);height:42px;vertical-align:bottom;padding-bottom:5px}
+table.mx thead th .yy{display:block;font-size:8.5px;font-weight:400;color:var(--ink-3);letter-spacing:0}
+table.mx thead th.now{background:var(--seal);color:#fff}
+table.mx thead th.now .yy{color:rgba(255,255,255,.75)}
+table.mx th.rowh{
+  position:sticky;left:0;z-index:3;background:var(--paper-3);text-align:left;
+  font-family:var(--f-disp);font-size:13px;font-weight:600;letter-spacing:-.005em;
+  padding:7px 10px 7px 12px;min-width:186px;max-width:186px;line-height:1.2;border-right:1px solid var(--ink)}
+table.mx thead th.corner{left:0;z-index:4;min-width:186px;max-width:186px;text-align:left;padding-left:12px;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);border-right:1px solid var(--ink)}
+th.rowh .dot{display:inline-block;width:9px;height:9px;margin-right:7px;vertical-align:1px}
+td.cell{height:44px;cursor:pointer;position:relative;transition:box-shadow .12s}
+td.cell .fill{position:absolute;inset:3px;background:var(--ink)}
+td.cell.i0 .fill{opacity:1;border:1px dashed var(--rule)}
+td.cell.i1 .fill{opacity:.16}
+td.cell.i2 .fill{opacity:.42}
+td.cell.i3 .fill{opacity:.82}
+td.cell:hover,td.cell.sel{box-shadow:inset 0 0 0 2px var(--seal);z-index:1}
+td.cell:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--seal)}
+td.cell.gapcol{background:repeating-linear-gradient(135deg,transparent,transparent 4px,var(--rule-2) 4px,var(--rule-2) 5px)}
+.mx-read{border-top:1px solid var(--ink);padding:15px 17px;background:#fff;min-height:104px}
+.mx-read .tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.mx-read h4{font-size:22px;margin:4px 0 6px;letter-spacing:-.02em}
+.mx-read p{font-size:15.5px;margin:0;color:var(--ink-2);max-width:76ch}
+.mx-read .lvl{font-family:var(--f-mono);font-size:11px;color:var(--seal);letter-spacing:.06em;margin-top:8px;display:block}
+.mx-key{display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-family:var(--f-mono);font-size:10.5px;
+  color:var(--ink-3);letter-spacing:.05em;margin-top:12px}
+.mx-key i{display:inline-block;width:15px;height:15px;background:var(--ink);vertical-align:-3px;margin-right:5px}
+.mx-hint{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.05em;margin-top:10px}
+
+/* ---------- targets ---------- */
+.tg-wrap{border:1px solid var(--ink);background:var(--paper-2);overflow-x:auto}
+table.tg{border-collapse:collapse;width:100%;min-width:720px;font-size:14.5px}
+table.tg th,table.tg td{padding:8px 11px;border-bottom:1px solid var(--rule-2);text-align:left;vertical-align:top}
+table.tg thead th{background:var(--ink);color:var(--paper);font-family:var(--f-mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;font-weight:500;position:sticky;top:0}
+table.tg tbody tr:hover{background:#fff}
+table.tg td.num{font-family:var(--f-mono);font-size:14px;white-space:nowrap}
+table.tg td.tgt{font-family:var(--f-mono);font-size:14px;font-weight:600;white-space:nowrap}
+table.tg .grp td{background:var(--paper-3);font-family:var(--f-disp);font-weight:700;font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;padding:6px 11px}
+.pill{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:2px 6px;border:1px solid currentColor;white-space:nowrap}
+.pill.bind{color:var(--seal)}
+.pill.ind{color:var(--slate)}
+.arrow{font-family:var(--f-mono);font-weight:600}
+.up{color:var(--jade)}.dn{color:var(--seal)}.flat{color:var(--ink-3)}
+
+/* ---------- pillars ---------- */
+.pillars{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+@media(min-width:700px){.pillars{grid-template-columns:1fr 1fr}}
+@media(min-width:1050px){.pillars{grid-template-columns:repeat(3,1fr)}}
+.pill-card{background:var(--paper-2);padding:17px 17px 19px}
+.pill-card .idx{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;color:var(--ink-3)}
+.pill-card h4{font-size:20px;margin:6px 0 8px;letter-spacing:-.018em}
+.pill-card p{font-size:14.5px;color:var(--ink-2);margin:0 0 10px}
+.pill-card ul{margin:0;padding-left:16px;font-size:13.5px;color:var(--ink-2)}
+.pill-card li{margin-bottom:3px}
+.pill-card li::marker{color:var(--seal)}
+
+/* ---------- debate ---------- */
+.debate{display:grid;gap:18px}
+@media(min-width:820px){.debate{grid-template-columns:1fr 1fr}}
+.dcard{border-top:2px solid var(--ink);padding-top:12px}
+.dcard h4{font-size:20px;letter-spacing:-.02em;margin-bottom:6px}
+.dcard p{font-size:15px;color:var(--ink-2);margin:0 0 8px}
+.dcard .side{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--seal)}
+
+/* ---------- horizon ---------- */
+.horizon{border:1px solid var(--ink);background:var(--paper-2);display:grid;gap:1px;background:var(--rule)}
+@media(min-width:820px){.horizon{grid-template-columns:repeat(3,1fr)}}
+.hz{background:var(--paper-2);padding:20px 18px}
+.hz .yr{font-family:var(--f-disp);font-size:clamp(38px,6vw,62px);font-weight:700;letter-spacing:-.045em;line-height:.9}
+.hz .yr span{font-size:14px;font-family:var(--f-mono);font-weight:400;letter-spacing:.1em;display:block;color:var(--ink-3);margin-top:6px;text-transform:uppercase}
+.hz p{font-size:14.5px;color:var(--ink-2);margin:12px 0 0}
+.hz.next{background:#fff;border-left:4px solid var(--seal)}
+
+/* ---------- footer ---------- */
+footer{margin-top:clamp(56px,8vw,110px);border-top:2px solid var(--ink);padding:22px 0 60px}
+footer .cols{display:grid;gap:22px}
+@media(min-width:820px){footer .cols{grid-template-columns:1.4fr 1fr}}
+footer h4{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;font-weight:500}
+footer p,footer li{font-size:13.5px;color:var(--ink-2)}
+footer ul{margin:0;padding-left:16px}
+footer li{margin-bottom:3px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="mast-top">
+      <span class="mast-cn">国民经济和社会发展五年规划</span>
+      <span class="eyebrow">A reference for plans 1 through 15 · 1953–2030</span>
+    </div>
+    <h1 class="title">The Five<br>Year <em>Plan</em></h1>
+    <div class="subline">
+      <div class="lede">Every five years since 1953, China has published a document that tells the whole state apparatus what to build. It has been a Soviet command blueprint, a war-survival programme, a retreating referee of market reform, and now an industrial-policy signal aimed at semiconductors and solar panels. This is what each one said, what changed between them, and which arguments run the entire length.</div>
+      <div class="factstack">
+        <div><b>15</b><span>plans issued</span></div>
+        <div><b>73</b><span>years covered</span></div>
+        <div><b>3</b><span>years unplanned</span></div>
+        <div><b>15-5</b><span>current cycle</span></div>
+      </div>
+    </div>
+
+    <div class="axis" id="axis">
+      <div class="axis-eras" id="axisEras"></div>
+      <div class="axis-rail" id="axisRail"></div>
+      <div class="axis-legend"><span>1953</span><span>Click any plan to open it below</span><span>2030</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="sticky">
+  <div class="wrap" id="nav">
+    <a href="#machinery">How a plan is made</a>
+    <a href="#timeline">All fifteen plans</a>
+    <a href="#threads">Policy threads</a>
+    <a href="#current">The 15th plan</a>
+    <a href="#targets">Target table</a>
+    <a href="#debate">What's contested</a>
+    <a href="#horizon">2031 and beyond</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- MACHINERY -->
+<section id="machinery"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>How a plan<br>is made</h2>
+    <div class="sec-note">
+      <p>The plan is not one document but a cascade. The Party sets direction, the legislature makes it law, and then roughly 100–200 sectoral and provincial plans translate it into budgets and permits over the following eighteen months. Understanding the cascade is what separates reading the plan from reading the news about the plan.</p>
+      <p>A second distinction matters more than any headline: some targets are <strong>binding</strong> and some are not. Officials are evaluated on the first kind and merely encouraged on the second — which is why the environmental numbers usually get hit and the consumption numbers usually do not.</p>
+    </div>
+  </div>
+
+  <div class="pipe" id="pipe"></div>
+
+  <div class="binding">
+    <div class="bcard b1">
+      <div class="cn">约束性指标</div>
+      <h4>Binding targets</h4>
+      <p>Government is directly accountable. Mostly environmental, land-use, and social-service metrics — things the state controls through its own budget, permits, and quotas. Missing one damages a career. Energy intensity, farmland area, forest cover, hospital beds per capita.</p>
+    </div>
+    <div class="bcard b2">
+      <div class="cn">预期性指标</div>
+      <h4>Anticipatory targets</h4>
+      <p>Expectations, not commitments — the state signals a direction and the market is supposed to deliver. GDP growth, R&amp;D spending, disposable income, urbanisation. Missing one is attributed to conditions. Since the 14th plan, headline growth is deliberately vague: "within a reasonable range."</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- TIMELINE -->
+<section id="timeline"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>All fifteen<br>plans</h2>
+    <div class="sec-note">
+      <p>Read straight through, the sequence is a record of what the leadership was afraid of at the time: Soviet dependency, then American bombers, then rural poverty, then inflation, then unemployment, then pollution, and now export controls. Open any plan for its aims, its signature projects, what actually happened, and a verdict.</p>
+    </div>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="plans" id="plans"></div>
+</div></section>
+
+<!-- THREADS -->
+<section id="threads"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>Policy<br>threads</h2>
+    <div class="sec-note">
+      <p>Individual plans are easy to read in isolation and misleading that way. Nine concerns recur across all of them, and the interesting information is in how each concern rises, disappears, and returns in different language. Food security in 1962 and food security in 2026 are the same worry with different instruments.</p>
+      <p>Each cell shows how central that thread was to that plan, and what specifically it looked like. Select a cell to read it. Darker means more central.</p>
+    </div>
+  </div>
+
+  <div class="mx-shell">
+    <div class="mx-scroll"><table class="mx" id="mx"></table></div>
+    <div class="mx-read" id="mxRead">
+      <div class="tag">Select a cell</div>
+      <h4>Nine threads across sixteen periods</h4>
+      <p>The grid is an editorial reading, not an official metric — emphasis is judged from each plan's own text, the projects funded under it, and what the leadership was arguing about at the time. Start anywhere; the diagonal from bottom-left to top-right is the story of the reform era.</p>
+    </div>
+  </div>
+  <div class="mx-key">
+    <span><i style="opacity:.05;border:1px dashed #C0CACA"></i>Absent or suppressed</span>
+    <span><i style="opacity:.16"></i>Present</span>
+    <span><i style="opacity:.42"></i>Major</span>
+    <span><i style="opacity:.82"></i>Defining</span>
+  </div>
+  <div class="mx-hint">Scroll the grid sideways on narrow screens. The vermilion column is the plan now running.</div>
+</div></section>
+
+<!-- CURRENT -->
+<section id="current"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>The 15th plan<br>2026–2030</h2>
+    <div class="sec-note">
+      <p>Approved by the National People's Congress on 12 March 2026, after the Party's Fourth Plenum signed off on recommendations in October 2025. It is the middle of three consecutive plans meant to deliver "basically achieving socialist modernisation" by 2035, which makes it the cycle where the arithmetic either works or stops working.</p>
+      <p>The diagnosis it offers of China's own economy is "strong supply, weak demand." The remedy it prescribes is, for the most part, more supply — better supply, in higher-value sectors, but supply. That tension is the plan's central and most criticised feature.</p>
+    </div>
+  </div>
+  <div class="pillars" id="pillars"></div>
+</div></section>
+
+<!-- TARGETS -->
+<section id="targets"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>Target<br>table</h2>
+    <div class="sec-note">
+      <p>The 15th plan's quantified targets, against where China actually finished the 14th. The direction column shows whether the new target is more demanding than the outcome it inherits. Two entries are worth pausing on: the carbon-intensity target has been <em>loosened</em> from 18% to 17%, and headline GDP growth still has no five-year number attached.</p>
+    </div>
+  </div>
+  <div class="tg-wrap"><table class="tg" id="tg"></table></div>
+  <p style="font-size:13px;color:var(--ink-3);margin-top:10px" class="mono">Carbon and energy figures are cumulative over the five-year period. Grain capacity in trillion jin; 1 trillion jin ≈ 500 million tonnes.</p>
+</div></section>
+
+<!-- DEBATE -->
+<section id="debate"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>What's<br>contested</h2>
+    <div class="sec-note">
+      <p>Analysts disagree less about what the plan says than about whether it can work, and about whether the plan does anything at all. Both arguments have serious people on both sides.</p>
+    </div>
+  </div>
+  <div class="debate" id="debate"></div>
+</div></section>
+
+<!-- HORIZON -->
+<section id="horizon"><div class="wrap">
+  <div class="sec-head">
+    <div class="rule"></div>
+    <h2>2031 and<br>beyond</h2>
+    <div class="sec-note">
+      <p>Five-year plans now sit inside longer frames. The 14th plan came bundled with "long-range objectives through 2035," which is the horizon that actually disciplines the current cycle. The 16th plan, covering 2031–2035, will be the one that has to close whatever gap the 15th leaves.</p>
+    </div>
+  </div>
+  <div class="horizon" id="horizon"></div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap"><div class="cols">
+  <div>
+    <h4>On the numbers</h4>
+    <p>Historical growth and outcome figures are official Chinese statistics (National Bureau of Statistics) unless noted, and are contested for the pre-reform period in particular; famine-era output data is unreliable by any account. Targets for 2030 are from the 15th Five-Year Plan outline as adopted in March 2026. The thread grid is an editorial coding, not an official series — it reflects a judgement about emphasis, and reasonable readers would shade some cells differently.</p>
+    <p style="margin-top:12px">Sectoral plans under the 15th cycle are still being published through 2026, so specifics below the outline level continue to change.</p>
+  </div>
+  <div>
+    <h4>Where this comes from</h4>
+    <ul>
+      <li>15th Five-Year Plan outline, NPC, March 2026</li>
+      <li>Fourth Plenum communiqué, October 2025</li>
+      <li>National Bureau of Statistics annual communiqués</li>
+      <li>Government Work Report, 2026</li>
+      <li>15th Five-Year Plan for Renewable Energy Development</li>
+      <li>Congressional Research Service, China Briefing, IISS, Carbon Brief, IDDRI analyses, 2026</li>
+    </ul>
+  </div>
+</div></div></footer>
+
+<script>
+/* ============================ DATA ============================ */
+
+const ERAS = [
+  {id:"command", name:"Command economy", from:1953, to:1978, color:"#262C33"},
+  {id:"reform",  name:"Reform launch",   from:1978, to:1992, color:"#47616B"},
+  {id:"market",  name:"Market takeoff",  from:1992, to:2012, color:"#2B4776"},
+  {id:"quality", name:"High-quality development", from:2012, to:2031, color:"#AE3226"}
+];
+
+const PLANS = [
+  {
+    n:"1st", cn:"一五", from:1953, to:1957, era:"command", gap:false,
+    title:"Copy the Soviet Union",
+    sum:"A literal transplant of Soviet industrialisation: heavy industry first, agriculture squeezed to pay for it.",
+    context:"China emerged from war with almost no modern industry and a leadership convinced that steel tonnage was the measure of a nation. Moscow supplied blueprints, engineers, and credit; Beijing supplied labour and grain.",
+    aims:[
+      "Build a heavy-industrial base from nothing, concentrated in the northeast",
+      "Convert private industry and commerce to joint state-private ownership",
+      "Move peasant households into agricultural producers' cooperatives",
+      "Train a technical cadre with Soviet instruction"
+    ],
+    sig:[
+      "156 Soviet-assisted key projects — steel, machine tools, power, chemicals",
+      "Anshan Iron and Steel expansion; First Automobile Works at Changchun",
+      "Wuhan Yangtze River Bridge, the first fixed crossing of the river",
+      "Unified state purchase and sale of grain (1953), fixing the rural–urban bargain"
+    ],
+    nums:[{v:"~9%",k:"GDP growth p.a."},{v:"~18%",k:"industrial output p.a."},{v:"156",k:"Soviet projects"},{v:"~50%",k:"investment in heavy industry"}],
+    outcome:"The most straightforwardly successful plan in the sequence on its own terms. Industrial output roughly doubled; a machine-building capability existed where none had.",
+    verdict:"It worked, and its success was the problem — it convinced the leadership that mobilisation had no ceiling, which produced the second plan."
+  },
+  {
+    n:"2nd", cn:"二五", from:1958, to:1962, era:"command", gap:false,
+    title:"Overtaken by the Great Leap",
+    sum:"A conventional plan abandoned within months for a mobilisation campaign that ended in mass famine.",
+    context:"Mao concluded that Soviet gradualism was too slow and that revolutionary enthusiasm could substitute for capital. Planning agencies were sidelined; targets were revised upward repeatedly by acclamation.",
+    aims:[
+      "Originally: continue heavy-industrial build-out at 1st-plan pace",
+      "In practice: overtake British steel output within fifteen years, then five",
+      "Merge cooperatives into people's communes with collective dining and childcare",
+      "Mobilise rural labour for backyard steel, water works, and deep ploughing"
+    ],
+    sig:[
+      "Backyard furnaces producing unusable pig iron at enormous fuel and forest cost",
+      "People's communes abolishing private plots and household cooking",
+      "Inflated output reporting up the chain, which set procurement quotas above real harvests",
+      "Soviet advisers withdrawn in 1960 amid the split, stranding unfinished projects"
+    ],
+    nums:[{v:"1959–61",k:"Great Famine"},{v:"15–45m",k:"excess deaths (estimates)"},{v:"−30%",k:"agricultural output trough"},{v:"1961",k:"plan formally abandoned"}],
+    outcome:"Grain output collapsed while procurement rose. The resulting famine is among the deadliest in recorded history. Industrial output also fell sharply once inputs and food ran out.",
+    verdict:"The clearest evidence in the whole series that a plan without honest measurement is worse than no plan."
+  },
+  {
+    n:"—", cn:"调整期", from:1963, to:1965, era:"command", gap:true,
+    title:"Three unplanned years",
+    sum:"No five-year plan was issued. The state ran a repair programme instead.",
+    context:"The famine discredited leap-style targets. Chen Yun and Liu Shaoqi were given room to stabilise, under the slogan 'readjustment, consolidation, filling out, raising standards' (调整、巩固、充实、提高).",
+    aims:[
+      "Restore grain supply before resuming industrial expansion",
+      "Shrink the urban population back toward what the countryside could feed",
+      "Return private plots, rural markets, and household production quotas",
+      "Close or mothball loss-making enterprises built during the Leap"
+    ],
+    sig:[
+      "Roughly 20 million urban residents sent back to rural areas",
+      "Grain imported from Canada and Australia — a taboo broken quietly",
+      "Nuclear weapons programme protected from cuts; first test October 1964",
+      "Selective purchase of complete plants from Japan and Western Europe"
+    ],
+    nums:[{v:"3",k:"years without a plan"},{v:"~20m",k:"urban residents relocated"},{v:"1964",k:"first nuclear test"},{v:"1965",k:"output back to 1957 level"}],
+    outcome:"Recovery was fast once incentives were restored — an early demonstration of how much output the household sector could produce when allowed to.",
+    verdict:"A dress rehearsal for 1978. The same instruments, applied by the same official, seventeen years early."
+  },
+  {
+    n:"3rd", cn:"三五", from:1966, to:1970, era:"command", gap:false,
+    title:"Build for a war",
+    sum:"Investment redirected to duplicate the industrial base in remote interior provinces, in case the coast were bombed.",
+    context:"With American escalation in Vietnam and a hostile Soviet border, Mao concluded China's industry was fatally concentrated and coastal. The Third Front (三线建设) moved plants inland, at enormous cost per unit of output.",
+    aims:[
+      "Relocate and duplicate defence and heavy industry in the southwest and northwest",
+      "Achieve strategic depth — survive losing the coast",
+      "Continue grain self-sufficiency under the Dazhai model",
+      "Maintain nuclear and missile programmes at any cost"
+    ],
+    sig:[
+      "Panzhihua steel complex in mountainous Sichuan; Jiuquan and Xichang launch facilities",
+      "Chengdu–Kunming railway through terrain that made it one of the era's hardest engineering projects",
+      "Factories sited by defensibility rather than logistics — 'near the mountains, dispersed, in caves'",
+      "Cultural Revolution paralysing planning ministries from 1966"
+    ],
+    nums:[{v:">⅓",k:"of state investment inland"},{v:"1967–68",k:"output falls in factional chaos"},{v:"1970",k:"first satellite launched"},{v:"~2%",k:"trade share of output"}],
+    outcome:"A vast, deliberately inefficient second industrial system was built. Much of it was uncompetitive when reform came and had to be written off in the 1980s and 90s.",
+    verdict:"Economically wasteful and strategically coherent. It is also the ancestor of today's supply-chain resilience language."
+  },
+  {
+    n:"4th", cn:"四五", from:1971, to:1975, era:"command", gap:false,
+    title:"Rapprochement and imported plant",
+    sum:"War preparation continued while, quietly, China started buying Western factories again.",
+    context:"Lin Biao's death and Nixon's visit reopened the outside world. Zhou Enlai used the opening to import complete industrial plants, especially fertiliser, which mattered more for eating than anything the Third Front produced.",
+    aims:[
+      "Continue interior construction while restoring coastal production",
+      "Raise grain yields through chemical fertiliser rather than mobilised labour",
+      "Rebuild the technical workforce shattered by the Cultural Revolution",
+      "Articulate the 'Four Modernisations' as a post-campaign programme"
+    ],
+    sig:[
+      "The '4-3 Programme' (四三方案) — US$4.3bn of imported Western and Japanese plants",
+      "Thirteen large ammonia–urea fertiliser complexes, which lifted yields for a generation",
+      "Daqing oilfield at peak, funding imports through crude exports",
+      "First national environmental protection conference, 1973"
+    ],
+    nums:[{v:"$4.3bn",k:"imported plant programme"},{v:"13",k:"fertiliser complexes"},{v:"1972",k:"Nixon visit"},{v:"1975",k:"Four Modernisations restated"}],
+    outcome:"Growth resumed unevenly. The fertiliser imports arguably did more for Chinese welfare than the entire Third Front.",
+    verdict:"The plan where the technocrats quietly won an argument that would not be announced for another five years."
+  },
+  {
+    n:"5th", cn:"五五", from:1976, to:1980, era:"command", gap:false,
+    title:"The leap outward, then the brakes",
+    sum:"An overreaching post-Mao industrialisation push, cancelled midway — and replaced by reform.",
+    context:"Mao and Zhou died in 1976. Hua Guofeng attempted to establish authority with a huge ten-year construction programme financed by projected oil exports. The projections were wrong and the contracts unaffordable.",
+    aims:[
+      "Originally: 120 large-scale projects including ten new steel bases and ten oilfields",
+      "Reach 60 million tonnes of steel by 1985, from roughly 21 million",
+      "Then, from 1979: 'readjustment' — cut capital construction, raise consumption",
+      "From 1978: allow household farming, foreign investment, and enterprise autonomy"
+    ],
+    sig:[
+      "Baoshan Steel in Shanghai, contracted from Nippon Steel and nearly cancelled",
+      "Third Plenum, December 1978 — reform and opening declared",
+      "Household responsibility system spreading from Xiaogang village, Anhui",
+      "Four special economic zones authorised in 1980: Shenzhen, Zhuhai, Shantou, Xiamen"
+    ],
+    nums:[{v:"1978",k:"Third Plenum"},{v:"1979",k:"programme cancelled"},{v:"4",k:"special economic zones"},{v:"1980",k:"one-child policy"}],
+    outcome:"The plan's own contents failed almost immediately. What happened during its years reorganised the Chinese economy for the next forty.",
+    verdict:"The least successful plan that mattered most — proof that the document and the period are not the same object."
+  },
+  {
+    n:"6th", cn:"六五", from:1981, to:1985, era:"reform", gap:false,
+    title:"Let the countryside eat",
+    sum:"The first reform-era plan: light industry, consumer goods, and a rural boom the plan mostly followed rather than caused.",
+    context:"Decollectivisation was already sweeping the countryside. The plan, drafted late and adopted retroactively in 1982, ratified it and shifted investment toward consumption and light manufacturing.",
+    aims:[
+      "Rebalance from heavy industry toward light industry and consumer goods",
+      "Complete the household responsibility system nationwide",
+      "Establish a 'planned commodity economy' — plan and market together",
+      "Open more of the coast to foreign trade and investment"
+    ],
+    sig:[
+      "Household farming universal by 1983; communes formally dissolved 1984",
+      "Township and village enterprises exploding outside the plan entirely",
+      "Fourteen coastal cities opened to foreign investment, 1984",
+      "Dual-track pricing: plan price and market price for the same good"
+    ],
+    nums:[{v:"~10%",k:"GDP growth p.a."},{v:"1984",k:"communes dissolved"},{v:"14",k:"coastal cities opened"},{v:"×2",k:"rural income in real terms"}],
+    outcome:"The fastest improvement in rural living standards in modern Chinese history, driven mainly by de-collectivisation and higher procurement prices.",
+    verdict:"The plan's real achievement was getting out of the way and then taking credit — which, institutionally, was necessary."
+  },
+  {
+    n:"7th", cn:"七五", from:1986, to:1990, era:"reform", gap:false,
+    title:"Price reform hits a wall",
+    sum:"Coastal export strategy and an attempt to free prices that produced inflation, panic buying, and political rupture.",
+    context:"Dual-track pricing created arbitrage and corruption. The leadership tried to unify prices in 1988; households, unused to inflation, emptied bank accounts to buy goods.",
+    aims:[
+      "Coastal development strategy — import materials, export finished goods",
+      "Push price reform through to a single market price",
+      "Give enterprises contract-based operating autonomy",
+      "Expand education and technical training"
+    ],
+    sig:[
+      "863 High-Technology Programme launched, March 1986 — the ancestor of today's tech plans",
+      "Torch Programme for commercialising research, 1988",
+      "1988 price shock: inflation near 19%, bank runs, reform halted",
+      "Retrenchment and austerity after June 1989; foreign investment paused"
+    ],
+    nums:[{v:"~7.9%",k:"GDP growth p.a."},{v:"18.8%",k:"peak inflation, 1988"},{v:"1986",k:"863 Programme"},{v:"1989",k:"reform suspended"}],
+    outcome:"Growth was decent and the political cost was enormous. Price reform was abandoned and resumed only after 1992.",
+    verdict:"The plan that taught the leadership its most durable macroeconomic lesson: inflation is a regime-stability variable, not an economic one."
+  },
+  {
+    n:"8th", cn:"八五", from:1991, to:1995, era:"market", gap:false,
+    title:"The socialist market economy",
+    sum:"Deng's Southern Tour restarted reform, growth hit double digits, and the state rebuilt its fiscal machinery.",
+    context:"After three years of retrenchment, Deng toured the south in 1992 and forced the issue. The Party declared a 'socialist market economy' in 1992–93 and the boom began immediately.",
+    aims:[
+      "Restore high growth and re-open to foreign capital",
+      "Establish market institutions: company law, tax system, central bank",
+      "Develop Pudong as a national financial and industrial showcase",
+      "Contain the inflation that the boom would inevitably generate"
+    ],
+    sig:[
+      "1994 tax-sharing reform (分税制), which rebuilt central government revenue and defined local finance for thirty years",
+      "Exchange-rate unification in 1994; the dual rate ends",
+      "Company Law 1993, Central Bank Law 1995 — the legal scaffolding of a market",
+      "Three Gorges Dam approved, 1992"
+    ],
+    nums:[{v:"~12%",k:"GDP growth p.a."},{v:"24%",k:"peak inflation, 1994"},{v:"1994",k:"fiscal and FX reform"},{v:"×4",k:"foreign investment inflow"}],
+    outcome:"Overheating, then a controlled cooling. The fiscal reform is arguably the most consequential single measure in the entire post-1978 period.",
+    verdict:"The plan document was almost irrelevant; the institution-building underneath it was decisive."
+  },
+  {
+    n:"9th", cn:"九五", from:1996, to:2000, era:"market", gap:false,
+    title:"Break the iron rice bowl",
+    sum:"Zhu Rongji's soft landing: state enterprises restructured, tens of millions laid off, housing privatised.",
+    context:"State industry was losing money at scale and the banks carrying it were insolvent in all but name. The Asian Financial Crisis arrived midway through. The response was surgery rather than delay.",
+    aims:[
+      "'Grasp the large, release the small' (抓大放小) — keep strategic SOEs, sell or close the rest",
+      "Recapitalise banks and move bad loans to asset management companies",
+      "End work-unit housing allocation and create a private housing market",
+      "Hold the exchange rate through the Asian crisis and grow via public investment"
+    ],
+    sig:[
+      "Roughly 30 million state workers laid off (下岗) between 1995 and 2002",
+      "1998 housing reform ending welfare allocation — the origin of the property economy",
+      "Military ordered out of commercial business, 1998",
+      "Great Western Development launched 1999; WTO agreement with the US, 1999"
+    ],
+    nums:[{v:"~8.6%",k:"GDP growth p.a."},{v:"~30m",k:"state workers laid off"},{v:"1998",k:"housing privatised"},{v:"1999",k:"US WTO deal"}],
+    outcome:"A genuine soft landing, purchased with enormous social pain concentrated in the northeast rust belt.",
+    verdict:"The most technically impressive plan in the series, and the one whose social costs are least commemorated."
+  },
+  {
+    n:"10th", cn:"十五", from:2001, to:2005, era:"market", gap:false,
+    title:"World's workshop",
+    sum:"WTO accession turned China into the manufacturing centre of the global economy, faster than the plan expected.",
+    context:"Accession in December 2001 locked in market access and forced regulatory harmonisation. Foreign investment and export capacity arrived at a pace no planner had modelled.",
+    aims:[
+      "Complete WTO-driven legal and tariff reform",
+      "Upgrade industrial structure and raise the services share",
+      "Encourage Chinese firms to invest abroad ('going out')",
+      "Reduce energy consumption per unit of output"
+    ],
+    sig:[
+      "Exports roughly quadrupled over the plan period",
+      "Heavy-chemical industry re-accelerated — steel, cement, aluminium, autos",
+      "Physical output quotas largely dropped from the plan document",
+      "'Going out' strategy formalised; early resource acquisitions abroad"
+    ],
+    nums:[{v:"~9.8%",k:"GDP growth p.a."},{v:"2001",k:"WTO accession"},{v:"×4",k:"exports"},{v:"missed",k:"energy intensity target"}],
+    outcome:"Spectacular growth with a hard environmental bill. Energy intensity worsened rather than improved — the one target that failed outright, and it stung.",
+    verdict:"Success on every axis the plan cared about, and the failure on the axis it under-weighted set the entire agenda of the next plan."
+  },
+  {
+    n:"11th", cn:"十一五", from:2006, to:2010, era:"market", gap:false,
+    title:"From commands to guidance",
+    sum:"The plan was renamed, the first binding environmental targets appeared, and a giant stimulus rewrote the landscape.",
+    context:"The word changed from 计划 (jihua, command plan) to 规划 (guihua, programme or guidance) — an explicit acknowledgement that the state now steered rather than allocated. Then the 2008 crisis arrived.",
+    aims:[
+      "Cut energy consumption per unit of GDP by 20% — the first hard environmental constraint",
+      "Cut major pollutant discharge by 10%",
+      "'Scientific development' and 'harmonious society' — address inequality and rural neglect",
+      "Build a national high-speed rail network"
+    ],
+    sig:[
+      "Agricultural tax abolished in 2006 after roughly two millennia",
+      "Rural cooperative medical scheme and rural pensions extended nationwide",
+      "RMB 4 trillion stimulus, late 2008 — infrastructure and local government debt at scale",
+      "Medium- and Long-Term S&T Plan with sixteen national megaprojects"
+    ],
+    nums:[{v:"~11.2%",k:"GDP growth p.a."},{v:"−19.1%",k:"energy intensity (target −20%)"},{v:"¥4tn",k:"stimulus package"},{v:"2006",k:"agricultural tax abolished"}],
+    outcome:"The energy target was nearly met, partly by shutting small plants in a scramble at the end. The stimulus produced world-class infrastructure and a local-debt problem still being managed today.",
+    verdict:"The pivot point: the moment the plan stopped being an allocation device and became an incentive system."
+  },
+  {
+    n:"12th", cn:"十二五", from:2011, to:2015, era:"quality", gap:false,
+    title:"Rebalance, or try to",
+    sum:"Consumption and services declared the future; seven emerging industries named; growth deliberately slowed.",
+    context:"The export model had reached its limits and the stimulus had left overcapacity. The leadership set a growth target below recent performance — signalling that quality now mattered more than speed.",
+    aims:[
+      "Raise the consumption and services share of GDP",
+      "Grow seven strategic emerging industries to 15% of GDP",
+      "Cut carbon intensity 17% and energy intensity 16%",
+      "Expand social insurance and affordable housing"
+    ],
+    sig:[
+      "The seven SEIs: energy conservation and environmental protection, next-generation IT, biotechnology, high-end equipment, new energy, new materials, new-energy vehicles",
+      "Services exceeded 50% of GDP in 2015 for the first time",
+      "PM2.5 monitoring and publication begins after public pressure, 2012",
+      "'Market plays the decisive role in resource allocation' — Third Plenum, 2013"
+    ],
+    nums:[{v:"~7.8%",k:"GDP growth p.a."},{v:"7%",k:"growth target"},{v:"50.5%",k:"services share by 2015"},{v:"−20%",k:"carbon intensity, target −17%"}],
+    outcome:"Environmental targets beaten; rebalancing toward consumption progressed more slowly than hoped, and investment stayed dominant.",
+    verdict:"The industrial list is the plan's real legacy — new-energy vehicles and solar are on it, and both became global export categories."
+  },
+  {
+    n:"13th", cn:"十三五", from:2016, to:2020, era:"quality", gap:false,
+    title:"Finish the poverty campaign",
+    sum:"A deadline plan: double 2010 incomes, eliminate absolute rural poverty, cut industrial overcapacity, then meet COVID.",
+    context:"2020 was a promised milestone — a 'moderately prosperous society in all respects' by the Party's centenary year. Everything in the plan was scheduled against that date.",
+    aims:[
+      "Double 2010 GDP and per capita income by 2020",
+      "Eliminate rural poverty under the national line by 2020",
+      "Supply-side structural reform: cut overcapacity, destock property, deleverage, lower costs, shore up weak spots",
+      "Innovation-driven development as the primary growth driver"
+    ],
+    sig:[
+      "Targeted poverty alleviation with paired assistance and relocation programmes",
+      "Steel and coal capacity closures measured in hundreds of millions of tonnes",
+      "War on pollution: coal caps around Beijing, sharp PM2.5 declines",
+      "Made in China 2025 running alongside; US tariffs and Huawei restrictions from 2018"
+    ],
+    nums:[{v:"~6.6%",k:"GDP growth p.a."},{v:"99m",k:"lifted from rural poverty since 2012"},{v:"2.4%",k:"R&D share of GDP, 2020"},{v:"2.2%",k:"growth in 2020"}],
+    outcome:"The poverty and income targets were declared met; air quality improved markedly. The external environment turned hostile midway through, which reframed everything after it.",
+    verdict:"The last plan written on the assumption that access to foreign technology could be taken for granted."
+  },
+  {
+    n:"14th", cn:"十四五", from:2021, to:2025, era:"quality", gap:false,
+    title:"Self-reliance and dual circulation",
+    sum:"No five-year growth number for the first time. Technology independence and security become the organising logic.",
+    context:"Export controls, the pandemic, and a property sector unwinding under its own leverage. The plan responded by declaring the domestic economy the main circuit and the external one supporting.",
+    aims:[
+      "Technological self-reliance as 'strategic support' for development — R&D up over 7% a year",
+      "Dual circulation: domestic demand primary, international supporting",
+      "Peak carbon before 2030, carbon neutrality before 2060",
+      "Common prosperity — narrow income and regional gaps",
+      "Keep manufacturing's share of GDP basically stable"
+    ],
+    sig:[
+      "Basic research raised toward 8% of R&D spending",
+      "Three red lines on developer leverage; Evergrande default 2021 and a multi-year property contraction",
+      "Platform regulation campaign, then partial relaxation",
+      "Solar, battery, and EV exports become the 'new three' growth engines"
+    ],
+    nums:[{v:"~5.2%",k:"GDP growth p.a."},{v:"¥140.2tn",k:"GDP at end-2025"},{v:"−17.7%",k:"carbon intensity, target −18%"},{v:"67.9%",k:"urbanisation, target 65%"}],
+    outcome:"Tech and manufacturing targets largely delivered; the carbon-intensity target was narrowly missed and consumption stayed weak while property dragged.",
+    verdict:"The plan that redefined success from how fast the economy grows to what the economy can build without permission."
+  },
+  {
+    n:"15th", cn:"十五五", from:2026, to:2030, era:"quality", gap:false, now:true,
+    title:"Modernisation, on the clock",
+    sum:"The cycle where the 2035 arithmetic has to work: upgrade industry, unlock consumption, break remaining chokepoints.",
+    context:"Adopted 12 March 2026. It inherits weak domestic demand, a shrinking workforce, a property sector still deflating, and an external environment where market access can be withdrawn by decree.",
+    aims:[
+      "Extraordinary measures for chokepoint technologies: chips, machine tools, instruments, basic and industrial software, advanced materials, biomanufacturing",
+      "Raise consumption capacity, willingness and the quality of what's on offer",
+      "Move traditional industry — steel, petrochemicals, shipbuilding, textiles — up the value chain",
+      "Urbanisation to 71%; life expectancy to 80; non-fossil energy to 25%",
+      "Cut the foreign investment negative list further; pilots in telecoms, biotech, wholly foreign-owned hospitals"
+    ],
+    sig:[
+      "The Made in China 2025 target of 70% semiconductor self-sufficiency is gone, replaced by digital economy value-added at 12.5% of GDP",
+      "Named frontier sectors: integrated circuits, embodied AI, biomanufacturing, new batteries, commercial aviation, low-altitude equipment, green hydrogen, brain–computer interfaces",
+      "3,500 GW of renewables by 2030, of which 2,800 GW wind and solar",
+      "Regulatory sandboxes and trigger-based supervision for new business models",
+      "RMB 100bn domestic-demand fund and RMB 250bn in trade-in bonds announced alongside"
+    ],
+    nums:[{v:"12 Mar 2026",k:"adopted by NPC"},{v:">22",k:"high-value patents per 10k by 2030"},{v:"12.5%",k:"digital economy share of GDP"},{v:"3,500 GW",k:"renewables by 2030"}],
+    outcome:"In progress. First-half 2026 growth came in at 4.7%, consistent with the slower trajectory the plan assumes.",
+    verdict:"A plan that names the demand problem clearly and then answers it largely with supply-side instruments — the tension most analysts flag."
+  }
+];
+
+const THREADS = [
+  {name:"Industrial base & manufacturing", color:"#9C7420", note:"What gets built, where, and by whom.",
+   cells:[
+    [3,"156 Soviet-aided plants: steel, machine tools, power, chemicals."],
+    [3,"Backyard furnaces; steel tonnage treated as a political loyalty test."],
+    [2,"Consolidate what exists, mothball what the Leap built badly."],
+    [3,"Third Front — a duplicate industrial system in the mountainous interior."],
+    [3,"Interior construction continues alongside imported Western plant."],
+    [3,"Hua's 120 giant projects, abandoned in 1979 as unaffordable."],
+    [2,"Deliberate pivot to light industry and consumer goods."],
+    [2,"Coastal processing for export; township enterprises grow outside the plan."],
+    [2,"Investment boom; development zones proliferate faster than approvals."],
+    [2,"Grasp the large, release the small — brutal SOE consolidation."],
+    [3,"Heavy-chemical re-industrialisation; China becomes the world's workshop."],
+    [2,"Curb overcapacity, upgrade equipment, close small dirty plants."],
+    [3,"Seven strategic emerging industries named and funded."],
+    [3,"Supply-side reform: hundreds of millions of tonnes of capacity cut."],
+    [3,"Manufacturing share of GDP to stay 'basically stable' — a first."],
+    [3,"Value-chain upgrade of steel, petrochemicals, shipbuilding, textiles."]
+   ]},
+  {name:"Agriculture & food security", color:"#2C6647", note:"Who feeds the cities, and on what terms.",
+   cells:[
+    [2,"Cooperatives formed; unified state grain purchase fixes the rural bargain."],
+    [3,"Communes, inflated reports, procurement above real harvest — famine."],
+    [3,"Agriculture first: private plots, rural markets, and imports restored."],
+    [2,"Learn from Dazhai; self-reliance in grain as a political virtue."],
+    [2,"Thirteen imported fertiliser complexes lift yields for a generation."],
+    [2,"Household responsibility system spreads unofficially from Anhui."],
+    [3,"Household farming nationwide; the largest rural income surge on record."],
+    [1,"Grain stagnates as rural labour moves into industry."],
+    [1,"Governors made personally responsible for provincial grain supply."],
+    [2,"Surpluses and storage scandals; procurement system reformed."],
+    [1,"Rural tax burden reduction begins under WTO pressure on farm prices."],
+    [3,"Agricultural tax abolished; 120m-hectare farmland red line drawn."],
+    [2,"Mechanisation and consolidation; output above 550 million tonnes."],
+    [2,"Permanent basic farmland designated; supply-side reform reaches the farm."],
+    [3,"Food security reframed as national security; seed self-reliance campaign."],
+    [3,"Grain capacity target of about 1.45 trillion jin — roughly 725 Mt."]
+   ]},
+  {name:"Technology & self-reliance", color:"#2B4776", note:"Borrow it, steal it, or build it.",
+   cells:[
+    [2,"Wholesale technology transfer from the USSR, with instructors."],
+    [2,"Self-reliance becomes doctrine after Soviet advisers withdraw in 1960."],
+    [2,"Twelve-year science plan resumed; nuclear programme protected."],
+    [2,"Defence R&D deliberately shielded from Cultural Revolution disruption."],
+    [1,"Science rehabilitated; Four Modernisations named with science among them."],
+    [2,"1978 Science Conference: science declared a productive force."],
+    [2,"Technology imports emphasised over indigenous development."],
+    [2,"863 High-Technology Programme (1986) and Torch Programme (1988)."],
+    [1,"Market-for-technology bargain struck with foreign joint ventures."],
+    [2,"973 basic research programme; mass expansion of universities."],
+    [2,"Indigenous innovation debated as foreign IP dependence becomes visible."],
+    [3,"Medium- and Long-Term S&T Plan with sixteen national megaprojects."],
+    [3,"Strategic emerging industries targeted at 15% of GDP."],
+    [3,"Innovation-driven development elevated to national strategy."],
+    [3,"Self-reliance as 'strategic support'; R&D growth above 7% a year."],
+    [3,"Extraordinary measures for chips, machine tools, software, AI, quantum."]
+   ]},
+  {name:"Energy, environment & climate", color:"#1C6B5E", note:"From an afterthought to the most binding constraint in the document.",
+   cells:[
+    [1,"Coal and hydro sized to industry; no environmental frame exists."],
+    [0,"Forests felled for backyard smelting; ecological cost unrecorded."],
+    [1,"Damage repair and reforestation begin quietly."],
+    [1,"Interior coal and hydro developed to serve Third Front plants."],
+    [2,"Daqing at peak; first national environmental conference, 1973."],
+    [1,"Oil-export-financed growth; trial Environmental Protection Law, 1979."],
+    [1,"Chronic power shortages ration industrial output."],
+    [1,"Coal expansion; acid rain emerges as a regional problem."],
+    [1,"Three Gorges approved after long internal opposition."],
+    [2,"Sulphur controls; logging ban after the 1998 Yangtze floods."],
+    [1,"Energy intensity worsens outright — the decade's clearest target failure."],
+    [3,"First binding target of the modern era: energy per unit GDP down 20%."],
+    [3,"Carbon intensity −17%; PM2.5 measured and published under public pressure."],
+    [3,"War on pollution: coal caps, air quality targets, visible improvement."],
+    [3,"Carbon peak before 2030 and neutrality before 2060 written into the plan."],
+    [3,"Non-fossil to 25% of energy; carbon intensity target eased to −17%."]
+   ]},
+  {name:"Opening, trade & foreign capital", color:"#68356A", note:"How much of the world economy to let in.",
+   cells:[
+    [1,"Trade almost entirely inside the socialist bloc."],
+    [0,"The Sino-Soviet split closes the only significant channel."],
+    [1,"Selective plant purchases from Japan and Western Europe."],
+    [0,"Near-autarky; trade falls to a negligible share of output."],
+    [2,"Nixon and Tanaka visits; US$4.3bn of imported complete plants."],
+    [2,"Joint venture law, 1979; four special economic zones, 1980."],
+    [2,"Fourteen coastal cities opened; foreign investment legalised broadly."],
+    [3,"Coastal strategy — 'both ends abroad', materials in and goods out."],
+    [3,"Pudong opens; FDI surges after the Southern Tour."],
+    [2,"WTO negotiation endgame; peg held through the Asian crisis."],
+    [3,"WTO accession; exports quadruple; 'going out' begins."],
+    [2,"Managed float from 2005; outbound investment accelerates."],
+    [2,"Free trade zones; RMB internationalisation begins in earnest."],
+    [2,"Belt and Road; negative list system for foreign investment."],
+    [2,"Dual circulation — domestic primary, external supporting."],
+    [2,"Shorter negative list; telecom, biotech and hospital pilots opened."]
+   ]},
+  {name:"Urbanisation, housing & regions", color:"#47616B", note:"Where people are allowed to live.",
+   cells:[
+    [1,"Industrial cities built from scratch around new plants."],
+    [1,"Hukou registration codified in 1958; rural exit closed off."],
+    [1,"Urban populations sent back to the countryside to relieve food supply."],
+    [2,"People and plants relocated inland for strategic depth."],
+    [1,"Sent-down youth; urban growth deliberately suppressed."],
+    [1,"Youth return to the cities and an urban jobs crisis follows."],
+    [1,"'Leave the land but not the village' — small-town urbanisation."],
+    [2,"Coastal cities pull migrants; the floating population becomes structural."],
+    [2,"Land leasing becomes the core of local government finance."],
+    [3,"Housing privatised in 1998; Great Western Development launched."],
+    [2,"Revitalise the Northeast and Rise of Central China programmes."],
+    [3,"Main functional zone planning; the high-speed rail network begins."],
+    [3,"Urbanisation target of 60%; large affordable housing push."],
+    [3,"Hukou reform in smaller cities; Xiongan; city-cluster planning."],
+    [3,"Urbanisation reaches 67.9%; three red lines applied to developers."],
+    [3,"Urbanisation to 71%; policy explicitly aimed at stabilising property."]
+   ]},
+  {name:"Income, consumption & welfare", color:"#AE3226", note:"What households get out of it.",
+   cells:[
+    [1,"Consumption compressed deliberately to fund accumulation."],
+    [0,"Living standards collapse; rationing fails in much of the countryside."],
+    [2,"Rations restored and consumption prioritised over investment."],
+    [1,"Urban wages effectively frozen for a decade."],
+    [1,"Work-unit welfare covers urban workers only; rural households excluded."],
+    [1,"Wage increases resume after 1977 for the first time in years."],
+    [2,"Rural incomes double in real terms; consumer durables spread."],
+    [2,"Price reform erodes savings; 1988 panic buying and bank runs."],
+    [1,"Inflation near 24% in 1994 wipes out household savings again."],
+    [1,"Mass layoffs end the iron rice bowl; urban safety net improvised."],
+    [1,"Inequality widens sharply; Gini passes 0.45."],
+    [3,"Harmonious society: rural pension and health insurance built out."],
+    [3,"Pledge to double 2010 incomes; social insurance expanded nationally."],
+    [3,"Absolute rural poverty declared eliminated in 2020."],
+    [3,"Common prosperity; income growth to track GDP growth."],
+    [3,"Consumption capacity, willingness, and supply quality all targeted."]
+   ]},
+  {name:"Market institutions & ownership", color:"#155863", note:"Who decides — the plan, the firm, or the price.",
+   cells:[
+    [2,"Private industry bought out into joint state-private ownership."],
+    [1,"Communes replace markets and household production entirely."],
+    [2,"Chen Yun's partial restoration of markets and material incentives."],
+    [0,"Markets condemned as 'capitalist tails' to be cut off."],
+    [0,"Allocation is entirely administrative; prices carry no information."],
+    [1,"Enterprise autonomy experiments begin in Sichuan under Zhao Ziyang."],
+    [3,"'Planned commodity economy'; dual-track prices institutionalised."],
+    [3,"Contract responsibility system; price reform attempted and abandoned."],
+    [3,"'Socialist market economy' enters doctrine and then the constitution."],
+    [3,"1994 tax-sharing; SOE corporatisation; central bank and company law."],
+    [2,"WTO forces broad legal and regulatory harmonisation."],
+    [2,"计划 becomes 规划: guidance replaces commands in the plan's own name."],
+    [2,"Market's 'decisive role' in resource allocation affirmed, 2013."],
+    [2,"Mixed-ownership reform; deleveraging campaign; Party committees in firms."],
+    [2,"Unified national market; platform regulation and partial retreat."],
+    [2,"Attack on local protectionism and inter-provincial trade barriers."]
+   ]},
+  {name:"Security & strategic depth", color:"#262C33", note:"The economy as a war-survival problem.",
+   cells:[
+    [2,"Korean War economy; defence plants prioritised in siting and supply."],
+    [2,"Militarised mobilisation of labour as an organising metaphor."],
+    [2,"Nuclear programme explicitly shielded from austerity."],
+    [3,"Third Front designed to survive losing the coast to a first strike."],
+    [3,"Dispersal continues; war preparation shapes plant location."],
+    [1,"Defence spending cut to fund civilian modernisation."],
+    [1,"The military is told to earn part of its own budget commercially."],
+    [1,"One-million-strong force reduction completed."],
+    [1,"Gulf War prompts a rethink of technological backwardness."],
+    [2,"Military divested from commercial business, 1998."],
+    [2,"Informatised warfare doctrine; defence budget growth resumes."],
+    [2,"Civil–military integration formalised as policy."],
+    [2,"Maritime, space, and cyber capability programmes expand."],
+    [3,"Military–civil fusion elevated to a national strategy."],
+    [3,"Security language appears in every chapter; chokepoint lists compiled."],
+    [3,"Supply-chain resilience with explicit grain and energy production floors."]
+   ]}
+];
+
+const PIPE = [
+  {k:"Step 1", h:"Preliminary research", when:"~30 months out · Dec 2023 for 15-5",
+   p:"The National Development and Reform Commission convenes ministries, provinces, and think tanks to study the coming period. Hundreds of commissioned studies, none public."},
+  {k:"Step 2", h:"Party recommendations", when:"Central Committee plenum · Oct 2025",
+   p:"The Fourth Plenum adopts 建议 — recommendations. This is where the political direction is fixed. Everything downstream elaborates rather than reopens it."},
+  {k:"Step 3", h:"Outline adopted", when:"National People's Congress · Mar 2026",
+   p:"The 纲要 outline is approved by the legislature and becomes a legally binding programme with numbered targets, chapter by chapter, plus columns of boxed 'major projects'."},
+  {k:"Step 4", h:"Cascade and review", when:"2026 through 2030",
+   p:"Roughly 100–200 sectoral plans (energy, renewables, transport, S&T) and 31 provincial plans convert the outline into budgets. A mid-term assessment lands around year three."}
+];
+
+const PILLARS = [
+  {i:"Pillar 01", h:"Chokepoint technology", p:"The plan commits to 'extraordinary measures' — a phrase reserved for things the state will fund regardless of return — in a short list of dependencies.",
+   li:["Integrated circuits and semiconductor equipment","Industrial machine tools and high-end instruments","Basic and industrial software","Advanced materials and biomanufacturing"]},
+  {i:"Pillar 02", h:"Frontier industries", p:"A named list of sectors expected to become the next export categories, following the template that produced solar panels and EVs.",
+   li:["Embodied AI and robotics","New-type batteries and green hydrogen","Commercial aviation and low-altitude aircraft","Brain–computer interfaces, high-end medical equipment"]},
+  {i:"Pillar 03", h:"Upgrading the old industries", p:"Not abandonment but repositioning — moving heavy and light industry toward products currently imported.",
+   li:["Steel, petrochemicals, shipbuilding restructuring","High-speed bearings, precision gears, seals","Large cruise ships, LNG carriers, smelting equipment","Textiles and light industry quality supply"]},
+  {i:"Pillar 04", h:"Demand and household capacity", p:"The demand side is addressed mainly by raising the ability to spend rather than transferring income directly.",
+   li:["Minimum wage increases; support for small businesses","Stabilise property and equity markets to repair household balance sheets","Service consumption: culture, sport, tourism, cruising, RVs","Auto and EV purchases via charging and swap infrastructure"]},
+  {i:"Pillar 05", h:"Opening on narrower terms", p:"Market access widens in services while security-relevant sectors stay closed — openness is now selective by design.",
+   li:["Negative list cut further from 106 entries","Pilots in value-added telecoms, biotech, wholly foreign-owned hospitals","Clean up rules inconsistent with the Foreign Investment Law","Cross-border data flow facilitation in free trade zones"]},
+  {i:"Pillar 06", h:"Energy and the climate ledger", p:"Ambitious in build-out, less so in the intensity target — a plan that expects to decarbonise by adding clean supply rather than constraining demand.",
+   li:["3,500 GW renewables by 2030; 2,800 GW wind and solar","Non-fossil energy to 25% of consumption","Carbon intensity −17% cumulative, down from −18%","'Dependable, grid-friendly' output emphasised over raw capacity"]}
+];
+
+const TARGETS = [
+  {g:"Economy"},
+  {n:"GDP growth", a:"5.0% (2025)", b:"Reasonable range", t:"Reasonable range", k:"ind", d:"flat", note:"Annual targets set year by year"},
+  {n:"Labour productivity growth", a:"6.1%", b:"Above GDP growth", t:"Above GDP growth", k:"ind", d:"flat"},
+  {n:"Urbanisation rate", a:"67.9%", b:"65%", t:"71%", k:"ind", d:"up"},
+  {g:"Innovation"},
+  {n:"R&D expenditure growth (society-wide)", a:"9.1%", b:">7%", t:">7%", k:"ind", d:"flat"},
+  {n:"High-value invention patents per 10,000", a:"16 (2024)", b:"12", t:">22", k:"ind", d:"up"},
+  {n:"Core digital economy share of GDP", a:"10.5%", b:"10%", t:"12.5%", k:"ind", d:"up"},
+  {g:"Welfare"},
+  {n:"Surveyed urban unemployment", a:"5.2%", b:"<5.5%", t:"<5.5%", k:"bind", d:"flat"},
+  {n:"Per capita disposable income growth", a:"5.0%", b:"In line with GDP", t:"In line with GDP", k:"ind", d:"flat"},
+  {n:"Average schooling, working-age population", a:"11.3 yrs", b:"11.3 yrs", t:"11.7 yrs", k:"ind", d:"up"},
+  {n:"Licensed doctors per 1,000", a:"3.1", b:"3.2", t:"3.7", k:"bind", d:"up"},
+  {n:"Licensed nurses per 1,000", a:"4.3", b:"—", t:"5.1", k:"bind", d:"up"},
+  {n:"Nursing beds in elderly care institutions", a:"68%", b:"—", t:"73%", k:"bind", d:"up"},
+  {n:"Under-3 daycare enrolment rate", a:"—", b:"—", t:"+6 pts", k:"bind", d:"up"},
+  {n:"Life expectancy", a:"79.25 yrs", b:"+1 yr", t:"80 yrs", k:"ind", d:"up"},
+  {g:"Green & low-carbon"},
+  {n:"CO₂ per unit of GDP", a:"−17.7%", b:"−18%", t:"−17%", k:"bind", d:"dn", note:"Target eased despite a missed inheritance"},
+  {n:"Non-fossil share of energy consumption", a:"21.7%", b:"—", t:"25%", k:"bind", d:"up"},
+  {n:"PM2.5, prefecture-level cities and above", a:"28 µg/m³", b:"—", t:"<27 µg/m³", k:"bind", d:"up"},
+  {n:"Surface water of good quality", a:"80%", b:"—", t:"85%", k:"bind", d:"up"},
+  {n:"Forest coverage", a:"25.1% (2024)", b:"24.1%", t:"25.8%", k:"bind", d:"up"},
+  {g:"Security"},
+  {n:"Grain production capacity", a:"1.39tn jin", b:"1.3tn jin", t:"~1.45tn jin", k:"bind", d:"up"},
+  {n:"Energy production capacity", a:"5.13bn tce", b:">4.6bn tce", t:"5.8bn tce", k:"bind", d:"up"}
+];
+
+const DEBATE = [
+  {side:"The core critique", h:"Supply-side answers to a demand-side problem",
+   p:"The plan states the diagnosis plainly — strong supply, weak demand — and then allocates most of its instruments to production. Critics argue this is how China arrived at overcapacity, deflationary pricing, and trade friction in the first place, and that repeating it in higher-value sectors just moves the friction upmarket.",
+   p2:"The counter-argument is that household demand cannot be conjured without a functioning social safety net and repaired household balance sheets, both of which take longer than five years, and that industrial competitiveness is what pays for them."},
+  {side:"Does the plan cause anything?", h:"Blueprint or ratification",
+   p:"A serious school of analysis holds that plans mostly codify what is already happening: household farming was spreading before the 6th plan blessed it, and the 8th plan document was largely irrelevant next to the 1994 fiscal reform.",
+   p2:"The other reading points to solar, high-speed rail, and EVs — all named in plans years before they were commercially plausible, all backed by directed capital afterwards. On this account the plan is not a forecast but a subsidy schedule, and it is unusually good at that."},
+  {side:"The arithmetic", h:"Demographics against the 2035 target",
+   p:"Reaching the per capita income of a moderately developed country by 2035 implies sustained real growth around 4–4.5%. The working-age population is shrinking, the property sector no longer contributes growth, and productivity gains have to carry more of the load than in any previous cycle.",
+   p2:"Fertility-support measures appear in the plan — daycare enrolment is now a target — but no country has reversed a fertility decline of this magnitude with policy alone."},
+  {side:"Climate", h:"An eased target and a plateau",
+   p:"The carbon-intensity target was set at −17% having missed −18%, which analysts read as an implicit concession that the 65%-by-2030 pledge is out of reach. There is no absolute emissions cap.",
+   p2:"At the same time, evidence suggests China's absolute emissions may already be plateauing, driven by clean-energy build-out running ahead of the plan's own targets. The document may be understating what the electricity system is about to do."},
+  {side:"Balance sheets", h:"Local debt and the property overhang",
+   p:"Local government financing vehicles, land-sale revenue collapse, and unfinished housing remain unresolved. The plan names these risks and does not propose a restructuring mechanism.",
+   p2:"Fiscal transfers and refinancing programmes have contained the problem without shrinking it — which works until growth slows enough that debt service crowds out the industrial spending the plan depends on."},
+  {side:"Foreign capital", h:"Openness pledges against a three-year decline",
+   p:"Actual use of foreign capital fell 9.5% in 2025, a third consecutive annual decline, even as the number of registered foreign firms rose. The plan responds with market-access pilots and a commitment to remove rules that contradict the Foreign Investment Law.",
+   p2:"Whether that reverses the trend depends less on the negative list than on data rules, security reviews, and geopolitics — none of which the plan can settle on its own."}
+];
+
+const HORIZON = [
+  {y:"2030", l:"End of the 15th plan", p:"Carbon emissions should have peaked. Non-fossil energy at 25% of consumption, urbanisation at 71%, digital economy at 12.5% of GDP. On the current trajectory China's economy would be roughly 30–40% larger in nominal terms than at the start of the cycle."},
+  {y:"2035", l:"Socialist modernisation, basically achieved", p:"The frame that disciplines everything: per capita GDP at the level of a moderately developed country — variously read as US$20,000 in 2020 prices or around US$25,000 nominal. Requires roughly 4–4.5% average real growth from here, with a shrinking workforce.", next:true},
+  {y:"2049", l:"Centenary of the People's Republic", p:"The stated endpoint: a 'great modern socialist country, prosperous, strong, democratic, culturally advanced, harmonious and beautiful.' Three or four more five-year plans sit between here and there, and none of them has been drafted."}
+];
+
+/* ============================ RENDER ============================ */
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => { const n=document.createElement(t); if(c)n.className=c; if(h!==undefined)n.innerHTML=h; return n; };
+const eraOf = id => ERAS.find(e=>e.id===id);
+
+/* --- axis --- */
+(function axis(){
+  const rail = $("#axisRail"), eras = $("#axisEras");
+  const span = 2031-1953;
+  ERAS.forEach(e=>{
+    const d = el("div",null,e.name);
+    d.style.flex = `0 0 ${((e.to-e.from)/span*100)}%`;
+    d.style.background = e.color;
+    eras.appendChild(d);
+  });
+  PLANS.forEach((p,i)=>{
+    const t = el("button","axis-tick"+(p.gap?" gap":"")+(p.now?" now":""));
+    t.type="button";
+    t.style.flex = `0 0 ${((p.to-p.from+1)/span*100)}%`;
+    t.setAttribute("aria-label", `${p.gap?"Adjustment period":"Plan "+p.n}, ${p.from} to ${p.to}`);
+    const bar = el("div","bar");
+    bar.style.height = p.gap ? "6px" : "16px";
+    bar.style.background = eraOf(p.era).color;
+    t.appendChild(bar);
+    t.appendChild(el("div","n",p.gap?"·":p.n.replace(/(st|nd|rd|th)/,"")));
+    t.appendChild(el("div","y",p.from+"–"+String(p.to).slice(2)));
+    t.addEventListener("click",()=>openPlan(i,true));
+    rail.appendChild(t);
+  });
+})();
+
+/* --- pipeline --- */
+$("#pipe").innerHTML = PIPE.map(s=>`
+  <div class="pipe-step">
+    <div class="k">${s.k}</div>
+    <h4>${s.h}</h4>
+    <p>${s.p}</p>
+    <span class="when">${s.when}</span>
+  </div>`).join("");
+
+/* --- timeline --- */
+const plansEl = $("#plans");
+function renderPlans(filter){
+  plansEl.innerHTML = "";
+  PLANS.forEach((p,i)=>{
+    if(filter && filter!=="all" && p.era!==filter) return;
+    const wrap = el("article","plan"+(p.now?" is-now":""));
+    wrap.id = "plan-"+i;
+    wrap.setAttribute("open-state","0");
+    const btn = el("button","plan-hd");
+    btn.type="button"; btn.setAttribute("aria-expanded","false"); btn.setAttribute("aria-controls","pb-"+i);
+    btn.innerHTML = `
+      <div class="pn">${p.gap?"—":p.n}<small>${p.cn}</small></div>
+      <div class="py">${p.from} – ${p.to}</div>
+      <div class="pt">${p.title}<span class="yrs-m">${p.from} – ${p.to}</span><em>${p.sum}</em></div>
+      <span class="chev">+</span>`;
+    btn.addEventListener("click",()=>toggle(wrap,btn));
+    const body = el("div","plan-body"); body.id="pb-"+i;
+    body.innerHTML = `
+      <div class="pb-grid">
+        <div>
+          <h5>Context</h5>
+          <p style="font-size:15.5px">${p.context}</p>
+          <h5>What it set out to do</h5>
+          <ul>${p.aims.map(a=>`<li>${a}</li>`).join("")}</ul>
+          <h5>Signature measures &amp; events</h5>
+          <ul>${p.sig.map(a=>`<li>${a}</li>`).join("")}</ul>
+        </div>
+        <div>
+          <h5>By the numbers</h5>
+          <div class="numbers">${p.nums.map(n=>`<div><b>${n.v}</b><span>${n.k}</span></div>`).join("")}</div>
+          <h5>What happened</h5>
+          <p style="font-size:15px">${p.outcome}</p>
+          <div class="verdict"><strong>Verdict</strong>${p.verdict}</div>
+        </div>
+      </div>`;
+    wrap.appendChild(btn); wrap.appendChild(body);
+    plansEl.appendChild(wrap);
+  });
+}
+function toggle(wrap,btn){
+  const open = wrap.getAttribute("open-state")==="1";
+  wrap.setAttribute("open-state", open?"0":"1");
+  btn.setAttribute("aria-expanded", open?"false":"true");
+}
+function openPlan(i,scroll){
+  const active = $("#filters button[aria-pressed='true']");
+  if(active && active.dataset.f!=="all"){ setFilter("all"); }
+  const node = document.getElementById("plan-"+i);
+  if(!node) return;
+  node.setAttribute("open-state","1");
+  node.querySelector(".plan-hd").setAttribute("aria-expanded","true");
+  if(scroll) node.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth", block:"start"});
+}
+
+/* --- filters --- */
+const FILTS = [{f:"all",l:"All periods"}].concat(ERAS.map(e=>({f:e.id,l:e.name})));
+$("#filters").innerHTML = FILTS.map(f=>`<button type="button" data-f="${f.f}" aria-pressed="${f.f==='all'}">${f.l}</button>`).join("");
+function setFilter(f){
+  document.querySelectorAll("#filters button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.f===f)));
+  renderPlans(f);
+}
+$("#filters").addEventListener("click",e=>{ const b=e.target.closest("button"); if(b) setFilter(b.dataset.f); });
+renderPlans("all");
+
+/* --- matrix --- */
+(function matrix(){
+  const t = $("#mx");
+  let head = `<thead><tr><th class="corner">Thread ↓ &nbsp;/&nbsp; Plan →</th>`;
+  PLANS.forEach(p=>{
+    head += `<th class="${p.now?"now":""}">${p.gap?"—":p.n}<span class="yy">${String(p.from).slice(2)}–${String(p.to).slice(2)}</span></th>`;
+  });
+  head += `</tr></thead>`;
+  let body = "<tbody>";
+  THREADS.forEach((th,r)=>{
+    body += `<tr><th class="rowh" scope="row"><span class="dot" style="background:${th.color}"></span>${th.name}</th>`;
+    th.cells.forEach((c,ci)=>{
+      body += `<td class="cell i${c[0]}${PLANS[ci].gap?" gapcol":""}" tabindex="0" role="button" data-r="${r}" data-c="${ci}" aria-label="${th.name}, ${PLANS[ci].gap?"adjustment period":PLANS[ci].n+" plan"}"><span class="fill" style="background:${c[0]?th.color:"transparent"}"></span></td>`;
+    });
+    body += `</tr>`;
+  });
+  t.innerHTML = head + body + "</tbody>";
+
+  const LVL = ["Absent or actively suppressed","Present but secondary","A major theme","A defining commitment"];
+  function read(r,c){
+    document.querySelectorAll("td.cell.sel").forEach(n=>n.classList.remove("sel"));
+    const cell = t.querySelector(`td[data-r="${r}"][data-c="${c}"]`);
+    if(cell) cell.classList.add("sel");
+    const th=THREADS[r], p=PLANS[c], d=th.cells[c];
+    $("#mxRead").innerHTML = `
+      <div class="tag" style="color:${th.color}">${th.name} &nbsp;·&nbsp; ${p.gap?"Adjustment period":p.n+" Five-Year Plan"} &nbsp;·&nbsp; ${p.from}–${p.to}</div>
+      <h4>${p.gap?"Three unplanned years":p.title}</h4>
+      <p>${d[1]}</p>
+      <span class="lvl">Emphasis: ${LVL[d[0]]} &nbsp;·&nbsp; ${th.note}</span>`;
+  }
+  t.addEventListener("click",e=>{ const c=e.target.closest("td.cell"); if(c) read(+c.dataset.r,+c.dataset.c); });
+  t.addEventListener("keydown",e=>{
+    const c=e.target.closest("td.cell"); if(!c) return;
+    if(e.key==="Enter"||e.key===" "){ e.preventDefault(); read(+c.dataset.r,+c.dataset.c); }
+  });
+})();
+
+/* --- pillars --- */
+$("#pillars").innerHTML = PILLARS.map(p=>`
+  <div class="pill-card">
+    <div class="idx">${p.i}</div>
+    <h4>${p.h}</h4>
+    <p>${p.p}</p>
+    <ul>${p.li.map(x=>`<li>${x}</li>`).join("")}</ul>
+  </div>`).join("");
+
+/* --- targets --- */
+(function targets(){
+  const ARROW={up:"▲ tighter",dn:"▼ looser",flat:"— held"};
+  let h = `<thead><tr><th>Indicator</th><th>2025 outcome</th><th>14th plan target</th><th>15th plan target, 2030</th><th>Type</th><th>Direction</th></tr></thead><tbody>`;
+  TARGETS.forEach(r=>{
+    if(r.g){ h+=`<tr class="grp"><td colspan="6">${r.g}</td></tr>`; return; }
+    h+=`<tr>
+      <td>${r.n}${r.note?`<br><small style="color:var(--ink-3)">${r.note}</small>`:""}</td>
+      <td class="num">${r.a}</td>
+      <td class="num" style="color:var(--ink-3)">${r.b}</td>
+      <td class="tgt">${r.t}</td>
+      <td><span class="pill ${r.k}">${r.k==="bind"?"Binding":"Anticipatory"}</span></td>
+      <td class="num arrow ${r.d}">${ARROW[r.d]}</td>
+    </tr>`;
+  });
+  $("#tg").innerHTML = h+"</tbody>";
+})();
+
+/* --- debate --- */
+$("#debate").innerHTML = DEBATE.map(d=>`
+  <div class="dcard">
+    <div class="side">${d.side}</div>
+    <h4>${d.h}</h4>
+    <p>${d.p}</p>
+    <p style="color:var(--ink-3)">${d.p2}</p>
+  </div>`).join("");
+
+/* --- horizon --- */
+$("#horizon").innerHTML = HORIZON.map(h=>`
+  <div class="hz${h.next?" next":""}">
+    <div class="yr">${h.y}<span>${h.l}</span></div>
+    <p>${h.p}</p>
+  </div>`).join("");
+
+/* --- nav scrollspy --- */
+(function spy(){
+  const links=[...document.querySelectorAll("nav.sticky a")];
+  const secs=links.map(a=>document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        links.forEach(l=>l.classList.toggle("on", l.getAttribute("href")==="#"+en.target.id));
+      }
+    });
+  },{rootMargin:"-45% 0px -50% 0px"});
+  secs.forEach(s=>io.observe(s));
+})();
+</script>
+</body>
+</html>
