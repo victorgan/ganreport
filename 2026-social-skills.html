@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Register — a field guide to being wanted in the room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1F26; --ink2:#153039; --ink3:#1C3D47; --line:#26505C;
+  --paper:#EDE4D3; --dim:#93A8AE; --brass:#D6A758;
+  --attention:#D6A758; --convening:#C97B84; --presentation:#7FB2A3; --navigation:#8E9FD4;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--ink); color:var(--paper); min-height:100vh;
+  font-family:'Public Sans',system-ui,-apple-system,sans-serif; font-weight:300;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0;}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+.mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+
+.wrap{max-width:900px;margin:0 auto;padding:48px 24px 150px;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--dim);}
+h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;line-height:1;
+  margin:14px 0 0;letter-spacing:-.01em;}
+.sub{max-width:48ch;margin:16px 0 0;font-size:15px;line-height:1.62;color:var(--dim);}
+.rule{height:1px;background:var(--line);margin:34px 0 26px;}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 14px;border:1px solid var(--line);border-radius:999px;font-size:13px;
+  color:var(--dim);transition:background .18s,color .18s,border-color .18s;}
+.chip:hover{color:var(--paper);border-color:var(--brass);}
+.chip[data-on="1"]{background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:500;}
+.note{margin-top:12px;font-size:13px;color:var(--dim);min-height:20px;}
+
+.bar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:36px 0 16px;}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex:none;}
+.seg button{padding:6px 13px;font-size:12px;color:var(--dim);}
+.seg button[data-on="1"]{background:var(--ink3);color:var(--paper);}
+
+.ladder{position:relative;transition:height .3s;}
+.row{position:absolute;left:0;right:0;height:46px;display:flex;align-items:center;gap:12px;
+  padding:0 8px;border-radius:5px;text-align:left;width:100%;
+  transition:transform .62s cubic-bezier(.22,1,.36,1),background .18s;}
+.row:hover{background:var(--ink2);}
+.rank{width:26px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);}
+.nm{width:180px;flex:none;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.track{flex:1;height:9px;background:var(--ink2);border-radius:2px;overflow:hidden;min-width:40px;}
+.fill{height:100%;border-radius:2px;transition:width .62s cubic-bezier(.22,1,.36,1);}
+.score{width:24px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:right;}
+.pips{width:30px;flex:none;display:flex;gap:3px;justify-content:flex-end;}
+.pip{width:5px;height:5px;border-radius:50%;background:var(--line);}
+.pip[data-on="1"]{background:var(--dim);}
+.delta{width:38px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right;}
+.up{color:#8FCBA8;} .down{color:#C98E8E;} .flat{color:var(--line);}
+
+.movers{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px;
+  padding-top:22px;border-top:1px solid var(--line);}
+.movers[hidden]{display:none;}
+.mtitle{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+.mrow{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;gap:10px;}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:26px;font-size:12px;color:var(--dim);
+  align-items:center;}
+.sw{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:7px;}
+
+.scrim{position:fixed;inset:0;background:rgba(6,16,20,.72);opacity:0;pointer-events:none;
+  transition:opacity .3s;z-index:40;}
+.scrim[data-on="1"]{opacity:1;pointer-events:auto;}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--ink2);
+  border-left:1px solid var(--line);z-index:50;overflow-y:auto;padding:32px 28px 48px;
+  transform:translateX(100%);transition:transform .38s cubic-bezier(.22,1,.36,1);}
+.panel[data-on="1"]{transform:none;}
+.close{position:absolute;top:18px;right:22px;font-size:20px;color:var(--dim);line-height:1;}
+.pname{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:32px;
+  line-height:1.1;margin:14px 0 0;}
+.pline{margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--dim);}
+.drill{margin:24px 0 0;padding:18px 20px;background:var(--ink3);border-left:2px solid var(--brass);
+  border-radius:0 5px 5px 0;}
+.drilltext{font-family:'Bodoni Moda',Didot,Georgia,serif;font-style:italic;font-size:19px;
+  line-height:1.4;margin:6px 0 0;}
+.block{margin-top:26px;}
+.blabel{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+.fail{font-size:14px;line-height:1.6;color:#C99C9C;margin:0;}
+.lvl{display:flex;gap:12px;align-items:flex-start;padding:11px 0;
+  border-bottom:1px solid var(--line);width:100%;text-align:left;}
+.box{width:16px;height:16px;flex:none;margin-top:2px;border:1px solid var(--line);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink);}
+.box[data-on="1"]{background:var(--brass);border-color:var(--brass);}
+.lvltext{font-size:13.5px;line-height:1.5;}
+.lvlnum{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);
+  letter-spacing:.1em;display:block;margin-bottom:3px;}
+.ctxrow{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12px;}
+.ctxname{width:78px;flex:none;color:var(--dim);}
+.ctxtrack{flex:1;height:5px;background:var(--ink3);border-radius:2px;overflow:hidden;}
+.ctxfill{height:100%;}
+.focusbtn{margin-top:28px;width:100%;padding:12px;border:1px solid var(--brass);border-radius:5px;
+  color:var(--brass);font-size:13px;letter-spacing:.04em;}
+.focusbtn[data-on="1"]{background:var(--brass);color:var(--ink);}
+.focusbtn:disabled{border-color:var(--line);color:var(--line);cursor:not-allowed;}
+
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--ink2);border-top:1px solid var(--line);
+  padding:12px 24px;z-index:30;}
+.dockin{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.docklabel{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);}
+.fchip{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--ink3);
+  border-radius:999px;font-size:12.5px;}
+.fprog{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
+.empty{font-size:12.5px;color:var(--dim);}
+
+@media (max-width:640px){
+  .wrap{padding:32px 16px 160px;}
+  h1{font-size:38px;}
+  .nm{width:120px;font-size:13px;}
+  .row{height:44px;gap:8px;padding:0 2px;}
+  .delta{display:none;}
+  .movers{grid-template-columns:1fr;}
+  .bar{align-items:flex-start;flex-direction:column;gap:10px;}
+  .panel{top:auto;height:88vh;width:100%;border-left:none;border-top:1px solid var(--line);
+    border-radius:14px 14px 0 0;transform:translateY(100%);}
+  .panel[data-on="1"]{transform:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  .row,.fill,.panel,.scrim{transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">A field guide to being wanted in the room</div>
+  <h1>Register</h1>
+  <p class="sub">Twenty social skills, ranked by impact — meaning how much having it changes
+  whether people want you around. Change the context and watch the order move. The ones that
+  barely move are the ones worth building first.</p>
+
+  <div class="rule"></div>
+
+  <div class="eyebrow" style="margin-bottom:12px">Context</div>
+  <div class="chips" id="chips"></div>
+  <div class="note" id="note"></div>
+
+  <div class="bar">
+    <div class="eyebrow" id="sortLabel">Ranked by impact</div>
+    <div class="seg" id="seg">
+      <button data-sort="impact">Impact</button>
+      <button data-sort="value">Value per effort</button>
+    </div>
+  </div>
+
+  <div class="ladder" id="ladder"></div>
+
+  <div class="movers" id="movers" hidden>
+    <div><div class="mtitle">Matters more here</div><div id="mUp"></div></div>
+    <div><div class="mtitle">Matters less here</div><div id="mDown"></div></div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <p class="sub" style="margin-top:28px;font-size:13px">The scores are considered judgment, not
+  measurement. Treat a one-point difference as noise and a four-point difference as real.</p>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-hidden="true"></aside>
+
+<div class="dock">
+  <div class="dockin">
+    <span class="docklabel">Practising</span>
+    <div id="dock" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"></div>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------- DATA */
+const FAMILIES = {
+  attention:{label:"Attention",color:"#D6A758"},
+  convening:{label:"Convening",color:"#C97B84"},
+  presentation:{label:"Presentation",color:"#7FB2A3"},
+  navigation:{label:"Navigation",color:"#8E9FD4"}
+};
+
+const CONTEXTS = [
+  {id:"general",    label:"General",    note:"Across everything, unweighted."},
+  {id:"work",       label:"Work",       note:"Colleagues, clients, professional rooms."},
+  {id:"dating",     label:"Dating",     note:"Early romance and courtship."},
+  {id:"newCity",    label:"New city",   note:"Travel, and arriving somewhere cold."},
+  {id:"friendship", label:"Friendship", note:"Building the deep, long kind."},
+  {id:"formal",     label:"Formal",     note:"Status-marked, high-ceremony rooms."}
+];
+
+const SKILLS = [
+{id:"conversation",name:"Conversation",family:"attention",effort:3,
+ s:{general:10,work:9,dating:10,newCity:10,friendship:9,formal:9},
+ line:"Asking the second and third question, telling a story with a shape, and leaving cleanly.",
+ drill:"Ask one follow-up you didn't plan, in every conversation today.",
+ failure:"You wait for your turn rather than listen, and every story runs the same length regardless of the room.",
+ levels:["You can keep a stranger going for ten minutes.",
+         "Someone has told you something they hadn't planned to say.",
+         "You can leave a conversation warmly and early, and people look for you later in the night."],
+ unlocks:["Hosting","Introducing","Curiosity","Asking well"]},
+
+{id:"hosting",name:"Hosting",family:"convening",effort:2,
+ s:{general:9,work:7,dating:5,newCity:10,friendship:10,formal:6},
+ line:"Being the one who convenes rather than the one who gets invited.",
+ drill:"Pick a date and invite six people. Don't wait until the place or the menu is ready.",
+ failure:"You wait for invitations — or you host and spend the whole night in the kitchen.",
+ levels:["You've convened four or more people at least once.",
+         "You have a recurring thing people expect.",
+         "People ask when the next one is, and strangers you invited have become regulars."],
+ unlocks:["Group logistics","Cooking one thing"]},
+
+{id:"remembering",name:"Remembering people",family:"attention",effort:1,
+ s:{general:8,work:9,dating:8,newCity:8,friendship:9,formal:8},
+ line:"Names, what they're working on, what they said last time.",
+ drill:"Write three lines about each new person within an hour of meeting them.",
+ failure:"You recognise the face but not the life, so every conversation restarts from zero.",
+ levels:["You get names right on the second meeting.",
+         "You open with what they were working on last time.",
+         "You notice when something they mentioned would matter to someone else."],
+ unlocks:["Introducing"]},
+
+{id:"followup",name:"The follow-up",family:"attention",effort:1,
+ s:{general:8,work:10,dating:9,newCity:9,friendship:8,formal:7},
+ line:"The note after dinner, the article you said you'd send, the introduction you promised.",
+ drill:"Twenty-four hour rule: anything you said you'd send or do, do it within a day.",
+ failure:"Warm in person, silent afterwards. Every relationship stays at the depth of the first meeting.",
+ levels:["You send the thing you promised, most of the time.",
+         "You reach out with no agenda attached.",
+         "You maintain a dozen relationships that have outlived their original context."],
+ unlocks:[]},
+
+{id:"curiosity",name:"Curiosity about their work",family:"attention",effort:1,
+ s:{general:8,work:8,dating:9,newCity:7,friendship:8,formal:9},
+ line:"Knowing enough about a field to ask what's actually hard about it.",
+ drill:"Ask: what's the part of your job that people always get wrong?",
+ failure:"You ask what they do, then wait — having learned nothing you could use.",
+ levels:["You can ask a good second question about any job.",
+         "You know what's difficult about five fields that aren't yours.",
+         "People light up telling you about work they normally avoid discussing socially."],
+ unlocks:[]},
+
+{id:"register",name:"Reading the register",family:"attention",effort:2,
+ s:{general:7,work:9,dating:7,newCity:8,friendship:5,formal:10},
+ line:"Matching volume, formality and pace — and noticing when the room shifts.",
+ drill:"First three minutes anywhere new: say little, watch how loud people are.",
+ failure:"Right words, wrong volume. You're the only one who missed the mood changing.",
+ levels:["You notice when you're louder or more formal than the room.",
+         "You adjust within a minute of arriving.",
+         "You can move a room's register on purpose."],
+ unlocks:["Dress","Physical presence"]},
+
+{id:"discretion",name:"Discretion",family:"attention",effort:1,
+ s:{general:7,work:10,dating:7,newCity:4,friendship:9,formal:9},
+ line:"Being someone people can say things around.",
+ drill:"For one week, repeat nothing you learned from anyone in private.",
+ failure:"You trade information for interest. People enjoy you and tell you less each time.",
+ levels:["You don't repeat things marked private.",
+         "You don't repeat things that weren't marked but obviously were.",
+         "People bring you problems before they're resolved."],
+ unlocks:[]},
+
+{id:"introducing",name:"Introducing two people",family:"convening",effort:1,
+ s:{general:7,work:9,dating:3,newCity:6,friendship:7,formal:9},
+ line:"Giving each person a handle, and a reason these two in particular should talk.",
+ drill:"Prepare one sentence per person before you bring them together.",
+ failure:"You say two names and walk away. They discuss the weather and never speak again.",
+ levels:["You give each person a handle, not just a name.",
+         "You name why these two should talk.",
+         "Your introductions produce things you hear about later."],
+ unlocks:[]},
+
+{id:"logistics",name:"Group logistics",family:"convening",effort:1,
+ s:{general:6,work:6,dating:7,newCity:5,friendship:9,formal:4},
+ line:"Moving eight people between places without a committee meeting.",
+ drill:"Stop offering options. Propose one plan, with a time and a place.",
+ failure:"Twenty minutes on a pavement. The bill takes longer than dessert.",
+ levels:["You propose rather than poll.",
+         "You can move a group between venues without a debate.",
+         "Nobody notices the logistics happening, which is the entire point."],
+ unlocks:[]},
+
+{id:"cooking",name:"Cooking one thing well",family:"convening",effort:2,
+ s:{general:5,work:2,dating:8,newCity:4,friendship:8,formal:2},
+ line:"One dish you can put in front of six people without stress.",
+ drill:"Pick one dish for six. Make it ten times.",
+ failure:"Ambitious menu, tense host, cold food, and a kitchen nobody's allowed into.",
+ levels:["You can feed four without a recipe in front of you.",
+         "You can cook and hold a conversation at the same time.",
+         "People request the dish by name."],
+ unlocks:[]},
+
+{id:"asking",name:"Asking well",family:"convening",effort:1,
+ s:{general:6,work:8,dating:6,newCity:8,friendship:4,formal:7},
+ line:"Tables, favours, exceptions. Specific, warm, and easy to refuse.",
+ drill:"Ask for one small thing this week — from the person who can actually say yes.",
+ failure:"You hint. Or you don't ask, then resent an answer you never requested.",
+ levels:["You ask directly instead of hinting.",
+         "You ask the person with the authority to agree.",
+         "You can ask for large things, and a no costs you nothing."],
+ unlocks:[]},
+
+{id:"dress",name:"Dress",family:"presentation",effort:1,
+ s:{general:6,work:6,dating:9,newCity:4,friendship:2,formal:10},
+ line:"Reading a dress code correctly, and owning clothes that resolve it without thought.",
+ drill:"Build two complete outfits — one for a good restaurant, one smart-casual. Stop improvising.",
+ failure:"You spend the whole evening aware of what you're wearing.",
+ levels:["You can read a dress code and land in range.",
+         "You own outfits, not garments.",
+         "You can be correctly dressed for two different rooms in one night."],
+ unlocks:[]},
+
+{id:"presence",name:"Physical presence",family:"presentation",effort:2,
+ s:{general:6,work:7,dating:9,newCity:5,friendship:3,formal:8},
+ line:"Posture, unhurried movement, steady eyes. Read before you speak, every time.",
+ drill:"Film yourself talking for two minutes. Watch it once.",
+ failure:"You fidget, fill silences and glance at the door. It reads as disinterest.",
+ levels:["You can hold eye contact through a full sentence.",
+         "You're comfortable with a two-second pause.",
+         "You're read as calm before you've said anything."],
+ unlocks:[]},
+
+{id:"drinks",name:"Drinks literacy",family:"presentation",effort:3,
+ s:{general:4,work:5,dating:6,newCity:4,friendship:4,formal:9},
+ line:"An order that's genuinely yours, and a bottle for the table without theatre.",
+ drill:"One grape at a time. Drink six examples before you move on.",
+ failure:"You order by price — or perform a knowledge you don't have.",
+ levels:["You have an order that's actually yours.",
+         "You can choose a bottle for a table and be right.",
+         "You can order for people whose taste isn't yours."],
+ unlocks:[]},
+
+{id:"culture",name:"Cultural range",family:"presentation",effort:3,
+ s:{general:5,work:4,dating:7,newCity:5,friendship:6,formal:9},
+ line:"Enough film, music, art and books to hold real opinions — plus the skill of catching up fast.",
+ drill:"One canonical work a week, rotating the medium.",
+ failure:"You've heard of everything and have an opinion about nothing.",
+ levels:["You hold real opinions in at least one medium.",
+         "You can catch up on an unfamiliar field in an evening.",
+         "You can disagree with an expert and keep their respect."],
+ unlocks:[]},
+
+{id:"money",name:"Money calibration",family:"presentation",effort:1,
+ s:{general:6,work:5,dating:8,newCity:7,friendship:7,formal:8},
+ line:"Tipping, splitting, and generosity that doesn't announce itself.",
+ drill:"Learn the local tipping norm before the first meal, not after it.",
+ failure:"Generosity as performance — or visible discomfort at one end of the price range.",
+ levels:["You handle a bill without friction.",
+         "You're generous without narrating it.",
+         "You're equally at ease at a $300 dinner and a plastic stool."],
+ unlocks:[]},
+
+{id:"arrival",name:"Arrival fluency",family:"navigation",effort:2,
+ s:{general:5,work:3,dating:2,newCity:10,friendship:2,formal:3},
+ line:"Landing somewhere unfamiliar and being functional within the hour.",
+ drill:"Next trip: no taxi from the airport. Work out transit before you land.",
+ failure:"Three hours in, and you've eaten at the place nearest the hotel.",
+ levels:["You're functional within an hour of landing.",
+         "You have one good thing booked before you land.",
+         "You can orient in a city you didn't research."],
+ unlocks:[]},
+
+{id:"alone",name:"Being alone in public",family:"navigation",effort:1,
+ s:{general:7,work:3,dating:4,newCity:10,friendship:3,formal:3},
+ line:"Eating at the bar, going to the film, travelling solo without treating it as a downgrade.",
+ drill:"Dinner at a good bar seat. No phone.",
+ failure:"You wait for company, so you go nowhere.",
+ levels:["You'll eat alone at a counter.",
+         "You'll go to a show or a film alone.",
+         "You'd rather go alone than not go."],
+ unlocks:[]},
+
+{id:"friction",name:"Graceful friction",family:"navigation",effort:2,
+ s:{general:5,work:8,dating:5,newCity:7,friendship:5,formal:7},
+ line:"Sending back a dish, declining an invitation, correcting a mistake — without heat and without folding.",
+ drill:"Next time something's wrong, say it in one calm sentence with no apology padding.",
+ failure:"You either swallow the mistake silently or escalate past what it was worth.",
+ levels:["You can send back a dish.",
+         "You can fix a problem without the other person losing face.",
+         "You can hold a position through three refusals and stay warm."],
+ unlocks:[]},
+
+{id:"language",name:"A little of the language",family:"navigation",effort:3,
+ s:{general:3,work:2,dating:3,newCity:8,friendship:3,formal:4},
+ line:"Fifty words changes every interaction. The posture matters more than the fluency.",
+ drill:"Fifty words: greetings, thanks, numbers, ordering, and one apology.",
+ failure:"You default to English, louder.",
+ levels:["You can greet, thank and order.",
+         "You can handle a transaction start to finish.",
+         "You can carry the first two minutes before switching."],
+ unlocks:[]}
+];
+
+const EFFORT_LABEL = {1:"Low effort",2:"Medium effort",3:"High effort"};
+const LEVEL_NAME = ["STARTING","WORKING","FLUENT"];
+const KEY = "register:state";
+
+/* ------------------------------------------------------------- STORAGE */
+/* Uses the host storage API when present, otherwise falls back so the
+   file still remembers state when opened straight off disk. */
+const store = {
+  async get(){
+    try{
+      if(window.storage && window.storage.get){
+        const r = await window.storage.get(KEY);
+        return r && r.value ? JSON.parse(r.value) : null;
+      }
+      const raw = window.localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  },
+  async set(v){
+    try{
+      const s = JSON.stringify(v);
+      if(window.storage && window.storage.set){ await window.storage.set(KEY, s); return; }
+      window.localStorage.setItem(KEY, s);
+    }catch(e){ /* state just won't persist */ }
+  }
+};
+
+/* --------------------------------------------------------------- STATE */
+let state = { ctx:"general", sort:"impact", open:null, focus:[], checked:{} };
+const byId = id => SKILLS.find(s => s.id === id);
+const rowH = () => window.innerWidth <= 640 ? 44 : 46;
+
+/* value-per-effort: impact discounted by acquisition cost, rescaled to 0–10 */
+const value = (s,ctx) => s.s[ctx] / (1 + (s.effort - 1) * 0.45);
+const metric = (s,ctx) => state.sort === "impact" ? s.s[ctx] : value(s,ctx);
+
+function orderFor(ctx){
+  return [...SKILLS].sort((a,b) => metric(b,ctx) - metric(a,ctx) || a.name.localeCompare(b.name));
+}
+function rankMap(ctx){
+  const m = {}; orderFor(ctx).forEach((s,i) => m[s.id] = i+1); return m;
+}
+
+/* --------------------------------------------------------------- BUILD */
+const $ = id => document.getElementById(id);
+
+CONTEXTS.forEach(c => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.textContent = c.label; b.dataset.ctx = c.id;
+  b.onclick = () => { state.ctx = c.id; render(); save(); };
+  $("chips").appendChild(b);
+});
+
+$("seg").querySelectorAll("button").forEach(b => {
+  b.onclick = () => { state.sort = b.dataset.sort; render(); save(); };
+});
+
+Object.values(FAMILIES).forEach(f => {
+  const s = document.createElement("span");
+  s.innerHTML = '<span class="sw" style="background:'+f.color+'"></span>'+f.label;
+  $("legend").appendChild(s);
+});
+const eff = document.createElement("span");
+eff.style.marginLeft = "auto"; eff.textContent = "● ● ● = effort to acquire";
+$("legend").appendChild(eff);
+
+const rows = {};
+SKILLS.forEach(s => {
+  const b = document.createElement("button");
+  b.className = "row";
+  b.innerHTML =
+    '<span class="rank"></span>' +
+    '<span class="nm">'+s.name+'</span>' +
+    '<span class="track"><span class="fill" style="background:'+FAMILIES[s.family].color+'"></span></span>' +
+    '<span class="score mono"></span>' +
+    '<span class="pips" title="'+EFFORT_LABEL[s.effort]+'">' +
+      [1,2,3].map(p => '<span class="pip" data-on="'+(p<=s.effort?1:0)+'"></span>').join("") +
+    '</span>' +
+    '<span class="delta"></span>';
+  b.onclick = () => openPanel(s.id);
+  rows[s.id] = b;
+  $("ladder").appendChild(b);
+});
+$("ladder").style.height = (SKILLS.length * rowH()) + "px";
+
+/* -------------------------------------------------------------- RENDER */
+function render(){
+  document.querySelectorAll(".chip").forEach(c =>
+    c.dataset.on = c.dataset.ctx === state.ctx ? "1" : "0");
+  $("seg").querySelectorAll("button").forEach(b =>
+    b.dataset.on = b.dataset.sort === state.sort ? "1" : "0");
+  $("note").textContent = CONTEXTS.find(c => c.id === state.ctx).note;
+  $("sortLabel").textContent = state.sort === "impact"
+    ? "Ranked by impact" : "Ranked by impact per unit of effort";
+
+  const order = orderFor(state.ctx);
+  const cur = rankMap(state.ctx);
+  const gen = (() => {
+    const m = {};
+    [...SKILLS].sort((a,b) => metric(b,"general") - metric(a,"general") || a.name.localeCompare(b.name))
+      .forEach((s,i) => m[s.id] = i+1);
+    return m;
+  })();
+
+  order.forEach((s,i) => {
+    const r = rows[s.id];
+    r.style.transform = "translateY(" + (i * rowH()) + "px)";
+    r.querySelector(".rank").textContent = String(i+1).padStart(2,"0");
+    r.querySelector(".fill").style.width = (s.s[state.ctx] * 10) + "%";
+    r.querySelector(".score").textContent = s.s[state.ctx];
+    const d = gen[s.id] - cur[s.id];
+    const el = r.querySelector(".delta");
+    el.className = "delta " + (d > 0 ? "up" : d < 0 ? "down" : "flat");
+    el.textContent = state.ctx === "general" ? "" : d > 0 ? "▲"+d : d < 0 ? "▼"+(-d) : "—";
+  });
+  $("ladder").style.height = (SKILLS.length * rowH()) + "px";
+
+  renderMovers();
+  renderDock();
+  if(state.open) renderPanel();
+}
+
+function renderMovers(){
+  const box = $("movers");
+  if(state.ctx === "general"){ box.hidden = true; return; }
+  box.hidden = false;
+  const diffs = SKILLS.map(s => ({s, d: s.s[state.ctx] - s.s.general})).filter(x => x.d !== 0);
+  const line = ({s,d}) =>
+    '<div class="mrow"><span>'+s.name+'</span><span class="mono '+(d>0?"up":"down")+'">'+
+    (d>0?"+":"")+d+'</span></div>';
+  $("mUp").innerHTML   = [...diffs].sort((a,b)=>b.d-a.d).slice(0,4).map(line).join("");
+  $("mDown").innerHTML = [...diffs].sort((a,b)=>a.d-b.d).slice(0,4).map(line).join("");
+}
+
+function renderDock(){
+  const d = $("dock");
+  if(!state.focus.length){
+    d.innerHTML = '<span class="empty">Nothing yet. Open a skill and add up to three.</span>';
+    return;
+  }
+  d.innerHTML = "";
+  state.focus.forEach(id => {
+    const s = byId(id), done = (state.checked[id]||[]).length;
+    const b = document.createElement("button");
+    b.className = "fchip";
+    b.innerHTML = '<span class="sw" style="margin:0;background:'+FAMILIES[s.family].color+'"></span>'
+      + s.name + '<span class="fprog">'+done+'/3</span>';
+    b.onclick = () => openPanel(id);
+    d.appendChild(b);
+  });
+}
+
+/* --------------------------------------------------------------- PANEL */
+function openPanel(id){ state.open = id; renderPanel(); }
+function closePanel(){
+  state.open = null;
+  $("panel").dataset.on = "0";
+  $("panel").setAttribute("aria-hidden","true");
+  $("scrim").dataset.on = "0";
+}
+
+function renderPanel(){
+  const s = byId(state.open); if(!s) return;
+  const checked = state.checked[s.id] || [];
+  const inFocus = state.focus.includes(s.id);
+  const full = !inFocus && state.focus.length >= 3;
+
+  $("panel").innerHTML =
+    '<button class="close" id="closeBtn" aria-label="Close">✕</button>' +
+    '<div class="eyebrow" style="color:'+FAMILIES[s.family].color+'">' +
+      FAMILIES[s.family].label + ' · ' + EFFORT_LABEL[s.effort] + '</div>' +
+    '<h2 class="pname">'+s.name+'</h2>' +
+    '<p class="pline">'+s.line+'</p>' +
+    '<div class="drill"><div class="blabel" style="margin-bottom:0">Drill</div>' +
+      '<p class="drilltext">'+s.drill+'</p></div>' +
+    '<div class="block"><div class="blabel">Doing it badly looks like</div>' +
+      '<p class="fail">'+s.failure+'</p></div>' +
+    '<div class="block"><div class="blabel">Signals — tick what\'s true</div>' +
+      s.levels.map((lv,i) =>
+        '<button class="lvl" data-lv="'+i+'">' +
+          '<span class="box" data-on="'+(checked.includes(i)?1:0)+'">'+(checked.includes(i)?"✓":"")+'</span>' +
+          '<span class="lvltext"><span class="lvlnum">'+LEVEL_NAME[i]+'</span>'+lv+'</span>' +
+        '</button>').join("") +
+    '</div>' +
+    '<div class="block"><div class="blabel">Impact by context</div>' +
+      CONTEXTS.map(c =>
+        '<div class="ctxrow"><span class="ctxname">'+c.label+'</span>' +
+        '<span class="ctxtrack"><span class="ctxfill" style="width:'+(s.s[c.id]*10)+'%;background:' +
+          (c.id===state.ctx ? FAMILIES[s.family].color : "#26505C")+'"></span></span>' +
+        '<span class="mono" style="width:16px;text-align:right">'+s.s[c.id]+'</span></div>').join("") +
+    '</div>' +
+    (s.unlocks.length ?
+      '<div class="block"><div class="blabel">Load-bearing for</div>' +
+      '<p class="pline" style="margin:0">'+s.unlocks.join(" · ")+'</p></div>' : "") +
+    '<button class="focusbtn" id="focusBtn" data-on="'+(inFocus?1:0)+'"'+(full?" disabled":"")+'>' +
+      (inFocus ? "Practising — remove"
+        : full ? "Practice list full — three at a time" : "Add to practice") +
+    '</button>';
+
+  $("closeBtn").onclick = closePanel;
+  $("panel").querySelectorAll(".lvl").forEach(b => {
+    b.onclick = () => {
+      const i = +b.dataset.lv;
+      const cur = state.checked[s.id] || [];
+      state.checked[s.id] = cur.includes(i) ? cur.filter(x => x !== i) : cur.concat(i);
+      renderPanel(); renderDock(); save();
+    };
+  });
+  const fb = $("focusBtn");
+  if(fb && !fb.disabled) fb.onclick = () => {
+    state.focus = inFocus ? state.focus.filter(x => x !== s.id) : state.focus.concat(s.id);
+    renderPanel(); renderDock(); save();
+  };
+
+  $("panel").dataset.on = "1";
+  $("panel").setAttribute("aria-hidden","false");
+  $("scrim").dataset.on = "1";
+}
+
+$("scrim").onclick = closePanel;
+document.addEventListener("keydown", e => { if(e.key === "Escape") closePanel(); });
+window.addEventListener("resize", () => render());
+
+/* ---------------------------------------------------------------- BOOT */
+let saveTimer = null;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => store.set({
+    ctx: state.ctx, sort: state.sort, focus: state.focus, checked: state.checked
+  }), 250);
+}
+
+(async () => {
+  const v = await store.get();
+  if(v){
+    if(v.ctx) state.ctx = v.ctx;
+    if(v.sort) state.sort = v.sort;
+    if(Array.isArray(v.focus)) state.focus = v.focus.slice(0,3);
+    if(v.checked) state.checked = v.checked;
+  }
+  render();
+})();
+</script>
+</body>
+</html>
