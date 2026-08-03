@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Cat Breed Atlas</title>
+<meta name="description" content="A field guide to every established domestic cat breed: where each one came from, what it looks like, how it behaves, and who it suits.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -232,23 +233,22 @@ footer p{max-width:70ch;margin:0 0 8px}
 <body>
 <header class="masthead">
   <p class="eyebrow">A field guide to the domestic cat &middot; <em>Felis catus</em></p>
-  <h1>The Cat Breed Atlas<em>62 breeds, four ways a breed comes into being</em></h1>
-  <p class="lede">Nearly every pedigreed cat alive traces to one of a few founding populations, a handful of odd kittens whose mutations someone decided to keep, or a deliberate cross drawn up on paper. This atlas maps who came from whom, what that makes them look like, how they behave, and who each one is actually for.</p>
+  <h1>The Cat Breed Atlas<em id="tagline">Four ways a breed comes into being</em></h1>
+  <p class="lede">Nearly every pedigreed cat alive traces back to one of four things: a founding population shaped by a place, an odd kitten whose mutation someone decided to keep, a cross drawn up on paper, or a wild species bred into domestic stock. This atlas maps who came from whom, what that makes them look like, how they behave, and who each one is actually for.</p>
   <div class="counts">
-    <span><b id="c-breeds">62</b> breeds</span>
-    <span><b id="c-fams">14</b> lineages</span>
+    <span><b id="c-breeds">&mdash;</b> breeds</span>
+    <span><b id="c-fams">&mdash;</b> lineages</span>
     <span><b>9</b> temperament axes</span>
-    <span>tap any cat to open its card</span>
+    <span>tap any breed to open its card</span>
   </div>
-  <nav class="strip" aria-label="Ten most commonly registered breeds"><div class="strip-inner" id="strip"></div></nav>
 </header>
 
 <div class="tabbar">
   <div class="tabbar-inner" role="tablist" id="tabs">
-    <button class="tab" role="tab" data-v="descent" aria-selected="true">Descent</button>
-    <button class="tab" role="tab" data-v="look" aria-selected="false">Look</button>
+    <button class="tab" role="tab" data-v="descent" aria-selected="true">Origins</button>
+    <button class="tab" role="tab" data-v="look" aria-selected="false">Shape</button>
     <button class="tab" role="tab" data-v="traits" aria-selected="false">Temperament</button>
-    <button class="tab" role="tab" data-v="common" aria-selected="false">Commonality</button>
+    <button class="tab" role="tab" data-v="common" aria-selected="false">How common</button>
     <button class="tab" role="tab" data-v="compare" aria-selected="false">Compare</button>
     <button class="tab" role="tab" data-v="fit" aria-selected="false">Find yours</button>
   </div>
@@ -257,7 +257,7 @@ footer p{max-width:70ch;margin:0 0 8px}
 <main>
   <section class="view on" id="v-descent" role="tabpanel">
     <div class="view-head">
-      <p class="eyebrow">01 &middot; Taxonomy</p>
+      <p class="eyebrow">Taxonomy</p>
       <h2>Where breeds come from</h2>
       <p>Cat breeds are not species and they are not old. Most are younger than the aeroplane. The useful first cut is not by looks but by <em>mechanism</em>: was this population shaped by a place, by a single mutation someone chose to propagate, by a breeder combining existing breeds, or by crossing in a wild species? Tap a breed to trace its ancestors and descendants.</p>
     </div>
@@ -268,9 +268,9 @@ footer p{max-width:70ch;margin:0 0 8px}
 
   <section class="view" id="v-look" role="tabpanel">
     <div class="view-head">
-      <p class="eyebrow">02 &middot; Morphology</p>
+      <p class="eyebrow">Morphology</p>
       <h2>Body type &times; coat</h2>
-      <p>Show judges describe cats along a single skeletal axis running from <em>cobby</em> (short, round, heavy-boned) to <em>oriental</em> (long, fine, tubular), with coat length laid across it. Almost every breed you can name sits in one of these thirty cells. Silhouettes are drawn from each breed's own build numbers, so shapes in the same column really are the same shape.</p>
+      <p>Show judges describe cats along a single skeletal axis running from <em>cobby</em> (short, round, heavy-boned) to <em>oriental</em> (long, fine, tubular), with coat length laid across it. Every established breed sits in one of these thirty-six cells. Silhouettes are drawn from each breed's own build numbers, so shapes in the same column really are the same shape.</p>
     </div>
     <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
     <p class="hint">Scroll sideways to see all six builds. Colour marks how the breed originated.</p>
@@ -278,14 +278,14 @@ footer p{max-width:70ch;margin:0 0 8px}
 
   <section class="view" id="v-traits" role="tabpanel">
     <div class="view-head">
-      <p class="eyebrow">03 &middot; Behaviour</p>
-      <h2>The trait field</h2>
+      <p class="eyebrow">Behaviour</p>
+      <h2>Temperament, mapped</h2>
       <p>Every breed rated 1&ndash;5 on nine axes. Put any two on the axes and the clusters do the explaining: the Siamese-descended cats pile into the loud-and-busy corner, the northern longhairs sit calm and self-possessed, the rex breeds cluster where energy meets neediness. Dot size is how commonly you'll meet the breed.</p>
     </div>
     <div class="controls">
       <div class="ctl"><label for="ax">Horizontal</label><select id="ax"></select></div>
       <div class="ctl"><label for="ay">Vertical</label><select id="ay"></select></div>
-      <div class="ctl"><label for="afilter">Show</label><select id="afilter"><option value="all">All origins</option><option value="landrace">Natural landrace</option><option value="mutation">Mutation</option><option value="cross">Engineered cross</option><option value="hybrid">Wild hybrid</option></select></div>
+      <div class="ctl"><label for="afilter">Show</label><select id="afilter"><option value="all">All origins</option><option value="landrace">Natural landrace</option><option value="mutation">Mutation</option><option value="cross">Deliberate cross</option><option value="hybrid">Wild hybrid</option></select></div>
     </div>
     <svg class="plot" id="plot" viewBox="0 0 400 400" role="img" aria-label="Scatter plot of cat breeds by two temperament traits"></svg>
     <p class="hint" id="plothint">Tap a dot for the full card. Positions are jittered slightly so identical scores don't hide each other.</p>
@@ -293,11 +293,13 @@ footer p{max-width:70ch;margin:0 0 8px}
 
   <section class="view" id="v-common" role="tabpanel">
     <div class="view-head">
-      <p class="eyebrow">04 &middot; Frequency</p>
-      <h2>How likely you are to meet one</h2>
-      <p>There is no single ranking of cat popularity. Registries count only pedigreed kittens registered with them, and they disagree: the CFA's 2026 list put the Maine Coon first and the Ragdoll second, while breeds that dominate elsewhere &mdash; the Bengal, the Scottish Fold, the Munchkin &mdash; sit low or unrecognised. The index below blends registry counts across the major bodies with how often each breed actually turns up in homes. Treat it as an order of magnitude, not a leaderboard.</p>
+      <p class="eyebrow">Frequency</p>
+      <h2>How often you will meet one</h2>
+      <p>There is no single ranking of cat popularity. Registries count only pedigreed kittens registered with them, and they disagree: the CFA's 2026 list put the Maine Coon first and the Ragdoll second, while breeds that dominate elsewhere &mdash; the Bengal, the Scottish Fold, the Munchkin &mdash; sit low or unrecognised. The 0&ndash;100 figure below is a blend: registry counts across the major bodies, weighted by how often each breed actually turns up in homes. Read it as an order of magnitude, not a leaderboard.</p>
     </div>
-    <div class="controls"><div class="seg" id="commonseg">
+    <p class="eyebrow" style="margin-bottom:2px">The twelve you are most likely to meet</p>
+    <nav class="strip" style="margin-top:0" aria-label="The twelve breeds you are most likely to meet"><div class="strip-inner" id="strip"></div></nav>
+    <div class="controls" style="margin-top:18px"><div class="seg" id="commonseg">
       <button data-mode="all" aria-pressed="true">All</button>
       <button data-mode="landrace" aria-pressed="false">Landrace</button>
       <button data-mode="mutation" aria-pressed="false">Mutation</button>
@@ -310,7 +312,7 @@ footer p{max-width:70ch;margin:0 0 8px}
 
   <section class="view" id="v-compare" role="tabpanel">
     <div class="view-head">
-      <p class="eyebrow">05 &middot; Side by side</p>
+      <p class="eyebrow">Side by side</p>
       <h2>Compare up to three</h2>
       <p>Useful pairs are the ones people confuse: Persian and Exotic, Ragdoll and Ragamuffin, Cornish and Devon Rex, Bengal and Toyger, Siberian and Maine Coon.</p>
     </div>
@@ -327,7 +329,7 @@ footer p{max-width:70ch;margin:0 0 8px}
 
   <section class="view" id="v-fit" role="tabpanel">
     <div class="view-head">
-      <p class="eyebrow">06 &middot; Matching</p>
+      <p class="eyebrow">Matching</p>
       <h2>Which cat is for you</h2>
       <p>Answer honestly about the life you actually live, not the one you mean to. Breed is a weak predictor next to individual personality and early socialisation &mdash; but it does shift the odds on noise, activity, coat work and how badly the cat minds being alone.</p>
     </div>
@@ -350,7 +352,7 @@ footer p{max-width:70ch;margin:0 0 8px}
 const ORIGINS = [
   {id:"landrace", name:"Natural landrace", def:"A cat population that shaped itself in a place — a climate, a port, a farm — before anyone wrote a standard for it. Breeders later described what already existed rather than inventing it."},
   {id:"mutation", name:"Spontaneous mutation", def:"One odd kitten in one litter: curled ears, no coat, no tail, waved fur. Someone decided the oddity was worth keeping and bred it on. Most of these breeds are traceable to a single founding animal."},
-  {id:"cross", name:"Engineered cross", def:"Assembled on purpose from existing breeds to hit a target look — a Persian body in short coat, a Siamese in solid colour, a leopard pattern with no wild blood."},
+  {id:"cross", name:"Deliberate cross", def:"Drawn up on paper and assembled from existing breeds to hit a target look — a Persian body in short coat, a Siamese in solid colour, a leopard pattern with no wild blood."},
   {id:"hybrid", name:"Wild hybrid", def:"A domestic cat crossed with a small wild species, then bred back toward domesticity over generations. Early filial generations are not house pets and are regulated or banned in many places."}
 ];
 
@@ -359,7 +361,8 @@ const FAMS = {
   west:{name:"Western working cats", note:"Barn, ship and street cats of Britain, France and North America, standardised into breeds in the late 1800s."},
   russ:{name:"Blue cats of Russia and Siam", note:"Dense short plush coats in solid blue-grey. Separate origins on opposite sides of Asia, similar-looking answer."},
   sea:{name:"Southeast Asian natives", note:"The old cats of Siam and the Malay world: fine-boned, heat-loving, and the source of the pointed pattern."},
-  medit:{name:"Mediterranean and African natives", note:"Landraces of Turkey, Greece, Egypt and coastal Kenya, several of them barely altered by breeding."},
+  medit:{name:"Mediterranean, African and Arabian natives", note:"Landraces of Turkey, Greece, Egypt, the Gulf and coastal Kenya, several of them barely altered by breeding."},
+  asian:{name:"East and South Asian natives", note:"Native populations of China and Sri Lanka, taken into breeding late and recognised by only one or two registries."},
   aby:{name:"Ticked-coat group", note:"Cats carrying the Ticked agouti allele: each hair is banded, so the body reads as shimmering and unstriped."},
   pers:{name:"Persian group", note:"The long-coated cats brought west from Persia and Turkey in the 1600s, then bred toward ever rounder, flatter faces."},
   rag:{name:"Doll-faced companions", note:"Large, placid, semi-longhaired cats bred from the 1960s onward with docility as the explicit goal."},
@@ -902,6 +905,58 @@ const B = [
  who:"Very experienced owners who can supply space, raw or high-meat diets, and a companion animal.",
  not:"Anyone without hybrid experience. Also a bad match for small homes.",
  health:"Short intestinal tract inherited from the wild side, causing food intolerance; otherwise long-lived."}
+,
+// ---------- LATE-RECOGNISED ASIAN LANDRACES ----------
+{id:"dragon-li",n:"Dragon Li",aka:"Chinese Li Hua, Li Hua Mao",fam:"asian",org:"landrace",reg:"China",era:"2003",from:[],pop:6,wt:"4–5.5 kg",size:4,coat:"short",body:"semi-cobby",
+ t:{en:4,af:3,vo:2,so:3,pl:4,ind:4,gr:1,sh:2,iq:4},m:{cob:4,leg:3,ear:3,head:3,tail:3,fur:1},life:"12–15 yr",
+ tell:"Brown mackerel tabby whose hairs are also ticked, so the stripes look sketched onto a shimmering ground.",
+ blurb:"China's only widely recognised native breed, taken into formal breeding only in 2003 despite centuries of documentation. Slow to mature, powerfully built and still a serious hunter — folklore ties it to the wild cats of the region, though testing shows ordinary domestic descent.",
+ who:"People who want a hardy, self-possessed natural breed and can reach a Chinese or specialist breeder.",
+ not:"Anyone wanting a lap cat, or expecting easy availability outside China.",
+ health:"Almost no breed-specific data exists; the founding population was large and healthy."},
+{id:"ceylon",n:"Ceylon",aka:"Sri Lankan ticked cat",fam:"asian",org:"landrace",reg:"Sri Lanka, developed in Italy",era:"1984",from:[],pop:4,wt:"2.5–4.5 kg",size:2,coat:"short",body:"semi-cobby",
+ t:{en:4,af:5,vo:3,so:4,pl:4,ind:2,gr:1,sh:1,iq:4},m:{cob:3,leg:3,ear:4,head:4,tail:2,fur:1},life:"12–16 yr",
+ tell:"Sand-coloured ticked coat with faint bracelets on the legs and rings on the tail, on a small rounded frame.",
+ blurb:"Street cats noticed in Sri Lanka by an Italian vet in 1984 and bred on in Europe. Ticked like an Abyssinian but rounder, smaller and far more willing to sit still. Recognised in Europe by the World Cat Federation and barely known elsewhere.",
+ who:"People who want Abyssinian colouring in a calmer, smaller, cuddlier cat.",
+ not:"Anyone outside Italy and its neighbours — the entire population is a few hundred cats.",
+ health:"Too small a population for reliable data; the gene pool is narrow."},
+{id:"arabian-mau",n:"Arabian Mau",aka:"—",fam:"medit",org:"landrace",reg:"Arabian peninsula",era:"2004",from:[],pop:6,wt:"3–7 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:4,vo:4,so:3,pl:4,ind:4,gr:1,sh:1,iq:4},m:{cob:3,leg:4,ear:5,head:3,tail:3,fur:1},life:"12–14 yr",
+ tell:"Very large ears, long legs and no undercoat at all — a body built to shed heat rather than hold it.",
+ blurb:"The desert street cat of the Gulf, formalised in the 2000s straight from the free-roaming population with no outcrossing. Loud, opinionated, territorial with strange cats and devoted at home. Adapted to extreme heat and correspondingly bad at cold.",
+ who:"Hot climates, and anyone who wants a genuinely unaltered landrace with survivor genetics.",
+ not:"Cold houses, multi-cat households, and people wanting a quiet cat.",
+ health:"Exceptionally sound — the breed was never bottlenecked."},
+{id:"suphalak",n:"Suphalak",aka:"Thong Daeng, Copper",fam:"sea",org:"landrace",reg:"Thailand",era:"1800s",from:[],pop:4,wt:"3–5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:5,vo:4,so:4,pl:4,ind:2,gr:1,sh:2,iq:4},m:{cob:3,leg:3,ear:4,head:3,tail:3,fur:1},life:"12–16 yr",
+ tell:"Solid warm copper-brown from nose to tail-tip with gold eyes — no points, no silvering, no shading.",
+ blurb:"One of the auspicious cats painted in the Thai Tamra Maew manuscripts and reconstructed by modern Thai breeders from village stock. Constantly confused with the Havana Brown and the Burmese, both of which are western breeding projects; this is the cat they were trying to imitate.",
+ who:"People who want the original Thai brown cat rather than a western interpretation of it.",
+ not:"Anyone outside Thailand — exports are almost nonexistent.",
+ health:"Little recorded. Breeding stock is tiny and pedigrees are often incomplete."},
+{id:"sam-sawet",n:"Sam Sawet",aka:"Even colour cat",fam:"sea",org:"landrace",reg:"Thailand",era:"1990s",from:[],pop:2,wt:"3–5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:4,vo:3,so:4,pl:4,ind:3,gr:1,sh:2,iq:4},m:{cob:3,leg:3,ear:4,head:3,tail:3,fur:1},life:"12–16 yr",
+ tell:"A single even coat somewhere between grey and khaki, with no pattern and no contrast at all.",
+ blurb:"The plainest of the Thai landraces and the least documented: a village cat defined mainly by the absence of markings. Recognised domestically in Thailand and by nobody else, with breed description still thinner than for any other cat here.",
+ who:"Almost nobody outside Thailand. Included because the Thai landraces are a real group, not a single breed.",
+ not:"Anyone who needs a written standard or a predictable type.",
+ health:"Undocumented."},
+{id:"mekong-bobtail",n:"Mekong Bobtail",aka:"Thai Bobtail",fam:"tail",org:"landrace",reg:"Southeast Asia, recognised in Russia",era:"2004",from:[],pop:5,wt:"3–4.5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:5,vo:3,so:4,pl:4,ind:2,gr:1,sh:2,iq:4},m:{cob:3,leg:3,ear:3,head:3,tail:0,fur:1},life:"14–18 yr",
+ tell:"Siamese points and blue eyes on a sturdier body, finished with a short kinked tail no two of which are the same.",
+ blurb:"The pointed bobtailed cat of the Mekong basin, historically given as diplomatic gifts and standardised by Russian breeders in 2004. Its bobtail gene is not the Manx mutation and carries no spinal risk. Sturdier and quieter than a modern Siamese.",
+ who:"People who want the Siamese look and a bobtail without either extreme type or the Manx health problems.",
+ not:"Anyone outside Russia and eastern Europe, where nearly all breeders are.",
+ health:"Sound. The tail mutation here is benign."},
+{id:"toybob",n:"Toybob",aka:"Skiff-Thai-Toybob",fam:"tail",org:"mutation",reg:"Rostov-on-Don, Russia",era:"1983",from:[],pop:6,wt:"1.5–2.5 kg",size:1,coat:"short",body:"semi-cobby",
+ t:{en:3,af:5,vo:2,so:4,pl:4,ind:2,gr:1,sh:2,iq:3},m:{cob:4,leg:2,ear:3,head:4,tail:0,fur:1},life:"12–15 yr",
+ tell:"A fully grown adult of 1.5 to 2.5 kg with a short kinked tail — permanently the size of a five-month kitten.",
+ blurb:"The smallest breed in existence, from a short-tailed pointed street cat found in Rostov in 1983. Crucially it is a proportionate miniature rather than a dwarf: the legs are normal for the body, so unlike the Munchkin nothing about its skeleton is deformed. Placid, affectionate and easily overwhelmed by larger animals.",
+ who:"Small homes and gentle households wanting a genuinely tiny cat without a dwarfing gene.",
+ not:"Homes with dogs, toddlers or boisterous cats. Also anyone in a hurry — the population is a few hundred.",
+ health:"No disorders linked to the size or tail genes so far, but the breed is small and young enough that this is provisional."}
+
 ];
 </script>
 <script>
@@ -981,7 +1036,7 @@ function openBreed(id){
     ["Build", `${b.body} &middot; ${b.coat} coat`],
     ["Weight", esc(b.wt)],
     ["Life span", esc(b.life)],
-    ["Commonality", `${b.pop}/100`]
+    ["How common", `${b.pop}/100`]
   ].map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("");
   $("#drawerin").innerHTML = `
     <button class="close" id="dclose" aria-label="Close">&times;</button>
@@ -1017,6 +1072,7 @@ document.addEventListener("click", e => {
 /* ---------- masthead strip ---------- */
 $("#strip").innerHTML = [...B].sort((a,b)=>b.pop-a.pop).slice(0,12)
   .map(b=>`<button class="spec" data-go="${b.id}">${sil(b,80)}<span class="nm">${esc(b.n)}</span></button>`).join("");
+$("#tagline").textContent = `${B.length} breeds, four ways a breed comes into being`;
 $("#c-breeds").textContent = B.length;
 $("#c-fams").textContent = new Set(B.map(b=>b.fam)).size;
 
@@ -1105,7 +1161,7 @@ $("#matrix").innerHTML =
        return `<td>${cells.length ? cells.map(b=>`<button class="cellchip" data-go="${b.id}"><i class="dot o-${b.org}"></i>${esc(b.n)}</button>`).join("") : `<span class="empty-cell">&mdash;</span>`}</td>`;
      }).join("")}</tr>`).join("")}</tbody>`;
 
-/* ---------- 03 trait field ---------- */
+/* ---------- temperament map ---------- */
 const axSel = $("#ax"), aySel = $("#ay");
 TRAITS.forEach(([k,l])=>{
   axSel.insertAdjacentHTML("beforeend", `<option value="${k}">${l}</option>`);
@@ -1152,9 +1208,9 @@ function drawPlot(){
 [axSel,aySel,$("#afilter")].forEach(el=>el.addEventListener("change", drawPlot));
 drawPlot();
 
-/* ---------- 04 commonality ---------- */
+/* ---------- how common ---------- */
 const TIERS = [
-  [60, "Tier 1 — you have met one"],
+  [60, "Tier 1 — you have met one of these"],
   [30, "Tier 2 — familiar to cat people"],
   [12, "Tier 3 — you would notice one"],
   [0,  "Tier 4 — rare, sometimes vanishingly"]
@@ -1245,8 +1301,8 @@ function drawCompare(){
     ["Build", b=>`${b.body} &middot; ${b.coat}`],
     ["Weight", b=>esc(b.wt)],
     ["Life span", b=>esc(b.life)],
-    ["Commonality", b=>`${b.pop}/100`],
-    ["Tell", b=>esc(b.tell)],
+    ["How common", b=>`${b.pop}/100`],
+    ["How to spot one", b=>esc(b.tell)],
     ["Suits", b=>esc(b.who)],
     ["Think again if", b=>esc(b.not)],
     ["Health watch", b=>esc(b.health)],
