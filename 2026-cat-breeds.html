@@ -1,0 +1,1356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Cat Breed Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E6E7E0;
+  --paper2:#F2F3ED;
+  --paper3:#DCDED4;
+  --ink:#1B2422;
+  --ink2:#4E5852;
+  --ink3:#7C857E;
+  --rule:#C5C9BC;
+  --jade:#2F6F5E;
+  --amber:#B37A16;
+  --mulberry:#7A3B5C;
+  --rust:#A6482A;
+  --shadow:0 1px 0 var(--rule);
+  --r:3px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:80px;
+}
+h1,h2,h3{font-family:"Fraunces","Iowan Old Style",Palatino,Georgia,serif;font-variation-settings:"SOFT" 30,"WONK" 1;margin:0;font-weight:600;letter-spacing:-.01em}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--jade)}
+
+/* ---------- masthead ---------- */
+.masthead{padding:34px 20px 14px;max-width:1180px;margin:0 auto}
+.masthead h1{font-size:clamp(38px,9vw,76px);line-height:.94;font-weight:700;font-variation-settings:"SOFT" 40,"WONK" 1,"opsz" 120}
+.masthead h1 em{font-style:italic;font-weight:300;display:block;font-size:.52em;color:var(--ink2);letter-spacing:0}
+.lede{max-width:56ch;margin:16px 0 0;color:var(--ink2);font-size:15.5px}
+.counts{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
+.counts span{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.counts b{color:var(--ink);font-weight:600}
+
+/* specimen strip */
+.strip{margin:22px 0 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:10px 0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.strip-inner{display:flex;gap:2px;min-width:min-content}
+.spec{flex:0 0 auto;width:92px;text-align:center;background:none;border:0;padding:6px 2px 8px;border-radius:var(--r)}
+.spec:hover,.spec:focus-visible{background:var(--paper2)}
+.spec svg{display:block;margin:0 auto}
+.spec .nm{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.04em;color:var(--ink2);margin-top:2px;line-height:1.25}
+
+/* ---------- tabs ---------- */
+.tabbar{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--rule)}
+.tabbar-inner{max-width:1180px;margin:0 auto;display:flex;gap:0;overflow-x:auto;padding:0 12px}
+.tab{background:none;border:0;padding:13px 12px 11px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.tab:focus-visible{outline:2px solid var(--jade);outline-offset:-4px}
+
+main{max-width:1180px;margin:0 auto;padding:0 20px}
+.view{display:none;padding:26px 0 40px}
+.view.on{display:block}
+.view-head{max-width:62ch;margin-bottom:22px}
+.view-head h2{font-size:clamp(22px,4.4vw,30px);margin:6px 0 8px}
+.view-head p{margin:0;color:var(--ink2);font-size:14.5px}
+
+/* ---------- origin legend ---------- */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.lg{display:flex;align-items:center;gap:7px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);background:var(--paper2);border:1px solid var(--rule);padding:5px 9px;border-radius:99px}
+.dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.o-landrace{background:var(--jade)} .o-mutation{background:var(--amber)}
+.o-cross{background:var(--mulberry)} .o-hybrid{background:var(--rust)}
+.c-landrace{color:var(--jade)} .c-mutation{color:var(--amber)}
+.c-cross{color:var(--mulberry)} .c-hybrid{color:var(--rust)}
+
+/* ---------- descent ---------- */
+.origin-block{margin:0 0 40px;border-top:2px solid var(--ink);padding-top:14px}
+.origin-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.origin-head h3{font-size:24px}
+.origin-head .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink3)}
+.origin-def{color:var(--ink2);font-size:14.5px;max-width:60ch;margin:6px 0 18px}
+.fam{margin:0 0 18px;padding-left:14px;border-left:1px solid var(--rule)}
+.fam-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+.fam-head h4{margin:0;font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:600}
+.fam-note{color:var(--ink3);font-size:13px;margin:0 0 10px;max-width:58ch}
+.breedrow{display:flex;flex-wrap:wrap;gap:6px}
+.bchip{display:flex;align-items:center;gap:7px;background:var(--paper2);border:1px solid var(--rule);border-radius:99px;padding:4px 11px 4px 6px;font-size:13.5px;line-height:1.2}
+.bchip:hover{background:#fff;border-color:var(--ink3)}
+.bchip .dot{width:7px;height:7px}
+.bchip .yr{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink3)}
+.bchip.anc{background:var(--ink);color:var(--paper2);border-color:var(--ink)}
+.bchip.anc .yr{color:var(--paper3)}
+.bchip.desc{background:#fff;border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.bchip.dim{opacity:.32}
+.lineage-bar{position:sticky;bottom:0;z-index:30;background:var(--ink);color:var(--paper2);padding:10px 16px;border-radius:var(--r);display:none;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:13.5px}
+.lineage-bar.on{display:flex}
+.lineage-bar button{background:none;border:1px solid var(--paper3);color:var(--paper2);border-radius:99px;padding:2px 10px;font-size:11px;font-family:"IBM Plex Mono",monospace}
+
+/* ---------- look matrix ---------- */
+.matrix-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--rule);background:var(--paper2);border-radius:var(--r)}
+table.matrix{border-collapse:collapse;min-width:820px;width:100%}
+table.matrix th,table.matrix td{border:1px solid var(--rule);vertical-align:top;padding:8px}
+table.matrix thead th{background:var(--paper3);position:sticky;top:0;text-align:center;width:15%}
+table.matrix thead th .lab{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-top:2px}
+table.matrix thead th .sub{font-size:11px;color:var(--ink3);display:block;font-family:"IBM Plex Sans",sans-serif;letter-spacing:0;text-transform:none;line-height:1.3;margin-top:3px}
+table.matrix tbody th{background:var(--paper3);text-align:left;width:96px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;position:sticky;left:0}
+table.matrix tbody th small{display:block;font-family:"IBM Plex Sans",sans-serif;text-transform:none;letter-spacing:0;color:var(--ink3);font-weight:400;font-size:11px;margin-top:3px}
+.cellchip{display:inline-block;background:var(--paper);border:1px solid var(--rule);border-radius:99px;padding:2px 9px;font-size:12.5px;margin:0 3px 3px 0}
+.cellchip:hover{background:#fff;border-color:var(--ink)}
+.cellchip .dot{display:inline-block;vertical-align:middle;margin-right:5px;width:6px;height:6px}
+.empty-cell{color:var(--ink3);font-size:11.5px;font-style:italic}
+
+/* ---------- traits / scatter ---------- */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:14px}
+.ctl{display:flex;flex-direction:column;gap:4px}
+.ctl label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+select,input[type=text]{font:inherit;font-size:13.5px;background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r);padding:7px 9px;color:var(--ink)}
+select:focus-visible,input:focus-visible{outline:2px solid var(--jade);outline-offset:1px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:99px;overflow:hidden;background:var(--paper2)}
+.seg button{background:none;border:0;padding:7px 14px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper2)}
+.plot{width:100%;height:auto;display:block;background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r);touch-action:manipulation}
+.plot .grid{stroke:var(--rule);stroke-width:.5}
+.plot .axis-lab{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;fill:var(--ink3)}
+.plot .pt{cursor:pointer}
+.plot .ptlab{font-family:"IBM Plex Mono",monospace;font-size:8.4px;fill:var(--ink2);pointer-events:none}
+.hint{font-size:12.5px;color:var(--ink3);margin-top:8px}
+
+/* ranked bars */
+.rank{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.rk{display:grid;grid-template-columns:26px 1fr;gap:10px;align-items:center;background:none;border:0;border-bottom:1px solid var(--rule);padding:7px 2px;text-align:left;width:100%}
+.rk:hover{background:var(--paper2)}
+.rk .no{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink3);text-align:right}
+.rk .bar{position:relative;height:22px;background:var(--paper3);border-radius:2px;overflow:hidden}
+.rk .fill{position:absolute;inset:0 auto 0 0;opacity:.9}
+.rk .lbl{position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13.5px;mix-blend-mode:normal}
+.rk .lbl .v{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink2)}
+.tiermark{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin:18px 0 4px;padding-top:8px;border-top:1px solid var(--ink)}
+
+/* ---------- compare ---------- */
+.picker{position:relative;max-width:420px}
+.sugg{position:absolute;z-index:20;left:0;right:0;background:#fff;border:1px solid var(--ink);border-radius:var(--r);max-height:240px;overflow:auto;display:none}
+.sugg.on{display:block}
+.sugg button{display:block;width:100%;text-align:left;background:none;border:0;padding:7px 10px;font-size:13.5px;border-bottom:1px solid var(--rule)}
+.sugg button:hover,.sugg button.hi{background:var(--paper3)}
+.picked{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 18px}
+.picked .pc{display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper2);border-radius:99px;padding:4px 6px 4px 12px;font-size:13.5px}
+.picked .pc button{background:var(--paper2);color:var(--ink);border:0;border-radius:50%;width:18px;height:18px;line-height:16px;font-size:12px;padding:0}
+.cmp-grid{display:grid;grid-template-columns:1fr;gap:22px}
+@media(min-width:820px){.cmp-grid{grid-template-columns:minmax(280px,420px) 1fr}}
+.radar{width:100%;height:auto;display:block;max-width:420px;background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r)}
+.radar .ring{fill:none;stroke:var(--rule);stroke-width:.6}
+.radar .spoke{stroke:var(--rule);stroke-width:.5}
+.radar .ax{font-family:"IBM Plex Mono",monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;fill:var(--ink3)}
+.cmp-table{width:100%;min-width:460px;border-collapse:collapse;font-size:13.5px}
+.cmp-table th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-weight:500;padding:9px 10px 9px 0;vertical-align:top;width:118px;border-bottom:1px solid var(--rule)}
+.cmp-table td{padding:9px 10px 9px 0;vertical-align:top;border-bottom:1px solid var(--rule)}
+.cmp-heads{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.cmp-heads figure{margin:0;text-align:center;width:120px}
+.cmp-heads figcaption{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink2);margin-top:2px}
+
+/* ---------- fit ---------- */
+.fit-grid{display:grid;grid-template-columns:1fr;gap:26px}
+@media(min-width:880px){.fit-grid{grid-template-columns:minmax(300px,400px) 1fr}}
+.slider{margin-bottom:16px}
+.slider .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.slider .q{font-size:14px;font-weight:500}
+.slider .val{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--jade);text-align:right}
+.slider .poles{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-top:2px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;margin:8px 0 0}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink);border-radius:2px}
+input[type=range]::-moz-range-track{height:2px;background:var(--ink);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--paper2);border:2px solid var(--ink);margin-top:-8px}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--paper2);border:2px solid var(--ink)}
+input[type=range]:focus-visible{outline:2px solid var(--jade);outline-offset:4px}
+.match{display:grid;grid-template-columns:64px 1fr;gap:12px;background:var(--paper2);border:1px solid var(--rule);border-radius:var(--r);padding:12px;margin-bottom:10px;text-align:left;width:100%}
+.match:hover{border-color:var(--ink)}
+.match h4{margin:0;font-family:"Fraunces",Georgia,serif;font-size:18px;font-weight:600}
+.match .pct{float:right;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--jade)}
+.match .why{font-size:13px;color:var(--ink2);margin:4px 0 0}
+.match .care{font-size:12.5px;color:var(--rust);margin:4px 0 0}
+.meter{height:3px;background:var(--paper3);border-radius:2px;margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--jade)}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(27,36,34,.4);opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:70;background:var(--paper2);border-left:1px solid var(--ink);top:0;right:0;bottom:0;width:min(440px,92vw);transform:translateX(102%);transition:transform .26s cubic-bezier(.2,.7,.3,1);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.drawer.on{transform:none}
+@media(max-width:640px){
+  .drawer{top:auto;left:0;width:100%;height:88vh;border-left:0;border-top:1px solid var(--ink);border-radius:10px 10px 0 0;transform:translateY(102%)}
+}
+.drawer-in{padding:18px 20px 60px}
+.drawer .close{position:sticky;top:0;float:right;background:var(--paper2);border:1px solid var(--rule);border-radius:50%;width:30px;height:30px;font-size:15px;line-height:1;padding:0}
+.d-name{font-size:30px;line-height:1.05;margin:4px 0 2px}
+.d-aka{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink3);letter-spacing:.05em}
+.d-tell{font-size:14.5px;color:var(--ink2);border-left:2px solid var(--ink);padding-left:10px;margin:14px 0}
+.d-sil{display:flex;justify-content:center;padding:6px 0 2px}
+.kv{display:grid;grid-template-columns:92px 1fr;gap:2px 10px;font-size:13.5px;margin:14px 0}
+.kv dt{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);padding-top:3px}
+.kv dd{margin:0 0 6px}
+.bars{margin:16px 0}
+.tb{display:grid;grid-template-columns:76px 1fr 20px;gap:8px;align-items:center;margin-bottom:5px;font-size:12.5px}
+.tb .tn{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2)}
+.tb .track{height:8px;background:var(--paper3);border-radius:2px;display:flex;gap:2px}
+.tb .track i{flex:1;border-radius:1px}
+.tb .track i.on{background:var(--ink)}
+.tb .track i.off{background:transparent;box-shadow:inset 0 0 0 1px var(--rule)}
+.tb .tv{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink3)}
+.d-sect{margin:16px 0}
+.d-sect h5{margin:0 0 4px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.d-sect p{margin:0;font-size:14px}
+.flagbox{background:#fff;border:1px solid var(--rust);border-left:3px solid var(--rust);border-radius:var(--r);padding:10px 12px;margin:14px 0}
+.flagbox h5{color:var(--rust);margin:0 0 3px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;text-transform:uppercase}
+.flagbox p{margin:0;font-size:13.5px}
+.relrow{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.rel{background:var(--paper);border:1px solid var(--rule);border-radius:99px;padding:3px 10px;font-size:12.5px}
+.rel:hover{border-color:var(--ink)}
+
+footer{max-width:1180px;margin:0 auto;padding:30px 20px 60px;border-top:1px solid var(--rule);color:var(--ink3);font-size:12.5px}
+footer p{max-width:70ch;margin:0 0 8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <p class="eyebrow">A field guide to the domestic cat &middot; <em>Felis catus</em></p>
+  <h1>The Cat Breed Atlas<em>62 breeds, four ways a breed comes into being</em></h1>
+  <p class="lede">Nearly every pedigreed cat alive traces to one of a few founding populations, a handful of odd kittens whose mutations someone decided to keep, or a deliberate cross drawn up on paper. This atlas maps who came from whom, what that makes them look like, how they behave, and who each one is actually for.</p>
+  <div class="counts">
+    <span><b id="c-breeds">62</b> breeds</span>
+    <span><b id="c-fams">14</b> lineages</span>
+    <span><b>9</b> temperament axes</span>
+    <span>tap any cat to open its card</span>
+  </div>
+  <nav class="strip" aria-label="Ten most commonly registered breeds"><div class="strip-inner" id="strip"></div></nav>
+</header>
+
+<div class="tabbar">
+  <div class="tabbar-inner" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-v="descent" aria-selected="true">Descent</button>
+    <button class="tab" role="tab" data-v="look" aria-selected="false">Look</button>
+    <button class="tab" role="tab" data-v="traits" aria-selected="false">Temperament</button>
+    <button class="tab" role="tab" data-v="common" aria-selected="false">Commonality</button>
+    <button class="tab" role="tab" data-v="compare" aria-selected="false">Compare</button>
+    <button class="tab" role="tab" data-v="fit" aria-selected="false">Find yours</button>
+  </div>
+</div>
+
+<main>
+  <section class="view on" id="v-descent" role="tabpanel">
+    <div class="view-head">
+      <p class="eyebrow">01 &middot; Taxonomy</p>
+      <h2>Where breeds come from</h2>
+      <p>Cat breeds are not species and they are not old. Most are younger than the aeroplane. The useful first cut is not by looks but by <em>mechanism</em>: was this population shaped by a place, by a single mutation someone chose to propagate, by a breeder combining existing breeds, or by crossing in a wild species? Tap a breed to trace its ancestors and descendants.</p>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div id="descent"></div>
+    <div class="lineage-bar" id="linbar"></div>
+  </section>
+
+  <section class="view" id="v-look" role="tabpanel">
+    <div class="view-head">
+      <p class="eyebrow">02 &middot; Morphology</p>
+      <h2>Body type &times; coat</h2>
+      <p>Show judges describe cats along a single skeletal axis running from <em>cobby</em> (short, round, heavy-boned) to <em>oriental</em> (long, fine, tubular), with coat length laid across it. Almost every breed you can name sits in one of these thirty cells. Silhouettes are drawn from each breed's own build numbers, so shapes in the same column really are the same shape.</p>
+    </div>
+    <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+    <p class="hint">Scroll sideways to see all six builds. Colour marks how the breed originated.</p>
+  </section>
+
+  <section class="view" id="v-traits" role="tabpanel">
+    <div class="view-head">
+      <p class="eyebrow">03 &middot; Behaviour</p>
+      <h2>The trait field</h2>
+      <p>Every breed rated 1&ndash;5 on nine axes. Put any two on the axes and the clusters do the explaining: the Siamese-descended cats pile into the loud-and-busy corner, the northern longhairs sit calm and self-possessed, the rex breeds cluster where energy meets neediness. Dot size is how commonly you'll meet the breed.</p>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="ax">Horizontal</label><select id="ax"></select></div>
+      <div class="ctl"><label for="ay">Vertical</label><select id="ay"></select></div>
+      <div class="ctl"><label for="afilter">Show</label><select id="afilter"><option value="all">All origins</option><option value="landrace">Natural landrace</option><option value="mutation">Mutation</option><option value="cross">Engineered cross</option><option value="hybrid">Wild hybrid</option></select></div>
+    </div>
+    <svg class="plot" id="plot" viewBox="0 0 400 400" role="img" aria-label="Scatter plot of cat breeds by two temperament traits"></svg>
+    <p class="hint" id="plothint">Tap a dot for the full card. Positions are jittered slightly so identical scores don't hide each other.</p>
+  </section>
+
+  <section class="view" id="v-common" role="tabpanel">
+    <div class="view-head">
+      <p class="eyebrow">04 &middot; Frequency</p>
+      <h2>How likely you are to meet one</h2>
+      <p>There is no single ranking of cat popularity. Registries count only pedigreed kittens registered with them, and they disagree: the CFA's 2026 list put the Maine Coon first and the Ragdoll second, while breeds that dominate elsewhere &mdash; the Bengal, the Scottish Fold, the Munchkin &mdash; sit low or unrecognised. The index below blends registry counts across the major bodies with how often each breed actually turns up in homes. Treat it as an order of magnitude, not a leaderboard.</p>
+    </div>
+    <div class="controls"><div class="seg" id="commonseg">
+      <button data-mode="all" aria-pressed="true">All</button>
+      <button data-mode="landrace" aria-pressed="false">Landrace</button>
+      <button data-mode="mutation" aria-pressed="false">Mutation</button>
+      <button data-mode="cross" aria-pressed="false">Cross</button>
+      <button data-mode="hybrid" aria-pressed="false">Hybrid</button>
+    </div></div>
+    <div class="rank" id="rank"></div>
+    <p class="hint">Every pedigreed cat put together is a rounding error next to the domestic shorthair &mdash; the unpedigreed moggy is roughly 95&ndash;97% of the world's owned cats. Nothing on this list is common in absolute terms.</p>
+  </section>
+
+  <section class="view" id="v-compare" role="tabpanel">
+    <div class="view-head">
+      <p class="eyebrow">05 &middot; Side by side</p>
+      <h2>Compare up to three</h2>
+      <p>Useful pairs are the ones people confuse: Persian and Exotic, Ragdoll and Ragamuffin, Cornish and Devon Rex, Bengal and Toyger, Siberian and Maine Coon.</p>
+    </div>
+    <div class="picker">
+      <input type="text" id="cmpin" placeholder="Type a breed name&hellip;" autocomplete="off" aria-label="Add a breed to compare">
+      <div class="sugg" id="cmpsugg"></div>
+    </div>
+    <div class="picked" id="cmppicked"></div>
+    <div class="cmp-grid">
+      <div><div class="cmp-heads" id="cmpheads"></div><svg class="radar" id="radar" viewBox="0 0 300 300" role="img" aria-label="Radar chart comparing selected breeds"></svg></div>
+      <div style="overflow-x:auto"><table class="cmp-table" id="cmptable"></table></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-fit" role="tabpanel">
+    <div class="view-head">
+      <p class="eyebrow">06 &middot; Matching</p>
+      <h2>Which cat is for you</h2>
+      <p>Answer honestly about the life you actually live, not the one you mean to. Breed is a weak predictor next to individual personality and early socialisation &mdash; but it does shift the odds on noise, activity, coat work and how badly the cat minds being alone.</p>
+    </div>
+    <div class="fit-grid">
+      <form id="fitform"></form>
+      <div><div id="fitres"></div><p class="hint" id="fitnote"></p></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p><b>On the numbers.</b> Trait ratings are consensus breed-standard temperament, compressed to a 1&ndash;5 scale for comparison. They describe tendencies across a breed, not any individual cat; within-breed variation is larger than most between-breed differences. Weight, lifespan and health notes follow the major registries and veterinary breed-predisposition literature.</p>
+  <p><b>On hypoallergenic cats.</b> There aren't any. The main allergen, Fel d 1, is in saliva and skin, not hair, so hairless breeds are not exempt. Siberians, Balinese and Russian Blues are often reported to produce less of it; the evidence is thin and varies more between individual cats than between breeds.</p>
+  <p><b>On the flagged breeds.</b> Several popular breeds are defined by a mutation that also causes harm &mdash; folded ears come with cartilage disease in every Scottish Fold, flat faces with obstructed airways, taillessness with spinal defects. Those cards carry a welfare note. It is not an argument against the cats already alive, which deserve homes.</p>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Breed detail"><div class="drawer-in" id="drawerin"></div></aside>
+<script>
+const ORIGINS = [
+  {id:"landrace", name:"Natural landrace", def:"A cat population that shaped itself in a place — a climate, a port, a farm — before anyone wrote a standard for it. Breeders later described what already existed rather than inventing it."},
+  {id:"mutation", name:"Spontaneous mutation", def:"One odd kitten in one litter: curled ears, no coat, no tail, waved fur. Someone decided the oddity was worth keeping and bred it on. Most of these breeds are traceable to a single founding animal."},
+  {id:"cross", name:"Engineered cross", def:"Assembled on purpose from existing breeds to hit a target look — a Persian body in short coat, a Siamese in solid colour, a leopard pattern with no wild blood."},
+  {id:"hybrid", name:"Wild hybrid", def:"A domestic cat crossed with a small wild species, then bred back toward domesticity over generations. Early filial generations are not house pets and are regulated or banned in many places."}
+];
+
+const FAMS = {
+  north:{name:"Northern forest cats", note:"Big semi-longhaired cats from cold places, insulated by a shaggy water-shedding topcoat over dense down."},
+  west:{name:"Western working cats", note:"Barn, ship and street cats of Britain, France and North America, standardised into breeds in the late 1800s."},
+  russ:{name:"Blue cats of Russia and Siam", note:"Dense short plush coats in solid blue-grey. Separate origins on opposite sides of Asia, similar-looking answer."},
+  sea:{name:"Southeast Asian natives", note:"The old cats of Siam and the Malay world: fine-boned, heat-loving, and the source of the pointed pattern."},
+  medit:{name:"Mediterranean and African natives", note:"Landraces of Turkey, Greece, Egypt and coastal Kenya, several of them barely altered by breeding."},
+  aby:{name:"Ticked-coat group", note:"Cats carrying the Ticked agouti allele: each hair is banded, so the body reads as shimmering and unstriped."},
+  pers:{name:"Persian group", note:"The long-coated cats brought west from Persia and Turkey in the 1600s, then bred toward ever rounder, flatter faces."},
+  rag:{name:"Doll-faced companions", note:"Large, placid, semi-longhaired cats bred from the 1960s onward with docility as the explicit goal."},
+  rex:{name:"Coat mutations", note:"Waves, curls, wire and hairlessness — each from a different gene, found in a different country, on a different decade."},
+  tail:{name:"Tail and spine mutations", note:"Genes that shorten, kink or delete the tail. Some are harmless; one of them is not."},
+  ear:{name:"Ear cartilage mutations", note:"Ears folded forward or curled back. Same category, opposite welfare stories."},
+  leg:{name:"Limb mutations", note:"A dominant dwarfism gene: normal-sized body, shortened legs."},
+  burm:{name:"Burmese group", note:"Everything descended from Wong Mau, one brown cat brought from Rangoon to San Francisco in 1930, and her Siamese mates."},
+  sia:{name:"Siamese-derived breeds", note:"Everything built out of the Siamese — other colours, other coat lengths, other body weights."},
+  des:{name:"Designed look-alikes", note:"Crosses assembled to imitate a wild cat or another breed, using only domestic stock."},
+  hyb:{name:"Wild-hybrid lines", note:"Domestic cats crossed with servals, Asian leopard cats or jungle cats."}
+};
+
+const TRAITS = [
+  ["en","Energy","couch","relentless"],
+  ["af","Affection","self-contained","velcro"],
+  ["vo","Vocal","silent","opinionated"],
+  ["so","Sociable","one-person","everybody"],
+  ["pl","Playful","dignified","clownish"],
+  ["ind","Independent","needs company","fine alone"],
+  ["gr","Grooming","wash-and-go","daily work"],
+  ["sh","Shedding","negligible","everywhere"],
+  ["iq","Trainable","instinctive","learns fast"]
+];
+
+const B = [
+// ---------- NORTHERN FOREST ----------
+{id:"maine-coon",n:"Maine Coon",aka:"Coon cat, gentle giant",fam:"north",org:"landrace",reg:"Maine, USA",era:"1860s",from:[],pop:100,wt:"5–11 kg",size:5,coat:"semi-long",body:"substantial",
+ t:{en:3,af:4,vo:3,so:5,pl:4,ind:3,gr:3,sh:4,iq:5},m:{cob:4,leg:3,ear:5,head:3,tail:3,fur:3},life:"10–14 yr",
+ tell:"Lynx tips on the ears, shaggy britches, and a tail it can wrap around itself like a scarf.",
+ blurb:"A working barn cat scaled up by New England winters. Slow to mature — three to four years to full size — and famous for chirping and trilling rather than meowing. Fascinated by running water.",
+ who:"People who want a dog-shaped relationship in a cat: follows you room to room, tolerates harnesses, greets guests.",
+ not:"Small flats, tidy people, or anyone who resents a 6 kg cat on the keyboard. The coat needs real combing twice a week.",
+ health:"Hypertrophic cardiomyopathy (a known MYBPC3 variant), hip dysplasia, spinal muscular atrophy. Ask for cardiac screening of both parents."},
+{id:"norwegian-forest",n:"Norwegian Forest Cat",aka:"Skogkatt, Wegie",fam:"north",org:"landrace",reg:"Norway",era:"1930s",from:[],pop:52,wt:"4–9 kg",size:5,coat:"semi-long",body:"substantial",
+ t:{en:3,af:3,vo:1,so:3,pl:3,ind:4,gr:3,sh:4,iq:4},m:{cob:4,leg:4,ear:4,head:2,tail:3,fur:3},life:"12–16 yr",
+ tell:"Triangular head with a straight profile from brow to nose — no dip, unlike the Maine Coon.",
+ blurb:"A farm cat from the Norwegian forests with a glossy waterproof topcoat and serious climbing muscle. Quieter and more reserved than the Maine Coon it is constantly mistaken for.",
+ who:"People who want a big, calm, undemanding cat that likes being in the room rather than on you, and can offer height to climb.",
+ not:"Anyone wanting a lap cat on tap, or living somewhere with nothing to scale.",
+ health:"Glycogen storage disease IV (testable), HCM, hip dysplasia."},
+{id:"siberian",n:"Siberian",aka:"Siberian Forest Cat",fam:"north",org:"landrace",reg:"Russia",era:"1980s",from:[],pop:56,wt:"4–9 kg",size:4,coat:"semi-long",body:"substantial",
+ t:{en:4,af:4,vo:2,so:4,pl:4,ind:3,gr:3,sh:4,iq:4},m:{cob:5,leg:3,ear:3,head:4,tail:3,fur:4},life:"12–16 yr",
+ tell:"Rounder than the other forest cats — barrel body, round eyes, a triple coat with a full ruff.",
+ blurb:"Russia's native longhair, agile out of proportion to its bulk and often startlingly athletic. Widely marketed as the low-allergen cat; some individuals do produce less Fel d 1, but no line is reliably safe.",
+ who:"Allergy-curious households willing to test-sit with a specific cat first; people who want a big cat that still plays like a kitten at eight.",
+ not:"Anyone treating the hypoallergenic claim as a guarantee, or unwilling to manage a heavy spring moult.",
+ health:"HCM. Otherwise a robust breed with a wide gene pool."},
+{id:"neva-masquerade",n:"Neva Masquerade",aka:"Colourpoint Siberian",fam:"north",org:"landrace",reg:"Russia",era:"1980s",from:["siberian"],pop:18,wt:"4–9 kg",size:4,coat:"semi-long",body:"substantial",
+ t:{en:4,af:4,vo:2,so:4,pl:4,ind:3,gr:3,sh:4,iq:4},m:{cob:5,leg:3,ear:3,head:4,tail:3,fur:4},life:"12–16 yr",
+ tell:"A Siberian wearing Siamese colouring: dark mask and boots, blue eyes.",
+ blurb:"Not a separate breed everywhere — most registries treat it as the pointed division of the Siberian, named for the river Neva. Temperament is Siberian throughout.",
+ who:"Anyone who wants Siberian character with the pointed pattern and blue eyes.",
+ not:"People expecting a Siamese personality to come with the Siamese markings. It does not.",
+ health:"As Siberian."},
+{id:"kurilian-bobtail",n:"Kurilian Bobtail",aka:"Kuril Islands Bobtail",fam:"north",org:"landrace",reg:"Kuril Islands, Russia",era:"1950s",from:[],pop:10,wt:"3–7 kg",size:4,coat:"semi-long",body:"substantial",
+ t:{en:4,af:4,vo:2,so:4,pl:5,ind:3,gr:2,sh:3,iq:4},m:{cob:4,leg:4,ear:3,head:3,tail:0,fur:3},life:"14–18 yr",
+ tell:"A pom-pom tail of two to ten vertebrae, every one a different shape — no two are alike.",
+ blurb:"An island landrace with a naturally shortened tail unrelated to the Manx gene, and no associated spinal disease. Strong hunters, unusually water-tolerant, and known for retrieving.",
+ who:"People who want a genuinely rustic, healthy, high-play cat and can find a breeder — rare outside Russia and continental Europe.",
+ not:"Anyone who wants a sedentary cat. These hunt.",
+ health:"Unusually sound. The bobtail gene here is not linked to the Manx spinal defects."},
+// ---------- WESTERN WORKING ----------
+{id:"american-shorthair",n:"American Shorthair",aka:"ASH, domestic shorthair's pedigreed cousin",fam:"west",org:"landrace",reg:"USA",era:"1900s",from:[],pop:55,wt:"3.5–7 kg",size:4,coat:"short",body:"semi-cobby",
+ t:{en:3,af:3,vo:2,so:4,pl:3,ind:4,gr:1,sh:3,iq:3},m:{cob:4,leg:3,ear:3,head:4,tail:3,fur:1},life:"15–20 yr",
+ tell:"Looks like the cat on a bag of cat food: solid, square, silver classic tabby with a bullseye flank.",
+ blurb:"Ship's cats that came over with European settlers as rodent control, then bred for consistency rather than exaggeration. Possibly the least neurotic pedigree cat there is.",
+ who:"First-time owners, families, anyone who wants an easy cat with a long life and no special handling.",
+ not:"People who want to be adored intensely. This is a companionable cat, not a devoted one.",
+ health:"HCM in some lines; otherwise notably hardy and long-lived."},
+{id:"british-shorthair",n:"British Shorthair",aka:"BSH",fam:"west",org:"landrace",reg:"United Kingdom",era:"1870s",from:[],pop:86,wt:"4–8 kg",size:4,coat:"short",body:"cobby",
+ t:{en:2,af:3,vo:1,so:3,pl:2,ind:5,gr:2,sh:3,iq:3},m:{cob:5,leg:2,ear:2,head:5,tail:2,fur:2},life:"12–17 yr",
+ tell:"Round face, round copper eyes, and a crisp coat that stands away from the body like plush.",
+ blurb:"Britain's street cat, formalised. Dignified rather than affectionate: it will sit beside you for hours and object to being picked up. The plush blue coat made it the internet's default cat.",
+ who:"Calm households, people who work long days, anyone charmed by a cat with the manner of a Victorian gentleman.",
+ not:"Cuddle-seekers and people who want to carry their cat around. Also prone to obesity — this breed eats and does not move.",
+ health:"HCM, polycystic kidney disease (Persian outcrosses introduced it), obesity.",
+ flag:"Some show lines have been bred toward extreme roundness with a shortened muzzle. Avoid flat-faced BSH; the healthy version has a visible nose."},
+{id:"british-longhair",n:"British Longhair",aka:"Lowlander",fam:"west",org:"cross",reg:"United Kingdom",era:"1950s",from:["british-shorthair","persian"],pop:20,wt:"4–8 kg",size:4,coat:"semi-long",body:"cobby",
+ t:{en:2,af:3,vo:1,so:3,pl:2,ind:5,gr:3,sh:4,iq:3},m:{cob:5,leg:2,ear:2,head:5,tail:3,fur:3},life:"12–17 yr",
+ tell:"A British Shorthair in a semi-long coat — round everything, plus a ruff.",
+ blurb:"The longhaired offspring produced when Persians were used to rebuild BSH numbers after the wars, eventually recognised on its own. Personality identical to the shorthair.",
+ who:"People who want BSH temperament with more coat and can commit to twice-weekly combing.",
+ not:"Anyone who dislikes grooming — this coat mats behind the legs.",
+ health:"As British Shorthair, plus PKD risk from the Persian side."},
+{id:"chartreux",n:"Chartreux",aka:"The smiling cat of France",fam:"west",org:"landrace",reg:"France",era:"1500s",from:[],pop:20,wt:"3–7 kg",size:4,coat:"short",body:"semi-cobby",
+ t:{en:2,af:4,vo:1,so:3,pl:3,ind:4,gr:1,sh:3,iq:4},m:{cob:4,leg:2,ear:3,head:4,tail:2,fur:2},life:"12–15 yr",
+ tell:"Blue coat, copper eyes, and a narrow-jawed head on a heavy body that makes it look like it is smiling.",
+ blurb:"An old French blue, dense-coated and famously near-silent — many never learn to meow properly. Reserved with strangers, deeply attached to one or two people.",
+ who:"Quiet homes; people who want devotion without noise or drama.",
+ not:"Households wanting a cat that entertains guests. Also frequently confused with, and mis-sold as, a British or Russian Blue.",
+ health:"Patellar luxation, hip dysplasia in some lines."},
+{id:"european-shorthair",n:"European Shorthair",aka:"Celtic Shorthair",fam:"west",org:"landrace",reg:"Scandinavia and continental Europe",era:"1980s",from:[],pop:15,wt:"3.5–7 kg",size:3,coat:"short",body:"moderate",
+ t:{en:3,af:3,vo:2,so:4,pl:3,ind:4,gr:1,sh:3,iq:3},m:{cob:3,leg:3,ear:3,head:3,tail:3,fur:1},life:"15–20 yr",
+ tell:"Deliberately ordinary — this is the ordinary European house cat with papers.",
+ blurb:"A registry decision more than a breeding project: the standard describes the common cat of Europe so it could be shown without being crossed to anything else. Genetically the broadest pool on this page.",
+ who:"Anyone, honestly. It is the moggy, preserved.",
+ not:"People who want a cat that looks like a statement.",
+ health:"Very few breed-specific problems."},
+// ---------- BLUE CATS ----------
+{id:"russian-blue",n:"Russian Blue",aka:"Archangel Blue",fam:"russ",org:"landrace",reg:"Arkhangelsk, Russia",era:"1860s",from:[],pop:54,wt:"3–5.5 kg",size:3,coat:"short",body:"foreign",
+ t:{en:3,af:4,vo:1,so:2,pl:3,ind:4,gr:1,sh:2,iq:5},m:{cob:2,leg:4,ear:4,head:2,tail:3,fur:2},life:"15–20 yr",
+ tell:"Silver-tipped blue double coat that stands out from the body, and vivid green eyes.",
+ blurb:"A shy, exacting cat that bonds hard with its household and vanishes when the doorbell goes. Notably clever — problem-solvers that open cupboards. Sensitive to routine and to dirty litter trays.",
+ who:"Quiet, predictable households; one or two people who want a devoted shadow.",
+ not:"Loud homes, frequent parties, small children, or anyone who changes the furniture often.",
+ health:"Among the soundest pedigreed breeds. Watch weight.",
+ allergy:1},
+{id:"nebelung",n:"Nebelung",aka:"Longhaired Russian Blue",fam:"russ",org:"cross",reg:"USA",era:"1980s",from:["russian-blue"],pop:14,wt:"3–5.5 kg",size:3,coat:"semi-long",body:"foreign",
+ t:{en:3,af:4,vo:1,so:2,pl:3,ind:4,gr:2,sh:3,iq:5},m:{cob:2,leg:4,ear:4,head:2,tail:3,fur:3},life:"15–18 yr",
+ tell:"The Russian Blue silhouette softened by a semi-long coat and a plumed tail. The name means creature of the mist.",
+ blurb:"Founded from two longhaired kittens born to a domestic-Russian cross in the 1980s, then bred back to Russian Blues. Shy, quiet, ferociously loyal to one person.",
+ who:"Introverts. A single-person household is close to ideal.",
+ not:"Anyone who cannot give a nervous cat weeks to settle.",
+ health:"As Russian Blue."},
+{id:"korat",n:"Korat",aka:"Si-Sawat",fam:"russ",org:"landrace",reg:"Thailand",era:"1350s",from:[],pop:18,wt:"2.5–4.5 kg",size:2,coat:"short",body:"semi-cobby",
+ t:{en:3,af:5,vo:3,so:2,pl:3,ind:2,gr:1,sh:2,iq:4},m:{cob:4,leg:3,ear:4,head:4,tail:2,fur:1},life:"15–19 yr",
+ tell:"Heart-shaped face and huge peridot-green eyes on a small silver-blue body with no undercoat.",
+ blurb:"One of the oldest documented breeds, described in Thai manuscripts centuries ago and traditionally given in pairs as a luck gift. Intensely bonded, possessive, and often unwilling to share a household with other cats.",
+ who:"People who want an old, small, single-cat companion and can accept jealousy.",
+ not:"Multi-cat homes; noisy environments — Korats startle badly.",
+ health:"GM1 and GM2 gangliosidosis — fatal, but a DNA test exists and responsible breeders screen."},
+{id:"khao-manee",n:"Khao Manee",aka:"Diamond Eye",fam:"sea",org:"landrace",reg:"Thailand",era:"1300s",from:[],pop:6,wt:"3–5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:4,vo:4,so:4,pl:4,ind:2,gr:1,sh:2,iq:4},m:{cob:3,leg:4,ear:4,head:3,tail:3,fur:1},life:"10–12 yr",
+ tell:"Pure white, frequently odd-eyed — one blue, one gold.",
+ blurb:"An old Thai palace cat, only exported since the 1990s. Chatty, athletic, extremely people-focused. White coats with blue eyes carry deafness risk, which is well documented here.",
+ who:"People who want a rare, talkative Thai cat and will hearing-test before buying.",
+ not:"Households with outdoor access if the cat proves deaf, or anyone unprepared for the noise.",
+ health:"Congenital deafness linked to the dominant white gene, particularly in blue-eyed individuals."},
+// ---------- SOUTHEAST ASIAN ----------
+{id:"siamese",n:"Siamese",aka:"Modern or Wedge Siamese",fam:"sea",org:"landrace",reg:"Thailand",era:"1350s",from:[],pop:80,wt:"2.5–5 kg",size:2,coat:"short",body:"oriental",
+ t:{en:5,af:5,vo:5,so:4,pl:5,ind:1,gr:1,sh:2,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:1},life:"12–20 yr",
+ tell:"A long flat wedge from ear tip to nose, with no break in the profile, and a voice like a rusty hinge.",
+ blurb:"The cat that shaped half of modern breeding. Loud, insistent, emotionally demanding, and genuinely clever — the pointed pattern comes from a temperature-sensitive enzyme, which is why the cool extremities darken. Show type has been bred far more extreme than the original.",
+ who:"People who are home a lot, want conversation, and find constant involvement charming rather than exhausting.",
+ not:"Open-plan offices, light sleepers, anyone leaving a cat alone all day. Separation distress is real in this breed.",
+ health:"Amyloidosis, asthma, dental disease, progressive retinal atrophy. Long-lived when sound."},
+{id:"thai",n:"Thai",aka:"Old-style or Applehead Siamese, Wichienmaat",fam:"sea",org:"landrace",reg:"Thailand",era:"1350s",from:[],pop:8,wt:"3–5.5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:5,vo:5,so:4,pl:4,ind:1,gr:1,sh:2,iq:5},m:{cob:3,leg:3,ear:3,head:3,tail:3,fur:1},life:"12–18 yr",
+ tell:"The Siamese as it looked in 1950: rounder head, sturdier body, same pattern and same mouth.",
+ blurb:"A preservation breed, reconstructed by fanciers who thought the show Siamese had gone too far. Same personality, less fragile frame.",
+ who:"People who love the Siamese temperament but want a sturdier, more moderate cat.",
+ not:"Anyone hoping the moderate build comes with a moderate voice. It does not.",
+ health:"Fewer dental and respiratory issues than the extreme type."},
+{id:"singapura",n:"Singapura",aka:"Drain cat",fam:"sea",org:"landrace",reg:"Singapore",era:"1970s",from:[],pop:16,wt:"2–3.5 kg",size:1,coat:"short",body:"semi-cobby",
+ t:{en:4,af:5,vo:2,so:4,pl:5,ind:1,gr:1,sh:1,iq:4},m:{cob:3,leg:3,ear:5,head:4,tail:2,fur:1},life:"11–15 yr",
+ tell:"The smallest breed there is — 2 to 3 kg — with enormous ears and a sepia ticked coat.",
+ blurb:"Presented as a Singapore street cat, though the founding animals turned out to have travelled from the USA first; the origin story is disputed and the gene pool is very small. Relentlessly curious and shoulder-riding.",
+ who:"People who want a tiny, hot, permanently involved cat in a small home.",
+ not:"Anyone who wants a cat to leave them alone, or who is uneasy about a narrow gene pool.",
+ health:"Pyruvate kinase deficiency (testable), uterine inertia. Inbreeding depression is a genuine concern."},
+// ---------- BURMESE GROUP ----------
+{id:"burmese",n:"Burmese",aka:"Sable Burmese",fam:"burm",org:"cross",reg:"USA and Burma",era:"1930",from:["siamese"],pop:42,wt:"3–6 kg",size:3,coat:"short",body:"semi-cobby",
+ t:{en:4,af:5,vo:4,so:5,pl:5,ind:1,gr:1,sh:2,iq:5},m:{cob:4,leg:3,ear:3,head:4,tail:2,fur:1},life:"14–18 yr",
+ tell:"Surprisingly heavy for its size — the standard phrase is a brick wrapped in silk.",
+ blurb:"Founded on one brown cat, Wong Mau, brought from Rangoon in 1930 and bred to Siamese. American and European Burmese have since diverged into visibly different cats. Among the most people-dependent of all breeds.",
+ who:"Households with someone home most of the day, or a second cat for company. Excellent with children.",
+ not:"Anyone out ten hours a day. Burmese left alone become destructive and depressed.",
+ health:"Hypokalaemia (testable), diabetes mellitus, flat-chested kitten syndrome.",
+ flag:"American show lines carry a contour head defect — a lethal craniofacial malformation in homozygotes. Ask breeders directly about it."},
+{id:"bombay",n:"Bombay",aka:"Mini panther",fam:"burm",org:"cross",reg:"USA",era:"1958",from:["burmese","american-shorthair"],pop:24,wt:"3–5 kg",size:3,coat:"short",body:"semi-cobby",
+ t:{en:4,af:5,vo:4,so:5,pl:4,ind:1,gr:1,sh:2,iq:4},m:{cob:4,leg:3,ear:3,head:4,tail:2,fur:1},life:"12–16 yr",
+ tell:"Patent-leather black to the roots, with copper eyes. No other colour is allowed.",
+ blurb:"Built to look like a miniature Indian black leopard by crossing sable Burmese with black American Shorthairs. Heat-seeking — expect it under the duvet.",
+ who:"People who want Burmese personality in one dramatic colour, and who like a cat that sleeps in the bed.",
+ not:"Households where nobody is home. Same dependency as the Burmese.",
+ health:"As Burmese, plus excessive tearing and some brachycephalic tendency in flatter lines."},
+{id:"burmilla",n:"Burmilla",aka:"—",fam:"burm",org:"cross",reg:"United Kingdom",era:"1981",from:["burmese","persian"],pop:10,wt:"3–6 kg",size:3,coat:"short",body:"semi-cobby",
+ t:{en:3,af:4,vo:2,so:4,pl:4,ind:3,gr:1,sh:2,iq:4},m:{cob:4,leg:3,ear:3,head:4,tail:2,fur:1},life:"12–16 yr",
+ tell:"Silver coat with dark tipping, and eyes outlined as if in eyeliner.",
+ blurb:"An accident: a Chinchilla Persian and a lilac Burmese met when a door was left open in 1981. The kittens were good enough to keep. Calmer than a Burmese, more outgoing than a Persian.",
+ who:"People who want the Burmese temperament dialled down about thirty percent.",
+ not:"Anyone needing an easily available breed — numbers stay small.",
+ health:"Polycystic kidney disease from the Persian side (testable); generally sound."},
+{id:"australian-mist",n:"Australian Mist",aka:"Spotted Mist",fam:"burm",org:"cross",reg:"Australia",era:"1976",from:["burmese","abyssinian"],pop:8,wt:"3.5–6 kg",size:3,coat:"short",body:"semi-cobby",
+ t:{en:3,af:5,vo:2,so:5,pl:4,ind:2,gr:1,sh:2,iq:4},m:{cob:4,leg:3,ear:3,head:4,tail:2,fur:1},life:"14–19 yr",
+ tell:"Spots or marbling seen through a misting of ticked hairs, so the pattern looks slightly out of focus.",
+ blurb:"Bred in Australia specifically as an indoor cat for a country with fragile native wildlife — tolerant of confinement by design. Placid, sociable, exceptionally good with children.",
+ who:"Families, flat-dwellers, anyone who needs a cat that genuinely accepts staying inside.",
+ not:"People outside Australasia — it is barely exported.",
+ health:"Few known breed problems."},
+// ---------- SIAMESE-DERIVED ----------
+{id:"oriental-shorthair",n:"Oriental Shorthair",aka:"Ornamental, Foreign type",fam:"sia",org:"cross",reg:"United Kingdom",era:"1950s",from:["siamese","abyssinian","russian-blue"],pop:44,wt:"2.5–5 kg",size:2,coat:"short",body:"oriental",
+ t:{en:5,af:5,vo:5,so:4,pl:5,ind:1,gr:1,sh:2,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:1},life:"12–18 yr",
+ tell:"A Siamese in any colour but pointed — over 300 recognised colour and pattern combinations.",
+ blurb:"Created by crossing Siamese to solid-coloured British cats and breeding the pattern back out. Everything true of the Siamese is true here, sometimes more so.",
+ who:"People who want maximum interaction and maximum noise, and like collecting colours.",
+ not:"Quiet households, or anyone who thinks a cat should be low-maintenance company.",
+ health:"As Siamese: amyloidosis, dental disease, PRA."},
+{id:"oriental-longhair",n:"Oriental Longhair",aka:"British Angora, Javanese",fam:"sia",org:"cross",reg:"United Kingdom",era:"1970s",from:["oriental-shorthair","balinese"],pop:10,wt:"2.5–5 kg",size:2,coat:"semi-long",body:"oriental",
+ t:{en:5,af:5,vo:5,so:4,pl:5,ind:1,gr:2,sh:2,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:3},life:"12–18 yr",
+ tell:"Oriental angles under a fine silky coat with no undercoat, so it lies flat rather than fluffing.",
+ blurb:"The longhaired sibling of the Oriental. The single-layered coat sheds little and rarely mats, which makes it far less work than it looks.",
+ who:"People who want a longhaired cat without the grooming penalty, and can handle Siamese energy.",
+ not:"Anyone who wanted the calm that usually comes with a long coat.",
+ health:"As Oriental Shorthair."},
+{id:"balinese",n:"Balinese",aka:"Longhaired Siamese",fam:"sia",org:"mutation",reg:"USA",era:"1950s",from:["siamese"],pop:26,wt:"2.5–5 kg",size:2,coat:"semi-long",body:"oriental",
+ t:{en:5,af:5,vo:5,so:4,pl:5,ind:1,gr:2,sh:2,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:3},life:"12–20 yr",
+ tell:"Siamese points plus a plumed tail; the body coat is short enough that people miss the longhair at first.",
+ blurb:"Longhaired kittens appeared in Siamese litters and were at first considered a fault. Named for the dancers of Bali. Marginally quieter than a Siamese, and often cited alongside Siberians as lower-allergen.",
+ who:"Siamese people who want the plume, or allergy-cautious buyers willing to test.",
+ not:"Anyone expecting a placid longhair.",
+ health:"As Siamese.",
+ allergy:1},
+{id:"colorpoint-shorthair",n:"Colorpoint Shorthair",aka:"—",fam:"sia",org:"cross",reg:"USA",era:"1940s",from:["siamese","american-shorthair","abyssinian"],pop:14,wt:"2.5–5 kg",size:2,coat:"short",body:"oriental",
+ t:{en:5,af:5,vo:5,so:4,pl:5,ind:1,gr:1,sh:2,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:1},life:"12–18 yr",
+ tell:"A Siamese in points the Siamese standard does not allow — red, cream, tortie, lynx.",
+ blurb:"Recognised as a separate breed by the CFA and as simply a Siamese by nearly everyone else. A registry distinction rather than a biological one.",
+ who:"People who want unusual point colours and are showing under CFA rules.",
+ not:"Anyone confused by registry politics — elsewhere, this cat is a Siamese.",
+ health:"As Siamese."},
+{id:"tonkinese",n:"Tonkinese",aka:"Tonk",fam:"sia",org:"cross",reg:"Canada and USA",era:"1960s",from:["siamese","burmese"],pop:32,wt:"2.5–5.5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:5,af:5,vo:4,so:5,pl:5,ind:1,gr:1,sh:2,iq:5},m:{cob:3,leg:4,ear:4,head:2,tail:3,fur:1},life:"14–18 yr",
+ tell:"Mink coat with aqua eyes — a blended midpoint where the point pattern fades into the body colour.",
+ blurb:"The deliberate halfway house between Siamese and Burmese, and genetically exactly that: breed two Tonkinese and you get mink, pointed and solid kittens in a 2:1:1 ratio. Cannot breed true, by design.",
+ who:"People who want Siamese engagement at Burmese volume — busy but less shrill.",
+ not:"Households out all day. Tonks are relentless social animals.",
+ health:"Gingivitis, and the Burmese and Siamese conditions at lower rates."},
+{id:"havana-brown",n:"Havana Brown",aka:"Swiss Mountain Cat",fam:"sia",org:"cross",reg:"United Kingdom",era:"1950s",from:["siamese"],pop:12,wt:"2.5–4.5 kg",size:2,coat:"short",body:"moderate",
+ t:{en:4,af:5,vo:3,so:4,pl:4,ind:2,gr:1,sh:2,iq:5},m:{cob:3,leg:4,ear:4,head:2,tail:3,fur:1},life:"12–15 yr",
+ tell:"Uniform warm chocolate coat, green eyes, and whiskers that must also be brown.",
+ blurb:"Bred from chocolate-point Siamese crossed to black domestics. Investigates everything with its paws rather than its nose. One of the rarest breeds in the world — fewer than a thousand exist.",
+ who:"People who want a rare, hands-on, moderately talkative cat and will join a waiting list.",
+ not:"Anyone in a hurry to get a kitten.",
+ health:"A very small gene pool; outcrossing is permitted to manage it."},
+{id:"snowshoe",n:"Snowshoe",aka:"Silver Laces",fam:"sia",org:"cross",reg:"USA",era:"1960s",from:["siamese","american-shorthair"],pop:18,wt:"3–5.5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:4,af:5,vo:4,so:4,pl:4,ind:1,gr:1,sh:2,iq:4},m:{cob:3,leg:3,ear:4,head:3,tail:3,fur:1},life:"14–19 yr",
+ tell:"Siamese points with white boots and an inverted white V on the face — notoriously hard to breed to standard.",
+ blurb:"The white markings depend on unpredictable piebald genes, so few kittens match the standard. Softer-voiced than a Siamese, and often water-loving.",
+ who:"People who want the Siamese look with white markings and less volume.",
+ not:"Anyone shopping on markings alone; correct ones are rare and priced accordingly.",
+ health:"Generally sound; occasional Siamese eye and dental issues."},
+// ---------- PERSIAN GROUP ----------
+{id:"persian",n:"Persian",aka:"Longhair, Shirazi",fam:"pers",org:"landrace",reg:"Persia and Turkey, developed in Britain",era:"1600s",from:[],pop:88,wt:"3–6 kg",size:3,coat:"long",body:"cobby",
+ t:{en:1,af:4,vo:1,so:2,pl:2,ind:3,gr:5,sh:5,iq:2},m:{cob:5,leg:1,ear:1,head:5,tail:2,fur:4},life:"10–15 yr",
+ tell:"The flattest face in the cat world, and a coat up to 15 cm long that stands out in every direction.",
+ blurb:"The oldest pedigreed breed in the west and, for a century, the default show cat. Quiet, sedentary, undemanding — and the most labour-intensive coat there is. Modern peke-face breeding has gone far beyond what the cat can comfortably breathe through.",
+ who:"Calm, indoor, unhurried households willing to comb daily and wipe eyes daily, forever.",
+ not:"Anyone who will skip grooming. A neglected Persian coat mats to the skin and requires shaving under anaesthetic.",
+ health:"Polycystic kidney disease (testable), brachycephalic airway syndrome, tear duct overflow, dental crowding, PRA.",
+ flag:"The extreme flat face is a welfare problem, not a cosmetic preference: obstructed breathing, chronic eye discharge, difficult birth. Doll-face and traditional lines have a visible nose and far fewer problems."},
+{id:"exotic",n:"Exotic Shorthair",aka:"The lazy man's Persian",fam:"pers",org:"cross",reg:"USA",era:"1960s",from:["persian","american-shorthair"],pop:66,wt:"3–6 kg",size:3,coat:"short",body:"cobby",
+ t:{en:2,af:4,vo:1,so:3,pl:3,ind:3,gr:2,sh:3,iq:2},m:{cob:5,leg:1,ear:1,head:5,tail:2,fur:2},life:"10–15 yr",
+ tell:"A Persian face on a dense plush short coat — round, flat and startled-looking.",
+ blurb:"Created when breeders crossed Persians with American Shorthairs and found the resulting cats sold. Slightly livelier and more playful than the Persian, with a fraction of the coat work.",
+ who:"People who want the Persian look and face but cannot commit to daily grooming.",
+ not:"Anyone unwilling to accept the breathing and eye issues that come with the same skull.",
+ health:"As Persian, minus the coat problems.",
+ flag:"Shares the Persian brachycephalic burden in full. The shortened coat solves grooming, not breathing."},
+{id:"himalayan",n:"Himalayan",aka:"Colourpoint Persian, Himmy",fam:"pers",org:"cross",reg:"USA and UK",era:"1950s",from:["persian","siamese"],pop:30,wt:"3–6 kg",size:3,coat:"long",body:"cobby",
+ t:{en:2,af:4,vo:2,so:2,pl:3,ind:3,gr:5,sh:5,iq:3},m:{cob:5,leg:1,ear:1,head:5,tail:2,fur:4},life:"9–15 yr",
+ tell:"A Persian wearing Siamese points, with blue eyes.",
+ blurb:"Two decades of crossing produced Persian type with the pointed pattern. Treated as a separate breed in some registries and a Persian colour division in others. Marginally more playful than a solid Persian, which is a low bar.",
+ who:"Persian people who want blue eyes and points.",
+ not:"Anyone who thought the Siamese input might have added energy or reduced grooming.",
+ health:"As Persian.",
+ flag:"Same brachycephalic burden as the Persian."},
+// ---------- DOLL-FACED ----------
+{id:"ragdoll",n:"Ragdoll",aka:"—",fam:"rag",org:"cross",reg:"California, USA",era:"1963",from:["birman","persian"],pop:96,wt:"4.5–9 kg",size:5,coat:"semi-long",body:"substantial",
+ t:{en:2,af:5,vo:2,so:5,pl:3,ind:2,gr:3,sh:4,iq:3},m:{cob:4,leg:3,ear:3,head:4,tail:3,fur:3},life:"12–17 yr",
+ tell:"Goes limp when picked up — the trait it is named for — with blue eyes and a silky coat that barely mats.",
+ blurb:"Bred by Ann Baker from a white domestic longhair called Josephine, with a founding mythology that was mostly invented. The docility, however, is real and consistent. Slow to mature, and floor-dwelling rather than climbing.",
+ who:"Families, first-time owners, people who want a large cat that will be carried around. Best kept strictly indoors — it will not defend itself.",
+ not:"Homes wanting an independent or athletic cat, or anyone who cannot brush a big coat weekly.",
+ health:"HCM (a Ragdoll-specific gene variant, testable), bladder stones, obesity. Buy from cardiac-screened lines."},
+{id:"ragamuffin",n:"Ragamuffin",aka:"Cherubim",fam:"rag",org:"cross",reg:"USA",era:"1994",from:["ragdoll","persian"],pop:36,wt:"4.5–9 kg",size:5,coat:"semi-long",body:"substantial",
+ t:{en:2,af:5,vo:2,so:5,pl:3,ind:2,gr:3,sh:4,iq:3},m:{cob:5,leg:3,ear:3,head:5,tail:3,fur:3},life:"12–16 yr",
+ tell:"A Ragdoll in every colour and pattern, with a rounder face and a fuller nose break.",
+ blurb:"Split from the Ragdoll in a trademark dispute rather than a breeding one, then outcrossed for colour range and a broader gene pool. Behaviourally indistinguishable from a Ragdoll.",
+ who:"Anyone who likes the Ragdoll but wants a tabby or a solid colour.",
+ not:"People who need the blue eyes and points — those stay with the Ragdoll.",
+ health:"HCM, PKD from Persian outcrosses."},
+{id:"birman",n:"Birman",aka:"Sacred Cat of Burma",fam:"rag",org:"cross",reg:"France",era:"1920s",from:["siamese","persian"],pop:50,wt:"3.5–6.5 kg",size:4,coat:"semi-long",body:"moderate",
+ t:{en:2,af:5,vo:2,so:5,pl:3,ind:2,gr:2,sh:3,iq:3},m:{cob:4,leg:3,ear:3,head:4,tail:3,fur:3},life:"13–16 yr",
+ tell:"Pointed coat with four white gloves — the front pair even, the back pair rising into points up the hock.",
+ blurb:"French-developed in the 1920s with an origin story about Burmese temple cats that has no documentary support. Nearly wiped out in the war and rebuilt from two survivors. Gentle, quiet, follows you without demanding.",
+ who:"People who want Ragdoll-like gentleness in a medium-sized cat with modest grooming needs.",
+ not:"Anyone leaving a cat alone routinely — Birmans get quietly miserable.",
+ health:"HCM, PKD, congenital hypotrichosis in rare lines."},
+// ---------- ABYSSINIAN GROUP ----------
+{id:"abyssinian",n:"Abyssinian",aka:"Aby, Bunny cat",fam:"aby",org:"landrace",reg:"Indian Ocean coast, developed in Britain",era:"1860s",from:[],pop:58,wt:"3–5 kg",size:3,coat:"short",body:"foreign",
+ t:{en:5,af:4,vo:2,so:4,pl:5,ind:2,gr:1,sh:2,iq:5},m:{cob:2,leg:5,ear:5,head:2,tail:3,fur:1},life:"12–16 yr",
+ tell:"Warm ruddy coat with every hair banded three or four times, so it glows rather than stripes.",
+ blurb:"Restless, upright, permanently investigating. Abyssinians do not sit on laps; they supervise from the top of the door. One of the oldest breeds in the western fancy and genetically traceable to the Indian Ocean coast, not Ethiopia.",
+ who:"People who want a cat as an ongoing event: climbing shelves, taps left running, fetch at midnight.",
+ not:"Anyone wanting a lap cat, or a household with no vertical space.",
+ health:"Pyruvate kinase deficiency and PRA (both testable), renal amyloidosis, gingivitis."},
+{id:"somali",n:"Somali",aka:"Fox cat, Longhaired Abyssinian",fam:"aby",org:"mutation",reg:"USA and Canada",era:"1960s",from:["abyssinian"],pop:28,wt:"3–5.5 kg",size:3,coat:"semi-long",body:"foreign",
+ t:{en:5,af:4,vo:2,so:4,pl:5,ind:2,gr:2,sh:3,iq:5},m:{cob:2,leg:5,ear:5,head:2,tail:3,fur:3},life:"12–16 yr",
+ tell:"An Abyssinian with a full brush tail and britches — the fox comparison is unavoidable.",
+ blurb:"Longhaired kittens turned up in Abyssinian litters for decades before anyone would admit to them. Same busy, athletic, door-opening temperament, with a coat that only needs weekly attention.",
+ who:"Abyssinian people who want more coat. Households that can supply climbing height and puzzle feeders.",
+ not:"Anyone who wants stillness.",
+ health:"As Abyssinian."},
+// ---------- MEDITERRANEAN AND AFRICAN ----------
+{id:"turkish-angora",n:"Turkish Angora",aka:"Ankara kedisi",fam:"medit",org:"landrace",reg:"Turkey",era:"1400s",from:[],pop:26,wt:"2.5–5 kg",size:3,coat:"semi-long",body:"foreign",
+ t:{en:4,af:4,vo:3,so:4,pl:5,ind:2,gr:2,sh:3,iq:5},m:{cob:2,leg:5,ear:5,head:2,tail:3,fur:3},life:"12–18 yr",
+ tell:"A fine-boned white cat with a silky single coat and a tail carried like a plume over the back.",
+ blurb:"One of the original longhairs of the west, preserved by Ankara Zoo after the breed nearly disappeared into Persian breeding programmes. Bossy, fast, insists on being the one who decides.",
+ who:"People who want an active, elegant longhair with almost no undercoat and little matting.",
+ not:"Anyone hoping a longhair means a calm cat, or wanting a follower rather than a manager.",
+ health:"Deafness in blue-eyed whites; ataxia and HCM in some lines."},
+{id:"turkish-van",n:"Turkish Van",aka:"The swimming cat",fam:"medit",org:"landrace",reg:"Lake Van region, Turkey",era:"1950s",from:[],pop:14,wt:"3–9 kg",size:4,coat:"semi-long",body:"substantial",
+ t:{en:5,af:3,vo:3,so:3,pl:5,ind:4,gr:2,sh:3,iq:4},m:{cob:3,leg:4,ear:4,head:3,tail:3,fur:3},life:"12–17 yr",
+ tell:"Chalk-white body with colour restricted to the head and tail — the pattern is named after the breed.",
+ blurb:"A big, powerful, cashmere-coated cat from eastern Turkey with a documented liking for water — it will get into a bath or a pond. Emphatically not a lap cat; dislikes being held.",
+ who:"Confident owners with space, water tolerance and a sense of humour.",
+ not:"People who want to cuddle, or who own delicate objects on shelves.",
+ health:"Deafness in blue-eyed whites; generally hardy."},
+{id:"aegean",n:"Aegean",aka:"—",fam:"medit",org:"landrace",reg:"Cyclades, Greece",era:"1990s",from:[],pop:5,wt:"3–5 kg",size:3,coat:"semi-long",body:"moderate",
+ t:{en:4,af:4,vo:3,so:4,pl:4,ind:3,gr:2,sh:3,iq:4},m:{cob:3,leg:3,ear:3,head:3,tail:3,fur:3},life:"14–18 yr",
+ tell:"Bi- or tri-colour with white always present — the harbour cat of the Greek islands.",
+ blurb:"Greece's only native breed, developed straight from the island fishing-port populations with no outcrossing. Water-confident, fish-obsessed, and completely unfussy.",
+ who:"People who want a healthy, adaptable landrace and live somewhere it is actually available.",
+ not:"Anyone outside Greece — exports are rare.",
+ health:"No breed-specific disorders recorded, which is the point of it."},
+{id:"egyptian-mau",n:"Egyptian Mau",aka:"—",fam:"medit",org:"landrace",reg:"Egypt",era:"1950s",from:[],pop:24,wt:"3–5 kg",size:3,coat:"short",body:"moderate",
+ t:{en:5,af:4,vo:3,so:2,pl:5,ind:3,gr:1,sh:2,iq:5},m:{cob:3,leg:4,ear:4,head:3,tail:3,fur:1},life:"12–15 yr",
+ tell:"The only naturally spotted domestic breed — spots on the hair, not just the coat pattern — plus a worried-looking brow and gooseberry-green eyes.",
+ blurb:"Rebuilt from Egyptian street cats by an exiled Russian princess in the 1950s. The fastest domestic cat measured, with a longer hind leg and a loose belly flap. Deeply suspicious of strangers, devoted at home.",
+ who:"Experienced owners who want a natural spotted cat rather than a hybrid, and can offer a settled environment.",
+ not:"Busy, unpredictable households. Maus do not adapt quickly to change.",
+ health:"Small gene pool; occasional leukodystrophy and asthma, plus general sensitivity to anaesthesia."},
+{id:"sokoke",n:"Sokoke",aka:"Khadzonzo",fam:"medit",org:"landrace",reg:"Arabuko-Sokoke forest, Kenya",era:"1970s",from:[],pop:3,wt:"3–5 kg",size:3,coat:"short",body:"foreign",
+ t:{en:4,af:4,vo:3,so:3,pl:4,ind:3,gr:1,sh:1,iq:4},m:{cob:2,leg:5,ear:4,head:2,tail:3,fur:1},life:"12–15 yr",
+ tell:"African blotched tabby with almost no undercoat, and a tip-toed, long-legged walk.",
+ blurb:"A forest landrace of coastal Kenya, taken into breeding in the 1970s and still one of the rarest cats anywhere. Reported to communicate constantly with other cats and to pair-bond strongly.",
+ who:"Collectors of genuinely unusual landraces who can reach a European breeder.",
+ not:"Cold climates without heating — this coat is thin. Also, almost nobody: there are only a few hundred.",
+ health:"Little recorded; the population is too small to know much."},
+// ---------- TICKED / DESIGNED ----------
+{id:"ocicat",n:"Ocicat",aka:"—",fam:"des",org:"cross",reg:"USA",era:"1964",from:["abyssinian","siamese","american-shorthair"],pop:22,wt:"3–6.5 kg",size:4,coat:"short",body:"moderate",
+ t:{en:5,af:5,vo:4,so:5,pl:5,ind:2,gr:1,sh:2,iq:5},m:{cob:3,leg:4,ear:4,head:3,tail:3,fur:1},life:"12–18 yr",
+ tell:"Thumbprint spots on a ticked ground, with no wild ancestry at all.",
+ blurb:"An accident from an experiment to add ticked points to Siamese: one spotted kitten looked like an ocelot and a breed followed. Behaves like a Siamese in a leopard costume — loud, trainable, aggressively social.",
+ who:"People who want the wild look with a fully domestic temperament and no legal complications.",
+ not:"Anyone who wanted the aloofness that usually goes with the look.",
+ health:"Sound overall; occasional PKD, PRA and pyruvate kinase deficiency from the founding breeds."},
+{id:"toyger",n:"Toyger",aka:"—",fam:"des",org:"cross",reg:"USA",era:"1990s",from:["bengal","american-shorthair"],pop:12,wt:"3–7 kg",size:4,coat:"short",body:"moderate",
+ t:{en:4,af:5,vo:3,so:5,pl:4,ind:2,gr:1,sh:2,iq:4},m:{cob:3,leg:3,ear:2,head:3,tail:3,fur:1},life:"12–15 yr",
+ tell:"Vertical broken stripes on an orange ground, plus a deliberately small, rounded ear set to read as tiger-like.",
+ blurb:"A design project, still unfinished: the goal is a domestic cat that reads as a miniature tiger from across a room. Uses Bengal stock but no recent wild ancestry. Placid and dog-like compared to its ancestors.",
+ who:"People who want a striking cat that behaves like an easy one, and don't mind paying for a work in progress.",
+ not:"Anyone expecting a settled, uniform breed — type varies a lot between litters.",
+ health:"HCM and heart murmurs reported; small gene pool."},
+{id:"serengeti",n:"Serengeti",aka:"—",fam:"des",org:"cross",reg:"USA",era:"1994",from:["bengal","oriental-shorthair"],pop:5,wt:"3.5–7 kg",size:4,coat:"short",body:"foreign",
+ t:{en:5,af:4,vo:4,so:4,pl:5,ind:2,gr:1,sh:2,iq:4},m:{cob:2,leg:5,ear:5,head:2,tail:3,fur:1},life:"12–15 yr",
+ tell:"Long legs, huge upright ears and bold spots — built to evoke a serval without using one.",
+ blurb:"An answer to the Savannah for people who want the look without wild ancestry, legal restrictions or fertility problems. Very rare, very vocal, very busy.",
+ who:"People drawn to the Savannah who would rather not own an F1 hybrid.",
+ not:"Anyone who needs a quiet or sedentary cat.",
+ health:"Few data; Bengal and Oriental predispositions apply."},
+// ---------- COAT MUTATIONS ----------
+{id:"cornish-rex",n:"Cornish Rex",aka:"—",fam:"rex",org:"mutation",reg:"Cornwall, England",era:"1950",from:[],pop:34,wt:"2.5–4.5 kg",size:2,coat:"curly",body:"oriental",
+ t:{en:5,af:5,vo:4,so:5,pl:5,ind:1,gr:1,sh:1,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:1},life:"12–16 yr",
+ tell:"Only the undercoat remains, in tight marcel waves — no guard hairs at all — over an arched greyhound body.",
+ blurb:"From one curly kitten on a Cornish farm in 1950. Warm to the touch, permanently in motion, and physically incapable of leaving a room alone. Runs at a gallop, hunts thrown objects, seeks heat.",
+ who:"Warm homes, people who are around, and anyone who wants a cat that acts like a whippet.",
+ not:"Cold houses, quiet households, and people who want a cat that will settle down after two.",
+ health:"Patellar luxation, hypotrichosis, sensitivity to cold and to anaesthetics."},
+{id:"devon-rex",n:"Devon Rex",aka:"Pixie cat, Poodle cat",fam:"rex",org:"mutation",reg:"Devon, England",era:"1959",from:[],pop:60,wt:"2.5–4.5 kg",size:2,coat:"curly",body:"foreign",
+ t:{en:5,af:5,vo:3,so:5,pl:5,ind:1,gr:1,sh:1,iq:5},m:{cob:2,leg:4,ear:5,head:4,tail:3,fur:1},life:"12–16 yr",
+ tell:"Enormous low-set ears, huge eyes, a short loose curl and crinkled whiskers that break off.",
+ blurb:"A separate mutation from the Cornish, discovered ten years later and only nine miles away; crossing the two gives straight-coated kittens. Perches on shoulders, sleeps under covers, and steals food with intent.",
+ who:"People who want a cat that behaves like a small mischievous primate, and who are home.",
+ not:"Anyone wanting dignity or independence. Devons are needy and unrepentant about it.",
+ health:"HCM, patellar luxation, Devon Rex myopathy (testable), coagulopathy, greasy skin needing bathing."},
+{id:"german-rex",n:"German Rex",aka:"—",fam:"rex",org:"mutation",reg:"Germany",era:"1951",from:[],pop:4,wt:"3–5 kg",size:3,coat:"curly",body:"moderate",
+ t:{en:4,af:5,vo:2,so:5,pl:4,ind:2,gr:1,sh:1,iq:4},m:{cob:3,leg:3,ear:3,head:3,tail:3,fur:1},life:"12–16 yr",
+ tell:"The Cornish curl on a normal, medium, unexaggerated European body.",
+ blurb:"Actually the first rex documented in Europe, from a cat found near a Berlin hospital in 1951, and carrying the same gene as the Cornish. Never became fashionable, so it stayed moderate in type.",
+ who:"People who want a curly coat without the extreme greyhound build.",
+ not:"Anyone in a hurry — the breed is nearly extinct outside Germany.",
+ health:"Few problems; small population."},
+{id:"selkirk-rex",n:"Selkirk Rex",aka:"The cat in sheep's clothing",fam:"rex",org:"mutation",reg:"Montana, USA",era:"1987",from:["persian","british-shorthair","exotic"],pop:28,wt:"3.5–7 kg",size:4,coat:"curly",body:"cobby",
+ t:{en:2,af:5,vo:2,so:5,pl:3,ind:3,gr:3,sh:3,iq:3},m:{cob:5,leg:2,ear:2,head:5,tail:2,fur:3},life:"12–16 yr",
+ tell:"Loose random curls, including in the whiskers, on a heavy round body — it looks like a sheep.",
+ blurb:"A dominant curl gene, unlike the Cornish and Devon recessives, found in a shelter kitten in Montana and outcrossed to Persians and British Shorthairs. Which is why the temperament is placid rather than frantic.",
+ who:"People who want the novelty coat with a calm, patient, cuddly cat underneath.",
+ not:"Anyone assuming curly means low-shedding — this one sheds and needs gentle combing that will not straighten the curl.",
+ health:"PKD and HCM from Persian and BSH lines; brachycephalic risk in flatter individuals."},
+{id:"laperm",n:"LaPerm",aka:"—",fam:"rex",org:"mutation",reg:"Oregon, USA",era:"1982",from:[],pop:14,wt:"3–5.5 kg",size:3,coat:"curly",body:"foreign",
+ t:{en:4,af:5,vo:3,so:5,pl:4,ind:2,gr:2,sh:1,iq:4},m:{cob:2,leg:4,ear:4,head:3,tail:3,fur:3},life:"12–16 yr",
+ tell:"Ringlets and corkscrew curls, longest at the ruff and tail, often after being born bald.",
+ blurb:"Began with one hairless kitten on an Oregon cherry farm that grew a curly coat at eight weeks. Dominant gene, wide outcrossing, and a barn-cat gene pool — one of the healthier novelty breeds.",
+ who:"People who want a curly coat, low shedding and a mellow, affectionate, hands-on cat.",
+ not:"Anyone allergic — the curl reduces shed hair, not Fel d 1.",
+ health:"Notably robust thanks to continuing outcrosses."},
+{id:"american-wirehair",n:"American Wirehair",aka:"—",fam:"rex",org:"mutation",reg:"New York, USA",era:"1966",from:["american-shorthair"],pop:4,wt:"3.5–6 kg",size:3,coat:"wire",body:"semi-cobby",
+ t:{en:3,af:4,vo:2,so:4,pl:3,ind:4,gr:1,sh:2,iq:3},m:{cob:4,leg:3,ear:3,head:4,tail:3,fur:2},life:"14–18 yr",
+ tell:"Every hair bent or hooked, giving a springy steel-wool texture — even the whiskers are crimped.",
+ blurb:"A single mutation in a farm litter in upstate New York, unique to America and found nowhere else. Behaviourally an American Shorthair. One of the rarest breeds in existence, with only a few dozen registered a year.",
+ who:"People who want an easy, sturdy cat with a genuinely one-of-a-kind coat.",
+ not:"Anyone who needs to actually find one.",
+ health:"As American Shorthair; occasional oily skin needing bathing."},
+{id:"sphynx",n:"Sphynx",aka:"Canadian Hairless",fam:"rex",org:"mutation",reg:"Toronto, Canada",era:"1966",from:[],pop:70,wt:"3–5.5 kg",size:3,coat:"hairless",body:"foreign",
+ t:{en:5,af:5,vo:4,so:5,pl:5,ind:1,gr:4,sh:1,iq:5},m:{cob:3,leg:4,ear:5,head:3,tail:3,fur:0},life:"9–15 yr",
+ tell:"Skin like warm chamois with a fine down, deeply wrinkled at the muzzle and shoulders, and a pot belly.",
+ blurb:"From a hairless kitten born in Toronto in 1966, outcrossed to Devon Rex for soundness. The most extroverted breed there is: greets guests, sleeps under blankets, demands lap time constantly. High metabolism, always hungry, always seeking heat.",
+ who:"People who are home, want a cat in constant physical contact, and will bathe it weekly and clean its ears and nail beds.",
+ not:"Anyone with allergies — hairless does not mean allergen-free, and the skin oils actually spread Fel d 1. Also not for cold homes or outdoor access; they sunburn and chill.",
+ health:"HCM (high incidence — insist on screened lines), hereditary myopathy, skin conditions, dental disease."},
+{id:"donskoy",n:"Donskoy",aka:"Don Sphynx",fam:"rex",org:"mutation",reg:"Rostov-on-Don, Russia",era:"1987",from:[],pop:10,wt:"3–7 kg",size:3,coat:"hairless",body:"moderate",
+ t:{en:4,af:5,vo:3,so:5,pl:4,ind:1,gr:4,sh:1,iq:4},m:{cob:3,leg:3,ear:5,head:3,tail:3,fur:0},life:"12–15 yr",
+ tell:"Hairlessness from a dominant gene, not the Sphynx recessive, plus long webbed toes and a wrinkled face.",
+ blurb:"A separate mutation found in Russia in 1987. Kittens may be born coated and lose it, or be born bald; some regrow a coat in winter. The dominant gene is linked to dental problems.",
+ who:"People who want a hairless cat and specifically not a Sphynx.",
+ not:"Anyone who wants a straightforward health picture.",
+ health:"Severe early dental disease and gingivitis linked to the hairless gene; skin care and warmth needed.",
+ flag:"The dominant hairless gene is associated with ectodermal defects — missing teeth and abnormal dentition are common rather than exceptional."},
+{id:"peterbald",n:"Peterbald",aka:"—",fam:"rex",org:"cross",reg:"St Petersburg, Russia",era:"1994",from:["donskoy","oriental-shorthair"],pop:12,wt:"3–5 kg",size:2,coat:"hairless",body:"oriental",
+ t:{en:5,af:5,vo:4,so:5,pl:5,ind:1,gr:3,sh:1,iq:5},m:{cob:1,leg:5,ear:5,head:1,tail:3,fur:0},life:"12–15 yr",
+ tell:"An Oriental Shorthair's angles with anything from bald skin to a peach-fuzz or brush coat — the coat can change over the cat's life.",
+ blurb:"Donskoy crossed onto Oriental type. Combines the hairless gene's warmth-seeking with the Siamese family's volume and intelligence. Coat can go from bald to velour and back.",
+ who:"People who want a hairless cat with full Oriental personality.",
+ not:"Cold rooms, quiet expectations, or anyone hoping for reduced allergens.",
+ health:"Dental problems from the Donskoy gene; skin care needed; Oriental predispositions."},
+{id:"lykoi",n:"Lykoi",aka:"Werewolf cat",fam:"rex",org:"mutation",reg:"Tennessee, USA",era:"2010",from:[],pop:10,wt:"2.5–5 kg",size:2,coat:"hairless",body:"foreign",
+ t:{en:5,af:4,vo:2,so:3,pl:5,ind:3,gr:2,sh:2,iq:4},m:{cob:2,leg:4,ear:5,head:2,tail:3,fur:1},life:"12–15 yr",
+ tell:"Roan coat — black and white hairs mixed — with bald patches around the eyes, muzzle and behind the ears.",
+ blurb:"A recent mutation affecting hair follicles: the cat lacks an undercoat entirely and periodically moults to near-bald, then regrows. Behaves like a pointer more than a cat — stalks, hoards, problem-solves obsessively.",
+ who:"People who want the newest and strangest thing in the fancy and are amused by a cat that moults in patches.",
+ not:"Anyone who wants a consistent-looking pet; the coat cycles visibly through the year.",
+ health:"The mutation appears benign so far, but the breed is under fifteen years old and long-term data does not exist."},
+// ---------- TAIL AND SPINE ----------
+{id:"manx",n:"Manx",aka:"Rumpy, Stubbin",fam:"tail",org:"mutation",reg:"Isle of Man",era:"1700s",from:[],pop:26,wt:"3.5–5.5 kg",size:3,coat:"short",body:"cobby",
+ t:{en:3,af:4,vo:2,so:4,pl:4,ind:3,gr:2,sh:3,iq:4},m:{cob:5,leg:3,ear:3,head:4,tail:0,fur:2},life:"12–15 yr",
+ tell:"No tail at all in the rumpy, a rounded rump, and hind legs longer than the front, giving a rabbit-like hop.",
+ blurb:"An island mutation fixed by three centuries of isolation. Dog-like, water-tolerant, a determined hunter. The tailless gene is dominant and lethal when doubled, so Manx are never bred to each other.",
+ who:"Experienced owners who understand the genetics and will buy from breeders who test and outcross to tailed cats.",
+ not:"Anyone buying purely on the tailless novelty.",
+ health:"Manx syndrome — spina bifida, fused vertebrae, incontinence and megacolon — appears in a proportion of kittens, sometimes only at four to six months.",
+ flag:"The gene that removes the tail also shortens the spine. A share of kittens are born with serious spinal and bowel defects; homozygotes die in utero."},
+{id:"cymric",n:"Cymric",aka:"Longhaired Manx",fam:"tail",org:"mutation",reg:"Isle of Man and Canada",era:"1960s",from:["manx"],pop:10,wt:"3.5–5.5 kg",size:3,coat:"semi-long",body:"cobby",
+ t:{en:3,af:4,vo:2,so:4,pl:4,ind:3,gr:3,sh:4,iq:4},m:{cob:5,leg:3,ear:3,head:4,tail:0,fur:3},life:"12–15 yr",
+ tell:"A Manx with a double semi-long coat and full britches.",
+ blurb:"Longhaired Manx kittens, recognised separately in North America and as a Manx variety in Britain. Same gene, same caveats, more coat.",
+ who:"As Manx, with more grooming appetite.",
+ not:"As Manx.",
+ health:"As Manx, including Manx syndrome.",
+ flag:"Carries the same spinal risk as the Manx."},
+{id:"japanese-bobtail",n:"Japanese Bobtail",aka:"Maneki-neko cat",fam:"tail",org:"landrace",reg:"Japan",era:"1600s",from:[],pop:22,wt:"2.5–4.5 kg",size:2,coat:"short",body:"foreign",
+ t:{en:5,af:4,vo:4,so:5,pl:5,ind:2,gr:1,sh:2,iq:5},m:{cob:2,leg:4,ear:4,head:2,tail:0,fur:1},life:"14–18 yr",
+ tell:"A rigid pom-pom tail of a few kinked vertebrae, unique to each cat, and often a calico coat.",
+ blurb:"Old in Japan, and the model for the beckoning cat statue. Its bobtail gene is recessive and entirely unrelated to the Manx mutation, with no spinal consequences. Talkative in a whole range of tones, athletic, loves carrying things.",
+ who:"People who want a bobtail without the health baggage, and enjoy a chatty, acrobatic cat.",
+ not:"Households needing quiet or stillness.",
+ health:"No breed-specific disorders of note. A genuinely healthy breed."},
+{id:"american-bobtail",n:"American Bobtail",aka:"—",fam:"tail",org:"mutation",reg:"USA",era:"1960s",from:[],pop:16,wt:"3–7.5 kg",size:4,coat:"semi-long",body:"substantial",
+ t:{en:3,af:5,vo:2,so:5,pl:4,ind:2,gr:2,sh:3,iq:4},m:{cob:4,leg:3,ear:3,head:3,tail:1,fur:3},life:"13–15 yr",
+ tell:"A shaggy, wild-looking cat with a short expressive tail it still wags.",
+ blurb:"A dominant bobtail mutation, unrelated to the Manx gene, bred into a big rangy body. Widely used as a therapy cat: exceptionally tolerant of handling, travel and noise.",
+ who:"Families, frequent travellers, anyone wanting an easy-going large cat.",
+ not:"People who want a delicate or elegant cat.",
+ health:"Sound; occasional hip dysplasia. Fully tailless individuals should be avoided."},
+{id:"pixiebob",n:"Pixiebob",aka:"—",fam:"tail",org:"mutation",reg:"Washington, USA",era:"1985",from:[],pop:14,wt:"4–8 kg",size:4,coat:"short",body:"substantial",
+ t:{en:3,af:5,vo:2,so:4,pl:4,ind:2,gr:2,sh:3,iq:4},m:{cob:4,leg:4,ear:4,head:3,tail:1,fur:2},life:"13–16 yr",
+ tell:"Heavy-boned, ear-tufted, spotted, with a short tail and often extra toes — polydactyly is allowed in this breed alone.",
+ blurb:"Marketed for years as part bobcat; DNA testing found no wild ancestry whatsoever. What remains is a big, quiet, dog-like domestic cat that walks on a lead and follows its owner around.",
+ who:"People who want a rugged-looking cat with a placid, dog-like temperament and no legal complications.",
+ not:"Anyone buying it for the bobcat story — that story is not true.",
+ health:"Generally sound; occasional cryptorchidism and hip dysplasia."},
+// ---------- EAR MUTATIONS ----------
+{id:"scottish-fold",n:"Scottish Fold",aka:"Coupari, Highland Fold",fam:"ear",org:"mutation",reg:"Tayside, Scotland",era:"1961",from:["british-shorthair"],pop:68,wt:"2.5–6 kg",size:3,coat:"short",body:"cobby",
+ t:{en:2,af:5,vo:2,so:4,pl:3,ind:2,gr:2,sh:3,iq:3},m:{cob:5,leg:2,ear:1,head:5,tail:2,fur:2},life:"11–15 yr",
+ tell:"Ears folded flat forward against a round skull, and a habit of sitting up like a meerkat.",
+ blurb:"Traced to one barn cat, Susie, in Perthshire in 1961. Sweet, quiet and placid — and the fold is caused by a cartilage defect that affects every joint in the body, not just the ear.",
+ who:"Nobody, ideally. If you have one, it needs lifelong monitoring for pain and early joint imaging.",
+ not:"Anyone who can choose otherwise. Buying one funds the continued breeding of a painful mutation.",
+ health:"Osteochondrodysplasia — progressive, painful arthritis of the tail, ankles and knees, present in every folded cat to some degree.",
+ flag:"This is the clearest welfare case in the fancy. The GCCF has never recognised the breed and banned it in 1971; veterinary bodies in several countries have called for a breeding ban. Straight-eared siblings are healthy and are the ethical version of this cat."},
+{id:"american-curl",n:"American Curl",aka:"—",fam:"ear",org:"mutation",reg:"California, USA",era:"1981",from:[],pop:18,wt:"2.5–5 kg",size:3,coat:"semi-long",body:"moderate",
+ t:{en:4,af:5,vo:2,so:5,pl:5,ind:2,gr:2,sh:2,iq:4},m:{cob:3,leg:3,ear:4,head:3,tail:3,fur:3},life:"13–18 yr",
+ tell:"Ears curling backward in a smooth arc, firm at the base — kittens are born straight and curl within a week.",
+ blurb:"From a stray longhaired kitten in Lakewood, California in 1981. The dominant curl gene affects only the ear cartilage and carries no known health cost — the counterexample to the Scottish Fold. Famously kitten-like into old age.",
+ who:"People who want an unusual look with a clean conscience and a bright, sociable, low-drama cat.",
+ not:"Anyone rough with ears — the cartilage can be damaged by handling.",
+ health:"Nothing breed-specific. Wide outcrossing keeps the gene pool healthy."},
+{id:"highlander",n:"Highlander",aka:"Highland Lynx",fam:"ear",org:"cross",reg:"USA",era:"2004",from:["american-curl","pixiebob"],pop:6,wt:"4–9 kg",size:5,coat:"short",body:"substantial",
+ t:{en:5,af:5,vo:3,so:5,pl:5,ind:2,gr:1,sh:2,iq:4},m:{cob:4,leg:4,ear:4,head:3,tail:1,fur:2},life:"10–15 yr",
+ tell:"Curled ears, a short tail, a heavy body and frequently polydactyl feet.",
+ blurb:"A recent designer breed combining two mutations for a lynx-like look with no wild blood. Boisterous, water-loving, and much more active than its bulk suggests.",
+ who:"People who want a large, playful, strange-looking cat and are comfortable with a very new breed.",
+ not:"Anyone wanting a settled type or an established health record.",
+ health:"Too new for reliable data; watch for the polydactyl and short-tail issues of its parent breeds."},
+{id:"ukrainian-levkoy",n:"Ukrainian Levkoy",aka:"—",fam:"ear",org:"cross",reg:"Ukraine",era:"2004",from:["donskoy","scottish-fold"],pop:4,wt:"3–5.5 kg",size:3,coat:"hairless",body:"foreign",
+ t:{en:4,af:5,vo:3,so:5,pl:4,ind:1,gr:4,sh:1,iq:4},m:{cob:2,leg:4,ear:1,head:2,tail:3,fur:0},life:"12–15 yr",
+ tell:"Hairless, wrinkled and folded-eared at once, with a long angular head.",
+ blurb:"A deliberate combination of the Donskoy hairless gene and the Scottish Fold ear gene. Affectionate and dog-like, and unrecognised by every major international registry.",
+ who:"Very few people. Consider carefully what this breed combines.",
+ not:"Anyone who took the Scottish Fold and Donskoy warnings seriously — this breed stacks both.",
+ health:"Fold cartilage disease plus hairless-gene dental defects, in one cat.",
+ flag:"Combines two mutations each associated with lifelong disease. No major registry recognises it."},
+// ---------- LIMB MUTATIONS ----------
+{id:"munchkin",n:"Munchkin",aka:"Sausage cat",fam:"leg",org:"mutation",reg:"Louisiana, USA",era:"1983",from:[],pop:40,wt:"2.5–4 kg",size:2,coat:"short",body:"semi-cobby",
+ t:{en:4,af:5,vo:2,so:5,pl:5,ind:2,gr:1,sh:2,iq:4},m:{cob:4,leg:1,ear:3,head:4,tail:3,fur:2},life:"12–15 yr",
+ tell:"Legs roughly a third shorter than normal, with a normal-sized body above them. Sits up on its haunches like a ferret.",
+ blurb:"From a pregnant short-legged stray found in Louisiana in 1983. The gene is a dominant achondroplasia-like mutation, lethal when doubled. Cats are agile and fast but cannot jump to normal heights.",
+ who:"Contested. Owners report sunny, sociable, playful cats; many veterinary bodies oppose the breed's existence.",
+ not:"Anyone uneasy about breeding for a skeletal deformity, or who wants a cat that can reach a windowsill.",
+ health:"Lordosis and pectus excavatum occur at elevated rates; long-term joint data is limited.",
+ flag:"The GCCF and several European registries refuse recognition, describing the breed as founded on a deformity. TICA recognises it. This is the live ethical fault line in the cat fancy."},
+{id:"minuet",n:"Minuet",aka:"Napoleon",fam:"leg",org:"cross",reg:"USA",era:"1996",from:["munchkin","persian"],pop:8,wt:"2.5–4.5 kg",size:2,coat:"semi-long",body:"cobby",
+ t:{en:3,af:5,vo:2,so:5,pl:4,ind:2,gr:3,sh:4,iq:3},m:{cob:5,leg:1,ear:1,head:5,tail:2,fur:3},life:"10–15 yr",
+ tell:"A Persian face and coat on Munchkin legs.",
+ blurb:"Munchkin crossed to Persian and Exotic for a permanently kitten-like look. Calmer than a Munchkin, and carrying the health load of both parent breeds.",
+ who:"Few people should be seeking this out.",
+ not:"Anyone concerned about either brachycephaly or dwarfism.",
+ health:"Persian conditions plus Munchkin skeletal risks.",
+ flag:"Stacks a brachycephalic skull onto a dwarfing gene."},
+{id:"bambino",n:"Bambino",aka:"—",fam:"leg",org:"cross",reg:"USA",era:"2005",from:["munchkin","sphynx"],pop:5,wt:"2–4 kg",size:1,coat:"hairless",body:"semi-cobby",
+ t:{en:4,af:5,vo:3,so:5,pl:5,ind:1,gr:4,sh:1,iq:4},m:{cob:3,leg:1,ear:5,head:3,tail:3,fur:0},life:"12–15 yr",
+ tell:"Hairless and short-legged at once, with oversized ears.",
+ blurb:"Sphynx crossed to Munchkin. Warm, extremely affectionate and completely dependent on people — and combining two mutations that each restrict what a cat can physically do.",
+ who:"Consider a Sphynx instead.",
+ not:"Anyone who wants a cat that can jump, thermoregulate and keep its own coat clean.",
+ health:"Sphynx skin and cardiac issues plus Munchkin skeletal risks.",
+ flag:"Combines dwarfism and hairlessness. Unrecognised by most registries."},
+// ---------- WILD HYBRIDS ----------
+{id:"bengal",n:"Bengal",aka:"—",fam:"hyb",org:"hybrid",reg:"USA",era:"1963",from:["egyptian-mau","abyssinian"],pop:78,wt:"3.5–8 kg",size:4,coat:"short",body:"substantial",
+ t:{en:5,af:4,vo:4,so:4,pl:5,ind:3,gr:1,sh:2,iq:5},m:{cob:3,leg:4,ear:3,head:3,tail:3,fur:1},life:"12–16 yr",
+ tell:"Rosetted or marbled coat with a metallic glitter, and a pelt so short it feels like satin.",
+ blurb:"Founded on crosses between domestic cats and the Asian leopard cat, originally for feline leukaemia research. Cats from the fourth generation onward are legally domestic in most places. Powerful, water-obsessed, endlessly busy, and a genuine escape artist.",
+ who:"Active households ready to provide climbing structures, puzzle feeding and daily engagement — and a secure catio rather than free roaming.",
+ not:"Flats with no enrichment, quiet or elderly households, and anywhere earlier generations are restricted by law.",
+ health:"Progressive retinal atrophy (testable), pyruvate kinase deficiency, HCM. Some lines have chronic loose stools.",
+ flag:"F1 to F3 generations are large, difficult, often unsuitable as pets and restricted or illegal in many jurisdictions including New York City, Hawaii and parts of Australia and the UK."},
+{id:"savannah",n:"Savannah",aka:"—",fam:"hyb",org:"hybrid",reg:"USA",era:"1986",from:[],pop:32,wt:"5–11 kg",size:5,coat:"short",body:"foreign",
+ t:{en:5,af:4,vo:4,so:3,pl:5,ind:3,gr:1,sh:2,iq:5},m:{cob:1,leg:5,ear:5,head:2,tail:2,fur:1},life:"12–20 yr",
+ tell:"The tallest domestic cat — long legs, long neck, huge cupped ears and bold dark spots.",
+ blurb:"A serval crossed to a domestic cat, first produced in 1986. F1s can exceed 11 kg and jump 2.5 metres from standing. Later generations moderate toward normal cat behaviour, but the breed stays demanding, athletic and prone to bonding with one person.",
+ who:"Experienced exotic owners with space, secure outdoor enclosures and time. Later generations (F4 and beyond) suit dedicated ordinary households.",
+ not:"Most people, most homes, and most legal jurisdictions. Check your local law before anything else.",
+ health:"Generally hardy; anaesthetic sensitivity, and males are sterile through roughly F4.",
+ flag:"Early generations are regulated as exotic animals in many places and banned outright in others. Feeding, veterinary care and containment are non-trivial."},
+{id:"chausie",n:"Chausie",aka:"Nile cat",fam:"hyb",org:"hybrid",reg:"USA",era:"1990s",from:["abyssinian"],pop:8,wt:"4–11 kg",size:5,coat:"short",body:"foreign",
+ t:{en:5,af:4,vo:3,so:3,pl:5,ind:3,gr:1,sh:2,iq:5},m:{cob:2,leg:5,ear:4,head:2,tail:2,fur:1},life:"12–16 yr",
+ tell:"A tall, deep-chested, long-legged cat in ticked brown or grizzled black, built like a runner.",
+ blurb:"Jungle cat crossed to domestic stock, usually Abyssinian. Needs enormous exercise, is prone to serious gut problems on grain-based food, and will not tolerate being left alone or being an only cat.",
+ who:"Very experienced owners who can supply space, raw or high-meat diets, and a companion animal.",
+ not:"Anyone without hybrid experience. Also a bad match for small homes.",
+ health:"Short intestinal tract inherited from the wild side, causing food intolerance; otherwise long-lived."}
+];
+</script>
+<script>
+const $ = s => document.querySelector(s);
+const byId = Object.fromEntries(B.map(b => [b.id, b]));
+const ORIGIN_NAME = Object.fromEntries(ORIGINS.map(o => [o.id, o.name]));
+const ORIGIN_COL = {landrace:"var(--jade)", mutation:"var(--amber)", cross:"var(--mulberry)", hybrid:"var(--rust)"};
+const ORIGIN_HEX = {landrace:"#2F6F5E", mutation:"#B37A16", cross:"#7A3B5C", hybrid:"#A6482A"};
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------- procedural silhouette ---------- */
+function sil(b, w, col){
+  const m = b.m, c = col || ORIGIN_HEX[b.org];
+  const base = 88, legLen = 7 + m.leg*4.2;
+  const rx = 36 - m.cob*2, ry = 8 + m.cob*2.4;
+  const cx = 76, cy = base - legLen - ry;
+  const fur = 0.7 + m.fur*1.15;
+  const hr = 9 + m.head*0.9 + m.fur*0.5;
+  const hx = cx - rx*0.95 - hr*0.30;
+  const hy = cy - ry*0.75 - hr*0.60;
+  const muz = (6 - m.head)*1.6;
+  const eh = 3.5 + m.ear*2.1, ew = 4 + m.ear*1.4;
+  const lw = 3.4 + m.cob*0.7;
+  const legY = cy + ry*0.5;
+  const p = [];
+  // tail
+  if(m.tail === 0){
+    p.push(`<circle cx="${(cx+rx*0.9).toFixed(1)}" cy="${(cy-ry*0.4).toFixed(1)}" r="${(3+m.fur*0.8).toFixed(1)}"/>`);
+  } else {
+    const L = m.tail*9;
+    const endY = Math.max(7, cy - 12 - L*0.95);
+    const ctrlY = Math.max(4, cy - 4 - L*0.25);
+    p.push(`<path d="M${(cx+rx*0.78).toFixed(1)} ${(cy+ry*0.1).toFixed(1)} Q${(cx+rx+9+L*0.45).toFixed(1)} ${ctrlY.toFixed(1)} ${(cx+rx*0.7+L*0.3).toFixed(1)} ${endY.toFixed(1)}" fill="none" stroke="${c}" stroke-width="${(2.6+m.fur*1.5).toFixed(1)}" stroke-linecap="round"/>`);
+  }
+  // legs
+  [-0.62,-0.3,0.42,0.7].forEach(f=>{
+    p.push(`<rect x="${(cx + rx*f - lw/2).toFixed(1)}" y="${legY.toFixed(1)}" width="${lw.toFixed(1)}" height="${(base-legY).toFixed(1)}" rx="${(lw/2).toFixed(1)}"/>`);
+  });
+  // body
+  p.push(`<ellipse cx="${cx}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}"/>`);
+  // neck
+  const sx0 = cx - rx*0.62, sy0 = cy - ry*0.42;
+  p.push(`<ellipse cx="${((hx+sx0)/2).toFixed(1)}" cy="${((hy+sy0)/2).toFixed(1)}" rx="${(hr*0.46 + m.fur*0.8).toFixed(1)}" ry="${(hr*0.55 + m.fur*0.8).toFixed(1)}"/>`);
+  // head + muzzle
+  p.push(`<circle cx="${hx.toFixed(1)}" cy="${hy.toFixed(1)}" r="${hr.toFixed(1)}"/>`);
+  p.push(`<path d="M${(hx-hr*0.1).toFixed(1)} ${(hy-hr*0.55).toFixed(1)} L${(hx-hr*0.82-muz).toFixed(1)} ${(hy+hr*0.22).toFixed(1)} L${(hx-hr*0.05).toFixed(1)} ${(hy+hr*0.8).toFixed(1)} Z"/>`);
+  // ears
+  [[-0.6,-0.45],[0.42,0.9]].forEach(([f,tilt])=>{
+    const bx = hx + hr*f, by = hy - hr*0.66;
+    p.push(`<path d="M${(bx-ew/2).toFixed(1)} ${(by+2).toFixed(1)} L${(bx+ew*tilt*0.4).toFixed(1)} ${(by-eh).toFixed(1)} L${(bx+ew/2).toFixed(1)} ${(by+2.5).toFixed(1)} Z"/>`);
+  });
+  const h = Math.round(w*100/130);
+  return `<svg viewBox="0 0 130 100" width="${w}" height="${h}" aria-hidden="true"><g fill="${c}" stroke="${c}" stroke-width="${fur.toFixed(1)}" stroke-linejoin="round" style="paint-order:stroke fill">${p.join("")}</g></svg>`;
+}
+
+/* ---------- drawer ---------- */
+function relOf(b){
+  const parents = b.from.map(id=>byId[id]).filter(Boolean);
+  const kids = B.filter(x=>x.from.includes(b.id));
+  const sibs = B.filter(x=>x.fam===b.fam && x.id!==b.id && !x.from.includes(b.id) && !b.from.includes(x.id)).slice(0,6);
+  return {parents, kids, sibs};
+}
+function bar(name, v){
+  let cells="";
+  for(let i=1;i<=5;i++) cells += `<i class="${i<=v?"on":"off"}"></i>`;
+  return `<div class="tb"><span class="tn">${name}</span><span class="track">${cells}</span><span class="tv">${v}</span></div>`;
+}
+function openBreed(id){
+  const b = byId[id]; if(!b) return;
+  const r = relOf(b);
+  const chips = arr => arr.map(x=>`<button class="rel" data-go="${x.id}">${esc(x.n)}</button>`).join("");
+  const kv = [
+    ["Origin", `<span class="c-${b.org}">${ORIGIN_NAME[b.org]}</span>`],
+    ["Lineage", FAMS[b.fam].name],
+    ["Home", esc(b.reg)],
+    ["First seen", esc(b.era)],
+    ["Build", `${b.body} &middot; ${b.coat} coat`],
+    ["Weight", esc(b.wt)],
+    ["Life span", esc(b.life)],
+    ["Commonality", `${b.pop}/100`]
+  ].map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("");
+  $("#drawerin").innerHTML = `
+    <button class="close" id="dclose" aria-label="Close">&times;</button>
+    <p class="eyebrow c-${b.org}">${ORIGIN_NAME[b.org]}</p>
+    <h2 class="d-name">${esc(b.n)}</h2>
+    <p class="d-aka">${esc(b.aka)}</p>
+    <div class="d-sil">${sil(b,190)}</div>
+    <p class="d-tell">${esc(b.tell)}</p>
+    <dl class="kv">${kv}</dl>
+    <div class="bars">${TRAITS.map(([k,label])=>bar(label,b.t[k])).join("")}</div>
+    <div class="d-sect"><h5>The breed</h5><p>${esc(b.blurb)}</p></div>
+    <div class="d-sect"><h5>Suits</h5><p>${esc(b.who)}</p></div>
+    <div class="d-sect"><h5>Think again if</h5><p>${esc(b.not)}</p></div>
+    <div class="d-sect"><h5>Health watch</h5><p>${esc(b.health)}</p></div>
+    ${b.flag?`<div class="flagbox"><h5>Welfare note</h5><p>${esc(b.flag)}</p></div>`:""}
+    ${b.allergy?`<div class="d-sect"><h5>Allergies</h5><p>Often reported to produce less Fel d 1 than average. The evidence is weak and varies by individual cat — sit with the specific animal before committing.</p></div>`:""}
+    ${r.parents.length?`<div class="d-sect"><h5>Descends from</h5><div class="relrow">${chips(r.parents)}</div></div>`:""}
+    ${r.kids.length?`<div class="d-sect"><h5>Gave rise to</h5><div class="relrow">${chips(r.kids)}</div></div>`:""}
+    ${r.sibs.length?`<div class="d-sect"><h5>Same lineage</h5><div class="relrow">${chips(r.sibs)}</div></div>`:""}
+  `;
+  $("#drawer").classList.add("on"); $("#scrim").classList.add("on");
+  $("#drawer").scrollTop = 0;
+  $("#dclose").focus();
+}
+function closeDrawer(){ $("#drawer").classList.remove("on"); $("#scrim").classList.remove("on"); }
+$("#scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeDrawer(); });
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-go]"); if(g){ openBreed(g.dataset.go); return; }
+  if(e.target.id === "dclose") closeDrawer();
+});
+
+/* ---------- masthead strip ---------- */
+$("#strip").innerHTML = [...B].sort((a,b)=>b.pop-a.pop).slice(0,12)
+  .map(b=>`<button class="spec" data-go="${b.id}">${sil(b,80)}<span class="nm">${esc(b.n)}</span></button>`).join("");
+$("#c-breeds").textContent = B.length;
+$("#c-fams").textContent = new Set(B.map(b=>b.fam)).size;
+
+/* ---------- tabs ---------- */
+$("#tabs").addEventListener("click", e => {
+  const t = e.target.closest(".tab"); if(!t) return;
+  document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected", String(x===t)));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on", v.id === "v"+"-"+t.dataset.v));
+  window.scrollTo({top: $(".tabbar").offsetTop - 1, behavior:"instant"});
+  if(t.dataset.v === "traits") drawPlot();
+  if(t.dataset.v === "compare") drawCompare();
+});
+
+/* ---------- 01 descent ---------- */
+$("#legend").innerHTML = ORIGINS.map(o=>`<span class="lg"><i class="dot o-${o.id}"></i>${o.name}</span>`).join("");
+$("#descent").innerHTML = ORIGINS.map(o => {
+  const list = B.filter(b=>b.org===o.id);
+  const fams = [...new Set(list.map(b=>b.fam))];
+  return `<section class="origin-block">
+    <div class="origin-head"><h3>${o.name}</h3><span class="n">${list.length} breeds &middot; ${fams.length} lineages</span></div>
+    <p class="origin-def">${o.def}</p>
+    ${fams.map(f=>`<div class="fam">
+      <div class="fam-head"><h4>${FAMS[f].name}</h4></div>
+      <p class="fam-note">${FAMS[f].note}</p>
+      <div class="breedrow">${list.filter(b=>b.fam===f).sort((a,b)=>b.pop-a.pop).map(b=>
+        `<button class="bchip" data-b="${b.id}"><i class="dot o-${b.org}"></i>${esc(b.n)} <span class="yr">${esc(b.era)}</span></button>`).join("")}</div>
+    </div>`).join("")}
+  </section>`;
+}).join("");
+
+function ancestors(id, seen=new Set()){
+  (byId[id].from||[]).forEach(p=>{ if(byId[p] && !seen.has(p)){ seen.add(p); ancestors(p, seen); } });
+  return seen;
+}
+function descendants(id, seen=new Set()){
+  B.filter(x=>x.from.includes(id)).forEach(k=>{ if(!seen.has(k.id)){ seen.add(k.id); descendants(k.id, seen); } });
+  return seen;
+}
+let lineageOn = null;
+function setLineage(id){
+  lineageOn = id;
+  const anc = ancestors(id), des = descendants(id);
+  document.querySelectorAll(".bchip").forEach(el=>{
+    const i = el.dataset.b;
+    el.classList.toggle("anc", anc.has(i));
+    el.classList.toggle("desc", des.has(i));
+    el.classList.toggle("dim", i!==id && !anc.has(i) && !des.has(i));
+  });
+  const b = byId[id];
+  const names = a => [...a].map(x=>byId[x].n).join(", ");
+  $("#linbar").innerHTML = `<span><b>${esc(b.n)}</b> &mdash; ${anc.size?`built from ${esc(names(anc))}`:"no breed ancestors on record"}${des.size?`; gave rise to ${esc(names(des))}`:""}.</span><button id="linclear">clear</button>`;
+  $("#linbar").classList.add("on");
+}
+$("#descent").addEventListener("click", e=>{
+  const c = e.target.closest(".bchip"); if(!c) return;
+  setLineage(c.dataset.b); openBreed(c.dataset.b);
+});
+$("#linbar").addEventListener("click", e=>{
+  if(e.target.id!=="linclear") return;
+  lineageOn=null; $("#linbar").classList.remove("on");
+  document.querySelectorAll(".bchip").forEach(el=>el.classList.remove("anc","desc","dim"));
+});
+
+/* ---------- 02 look matrix ---------- */
+const BODIES = [
+  ["oriental","Oriental","Tubular, fine-boned, long — a tube on stilts"],
+  ["foreign","Foreign","Slim and muscular, still lightly built"],
+  ["moderate","Moderate","Neither long nor round; the default cat"],
+  ["semi-cobby","Semi-cobby","Solid and compact with medium legs"],
+  ["cobby","Cobby","Short, broad, low-slung, heavy-boned"],
+  ["substantial","Substantial","Simply large — long and heavy at once"]
+];
+const COATS = [
+  ["hairless","Hairless","Down or bare skin"],
+  ["curly","Rexed","Waved, curled or ringleted"],
+  ["wire","Wire","Crimped and springy"],
+  ["short","Short","Close-lying, one to two layers"],
+  ["semi-long","Semi-long","Ruff and plume, shorter on the back"],
+  ["long","Long","Uniformly long over the whole body"]
+];
+$("#matrix").innerHTML =
+  `<thead><tr><th></th>${BODIES.map(([id,n,d])=>`<th>${sil({m:{cob:{oriental:1,foreign:2,moderate:3,"semi-cobby":4,cobby:5,substantial:4}[id],leg:{oriental:5,foreign:5,moderate:3,"semi-cobby":3,cobby:2,substantial:3}[id],ear:3,head:{oriental:1,foreign:2,moderate:3,"semi-cobby":4,cobby:5,substantial:3}[id],tail:3,fur:1},org:"landrace"},74,"#7C857E")}<span class="lab">${n}</span><span class="sub">${d}</span></th>`).join("")}</tr></thead>
+   <tbody>${COATS.map(([cid,cn,cd])=>`<tr><th>${cn}<small>${cd}</small></th>${
+     BODIES.map(([bid])=>{
+       const cells = B.filter(b=>b.coat===cid && b.body===bid).sort((a,b)=>b.pop-a.pop);
+       return `<td>${cells.length ? cells.map(b=>`<button class="cellchip" data-go="${b.id}"><i class="dot o-${b.org}"></i>${esc(b.n)}</button>`).join("") : `<span class="empty-cell">&mdash;</span>`}</td>`;
+     }).join("")}</tr>`).join("")}</tbody>`;
+
+/* ---------- 03 trait field ---------- */
+const axSel = $("#ax"), aySel = $("#ay");
+TRAITS.forEach(([k,l])=>{
+  axSel.insertAdjacentHTML("beforeend", `<option value="${k}">${l}</option>`);
+  aySel.insertAdjacentHTML("beforeend", `<option value="${k}">${l}</option>`);
+});
+axSel.insertAdjacentHTML("beforeend", `<option value="size">Size</option>`);
+aySel.insertAdjacentHTML("beforeend", `<option value="size">Size</option>`);
+axSel.value = "en"; aySel.value = "af";
+const val = (b,k) => k==="size" ? b.size : b.t[k];
+const hash = s => { let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0; return h; };
+function drawPlot(){
+  const kx = axSel.value, ky = aySel.value, filt = $("#afilter").value;
+  const L=46, R=14, T=14, Bm=40, W=400, H=400;
+  const sx = v => L + (v-0.6)/4.8*(W-L-R);
+  const sy = v => (H-Bm) - (v-0.6)/4.8*(H-T-Bm);
+  let g = "";
+  for(let i=1;i<=5;i++){
+    g += `<line class="grid" x1="${sx(i)}" y1="${T}" x2="${sx(i)}" y2="${H-Bm}"/>`;
+    g += `<line class="grid" x1="${L}" y1="${sy(i)}" x2="${W-R}" y2="${sy(i)}"/>`;
+    g += `<text class="axis-lab" x="${sx(i)}" y="${H-Bm+14}" text-anchor="middle">${i}</text>`;
+    g += `<text class="axis-lab" x="${L-8}" y="${sy(i)+3}" text-anchor="end">${i}</text>`;
+  }
+  const nx = kx==="size"?"Size":TRAITS.find(t=>t[0]===kx)[1];
+  const ny = ky==="size"?"Size":TRAITS.find(t=>t[0]===ky)[1];
+  const px = kx==="size"?["small","huge"]:TRAITS.find(t=>t[0]===kx).slice(2);
+  const py = ky==="size"?["small","huge"]:TRAITS.find(t=>t[0]===ky).slice(2);
+  g += `<text class="axis-lab" x="${L}" y="${H-8}">${px[0]}</text>`;
+  g += `<text class="axis-lab" x="${W-R}" y="${H-8}" text-anchor="end">${nx} &rarr; ${px[1]}</text>`;
+  g += `<text class="axis-lab" transform="translate(13,${H-Bm}) rotate(-90)">${py[0]}</text>`;
+  g += `<text class="axis-lab" transform="translate(13,${T}) rotate(-90)" text-anchor="end">${ny} &rarr; ${py[1]}</text>`;
+  const shown = B.filter(b=>filt==="all"||b.org===filt);
+  shown.forEach(b=>{
+    const h = hash(b.id);
+    const jx = ((h%17)/17-0.5)*11, jy = (((h>>5)%19)/19-0.5)*11;
+    const x = sx(val(b,kx))+jx, y = sy(val(b,ky))+jy;
+    const r = 3 + Math.sqrt(b.pop)/2.6;
+    g += `<g class="pt" data-go="${b.id}"><title>${esc(b.n)}</title>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${ORIGIN_HEX[b.org]}" fill-opacity="${b.pop>30?0.85:0.5}" stroke="${ORIGIN_HEX[b.org]}" stroke-width="0.8"/>
+      ${b.pop>=40?`<text class="ptlab" x="${(x+r+2.5).toFixed(1)}" y="${(y+3).toFixed(1)}">${esc(b.n)}</text>`:""}</g>`;
+  });
+  $("#plot").innerHTML = g;
+  $("#plothint").textContent = `${shown.length} breeds shown. Labels appear on the more common ones; tap any dot for its card. Points are jittered slightly so identical scores stay visible.`;
+}
+[axSel,aySel,$("#afilter")].forEach(el=>el.addEventListener("change", drawPlot));
+drawPlot();
+
+/* ---------- 04 commonality ---------- */
+const TIERS = [
+  [60, "Tier 1 — you have met one"],
+  [30, "Tier 2 — familiar to cat people"],
+  [12, "Tier 3 — you would notice one"],
+  [0,  "Tier 4 — rare, sometimes vanishingly"]
+];
+function drawRank(mode){
+  const list = B.filter(b=>mode==="all"||b.org===mode).sort((a,b)=>b.pop-a.pop);
+  let out = "", tier = -1, n = 0;
+  list.forEach(b=>{
+    const ti = TIERS.findIndex(t=>b.pop>=t[0]);
+    if(ti!==tier){ tier=ti; out += `<div class="tiermark">${TIERS[ti][1]}</div>`; }
+    n++;
+    out += `<button class="rk" data-go="${b.id}">
+      <span class="no">${n}</span>
+      <span class="bar"><span class="fill" style="width:${b.pop}%;background:${ORIGIN_HEX[b.org]};opacity:.22"></span>
+        <span class="lbl">${esc(b.n)}<span class="v">${b.pop}</span></span></span></button>`;
+  });
+  $("#rank").innerHTML = out;
+}
+drawRank("all");
+$("#commonseg").addEventListener("click", e=>{
+  const btn = e.target.closest("button"); if(!btn) return;
+  document.querySelectorAll("#commonseg button").forEach(x=>x.setAttribute("aria-pressed", String(x===btn)));
+  drawRank(btn.dataset.mode);
+});
+
+/* ---------- 05 compare ---------- */
+let picked = ["persian","exotic","siamese"];
+const CMPCOL = ["#1B2422","#A6482A","#2F6F5E"];
+const cmpin = $("#cmpin"), cmpsugg = $("#cmpsugg");
+cmpin.addEventListener("input", ()=>{
+  const q = cmpin.value.trim().toLowerCase();
+  if(!q){ cmpsugg.classList.remove("on"); return; }
+  const hits = B.filter(b=>(b.n+" "+b.aka).toLowerCase().includes(q) && !picked.includes(b.id)).slice(0,8);
+  cmpsugg.innerHTML = hits.map(b=>`<button data-add="${b.id}">${esc(b.n)} <span style="color:var(--ink3);font-size:11px">${esc(FAMS[b.fam].name)}</span></button>`).join("") || `<button disabled style="color:var(--ink3)">no match</button>`;
+  cmpsugg.classList.toggle("on", hits.length>0);
+});
+cmpsugg.addEventListener("click", e=>{
+  const btn = e.target.closest("[data-add]"); if(!btn) return;
+  if(picked.length>=3) picked.shift();
+  picked.push(btn.dataset.add);
+  cmpin.value=""; cmpsugg.classList.remove("on"); drawCompare();
+});
+$("#cmppicked").addEventListener("click", e=>{
+  const x = e.target.closest("[data-rm]"); if(!x) return;
+  picked = picked.filter(p=>p!==x.dataset.rm); drawCompare();
+});
+function drawCompare(){
+  $("#cmppicked").innerHTML = picked.map((id,i)=>{
+    const b = byId[id];
+    return `<span class="pc" style="background:${CMPCOL[i]}"><i class="dot" style="background:var(--paper2)"></i>${esc(b.n)}<button data-rm="${id}" aria-label="Remove">&times;</button></span>`;
+  }).join("") + (picked.length<3?`<span class="pc" style="background:none;color:var(--ink3);border:1px dashed var(--rule)">add up to ${3-picked.length} more</span>`:"");
+  $("#cmpheads").innerHTML = picked.map((id,i)=>{
+    const b=byId[id];
+    return `<figure>${sil(b,120,CMPCOL[i])}<figcaption>${esc(b.n)}</figcaption></figure>`;
+  }).join("");
+  // radar
+  const cx=150, cy=150, R=98, N=TRAITS.length;
+  let g="";
+  for(let r=1;r<=5;r++){
+    const pts = TRAITS.map((_,i)=>{
+      const a = -Math.PI/2 + i*2*Math.PI/N, rr = R*r/5;
+      return `${(cx+Math.cos(a)*rr).toFixed(1)},${(cy+Math.sin(a)*rr).toFixed(1)}`;
+    }).join(" ");
+    g += `<polygon class="ring" points="${pts}"/>`;
+  }
+  TRAITS.forEach(([k,l],i)=>{
+    const a = -Math.PI/2 + i*2*Math.PI/N;
+    g += `<line class="spoke" x1="${cx}" y1="${cy}" x2="${(cx+Math.cos(a)*R).toFixed(1)}" y2="${(cy+Math.sin(a)*R).toFixed(1)}"/>`;
+    const lx = cx+Math.cos(a)*(R+17), ly = cy+Math.sin(a)*(R+17);
+    const anchor = Math.abs(Math.cos(a))<0.25 ? "middle" : (Math.cos(a)>0?"start":"end");
+    g += `<text class="ax" x="${lx.toFixed(1)}" y="${(ly+3).toFixed(1)}" text-anchor="${anchor}">${l}</text>`;
+  });
+  picked.forEach((id,i)=>{
+    const b = byId[id];
+    const pts = TRAITS.map(([k],j)=>{
+      const a = -Math.PI/2 + j*2*Math.PI/N, rr = R*b.t[k]/5;
+      return `${(cx+Math.cos(a)*rr).toFixed(1)},${(cy+Math.sin(a)*rr).toFixed(1)}`;
+    }).join(" ");
+    g += `<polygon points="${pts}" fill="${CMPCOL[i]}" fill-opacity="0.12" stroke="${CMPCOL[i]}" stroke-width="1.6"/>`;
+  });
+  $("#radar").innerHTML = g;
+  // table
+  const rows = [
+    ["Origin", b=>`<span class="c-${b.org}">${ORIGIN_NAME[b.org]}</span>`],
+    ["Lineage", b=>FAMS[b.fam].name],
+    ["Home", b=>esc(b.reg)+" &middot; "+esc(b.era)],
+    ["Descends from", b=>b.from.length?b.from.map(f=>esc(byId[f].n)).join(", "):"&mdash;"],
+    ["Build", b=>`${b.body} &middot; ${b.coat}`],
+    ["Weight", b=>esc(b.wt)],
+    ["Life span", b=>esc(b.life)],
+    ["Commonality", b=>`${b.pop}/100`],
+    ["Tell", b=>esc(b.tell)],
+    ["Suits", b=>esc(b.who)],
+    ["Think again if", b=>esc(b.not)],
+    ["Health watch", b=>esc(b.health)],
+    ["Welfare note", b=>b.flag?`<span style="color:var(--rust)">${esc(b.flag)}</span>`:"&mdash;"]
+  ];
+  $("#cmptable").innerHTML = `<thead><tr><th></th>${picked.map((id,i)=>`<th style="color:${CMPCOL[i]};font-size:12px">${esc(byId[id].n)}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(([label,fn])=>`<tr><th>${label}</th>${picked.map(id=>`<td>${fn(byId[id])}</td>`).join("")}</tr>`).join("")}</tbody>`;
+}
+drawCompare();
+
+/* ---------- 06 fit ---------- */
+const QS = [
+  {id:"alone", q:"Hours the cat is alone on a workday", a:"rarely alone", b:"out all day"},
+  {id:"play",  q:"Active play you will actually do, daily", a:"none", b:"an hour"},
+  {id:"noise", q:"Tolerance for a talkative cat", a:"silence, please", b:"talk to me"},
+  {id:"groom", q:"Grooming you will commit to", a:"never brush", b:"daily comb"},
+  {id:"lap",   q:"Lap cat or self-sufficient roommate", a:"roommate", b:"on me always"},
+  {id:"busy",  q:"How busy the household is", a:"quiet, adults", b:"kids, dogs, guests"},
+  {id:"space", q:"Space you can offer", a:"studio flat", b:"house and catio"},
+  {id:"exp",   q:"Cat experience", a:"first cat", b:"bred them"}
+];
+$("#fitform").innerHTML = QS.map(q=>`
+  <div class="slider">
+    <div class="top"><label class="q" for="q-${q.id}">${q.q}</label><span class="val" id="v-${q.id}">2</span></div>
+    <input type="range" id="q-${q.id}" min="0" max="4" step="1" value="2">
+    <div class="poles"><span>${q.a}</span><span>${q.b}</span></div>
+  </div>`).join("") + `
+  <label style="display:flex;gap:9px;align-items:flex-start;font-size:13.5px;margin-bottom:9px"><input type="checkbox" id="q-allergy" style="margin-top:3px"> Someone in the house reacts to cats</label>
+  <label style="display:flex;gap:9px;align-items:flex-start;font-size:13.5px"><input type="checkbox" id="q-ethics" style="margin-top:3px" checked> Hide breeds with a welfare warning</label>`;
+const VLAB = {
+  alone:["rarely","2–4 h","5–7 h","8–9 h","10 h +"],
+  play:["none","10 min","20 min","40 min","an hour"],
+  noise:["none","a little","normal","chatty","constant"],
+  groom:["none","5 min/wk","15 min/wk","30 min/wk","daily"],
+  lap:["roommate","mostly apart","balanced","cuddly","glued to me"],
+  busy:["very quiet","calm","normal","lively","chaos"],
+  space:["studio","1 bed","2 bed","house","house + catio"],
+  exp:["first cat","had one","had several","very experienced","bred them"]
+};
+function readFit(){
+  const o = {}; QS.forEach(q=>o[q.id] = +$("#q-"+q.id).value);
+  o.allergy = $("#q-allergy").checked; o.ethics = $("#q-ethics").checked;
+  return o;
+}
+function difficulty(b){
+  let d = 0;
+  if(b.org==="hybrid") d += 3;
+  if(b.t.gr >= 4) d += 1.4;
+  if(b.t.en === 5) d += 1;
+  if(b.t.vo === 5) d += 0.8;
+  if(b.flag) d += 1;
+  if(b.pop < 12) d += 1;
+  return d;
+}
+function scoreFit(b, f){
+  const pen = [];
+  const add = (label, p, good) => pen.push({label, p, good});
+  const one = (excess) => Math.max(0, excess);
+  add("time alone", Math.abs(b.t.ind - (1 + f.alone))*1.15 + one(b.t.af - (5 - f.alone*0.6))*0.5, `copes with ${VLAB.alone[f.alone]} alone`);
+  add("energy", Math.abs(b.t.en - (1 + f.play))*1.2, `plays about ${VLAB.play[f.play]} a day`);
+  add("noise", one(b.t.vo - (f.noise + 1))*1.5, b.t.vo<=2?"quiet by nature":"talks, and you want that");
+  add("coat work", one(b.t.gr - (f.groom + 1))*1.4 + one(b.t.sh - (f.groom + 2))*0.5, b.t.gr<=2?"wash-and-go coat":"coat work matches what you offered");
+  add("closeness", Math.abs(b.t.af - (1 + f.lap))*1.1 + one((1+f.lap) - (6 - b.t.ind))*0.4, f.lap>=3?"seeks out laps":"companionable without clinging");
+  add("household", one((f.busy + 1) - b.t.so)*1.25, `handles a ${VLAB.busy[f.busy]} household`);
+  add("space", one(b.size - (f.space + 2))*0.9 + (b.org==="hybrid" && f.space<3 ? 3 : 0) + one(b.t.en - (f.space + 2))*0.4, b.size<=3?"content in a smaller home":"has the room it needs");
+  add("experience", one(difficulty(b) - (f.exp + 1.2))*1.1, f.exp>=3?"rewards an experienced owner":"straightforward to live with");
+  let total = pen.reduce((s,x)=>s+x.p, 0);
+  if(f.allergy){ total += b.t.sh*0.55; if(b.allergy) total -= 2.2; if(b.coat==="hairless") total += 0.6; }
+  const score = Math.max(6, Math.min(99, Math.round(100 - total*6.2)));
+  const best = pen.filter(x=>x.p<0.35).sort((a,b2)=>a.p-b2.p).slice(0,2);
+  const worst = pen.slice().sort((a,b2)=>b2.p-a.p)[0];
+  return {score, best, worst};
+}
+const CAUTION = {
+  "time alone":"will struggle with the hours you are out",
+  "energy":"energy level is off from the play you described",
+  "noise":"louder than you asked for",
+  "coat work":"needs more grooming than you signed up for",
+  "closeness":"more or less affectionate than you want",
+  "household":"reserved for a household this busy",
+  "space":"wants more room than you have",
+  "experience":"a demanding first cat"
+};
+function drawFit(){
+  const f = readFit();
+  QS.forEach(q=>$("#v-"+q.id).textContent = VLAB[q.id][f[q.id]]);
+  let pool = B.filter(b=>!(f.ethics && b.flag));
+  const ranked = pool.map(b=>({b, ...scoreFit(b,f)})).sort((x,y)=>y.score-x.score).slice(0,6);
+  $("#fitres").innerHTML = ranked.map(({b,score,best,worst})=>`
+    <button class="match" data-go="${b.id}">
+      <span>${sil(b,64)}</span>
+      <span>
+        <h4>${esc(b.n)}<span class="pct">${score}% fit</span></h4>
+        <p class="why">${best.length? best.map(x=>esc(x.good)).join(" &middot; ") : "a reasonable all-round compromise"}</p>
+        ${worst.p>0.9?`<p class="care">Watch: ${CAUTION[worst.label]}.</p>`:""}
+        <span class="meter"><i style="width:${score}%"></i></span>
+      </span>
+    </button>`).join("");
+  $("#fitnote").innerHTML = f.allergy
+    ? "No breed is safe for a cat-allergic person. The ranking now favours low shedders and the breeds sometimes reported to produce less Fel d 1, but the only real test is spending several hours with the individual cat."
+    : (f.ethics ? "Breeds carrying a welfare warning are hidden. Untick the box to see them with their warnings attached." : "Welfare-flagged breeds are included; read their notes before acting on a high score.");
+}
+$("#fitform").addEventListener("input", drawFit);
+drawFit();
+</script>
+</body>
+</html>
