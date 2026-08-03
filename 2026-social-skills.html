@@ -11,15 +11,12 @@
 :root{
   --ink:#0E1F26; --ink2:#153039; --ink3:#1C3D47; --line:#26505C;
   --paper:#EDE4D3; --dim:#93A8AE; --brass:#D6A758;
-  --attention:#D6A758; --convening:#C97B84; --presentation:#7FB2A3; --navigation:#8E9FD4;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{
-  background:var(--ink); color:var(--paper); min-height:100vh;
-  font-family:'Public Sans',system-ui,-apple-system,sans-serif; font-weight:300;
-  -webkit-font-smoothing:antialiased;
-}
+body{background:var(--ink);color:var(--paper);min-height:100vh;
+  font-family:'Public Sans',system-ui,-apple-system,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;}
 button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0;}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
 .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
@@ -49,6 +46,8 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
   padding:0 8px;border-radius:5px;text-align:left;width:100%;
   transition:transform .62s cubic-bezier(.22,1,.36,1),background .18s;}
 .row:hover{background:var(--ink2);}
+.prog{position:absolute;left:8px;bottom:5px;height:1px;background:var(--brass);opacity:.75;
+  transition:width .3s;}
 .rank{width:26px;flex:none;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);}
 .nm{width:180px;flex:none;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .track{flex:1;height:9px;background:var(--ink2);border-radius:2px;overflow:hidden;min-width:40px;}
@@ -74,8 +73,8 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
 .scrim{position:fixed;inset:0;background:rgba(6,16,20,.72);opacity:0;pointer-events:none;
   transition:opacity .3s;z-index:40;}
 .scrim[data-on="1"]{opacity:1;pointer-events:auto;}
-.panel{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--ink2);
-  border-left:1px solid var(--line);z-index:50;overflow-y:auto;padding:32px 28px 48px;
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(500px,100%);background:var(--ink2);
+  border-left:1px solid var(--line);z-index:50;overflow-y:auto;padding:32px 28px 56px;
   transform:translateX(100%);transition:transform .38s cubic-bezier(.22,1,.36,1);}
 .panel[data-on="1"]{transform:none;}
 .close{position:absolute;top:18px;right:22px;font-size:20px;color:var(--dim);line-height:1;}
@@ -86,18 +85,34 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
   border-radius:0 5px 5px 0;}
 .drilltext{font-family:'Bodoni Moda',Didot,Georgia,serif;font-style:italic;font-size:19px;
   line-height:1.4;margin:6px 0 0;}
-.block{margin-top:26px;}
+.block{margin-top:28px;}
 .blabel{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
   text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
 .fail{font-size:14px;line-height:1.6;color:#C99C9C;margin:0;}
-.lvl{display:flex;gap:12px;align-items:flex-start;padding:11px 0;
-  border-bottom:1px solid var(--line);width:100%;text-align:left;}
-.box{width:16px;height:16px;flex:none;margin-top:2px;border:1px solid var(--line);border-radius:3px;
-  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink);}
+
+.stagehead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  margin:22px 0 4px;padding-bottom:7px;border-bottom:1px solid var(--line);}
+.stagename{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;
+  text-transform:uppercase;}
+.stagecount{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--dim);}
+.stagedesc{font-size:12px;color:var(--dim);margin:6px 0 4px;line-height:1.5;}
+.lvl{display:flex;gap:11px;align-items:flex-start;padding:9px 0;width:100%;text-align:left;}
+.lvl:hover .lvltext{color:var(--paper);}
+.box{width:15px;height:15px;flex:none;margin-top:1px;border:1px solid var(--line);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--ink);
+  transition:background .15s;}
 .box[data-on="1"]{background:var(--brass);border-color:var(--brass);}
-.lvltext{font-size:13.5px;line-height:1.5;}
-.lvlnum{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);
-  letter-spacing:.1em;display:block;margin-bottom:3px;}
+.lvltext{font-size:13.5px;line-height:1.45;color:#CFC5B4;transition:color .15s;}
+.lvl[data-on="1"] .lvltext{color:var(--dim);text-decoration:line-through;
+  text-decoration-color:var(--line);}
+
+.meter{height:3px;background:var(--ink3);border-radius:2px;overflow:hidden;margin-top:16px;}
+.meterfill{height:100%;background:var(--brass);transition:width .3s;}
+.stagebadge{display:inline-block;margin-top:14px;padding:3px 10px;border:1px solid var(--brass);
+  border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;
+  color:var(--brass);}
+.stagebadge[data-none="1"]{border-color:var(--line);color:var(--dim);}
+
 .ctxrow{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12px;}
 .ctxname{width:78px;flex:none;color:var(--dim);}
 .ctxtrack{flex:1;height:5px;background:var(--ink3);border-radius:2px;overflow:hidden;}
@@ -122,15 +137,16 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
   h1{font-size:38px;}
   .nm{width:120px;font-size:13px;}
   .row{height:44px;gap:8px;padding:0 2px;}
+  .prog{left:2px;}
   .delta{display:none;}
   .movers{grid-template-columns:1fr;}
   .bar{align-items:flex-start;flex-direction:column;gap:10px;}
-  .panel{top:auto;height:88vh;width:100%;border-left:none;border-top:1px solid var(--line);
-    border-radius:14px 14px 0 0;transform:translateY(100%);}
+  .panel{top:auto;height:90vh;width:100%;border-left:none;border-top:1px solid var(--line);
+    border-radius:14px 14px 0 0;transform:translateY(100%);padding:28px 20px 48px;}
   .panel[data-on="1"]{transform:none;}
 }
 @media (prefers-reduced-motion:reduce){
-  .row,.fill,.panel,.scrim{transition:none !important;}
+  .row,.fill,.panel,.scrim,.meterfill,.prog{transition:none !important;}
 }
 </style>
 </head>
@@ -140,8 +156,8 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
   <div class="eyebrow">A field guide to being wanted in the room</div>
   <h1>Register</h1>
   <p class="sub">Twenty social skills, ranked by impact — meaning how much having it changes
-  whether people want you around. Change the context and watch the order move. The ones that
-  barely move are the ones worth building first.</p>
+  whether people want you around. Change the context and watch the order move. Open any skill
+  for the drill and the full list of signals that tell you it's working.</p>
 
   <div class="rule"></div>
 
@@ -167,7 +183,8 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
   <div class="legend" id="legend"></div>
 
   <p class="sub" style="margin-top:28px;font-size:13px">The scores are considered judgment, not
-  measurement. Treat a one-point difference as noise and a four-point difference as real.</p>
+  measurement. Treat a one-point difference as noise and a four-point difference as real.
+  <span id="total" class="mono" style="display:block;margin-top:8px;font-size:11px"></span></p>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -181,7 +198,6 @@ h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:400;font-size:56px;
 </div>
 
 <script>
-/* ---------------------------------------------------------------- DATA */
 const FAMILIES = {
   attention:{label:"Attention",color:"#D6A758"},
   convening:{label:"Convening",color:"#C97B84"},
@@ -198,215 +214,459 @@ const CONTEXTS = [
   {id:"formal",     label:"Formal",     note:"Status-marked, high-ceremony rooms."}
 ];
 
+const STAGE_DESC = [
+  "The floor. Mostly about removing the obvious frictions.",
+  "Where it starts producing results other people notice.",
+  "The rare part. Not required — this is just what it looks like at the top."
+];
+
 const SKILLS = [
 {id:"conversation",name:"Conversation",family:"attention",effort:3,
  s:{general:10,work:9,dating:10,newCity:10,friendship:9,formal:9},
  line:"Asking the second and third question, telling a story with a shape, and leaving cleanly.",
  drill:"Ask one follow-up you didn't plan, in every conversation today.",
  failure:"You wait for your turn rather than listen, and every story runs the same length regardless of the room.",
- levels:["You can keep a stranger going for ten minutes.",
-         "Someone has told you something they hadn't planned to say.",
-         "You can leave a conversation warmly and early, and people look for you later in the night."],
- unlocks:["Hosting","Introducing","Curiosity","Asking well"]},
+ unlocks:["Hosting","Introducing","Curiosity","Asking well"],
+ stages:[
+  ["You can keep a stranger going for ten minutes.",
+   "You ask a follow-up before offering your own story.",
+   "You ask what someone is working on, not just what they do.",
+   "You let a two-second silence sit without filling it.",
+   "You can tell one story that lands in under ninety seconds."],
+  ["Someone has told you something they hadn't planned to say.",
+   "You notice a topic closing and change it before it dies.",
+   "You can bring a quiet person into a group conversation.",
+   "You match their level of disclosure rather than outpacing it.",
+   "You've stopped narrating your own credentials."],
+  ["You can leave a conversation warmly and early.",
+   "People look for you later in the evening.",
+   "You can hold a disagreement without either side hardening.",
+   "You can carry a table of six without dominating it."]]},
 
 {id:"hosting",name:"Hosting",family:"convening",effort:2,
  s:{general:9,work:7,dating:5,newCity:10,friendship:10,formal:6},
  line:"Being the one who convenes rather than the one who gets invited.",
  drill:"Pick a date and invite six people. Don't wait until the place or the menu is ready.",
  failure:"You wait for invitations — or you host and spend the whole night in the kitchen.",
- levels:["You've convened four or more people at least once.",
-         "You have a recurring thing people expect.",
-         "People ask when the next one is, and strangers you invited have become regulars."],
- unlocks:["Group logistics","Cooking one thing"]},
+ unlocks:["Group logistics","Cooking one thing"],
+ stages:[
+  ["You've picked a date before the plan was ready.",
+   "You've convened four or more people at least once.",
+   "You invite people who don't already know each other.",
+   "Your invitation names a time, a place and an end.",
+   "You've stopped waiting to be invited first."],
+  ["You have a recurring thing people expect.",
+   "You spend the evening in the room, not the kitchen.",
+   "You introduce every arrival to at least one person.",
+   "You've invited someone you barely know.",
+   "You notice when a guest is stranded and fix it."],
+  ["People ask when the next one is.",
+   "Strangers you invited have become regulars.",
+   "You can host on a weeknight with two days' notice.",
+   "Your guests have started hosting each other."]]},
 
 {id:"remembering",name:"Remembering people",family:"attention",effort:1,
  s:{general:8,work:9,dating:8,newCity:8,friendship:9,formal:8},
  line:"Names, what they're working on, what they said last time.",
  drill:"Write three lines about each new person within an hour of meeting them.",
  failure:"You recognise the face but not the life, so every conversation restarts from zero.",
- levels:["You get names right on the second meeting.",
-         "You open with what they were working on last time.",
-         "You notice when something they mentioned would matter to someone else."],
- unlocks:["Introducing"]},
+ unlocks:["Introducing"],
+ stages:[
+  ["You write names down within an hour of meeting.",
+   "You get names right on the second meeting.",
+   "You know what three recent acquaintances do for work.",
+   "You ask for a name again rather than guess.",
+   "You note who introduced you to whom."],
+  ["You open with what they were working on last time.",
+   "You remember partners' and children's names.",
+   "You know what someone is worried about, not just employed at.",
+   "You recall a preference — drink, dietary, city — unprompted.",
+   "You review your notes before seeing someone again."],
+  ["You notice when something they mentioned would matter to someone else.",
+   "You remember things people forgot they told you.",
+   "You track relationships between people, not just people.",
+   "You can reconnect after two years with no awkward reset."]]},
 
 {id:"followup",name:"The follow-up",family:"attention",effort:1,
  s:{general:8,work:10,dating:9,newCity:9,friendship:8,formal:7},
  line:"The note after dinner, the article you said you'd send, the introduction you promised.",
  drill:"Twenty-four hour rule: anything you said you'd send or do, do it within a day.",
  failure:"Warm in person, silent afterwards. Every relationship stays at the depth of the first meeting.",
- levels:["You send the thing you promised, most of the time.",
-         "You reach out with no agenda attached.",
-         "You maintain a dozen relationships that have outlived their original context."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You send the thing you promised, within a day.",
+   "You keep a list of what you owe people.",
+   "You send a note after being hosted.",
+   "You reply to warm messages within forty-eight hours.",
+   "You've stopped saying \u201cwe should get lunch\u201d without proposing a date."],
+  ["You reach out with no agenda attached.",
+   "You send someone a thing that made you think of them.",
+   "You follow up a second time when the first went unanswered.",
+   "You close loops you opened months ago.",
+   "You make the introduction you offered, unprompted."],
+  ["You maintain a dozen relationships past their original context.",
+   "People reciprocate without being prompted.",
+   "You reconnect on the occasion, not the anniversary.",
+   "Your follow-ups are welcome rather than obligatory."]]},
 
 {id:"curiosity",name:"Curiosity about their work",family:"attention",effort:1,
  s:{general:8,work:8,dating:9,newCity:7,friendship:8,formal:9},
  line:"Knowing enough about a field to ask what's actually hard about it.",
  drill:"Ask: what's the part of your job that people always get wrong?",
  failure:"You ask what they do, then wait — having learned nothing you could use.",
- levels:["You can ask a good second question about any job.",
-         "You know what's difficult about five fields that aren't yours.",
-         "People light up telling you about work they normally avoid discussing socially."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You ask what's hard about it, not just what it is.",
+   "You can ask a good second question about any job.",
+   "You've stopped redirecting to your own field.",
+   "You ask about the process, not just the outcome.",
+   "You admit when you don't know what a term means."],
+  ["You know what's difficult about five fields that aren't yours.",
+   "You ask what's changed in their field in the last two years.",
+   "You can tell when someone's being modest and push gently.",
+   "You ask what they'd be doing instead, if not this.",
+   "You've asked about the unglamorous part of glamorous work."],
+  ["People light up about work they usually avoid discussing socially.",
+   "You can connect two fields in a way both parties find useful.",
+   "You ask the question the expert wishes people asked.",
+   "You can hold your end of a technical conversation outside your domain."]]},
 
 {id:"register",name:"Reading the register",family:"attention",effort:2,
  s:{general:7,work:9,dating:7,newCity:8,friendship:5,formal:10},
  line:"Matching volume, formality and pace — and noticing when the room shifts.",
  drill:"First three minutes anywhere new: say little, watch how loud people are.",
  failure:"Right words, wrong volume. You're the only one who missed the mood changing.",
- levels:["You notice when you're louder or more formal than the room.",
-         "You adjust within a minute of arriving.",
-         "You can move a room's register on purpose."],
- unlocks:["Dress","Physical presence"]},
+ unlocks:["Dress","Physical presence"],
+ stages:[
+  ["You notice when you're louder than the room.",
+   "You wait three minutes before setting your tone.",
+   "You check what people wear there before you arrive.",
+   "You match the group's level of formality in address.",
+   "You notice a joke didn't land and don't repeat the move."],
+  ["You adjust within a minute of arriving.",
+   "You can tell when a conversation has become a negotiation.",
+   "You notice when the host wants the evening to end.",
+   "You read seniority in a room without being told.",
+   "You can shift registers mid-evening as the room changes."],
+  ["You can move a room's register on purpose.",
+   "You can be the first to break formality, correctly.",
+   "You know which rules are worth breaking, and when.",
+   "You spot someone's discomfort before they show it."]]},
 
 {id:"discretion",name:"Discretion",family:"attention",effort:1,
  s:{general:7,work:10,dating:7,newCity:4,friendship:9,formal:9},
  line:"Being someone people can say things around.",
  drill:"For one week, repeat nothing you learned from anyone in private.",
  failure:"You trade information for interest. People enjoy you and tell you less each time.",
- levels:["You don't repeat things marked private.",
-         "You don't repeat things that weren't marked but obviously were.",
-         "People bring you problems before they're resolved."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You don't repeat things marked private.",
+   "You've stopped using gossip as a conversational offering.",
+   "You ask before sharing someone else's news.",
+   "You don't forward or screenshot private messages.",
+   "You change the subject when someone's being discussed badly."],
+  ["You don't repeat things that weren't marked but obviously were.",
+   "You can hold a confidence that would make you look interesting.",
+   "You don't reveal who told you something.",
+   "You keep two groups' business separate without effort.",
+   "You've declined a direct question without lying."],
+  ["People bring you problems before they're resolved.",
+   "You're trusted with things that could damage the teller.",
+   "You've never been the traceable source of a leak.",
+   "You can sit where something is decided and never mention it."]]},
 
 {id:"introducing",name:"Introducing two people",family:"convening",effort:1,
  s:{general:7,work:9,dating:3,newCity:6,friendship:7,formal:9},
  line:"Giving each person a handle, and a reason these two in particular should talk.",
  drill:"Prepare one sentence per person before you bring them together.",
  failure:"You say two names and walk away. They discuss the weather and never speak again.",
- levels:["You give each person a handle, not just a name.",
-         "You name why these two should talk.",
-         "Your introductions produce things you hear about later."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You give each person a handle, not just a name.",
+   "You say both names clearly and in a fixed order.",
+   "You stay for the first thirty seconds.",
+   "You know one current thing about each person.",
+   "You've stopped introducing by job title alone."],
+  ["You name why these two in particular should talk.",
+   "You ask both sides before making an email introduction.",
+   "You hand over a topic and then step back.",
+   "You introduce every arrival at your own events.",
+   "You rescue an introduction that's stalling."],
+  ["Your introductions produce things you hear about later.",
+   "People ask you to introduce them to someone.",
+   "You introduce across seniority without either party feeling it.",
+   "You can decline to make an introduction without damage."]]},
 
 {id:"logistics",name:"Group logistics",family:"convening",effort:1,
  s:{general:6,work:6,dating:7,newCity:5,friendship:9,formal:4},
  line:"Moving eight people between places without a committee meeting.",
  drill:"Stop offering options. Propose one plan, with a time and a place.",
  failure:"Twenty minutes on a pavement. The bill takes longer than dessert.",
- levels:["You propose rather than poll.",
-         "You can move a group between venues without a debate.",
-         "Nobody notices the logistics happening, which is the entire point."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You propose one plan rather than poll.",
+   "You book before asking who's coming.",
+   "You know the address and the closing time.",
+   "You pick places within walking distance of each other.",
+   "You give a start time, not a window."],
+  ["You can move a group between venues without a debate.",
+   "You settle the bill without a table-wide negotiation.",
+   "You count heads before leaving a place.",
+   "You have a fallback venue for when the first is full.",
+   "You tell people the plan rather than asking their preference."],
+  ["Nobody notices the logistics happening.",
+   "You can absorb a late cancellation or two extra people.",
+   "You know which friends need a personal nudge to show up.",
+   "Groups default to you for the plan."]]},
 
 {id:"cooking",name:"Cooking one thing well",family:"convening",effort:2,
  s:{general:5,work:2,dating:8,newCity:4,friendship:8,formal:2},
  line:"One dish you can put in front of six people without stress.",
  drill:"Pick one dish for six. Make it ten times.",
  failure:"Ambitious menu, tense host, cold food, and a kitchen nobody's allowed into.",
- levels:["You can feed four without a recipe in front of you.",
-         "You can cook and hold a conversation at the same time.",
-         "People request the dish by name."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You've picked the one dish.",
+   "You've made it at least three times.",
+   "You can shop for it without a list.",
+   "You know how far ahead each component can be made.",
+   "You've cooked it for someone other than yourself."],
+  ["You can feed four without a recipe in front of you.",
+   "You can cook and hold a conversation at the same time.",
+   "The kitchen is clean before guests arrive.",
+   "You know what it costs and how long it takes, precisely.",
+   "You can scale it from four to eight without panic."],
+  ["People request the dish by name.",
+   "You can improvise around a missing ingredient.",
+   "You've taught it to someone else.",
+   "You have a second dish at the same standard."]]},
 
 {id:"asking",name:"Asking well",family:"convening",effort:1,
  s:{general:6,work:8,dating:6,newCity:8,friendship:4,formal:7},
  line:"Tables, favours, exceptions. Specific, warm, and easy to refuse.",
  drill:"Ask for one small thing this week — from the person who can actually say yes.",
  failure:"You hint. Or you don't ask, then resent an answer you never requested.",
- levels:["You ask directly instead of hinting.",
-         "You ask the person with the authority to agree.",
-         "You can ask for large things, and a no costs you nothing."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You ask directly instead of hinting.",
+   "You make the request specific.",
+   "You give the person an easy way to say no.",
+   "You ask in one message rather than three.",
+   "You've stopped apologising before the ask."],
+  ["You ask the person with the authority to agree.",
+   "You ask early enough that yes is still possible.",
+   "You say what you'll do with the yes.",
+   "You accept a no without renegotiating.",
+   "You've asked for something you assumed was impossible."],
+  ["You can ask for large things and a no costs you nothing.",
+   "You ask on behalf of other people.",
+   "People tell you when it's the wrong ask, and stay warm.",
+   "You know which asks have to be made in person."]]},
 
 {id:"dress",name:"Dress",family:"presentation",effort:1,
  s:{general:6,work:6,dating:9,newCity:4,friendship:2,formal:10},
  line:"Reading a dress code correctly, and owning clothes that resolve it without thought.",
  drill:"Build two complete outfits — one for a good restaurant, one smart-casual. Stop improvising.",
  failure:"You spend the whole evening aware of what you're wearing.",
- levels:["You can read a dress code and land in range.",
-         "You own outfits, not garments.",
-         "You can be correctly dressed for two different rooms in one night."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You can read a dress code and land in range.",
+   "You have one complete restaurant outfit.",
+   "Your shoes are in good condition.",
+   "Everything you'd wear out actually fits.",
+   "You check the venue before deciding."],
+  ["You own outfits, not garments.",
+   "You have a layer that works indoors and out.",
+   "You can dress an outfit up with one change.",
+   "Nothing you wear out needs adjusting during the evening.",
+   "You've stopped buying single items with no home."],
+  ["You can be correctly dressed for two rooms in one night.",
+   "You're never the most or the least dressed person present.",
+   "You can pack five days including one formal evening.",
+   "People can't identify what you're wearing, only that it works."]]},
 
 {id:"presence",name:"Physical presence",family:"presentation",effort:2,
  s:{general:6,work:7,dating:9,newCity:5,friendship:3,formal:8},
  line:"Posture, unhurried movement, steady eyes. Read before you speak, every time.",
  drill:"Film yourself talking for two minutes. Watch it once.",
  failure:"You fidget, fill silences and glance at the door. It reads as disinterest.",
- levels:["You can hold eye contact through a full sentence.",
-         "You're comfortable with a two-second pause.",
-         "You're read as calm before you've said anything."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You can hold eye contact through a full sentence.",
+   "You've watched yourself on video at least once.",
+   "You keep your hands still while listening.",
+   "You turn to face the person speaking.",
+   "You've stopped checking your phone in company."],
+  ["You're comfortable with a two-second pause.",
+   "You enter a room without hurrying.",
+   "You can stand in a group without shrinking your posture.",
+   "Your volume carries without effort.",
+   "You read the room before you speak."],
+  ["You're read as calm before you've said anything.",
+   "You can hold attention without raising your voice.",
+   "Your stillness makes other people slow down.",
+   "You're comfortable being looked at."]]},
 
 {id:"drinks",name:"Drinks literacy",family:"presentation",effort:3,
  s:{general:4,work:5,dating:6,newCity:4,friendship:4,formal:9},
  line:"An order that's genuinely yours, and a bottle for the table without theatre.",
  drill:"One grape at a time. Drink six examples before you move on.",
  failure:"You order by price — or perform a knowledge you don't have.",
- levels:["You have an order that's actually yours.",
-         "You can choose a bottle for a table and be right.",
-         "You can order for people whose taste isn't yours."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You have an order that's actually yours.",
+   "You can name three grapes you like, and why.",
+   "You can read a wine list without panic.",
+   "You know what you drink before dinner versus during.",
+   "You've tasted the same grape from two regions."],
+  ["You can choose a bottle for a table and be right.",
+   "You can ask a sommelier a useful question.",
+   "You know the house style of two or three producers.",
+   "You can pair a bottle to what the table ordered.",
+   "You can drink less without it becoming a topic."],
+  ["You can order for people whose taste isn't yours.",
+   "You can find the interesting bottle on a boring list.",
+   "You can describe what's in the glass without performing.",
+   "You know when the cheap thing is the right thing."]]},
 
 {id:"culture",name:"Cultural range",family:"presentation",effort:3,
  s:{general:5,work:4,dating:7,newCity:5,friendship:6,formal:9},
  line:"Enough film, music, art and books to hold real opinions — plus the skill of catching up fast.",
  drill:"One canonical work a week, rotating the medium.",
  failure:"You've heard of everything and have an opinion about nothing.",
- levels:["You hold real opinions in at least one medium.",
-         "You can catch up on an unfamiliar field in an evening.",
-         "You can disagree with an expert and keep their respect."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You hold real opinions in at least one medium.",
+   "You finish the things you start.",
+   "You can name what you like and why, without hedging.",
+   "You've taken on three canonical works this year.",
+   "You can say you haven't seen something without embarrassment."],
+  ["You can catch up on an unfamiliar field in an evening.",
+   "You recommend to a specific person, not in general.",
+   "You know one thing deeply enough to be asked about it.",
+   "You follow something current, not only the canon.",
+   "You can explain why something matters without liking it."],
+  ["You can disagree with an expert and keep their respect.",
+   "You can connect works across different media.",
+   "People discover things through you.",
+   "You can be wrong about taste publicly and cheerfully."]]},
 
 {id:"money",name:"Money calibration",family:"presentation",effort:1,
  s:{general:6,work:5,dating:8,newCity:7,friendship:7,formal:8},
  line:"Tipping, splitting, and generosity that doesn't announce itself.",
  drill:"Learn the local tipping norm before the first meal, not after it.",
  failure:"Generosity as performance — or visible discomfort at one end of the price range.",
- levels:["You handle a bill without friction.",
-         "You're generous without narrating it.",
-         "You're equally at ease at a $300 dinner and a plastic stool."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You handle a bill without friction.",
+   "You know the local tipping norm before the first meal.",
+   "You can say a place is out of your range, plainly.",
+   "You settle what you owe within a day.",
+   "You've stopped calculating shares to the cent."],
+  ["You're generous without narrating it.",
+   "You can pick up a check quietly.",
+   "You can accept being treated without discomfort.",
+   "You know what an evening will cost before proposing it.",
+   "You can propose a cheaper plan without apology."],
+  ["You're equally at ease at a $300 dinner and a plastic stool.",
+   "You can host across income levels without anyone noticing.",
+   "You can decline an expensive plan without explaining.",
+   "Money never becomes the subject of the evening."]]},
 
 {id:"arrival",name:"Arrival fluency",family:"navigation",effort:2,
  s:{general:5,work:3,dating:2,newCity:10,friendship:2,formal:3},
  line:"Landing somewhere unfamiliar and being functional within the hour.",
  drill:"Next trip: no taxi from the airport. Work out transit before you land.",
  failure:"Three hours in, and you've eaten at the place nearest the hotel.",
- levels:["You're functional within an hour of landing.",
-         "You have one good thing booked before you land.",
-         "You can orient in a city you didn't research."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You're functional within an hour of landing.",
+   "You know transit from the airport before you go.",
+   "You have payment or currency sorted before arrival.",
+   "You know the tipping and rounding norms.",
+   "You've looked at a map before you arrive."],
+  ["You have one good thing booked before you land.",
+   "You know which neighbourhoods do what.",
+   "You can order and pay without English.",
+   "You ate somewhere that wasn't near the hotel on day one.",
+   "You know the local eating hours."],
+  ["You can orient in a city you didn't research.",
+   "You find the good version of a thing within a day.",
+   "You can rebuild a plan when a place turns out closed.",
+   "You come home with places you'd return to."]]},
 
 {id:"alone",name:"Being alone in public",family:"navigation",effort:1,
  s:{general:7,work:3,dating:4,newCity:10,friendship:3,formal:3},
  line:"Eating at the bar, going to the film, travelling solo without treating it as a downgrade.",
  drill:"Dinner at a good bar seat. No phone.",
  failure:"You wait for company, so you go nowhere.",
- levels:["You'll eat alone at a counter.",
-         "You'll go to a show or a film alone.",
-         "You'd rather go alone than not go."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You'll eat alone at a counter.",
+   "You'll have a drink alone at a bar.",
+   "You can sit without using your phone as a shield.",
+   "You'll walk into a place without vetting it first.",
+   "You've asked a bartender for a recommendation."],
+  ["You'll go to a show or a film alone.",
+   "You'll take a table, not just a counter seat.",
+   "You'll travel alone for a weekend.",
+   "You've had a real conversation with a stranger while alone.",
+   "You've returned alone somewhere you first went with others."],
+  ["You'd rather go alone than not go.",
+   "You seek out things nobody you know would attend.",
+   "You're recognised somewhere you go alone.",
+   "Going alone isn't a fallback, it's a choice."]]},
 
 {id:"friction",name:"Graceful friction",family:"navigation",effort:2,
  s:{general:5,work:8,dating:5,newCity:7,friendship:5,formal:7},
  line:"Sending back a dish, declining an invitation, correcting a mistake — without heat and without folding.",
  drill:"Next time something's wrong, say it in one calm sentence with no apology padding.",
  failure:"You either swallow the mistake silently or escalate past what it was worth.",
- levels:["You can send back a dish.",
-         "You can fix a problem without the other person losing face.",
-         "You can hold a position through three refusals and stay warm."],
- unlocks:[]},
+ unlocks:[],
+ stages:[
+  ["You can send back a dish.",
+   "You state the problem in one sentence.",
+   "You've stopped padding requests with apology.",
+   "You raise it at the time rather than afterwards.",
+   "You ask for what you want, not just name what's wrong."],
+  ["You can fix a problem without the other person losing face.",
+   "You can decline an invitation without inventing an excuse.",
+   "You can correct someone in front of others gracefully.",
+   "You escalate proportionally rather than emotionally.",
+   "You can accept a fix that isn't the one you asked for."],
+  ["You can hold a position through three refusals and stay warm.",
+   "People you've complained to remember you well.",
+   "You can deliver bad news to someone who'll take it badly.",
+   "You can be disliked in the moment and be fine with it."]]},
 
 {id:"language",name:"A little of the language",family:"navigation",effort:3,
  s:{general:3,work:2,dating:3,newCity:8,friendship:3,formal:4},
  line:"Fifty words changes every interaction. The posture matters more than the fluency.",
  drill:"Fifty words: greetings, thanks, numbers, ordering, and one apology.",
  failure:"You default to English, louder.",
- levels:["You can greet, thank and order.",
-         "You can handle a transaction start to finish.",
-         "You can carry the first two minutes before switching."],
- unlocks:[]}
+ unlocks:[],
+ stages:[
+  ["You can greet, thank and apologise.",
+   "You know the numbers to a hundred.",
+   "You can order food and drink.",
+   "You've stopped opening in English.",
+   "You can get through a menu without panic."],
+  ["You can handle a transaction start to finish.",
+   "You can ask for directions and understand the answer.",
+   "You can say what you do and where you're from.",
+   "You know the polite and the casual register apart.",
+   "You've had an exchange nobody switched out of."],
+  ["You can carry the first two minutes before switching.",
+   "You can follow a conversation you're not part of.",
+   "You can make a small joke.",
+   "You've been mistaken for someone who lives there."]]}
 ];
 
 const EFFORT_LABEL = {1:"Low effort",2:"Medium effort",3:"High effort"};
-const LEVEL_NAME = ["STARTING","WORKING","FLUENT"];
+const STAGE_NAME = ["Starting","Working","Fluent"];
 const KEY = "register:state";
+const TOTAL_SIGNALS = SKILLS.reduce((n,s)=>n+s.stages.flat().length,0);
 
-/* ------------------------------------------------------------- STORAGE */
-/* Uses the host storage API when present, otherwise falls back so the
-   file still remembers state when opened straight off disk. */
 const store = {
   async get(){
     try{
@@ -421,40 +681,47 @@ const store = {
   async set(v){
     try{
       const s = JSON.stringify(v);
-      if(window.storage && window.storage.set){ await window.storage.set(KEY, s); return; }
-      window.localStorage.setItem(KEY, s);
-    }catch(e){ /* state just won't persist */ }
+      if(window.storage && window.storage.set){ await window.storage.set(KEY,s); return; }
+      window.localStorage.setItem(KEY,s);
+    }catch(e){}
   }
 };
 
-/* --------------------------------------------------------------- STATE */
 let state = { ctx:"general", sort:"impact", open:null, focus:[], checked:{} };
 const byId = id => SKILLS.find(s => s.id === id);
 const rowH = () => window.innerWidth <= 640 ? 44 : 46;
+const flat = s => s.stages.flat();
+const doneCount = id => (state.checked[id]||[]).length;
 
-/* value-per-effort: impact discounted by acquisition cost, rescaled to 0–10 */
-const value = (s,ctx) => s.s[ctx] / (1 + (s.effort - 1) * 0.45);
+function stageOffset(s,n){ let o=0; for(let i=0;i<n;i++) o += s.stages[i].length; return o; }
+
+function stageOf(s){
+  const ch = state.checked[s.id]||[];
+  let reached = -1;
+  for(let n=0;n<s.stages.length;n++){
+    const off = stageOffset(s,n);
+    if(s.stages[n].every((_,i)=>ch.includes(off+i))) reached = n; else break;
+  }
+  return reached;
+}
+
+const value  = (s,ctx) => s.s[ctx] / (1 + (s.effort-1)*0.45);
 const metric = (s,ctx) => state.sort === "impact" ? s.s[ctx] : value(s,ctx);
+const orderFor = ctx =>
+  [...SKILLS].sort((a,b)=>metric(b,ctx)-metric(a,ctx) || a.name.localeCompare(b.name));
+const rankMap = ctx => { const m={}; orderFor(ctx).forEach((s,i)=>m[s.id]=i+1); return m; };
 
-function orderFor(ctx){
-  return [...SKILLS].sort((a,b) => metric(b,ctx) - metric(a,ctx) || a.name.localeCompare(b.name));
-}
-function rankMap(ctx){
-  const m = {}; orderFor(ctx).forEach((s,i) => m[s.id] = i+1); return m;
-}
-
-/* --------------------------------------------------------------- BUILD */
 const $ = id => document.getElementById(id);
 
 CONTEXTS.forEach(c => {
   const b = document.createElement("button");
-  b.className = "chip"; b.textContent = c.label; b.dataset.ctx = c.id;
-  b.onclick = () => { state.ctx = c.id; render(); save(); };
+  b.className="chip"; b.textContent=c.label; b.dataset.ctx=c.id;
+  b.onclick = () => { state.ctx=c.id; render(); save(); };
   $("chips").appendChild(b);
 });
 
 $("seg").querySelectorAll("button").forEach(b => {
-  b.onclick = () => { state.sort = b.dataset.sort; render(); save(); };
+  b.onclick = () => { state.sort=b.dataset.sort; render(); save(); };
 });
 
 Object.values(FAMILIES).forEach(f => {
@@ -463,70 +730,77 @@ Object.values(FAMILIES).forEach(f => {
   $("legend").appendChild(s);
 });
 const eff = document.createElement("span");
-eff.style.marginLeft = "auto"; eff.textContent = "● ● ● = effort to acquire";
+eff.style.marginLeft="auto"; eff.textContent="\u25CF \u25CF \u25CF = effort to acquire";
 $("legend").appendChild(eff);
 
 const rows = {};
 SKILLS.forEach(s => {
   const b = document.createElement("button");
-  b.className = "row";
+  b.className="row";
   b.innerHTML =
-    '<span class="rank"></span>' +
-    '<span class="nm">'+s.name+'</span>' +
-    '<span class="track"><span class="fill" style="background:'+FAMILIES[s.family].color+'"></span></span>' +
-    '<span class="score mono"></span>' +
-    '<span class="pips" title="'+EFFORT_LABEL[s.effort]+'">' +
-      [1,2,3].map(p => '<span class="pip" data-on="'+(p<=s.effort?1:0)+'"></span>').join("") +
-    '</span>' +
+    '<span class="prog" style="width:0"></span>'+
+    '<span class="rank"></span>'+
+    '<span class="nm">'+s.name+'</span>'+
+    '<span class="track"><span class="fill" style="background:'+FAMILIES[s.family].color+'"></span></span>'+
+    '<span class="score mono"></span>'+
+    '<span class="pips" title="'+EFFORT_LABEL[s.effort]+'">'+
+      [1,2,3].map(p=>'<span class="pip" data-on="'+(p<=s.effort?1:0)+'"></span>').join("")+
+    '</span>'+
     '<span class="delta"></span>';
   b.onclick = () => openPanel(s.id);
   rows[s.id] = b;
   $("ladder").appendChild(b);
 });
-$("ladder").style.height = (SKILLS.length * rowH()) + "px";
 
-/* -------------------------------------------------------------- RENDER */
 function render(){
-  document.querySelectorAll(".chip").forEach(c =>
-    c.dataset.on = c.dataset.ctx === state.ctx ? "1" : "0");
-  $("seg").querySelectorAll("button").forEach(b =>
-    b.dataset.on = b.dataset.sort === state.sort ? "1" : "0");
-  $("note").textContent = CONTEXTS.find(c => c.id === state.ctx).note;
-  $("sortLabel").textContent = state.sort === "impact"
+  document.querySelectorAll(".chip").forEach(c => c.dataset.on = c.dataset.ctx===state.ctx?"1":"0");
+  $("seg").querySelectorAll("button").forEach(b => b.dataset.on = b.dataset.sort===state.sort?"1":"0");
+  $("note").textContent = CONTEXTS.find(c=>c.id===state.ctx).note;
+  $("sortLabel").textContent = state.sort==="impact"
     ? "Ranked by impact" : "Ranked by impact per unit of effort";
 
   const order = orderFor(state.ctx);
   const cur = rankMap(state.ctx);
-  const gen = (() => {
-    const m = {};
-    [...SKILLS].sort((a,b) => metric(b,"general") - metric(a,"general") || a.name.localeCompare(b.name))
-      .forEach((s,i) => m[s.id] = i+1);
-    return m;
-  })();
+  const gen = (()=>{ const m={};
+    [...SKILLS].sort((a,b)=>metric(b,"general")-metric(a,"general")||a.name.localeCompare(b.name))
+      .forEach((s,i)=>m[s.id]=i+1); return m; })();
 
-  order.forEach((s,i) => {
+  order.forEach((s,i)=>{
     const r = rows[s.id];
-    r.style.transform = "translateY(" + (i * rowH()) + "px)";
+    r.style.transform = "translateY("+(i*rowH())+"px)";
     r.querySelector(".rank").textContent = String(i+1).padStart(2,"0");
-    r.querySelector(".fill").style.width = (s.s[state.ctx] * 10) + "%";
+    r.querySelector(".fill").style.width = (s.s[state.ctx]*10)+"%";
     r.querySelector(".score").textContent = s.s[state.ctx];
-    const d = gen[s.id] - cur[s.id];
+    setProg(s.id);
+    const d = gen[s.id]-cur[s.id];
     const el = r.querySelector(".delta");
-    el.className = "delta " + (d > 0 ? "up" : d < 0 ? "down" : "flat");
-    el.textContent = state.ctx === "general" ? "" : d > 0 ? "▲"+d : d < 0 ? "▼"+(-d) : "—";
+    el.className = "delta "+(d>0?"up":d<0?"down":"flat");
+    el.textContent = state.ctx==="general" ? "" : d>0?"\u25B2"+d : d<0?"\u25BC"+(-d) : "\u2014";
   });
-  $("ladder").style.height = (SKILLS.length * rowH()) + "px";
+  $("ladder").style.height = (SKILLS.length*rowH())+"px";
 
+  updateTotal();
   renderMovers();
   renderDock();
   if(state.open) renderPanel();
 }
 
+function setProg(id){
+  const s = byId(id);
+  const pct = doneCount(id)/flat(s).length;
+  rows[id].querySelector(".prog").style.width = pct ? "calc((100% - 16px) * "+pct+")" : "0";
+}
+
+function updateTotal(){
+  const ticked = SKILLS.reduce((n,s)=>n+doneCount(s.id),0);
+  $("total").textContent = ticked+" of "+TOTAL_SIGNALS+" signals ticked across all twenty skills.";
+}
+
 function renderMovers(){
   const box = $("movers");
-  if(state.ctx === "general"){ box.hidden = true; return; }
-  box.hidden = false;
-  const diffs = SKILLS.map(s => ({s, d: s.s[state.ctx] - s.s.general})).filter(x => x.d !== 0);
+  if(state.ctx==="general"){ box.hidden=true; return; }
+  box.hidden=false;
+  const diffs = SKILLS.map(s=>({s,d:s.s[state.ctx]-s.s.general})).filter(x=>x.d!==0);
   const line = ({s,d}) =>
     '<div class="mrow"><span>'+s.name+'</span><span class="mono '+(d>0?"up":"down")+'">'+
     (d>0?"+":"")+d+'</span></div>';
@@ -541,104 +815,120 @@ function renderDock(){
     return;
   }
   d.innerHTML = "";
-  state.focus.forEach(id => {
-    const s = byId(id), done = (state.checked[id]||[]).length;
+  state.focus.forEach(id=>{
+    const s = byId(id);
     const b = document.createElement("button");
-    b.className = "fchip";
+    b.className="fchip";
     b.innerHTML = '<span class="sw" style="margin:0;background:'+FAMILIES[s.family].color+'"></span>'
-      + s.name + '<span class="fprog">'+done+'/3</span>';
+      + s.name + '<span class="fprog">'+doneCount(id)+'/'+flat(s).length+'</span>';
     b.onclick = () => openPanel(id);
     d.appendChild(b);
   });
 }
 
-/* --------------------------------------------------------------- PANEL */
-function openPanel(id){ state.open = id; renderPanel(); }
+function openPanel(id){ state.open=id; renderPanel(); }
 function closePanel(){
-  state.open = null;
-  $("panel").dataset.on = "0";
+  state.open=null;
+  $("panel").dataset.on="0";
   $("panel").setAttribute("aria-hidden","true");
-  $("scrim").dataset.on = "0";
+  $("scrim").dataset.on="0";
 }
 
 function renderPanel(){
   const s = byId(state.open); if(!s) return;
-  const checked = state.checked[s.id] || [];
+  const ch = state.checked[s.id]||[];
+  const items = flat(s);
+  const done = ch.length, pct = Math.round(done/items.length*100);
+  const st = stageOf(s);
   const inFocus = state.focus.includes(s.id);
-  const full = !inFocus && state.focus.length >= 3;
+  const full = !inFocus && state.focus.length>=3;
+
+  const stagesHtml = s.stages.map((stage,n)=>{
+    const off = stageOffset(s,n);
+    const got = stage.filter((_,i)=>ch.includes(off+i)).length;
+    return '<div class="stagehead"><span class="stagename" style="color:'+
+        (got===stage.length?FAMILIES[s.family].color:"#93A8AE")+'">'+
+        STAGE_NAME[n]+'</span><span class="stagecount">'+got+'/'+stage.length+'</span></div>'+
+      '<p class="stagedesc">'+STAGE_DESC[n]+'</p>'+
+      stage.map((it,i)=>{
+        const idx = off+i, on = ch.includes(idx);
+        return '<button class="lvl" data-i="'+idx+'" data-on="'+(on?1:0)+'">'+
+          '<span class="box" data-on="'+(on?1:0)+'">'+(on?"\u2713":"")+'</span>'+
+          '<span class="lvltext">'+it+'</span></button>';
+      }).join("");
+  }).join("");
 
   $("panel").innerHTML =
-    '<button class="close" id="closeBtn" aria-label="Close">✕</button>' +
-    '<div class="eyebrow" style="color:'+FAMILIES[s.family].color+'">' +
-      FAMILIES[s.family].label + ' · ' + EFFORT_LABEL[s.effort] + '</div>' +
-    '<h2 class="pname">'+s.name+'</h2>' +
-    '<p class="pline">'+s.line+'</p>' +
-    '<div class="drill"><div class="blabel" style="margin-bottom:0">Drill</div>' +
-      '<p class="drilltext">'+s.drill+'</p></div>' +
-    '<div class="block"><div class="blabel">Doing it badly looks like</div>' +
-      '<p class="fail">'+s.failure+'</p></div>' +
-    '<div class="block"><div class="blabel">Signals — tick what\'s true</div>' +
-      s.levels.map((lv,i) =>
-        '<button class="lvl" data-lv="'+i+'">' +
-          '<span class="box" data-on="'+(checked.includes(i)?1:0)+'">'+(checked.includes(i)?"✓":"")+'</span>' +
-          '<span class="lvltext"><span class="lvlnum">'+LEVEL_NAME[i]+'</span>'+lv+'</span>' +
-        '</button>').join("") +
-    '</div>' +
-    '<div class="block"><div class="blabel">Impact by context</div>' +
-      CONTEXTS.map(c =>
-        '<div class="ctxrow"><span class="ctxname">'+c.label+'</span>' +
-        '<span class="ctxtrack"><span class="ctxfill" style="width:'+(s.s[c.id]*10)+'%;background:' +
-          (c.id===state.ctx ? FAMILIES[s.family].color : "#26505C")+'"></span></span>' +
-        '<span class="mono" style="width:16px;text-align:right">'+s.s[c.id]+'</span></div>').join("") +
-    '</div>' +
+    '<button class="close" id="closeBtn" aria-label="Close">\u2715</button>'+
+    '<div class="eyebrow" style="color:'+FAMILIES[s.family].color+'">'+
+      FAMILIES[s.family].label+' \u00B7 '+EFFORT_LABEL[s.effort]+'</div>'+
+    '<h2 class="pname">'+s.name+'</h2>'+
+    '<p class="pline">'+s.line+'</p>'+
+    '<span class="stagebadge" data-none="'+(st<0?1:0)+'">'+
+      (st<0 ? "NOT STARTED" : STAGE_NAME[st].toUpperCase())+'</span>'+
+    '<div class="meter"><span class="meterfill" style="width:'+pct+'%"></span></div>'+
+    '<div class="stagecount" style="margin-top:6px">'+done+' of '+items.length+' signals</div>'+
+    '<div class="drill"><div class="blabel" style="margin-bottom:0">Drill</div>'+
+      '<p class="drilltext">'+s.drill+'</p></div>'+
+    '<div class="block"><div class="blabel">Doing it badly looks like</div>'+
+      '<p class="fail">'+s.failure+'</p></div>'+
+    '<div class="block"><div class="blabel">Signals \u2014 tick what\u2019s already true</div>'+
+      stagesHtml+'</div>'+
+    '<div class="block"><div class="blabel">Impact by context</div>'+
+      CONTEXTS.map(c=>
+        '<div class="ctxrow"><span class="ctxname">'+c.label+'</span>'+
+        '<span class="ctxtrack"><span class="ctxfill" style="width:'+(s.s[c.id]*10)+'%;background:'+
+          (c.id===state.ctx?FAMILIES[s.family].color:"#26505C")+'"></span></span>'+
+        '<span class="mono" style="width:16px;text-align:right">'+s.s[c.id]+'</span></div>').join("")+
+    '</div>'+
     (s.unlocks.length ?
-      '<div class="block"><div class="blabel">Load-bearing for</div>' +
-      '<p class="pline" style="margin:0">'+s.unlocks.join(" · ")+'</p></div>' : "") +
-    '<button class="focusbtn" id="focusBtn" data-on="'+(inFocus?1:0)+'"'+(full?" disabled":"")+'>' +
-      (inFocus ? "Practising — remove"
-        : full ? "Practice list full — three at a time" : "Add to practice") +
+      '<div class="block"><div class="blabel">Load-bearing for</div>'+
+      '<p class="pline" style="margin:0">'+s.unlocks.join(" \u00B7 ")+'</p></div>' : "")+
+    '<button class="focusbtn" id="focusBtn" data-on="'+(inFocus?1:0)+'"'+(full?" disabled":"")+'>'+
+      (inFocus?"Practising \u2014 remove":full?"Practice list full \u2014 three at a time":"Add to practice")+
     '</button>';
 
   $("closeBtn").onclick = closePanel;
-  $("panel").querySelectorAll(".lvl").forEach(b => {
+  $("panel").querySelectorAll(".lvl").forEach(b=>{
     b.onclick = () => {
-      const i = +b.dataset.lv;
-      const cur = state.checked[s.id] || [];
-      state.checked[s.id] = cur.includes(i) ? cur.filter(x => x !== i) : cur.concat(i);
-      renderPanel(); renderDock(); save();
+      const i = +b.dataset.i;
+      const cur = state.checked[s.id]||[];
+      state.checked[s.id] = cur.includes(i) ? cur.filter(x=>x!==i) : cur.concat(i);
+      const y = $("panel").scrollTop;
+      renderPanel(); renderDock(); setProg(s.id); updateTotal(); save();
+      $("panel").scrollTop = y;
     };
   });
   const fb = $("focusBtn");
   if(fb && !fb.disabled) fb.onclick = () => {
-    state.focus = inFocus ? state.focus.filter(x => x !== s.id) : state.focus.concat(s.id);
+    state.focus = inFocus ? state.focus.filter(x=>x!==s.id) : state.focus.concat(s.id);
     renderPanel(); renderDock(); save();
   };
 
-  $("panel").dataset.on = "1";
+  $("panel").dataset.on="1";
   $("panel").setAttribute("aria-hidden","false");
-  $("scrim").dataset.on = "1";
+  $("scrim").dataset.on="1";
 }
 
 $("scrim").onclick = closePanel;
-document.addEventListener("keydown", e => { if(e.key === "Escape") closePanel(); });
-window.addEventListener("resize", () => render());
+document.addEventListener("keydown", e => { if(e.key==="Escape") closePanel(); });
+window.addEventListener("resize", render);
 
-/* ---------------------------------------------------------------- BOOT */
-let saveTimer = null;
+let saveTimer=null;
 function save(){
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => store.set({
-    ctx: state.ctx, sort: state.sort, focus: state.focus, checked: state.checked
-  }), 250);
+  saveTimer = setTimeout(()=>store.set({
+    ctx:state.ctx, sort:state.sort, focus:state.focus, checked:state.checked
+  }),250);
 }
 
-(async () => {
+(async()=>{
   const v = await store.get();
   if(v){
-    if(v.ctx) state.ctx = v.ctx;
-    if(v.sort) state.sort = v.sort;
-    if(Array.isArray(v.focus)) state.focus = v.focus.slice(0,3);
-    if(v.checked) state.checked = v.checked;
+    if(v.ctx) state.ctx=v.ctx;
+    if(v.sort) state.sort=v.sort;
+    if(Array.isArray(v.focus)) state.focus=v.focus.slice(0,3);
+    if(v.checked) state.checked=v.checked;
   }
   render();
 })();
