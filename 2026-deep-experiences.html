@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soundings — a depth chart of experiences</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;1,300;1,400&display=swap');
+
+:root{
+  --paper:#E7E6DE;
+  --ink:#101E24;
+  --ink-soft:#4C5F64;
+  --ink-faint:#8A9599;
+  --b1:#F1F0E8;
+  --b2:#DBE5E0;
+  --b3:#B7CDCC;
+  --b4:#86A7AC;
+  --caution:#AE1476;
+  --rule:rgba(16,30,36,.22);
+  --rule-hard:rgba(16,30,36,.5);
+  --sans:"IBM Plex Sans Condensed","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --serif:"Spectral",Palatino,"Iowan Old Style",Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  font-size:16px;line-height:1.45;
+}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--caution);outline-offset:2px}
+
+/* ---------- masthead ---------- */
+.mast{
+  border-bottom:1px solid var(--rule-hard);
+  padding:26px 22px 0;
+  max-width:1180px;margin:0 auto;
+}
+.mast-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 24px}
+h1{
+  font-family:var(--sans);font-weight:600;
+  font-size:clamp(30px,6.5vw,46px);
+  letter-spacing:.24em;margin:0;text-transform:uppercase;line-height:1;
+}
+.mast-sub{
+  font-family:var(--serif);font-style:italic;font-weight:300;
+  font-size:clamp(15px,2.6vw,19px);color:var(--ink-soft);
+  margin:0 0 4px;
+}
+.thesis{
+  font-family:var(--serif);font-size:15.5px;line-height:1.6;
+  max-width:62ch;margin:16px 0 0;color:var(--ink-soft);
+}
+.thesis b{font-weight:400;color:var(--ink);font-style:normal;font-family:var(--sans)}
+.legend{
+  display:flex;flex-wrap:wrap;gap:10px 26px;
+  padding:16px 0 14px;margin-top:16px;
+  border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.swatch{width:22px;height:11px;border:1px solid var(--rule-hard);display:inline-block}
+
+/* ---------- controls ---------- */
+.controls{
+  position:sticky;top:0;z-index:20;
+  background:var(--paper);
+  border-bottom:1px solid var(--rule-hard);
+}
+.controls-inner{max-width:1180px;margin:0 auto;padding:10px 22px 12px}
+.ctl-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctl-row + .ctl-row{margin-top:8px}
+.label{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-faint);
+  margin-right:4px;flex:0 0 auto;
+}
+.chip{
+  font-family:var(--sans);font-size:12.5px;letter-spacing:.04em;
+  padding:3px 9px;border:1px solid var(--rule);
+  color:var(--ink-soft);white-space:nowrap;
+  transition:background .12s,color .12s,border-color .12s;
+}
+.chip:hover{border-color:var(--rule-hard);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip.flag[aria-pressed="true"]{background:var(--caution);border-color:var(--caution);color:#fff}
+#q{
+  font-family:var(--sans);font-size:13px;
+  border:1px solid var(--rule);background:transparent;
+  padding:4px 9px;min-width:150px;flex:1 1 160px;max-width:280px;color:var(--ink);
+}
+#q::placeholder{color:var(--ink-faint)}
+.count{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  color:var(--ink-faint);text-transform:uppercase;margin-left:auto;white-space:nowrap;
+}
+
+/* ---------- chart ---------- */
+.chart{max-width:1180px;margin:0 auto;padding:0 22px 120px;position:relative}
+.band{padding:0 0 34px;margin:0 -22px;padding-left:22px;padding-right:22px}
+.band[data-d="1"]{background:var(--b1)}
+.band[data-d="2"]{background:var(--b2)}
+.band[data-d="3"]{background:var(--b3)}
+.band[data-d="4"]{background:var(--b4)}
+.contour{
+  display:flex;align-items:center;gap:12px;
+  padding:22px 0 16px;
+}
+.contour::before,.contour::after{content:"";height:1px;background:var(--rule-hard);flex:1 1 auto}
+.contour::before{flex:0 0 26px}
+.contour-fig{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--ink);flex:0 0 auto;
+}
+.contour-name{
+  font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  flex:0 0 auto;
+}
+.contour-gloss{
+  font-family:var(--serif);font-style:italic;font-size:13.5px;
+  color:var(--ink-soft);flex:0 0 auto;
+}
+.band[data-d="4"] .contour-gloss,.band[data-d="3"] .contour-gloss{color:#26383C}
+
+.rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:1px;background:var(--rule)}
+.row{
+  background:inherit;
+  display:block;width:100%;text-align:left;
+  padding:11px 12px 12px;
+  position:relative;
+  transition:transform .12s ease, background .12s;
+}
+.band[data-d="1"] .row{background:var(--b1)}
+.band[data-d="2"] .row{background:var(--b2)}
+.band[data-d="3"] .row{background:var(--b3)}
+.band[data-d="4"] .row{background:var(--b4)}
+.row:hover{transform:translateX(3px)}
+.row-head{display:flex;gap:8px;align-items:baseline}
+.sym{font-family:var(--mono);font-size:13px;line-height:1.2;flex:0 0 auto;color:var(--ink-faint)}
+.row[data-s="watching"] .sym,.row[data-s="underway"] .sym,.row[data-s="lived"] .sym{color:var(--caution)}
+.row-name{
+  font-size:15.5px;font-weight:500;letter-spacing:.005em;line-height:1.25;
+}
+.row[data-s="declined"] .row-name{text-decoration:line-through;color:var(--ink-faint)}
+.row-meta{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:6px;padding-left:21px;
+}
+.row-meta .lock{color:var(--caution)}
+.empty{
+  font-family:var(--serif);font-style:italic;color:var(--ink-soft);
+  padding:60px 0;text-align:center;
+}
+
+/* ---------- sheet ---------- */
+.scrim{
+  position:fixed;inset:0;background:rgba(16,30,36,.34);
+  opacity:0;pointer-events:none;transition:opacity .2s;z-index:40;
+}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;top:0;right:0;height:100%;width:min(460px,100%);
+  background:var(--paper);border-left:1px solid var(--rule-hard);
+  z-index:50;transform:translateX(101%);transition:transform .26s cubic-bezier(.22,.7,.3,1);
+  display:flex;flex-direction:column;
+}
+.sheet.on{transform:none}
+.sheet-scroll{overflow-y:auto;padding:22px 24px 40px;-webkit-overflow-scrolling:touch}
+.sheet-depth{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);display:flex;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--rule-hard);padding-bottom:8px;
+}
+.sheet h2{
+  font-family:var(--sans);font-weight:500;font-size:26px;line-height:1.15;
+  margin:18px 0 0;letter-spacing:.005em;
+}
+.field{margin-top:22px}
+.field-label{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:5px;
+}
+.field-body{font-family:var(--serif);font-size:16.5px;line-height:1.55}
+.field.caution{border-left:2px solid var(--caution);padding-left:12px}
+.field.caution .field-label{color:var(--caution)}
+.field.first .field-body{font-family:var(--sans);font-size:15.5px;font-style:normal}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:24px}
+.tag{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--rule);padding:3px 7px;color:var(--ink-soft);
+}
+.marks{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);margin-top:26px}
+.mark{
+  background:var(--paper);padding:9px 6px;text-align:center;
+  font-family:var(--sans);font-size:12.5px;letter-spacing:.06em;color:var(--ink-soft);
+}
+.mark[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.sheet-close{
+  position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:16px;
+  line-height:1;color:var(--ink-soft);padding:6px;
+}
+
+/* ---------- footer bar ---------- */
+.bar{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:var(--ink);color:var(--paper);
+  display:flex;align-items:center;gap:14px;
+  padding:9px 22px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;
+  transform:translateY(101%);transition:transform .22s;
+}
+.bar.on{transform:none}
+.bar-stats{display:flex;gap:14px;flex-wrap:wrap}
+.bar button{
+  border:1px solid rgba(231,230,222,.4);padding:3px 10px;color:var(--paper);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+.bar button:hover{background:var(--paper);color:var(--ink)}
+.bar .spacer{margin-left:auto}
+
+@media (max-width:720px){
+  .mast{padding:20px 16px 0}
+  .controls-inner{padding:9px 16px 10px}
+  .chart{padding:0 16px 130px}
+  .band{margin:0 -16px;padding-left:16px;padding-right:16px}
+  .sheet{width:100%;top:auto;bottom:0;height:88%;border-left:none;border-top:1px solid var(--rule-hard);
+    transform:translateY(101%)}
+  .sheet.on{transform:none}
+  .rows{grid-template-columns:1fr}
+  .bar{font-size:9.5px;gap:10px;padding:8px 16px}
+  .legend{gap:8px 16px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-top">
+    <h1>Soundings</h1>
+    <p class="mast-sub">a depth chart of experiences that change you</p>
+  </div>
+  <p class="thesis">
+    Every entry here shares three properties: <b>stakes you can't exit cheaply</b>, <b>reciprocity you don't control</b>, and <b>time you can't compress</b>.
+    Modern life is engineered to remove all three, which is why a borrowed cat can feel like a revelation. Depth below is not difficulty —
+    it's how much of you the thing takes, and how hard it is to come back up.
+  </p>
+  <div class="legend">
+    <span><i class="swatch" style="background:var(--b1)"></i>0–5 surface</span>
+    <span><i class="swatch" style="background:var(--b2)"></i>5–30 shelf</span>
+    <span><i class="swatch" style="background:var(--b3)"></i>30–100 slope</span>
+    <span><i class="swatch" style="background:var(--b4)"></i>100+ deep</span>
+    <span>○ watching</span>
+    <span>◐ underway</span>
+    <span>● lived</span>
+    <span>⊘ not for me</span>
+    <span style="color:var(--caution)">▲ locks in on its own</span>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="ctl-row" id="nerveRow">
+      <span class="label">Nerve</span>
+    </div>
+    <div class="ctl-row">
+      <span class="label">Filter</span>
+      <button class="chip flag" id="fStart" aria-pressed="false">Startable this month</button>
+      <button class="chip flag" id="fLock" aria-pressed="false">Locks in on its own</button>
+      <button class="chip flag" id="fMarked" aria-pressed="false">Marked only</button>
+      <button class="chip" id="fClear">Clear all</button>
+      <input id="q" type="search" placeholder="Search…" aria-label="Search entries">
+      <span class="count" id="count">—</span>
+    </div>
+  </div>
+</div>
+
+<main class="chart" id="chart"></main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <button class="sheet-close" id="sheetClose" aria-label="Close">✕</button>
+  <div class="sheet-scroll" id="sheetScroll"></div>
+</aside>
+
+<div class="bar" id="bar">
+  <div class="bar-stats" id="barStats"></div>
+  <span class="spacer"></span>
+  <button id="export">Copy as Markdown</button>
+</div>
+
+<script>
+/* ============ data ============
+   d: depth band 1–4   h: horizon   c: cost   L: locks in once started
+   w: why it works   x: the counterfeit   f: first move
+*/
+const NERVES = ["dependence","duration","mastery","humility","body","dislocation","intimacy","mortality","service","solitude","lineage","recalibration","awe","making"];
+
+const BANDS = [
+ {d:1,fig:"0–5",name:"Surface",gloss:"days to weeks — you can walk away and nothing follows you"},
+ {d:2,fig:"5–30",name:"Shelf",gloss:"months — real commitment, clean exit still available"},
+ {d:3,fig:"30–100",name:"Slope",gloss:"years — leaving costs you something you can't get back"},
+ {d:4,fig:"100+",name:"Deep",gloss:"no clean exit — another life, or an ending, is inside it"}
+];
+
+const D = [
+// ---- dependence ----
+{n:"Raise an animal from young to its death",k:"dependence",d:4,h:"decades",c:["grief","time"],L:1,
+ w:"You take on the whole arc at the start, ending included. Something depends on you that never agreed to and can't be reasoned with.",
+ x:"Catsitting. Borrowing a friend's dog. The good years without the last one.",
+ f:"Go meet a specific animal, not the idea of one."},
+{n:"Foster an animal or a person",k:"dependence",d:3,h:"months",c:["grief","time"],L:1,
+ w:"Love given fully to something you have agreed in advance to hand over. The ending is scheduled and you do it anyway.",
+ x:"Donating to a shelter. Sponsoring at a distance.",
+ f:"Fill in one application. The waiting list is the slow part."},
+{n:"Care for someone dying, with your hands",k:"dependence",d:4,h:"months",c:["grief","status"],L:1,
+ w:"Bathing, wiping, managing indignity on someone's behalf. Nothing else recalibrates what you think a person is for.",
+ x:"Visiting. Paying for the care. Coordinating from a distance.",
+ f:"Ask the family member already doing it what they need on Saturdays."},
+{n:"Be a named emergency contact — and get the call",k:"dependence",d:3,h:"years",c:["courage"],L:0,
+ w:"Being reachable is cheap. Being the one who actually arrives, at cost, is the entire relationship compressed into an hour.",
+ x:"Saying 'call me anytime' and meaning it abstractly.",
+ f:"Ask two people to list you. Give them your address."},
+{n:"Keep something alive that dies from inattention",k:"dependence",d:2,h:"years",c:["time"],L:1,
+ w:"A reef tank, a bonsai, a starter, a bee hive. Attention is the only input, and neglect shows up as a death rather than a bad grade.",
+ x:"A pothos. A pet you can board for two weeks without consequence.",
+ f:"Pick the one whose failure mode you'd actually feel."},
+{n:"Tend the same ground across seasons",k:"dependence",d:3,h:"years",c:["time"],L:1,
+ w:"You take orders from a schedule you didn't set and can't renegotiate. The land does not care about your quarter.",
+ x:"Houseplants. A raised bed you plant in April and abandon in July.",
+ f:"Get on the list for a community plot; they're usually full."},
+{n:"Cook for the same people on a fixed night",k:"dependence",d:2,h:"years",c:["time"],L:1,
+ w:"Repetition plus feeding is how strangers become regulars. The obligation is small and the compounding is enormous.",
+ x:"Hosting a dinner party twice a year.",
+ f:"Name the night. Invite the same four people for the next four weeks."},
+{n:"Teach one beginner until they surpass you",k:"dependence",d:3,h:"years",c:["time","status"],L:0,
+ w:"You become responsible for someone's ceiling, then watch it rise past yours. The gladness is the part you can't fake in advance.",
+ x:"Publishing a tutorial. Answering questions in a forum.",
+ f:"Offer one person a standing weekly hour."},
+{n:"Raise a child",k:"dependence",d:4,h:"decades",c:["years","money","grief"],L:1,
+ w:"The largest version of the whole list. Unearned dependence, no exit, and a twenty-year arc you cannot speed up or optimize.",
+ x:"Being the fun uncle. Anything with a return date.",
+ f:"Nothing this month — but stop treating it as a default that will happen on its own."},
+// ---- duration ----
+{n:"Keep a daily journal for ten years, then read year one",k:"duration",d:3,h:"decades",c:["time"],L:0,
+ w:"The payload isn't the writing, it's meeting a stranger who was you and had opinions you'd now argue with.",
+ x:"Notes you never reread. A vault you search but never sit inside.",
+ f:"Three lines a night, same file, no formatting rules."},
+{n:"Photograph one subject annually for a decade",k:"duration",d:2,h:"decades",c:["time"],L:0,
+ w:"A single frame is a picture; ten frames on the same date is a measurement of time doing its work on something you love.",
+ x:"Ten thousand photos of everything. Volume is not a series.",
+ f:"Pick the subject and the date. Put it in the calendar to repeat yearly."},
+{n:"Stay in one home long enough to repair your own repairs",k:"duration",d:3,h:"decades",c:["years","money"],L:1,
+ w:"You meet your past decisions as a maintenance burden. Nothing else teaches you what 'permanent' costs.",
+ x:"Renovating and selling. Moving before the consequences arrive.",
+ f:"Ask what would have to be true for you to stay ten years."},
+{n:"Carry a friendship through years with nothing in common",k:"duration",d:3,h:"decades",c:["time"],L:0,
+ w:"The dead stretch is what makes it load-bearing later. Friendships tested only in the fun years are untested.",
+ x:"Liking their posts. An annual catch-up drink.",
+ f:"Call the one you've drifted from. No agenda, no apology for the gap."},
+{n:"Be present for a child who isn't yours, for twenty years",k:"duration",d:4,h:"decades",c:["time"],L:0,
+ w:"Low cost per year, enormous cumulative weight. You become part of someone's structural memory of being cared about.",
+ x:"Generous birthday presents. Showing up for the milestones only.",
+ f:"Claim one recurring role — the Sunday, the sport, the school run."},
+{n:"Plant what you won't see mature",k:"duration",d:2,h:"decades",c:["time"],L:0,
+ w:"An act whose payoff is definitionally not yours. Practice for every other long commitment.",
+ x:"A tree in a pot you'll move house with.",
+ f:"Find out who plants trees in your city and go on a Saturday."},
+{n:"A standing weekly thing — same day, same place, for years",k:"duration",d:3,h:"years",c:["time"],L:1,
+ w:"Groups don't form from intent, they form from repetition on a fixed schedule that removes the need for anyone to organise.",
+ x:"A group chat. 'We should do this more often.' Ad hoc invitations.",
+ f:"Pick the night and the venue, tell six people, then show up alone if you must."},
+{n:"Return somewhere after ten years",k:"duration",d:1,h:"days",c:["money"],L:0,
+ w:"You go to see how the place changed and discover the measurement is running the other way.",
+ x:"Following the place online. Watching it change in real time removes the shock.",
+ f:"List the places you loved before 2016. Book the cheapest one."},
+{n:"Become a regular somewhere until your absence is noticed",k:"duration",d:1,h:"months",c:["time"],L:1,
+ w:"Weak ties with continuity do most of the work of feeling at home in a city. Being missed is the threshold event.",
+ x:"Trying a new café every week. Novelty is the enemy here.",
+ f:"Choose one place. Go the same time, three times a week, for a month."},
+// ---- mastery ----
+{n:"Push one skill past where compliments stop landing",k:"mastery",d:3,h:"years",c:["years"],L:0,
+ w:"Past this line, praise is noise and your own taste is the only critic left. This is where a hobby becomes an identity.",
+ x:"Being the best in a room of beginners. Collecting new hobbies.",
+ f:"Name your one. Find where the actual ceiling is and how far below it you are."},
+{n:"Chase a number nobody can argue with",k:"mastery",d:2,h:"months",c:["time"],L:0,
+ w:"A grade, a rating, a race time, a page translated. Objective standards cut off every escape route your ego builds.",
+ x:"Vibes-based progress. Metrics you defined yourself and can redefine.",
+ f:"Pick the number. Write today's value down."},
+{n:"Make something a stranger uses daily",k:"mastery",d:2,h:"months",c:["time"],L:0,
+ w:"Not admired — used. Wear and complaint are a kind of feedback that applause can't provide.",
+ x:"Something well-received that nobody depends on.",
+ f:"Ask one person what they'd use if it existed. Build the smallest version."},
+{n:"Repair something complicated rather than replace it",k:"mastery",d:1,h:"days",c:["time"],L:0,
+ w:"You are forced to understand a thing's actual structure instead of its interface. Ownership changes character afterward.",
+ x:"Paying for the repair. Watching the video without doing it.",
+ f:"Take the broken thing off the shelf tonight."},
+{n:"Perform live",k:"mastery",d:2,h:"months",c:["courage"],L:0,
+ w:"Failure that is public, immediate, and unrepeatable. Everything you can hide in a recording is exposed.",
+ x:"Posting the take you were happy with.",
+ f:"Find the open mic, the recital, the local night. Book a date."},
+{n:"Learn a hand craft from someone old",k:"mastery",d:2,h:"years",c:["time"],L:0,
+ w:"Knowledge that lives in hands and dies with bodies. The transfer only happens in person and only if you're early.",
+ x:"The book about it. The archived interview.",
+ f:"Identify who near you still does it. Ask this month."},
+{n:"Own something in production that breaks at 2am",k:"mastery",d:2,h:"years",c:["time"],L:1,
+ w:"Responsibility that doesn't respect your calendar, for consequences borne by people you'll never meet.",
+ x:"Contributing to something someone else carries the pager for.",
+ f:"Take the thing you built and put a real user on it."},
+{n:"Be the least skilled person in a working shop",k:"mastery",d:2,h:"months",c:["status"],L:0,
+ w:"Apprenticeship gives you standards before you have skill. You learn what good looks like from the inside of it.",
+ x:"A weekend workshop where everyone's a beginner.",
+ f:"Offer free hands to someone whose work you admire."},
+// ---- humility ----
+{n:"Argue and joke in a second language",k:"humility",d:3,h:"years",c:["years","status"],L:0,
+ w:"The two years of sounding stupid are the experience; fluency is only the residue. You meet a less clever version of yourself and survive them.",
+ x:"Ordering food. An app streak. Passive comprehension.",
+ f:"Book a conversation hour with a tutor for this week."},
+{n:"Take a beginner class among people much younger",k:"humility",d:1,h:"months",c:["status"],L:0,
+ w:"Competence is load-bearing for most adults' self-image. Removing it deliberately, in public, loosens something.",
+ x:"Learning it privately until you're presentable.",
+ f:"Sign up for the one you'd be embarrassed to be seen at."},
+{n:"Play a team sport as the worst player",k:"humility",d:1,h:"months",c:["status"],L:1,
+ w:"Your inadequacy costs other people something, and they keep picking you anyway. That's the part that lands.",
+ x:"Individual sport. Anything where only you bear the result.",
+ f:"Find the beginner league that's mid-season and short a body."},
+{n:"Do improv or standup",k:"humility",d:2,h:"months",c:["courage"],L:0,
+ w:"Structured, repeated, public failure with witnesses. The fear reliably outsizes the actual event.",
+ x:"Being funny with friends.",
+ f:"Book the beginner course, not the drop-in."},
+{n:"Dance sober, in public, badly",k:"humility",d:1,h:"days",c:["courage"],L:0,
+ w:"The smallest available dose of self-consciousness discharged voluntarily. Cheap and unreasonably effective.",
+ x:"Dancing drunk. The alcohol is doing the work you wanted to do.",
+ f:"Go to the class where nobody brings a partner."},
+{n:"Ask the stupid question in a room of experts",k:"humility",d:1,h:"days",c:["status"],L:0,
+ w:"You trade a moment of standing for actual understanding, and find the exchange rate was always in your favour.",
+ x:"Looking it up afterward so nobody sees the gap.",
+ f:"Next meeting where you're lost: say 'I don't follow — go back.'"},
+{n:"Change your mind in public",k:"humility",d:2,h:"days",c:["status"],L:0,
+ w:"Publicly revising a position you argued for is the rarest social act there is, and it permanently changes how you hold beliefs.",
+ x:"Quietly updating and never mentioning it.",
+ f:"Find the thing you were loud and wrong about. Say so where you said it."},
+{n:"Be coached by someone who tells you the truth",k:"humility",d:2,h:"years",c:["money","status"],L:0,
+ w:"Being corrected on specifics by someone with no incentive to flatter you is unlike anything friendship provides.",
+ x:"Feedback from people who like you. Self-assessment.",
+ f:"Hire the coach. Ask them to be blunt in the first session."},
+// ---- body ----
+{n:"Continue past the point where quitting was reasonable",k:"body",d:2,h:"days",c:["courage"],L:0,
+ w:"You find the negotiating voice in your head is a separate thing from you, and it can be overruled. That knowledge persists.",
+ x:"Hard efforts that end when planned. The suffering has to be unscheduled.",
+ f:"Pick something long enough that finishing isn't assured."},
+{n:"Fast until hunger stops being interesting",k:"body",d:1,h:"days",c:["courage"],L:0,
+ w:"An appetite you've obeyed your whole life turns out to be a signal you can watch from outside.",
+ x:"Skipping breakfast. Anything you don't notice.",
+ f:"Pick a day with nothing social in it. Drink water. Don't make it a system."},
+{n:"Cold or heat until the panic goes quiet",k:"body",d:1,h:"months",c:["courage"],L:0,
+ w:"You practise the gap between a stress response and a decision, in a setting where the stakes are trivial.",
+ x:"A brisk shower you cut short at the first flinch.",
+ f:"Find water cold enough to argue with. Stay until the argument stops."},
+{n:"One training block aimed at one number",k:"body",d:2,h:"months",c:["time"],L:0,
+ w:"Months of unglamorous accumulation resolving into a single verdict. Then noticing how little the verdict changes.",
+ x:"Training generally, for fitness, forever.",
+ f:"Choose the number and the date. Work backwards."},
+{n:"A full day of manual labour beside people who do it daily",k:"body",d:1,h:"days",c:["time"],L:0,
+ w:"Your body learns what a working life actually costs, and your sense of who is impressive quietly reorders.",
+ x:"A gym session. Yard work at your own pace.",
+ f:"Volunteer for a build, a harvest, a move."},
+{n:"Be lost outdoors and navigate out",k:"body",d:2,h:"days",c:["courage"],L:0,
+ w:"Competence under real consequence, with no one to hand it to. Unfakeable and unforgettable.",
+ x:"Following a GPS line. Being lost with full signal.",
+ f:"Learn map and compass before you need them."},
+{n:"Cross real distance under your own power",k:"body",d:2,h:"days",c:["time"],L:0,
+ w:"Geography enters the body. It is the reason riding between two cities and flying between them are not the same experience.",
+ x:"The same route by car, stopping at the same viewpoints.",
+ f:"Draw a line between two places you know. Ride or walk it."},
+// ---- dislocation ----
+{n:"Be illiterate",k:"dislocation",d:2,h:"days",c:["courage","money"],L:0,
+ w:"A script you can't read strips out competence and forces dependence on the goodwill of strangers. Humbling in a way sightseeing never is.",
+ x:"An English-signposted city. Live translation on your camera the whole time.",
+ f:"Pick the country by its alphabet. Put the phone away for a day."},
+{n:"Live three months in one foreign place",k:"dislocation",d:3,h:"months",c:["money","time"],L:0,
+ w:"Long enough for a routine, a regular, a bad day, and a repaired mistake. Everything short of that is sightseeing.",
+ x:"Three weeks. Two countries a week. A tour.",
+ f:"Choose one place and one season. Book the accommodation long."},
+{n:"Travel alone long enough to get bored",k:"dislocation",d:2,h:"months",c:["time"],L:0,
+ w:"Past the sightseeing is where the actual thing lives: no audience, no narration, nobody to perform the trip for.",
+ x:"A solo trip you document daily. The audience came with you.",
+ f:"Go alone with no itinerary past day three."},
+{n:"Accept hospitality you can't repay",k:"dislocation",d:2,h:"days",c:["status"],L:0,
+ w:"Receiving without a settlement mechanism is deeply uncomfortable, and it rewires what you think obligation is for.",
+ x:"Paying your share. Sending a gift that squares it.",
+ f:"Say yes to the invitation instead of the hotel."},
+{n:"Be the only one of your kind in the room, for weeks",k:"dislocation",d:2,h:"months",c:["courage"],L:0,
+ w:"You stop being the default and start being the exception. Most people only experience this by accident, briefly.",
+ x:"A day trip. Anywhere with an expat neighbourhood to retreat into."
+ ,f:"Go where nobody nearby shares your language or your work."},
+{n:"Come home and find your own city foreign",k:"dislocation",d:2,h:"days",c:["time"],L:0,
+ w:"Reverse culture shock is the actual payload of long travel. Your defaults become visible because they briefly stop fitting.",
+ x:"A trip short enough that nothing recalibrated.",
+ f:"Write down what looks strange in week one back. It fades fast."},
+{n:"Go somewhere for a person, not a place",k:"dislocation",d:1,h:"days",c:["money"],L:0,
+ w:"Travel organised around a relationship rather than a landscape produces an entirely different set of memories.",
+ x:"Adding a friend visit onto a trip you were taking anyway.",
+ f:"Ask the far-away friend when their quiet week is."},
+{n:"Travel with a parent, as two adults",k:"dislocation",d:2,h:"days",c:["courage"],L:0,
+ w:"The role you've had since childhood becomes visibly optional. You meet a person who existed before you did.",
+ x:"A family holiday with the old hierarchy intact.",
+ f:"Propose a trip only the two of you take. Let them choose where."},
+{n:"Move where you know nobody and build from zero",k:"dislocation",d:4,h:"years",c:["courage","money"],L:1,
+ w:"Six months of living somewhere answers more than five years of comparing it. Also the only reliable way to find out what of you is really you.",
+ x:"A long visit. Research. Cost-of-living spreadsheets.",
+ f:"Pick the candidate you're most afraid of and go for a season first."},
+{n:"Stand where your family came from, with names",k:"dislocation",d:2,h:"days",c:["time"],L:0,
+ w:"Abstract heritage becomes a specific street, a specific record, a specific decision someone made that led to you.",
+ x:"A DNA percentage. Visiting the country and not the place.",
+ f:"Get the names and dates from the oldest living relative first."},
+// ---- intimacy ----
+{n:"Be seen at your worst and not left",k:"intimacy",d:3,h:"years",c:["courage"],L:0,
+ w:"Until someone has seen the ugly version, being loved is a review of your presentation.",
+ x:"A carefully managed relationship where nothing has gone wrong yet.",
+ f:"Stop editing the daily report of how you actually are."},
+{n:"Reach the real grievance in a fight, then repair it",k:"intimacy",d:3,h:"days",c:["courage"],L:0,
+ w:"The repair is the bond. A relationship with no survived rupture is untested and both people know it.",
+ x:"Never fighting. Fighting and letting it fade without resolution.",
+ f:"Reopen the argument you both dropped."},
+{n:"Say the thing that might end the friendship",k:"intimacy",d:2,h:"days",c:["courage"],L:0,
+ w:"You find out whether the relationship can hold weight. Either answer is worth more than not knowing.",
+ x:"Hinting. Telling someone else instead."
+ ,f:"Write it in one sentence. Say that sentence out loud to them."},
+{n:"Ask for help in a way that costs pride",k:"intimacy",d:2,h:"days",c:["status"],L:0,
+ w:"Being helped creates intimacy faster than helping. Self-sufficiency is the most common way people stay lonely while surrounded.",
+ x:"Asking for favours you could easily do yourself.",
+ f:"Name the thing you've been quietly struggling with. Ask one person."},
+{n:"Take the 3am call and go",k:"intimacy",d:2,h:"days",c:["time"],L:0,
+ w:"Inconvenient physical presence is the currency. Everything else is a statement of intent.",
+ x:"A long supportive message. Being available in principle.",
+ f:"Next time you're asked at a bad hour, don't calculate. Go."},
+{n:"Be the less impressive one, without resenting it",k:"intimacy",d:2,h:"years",c:["status"],L:0,
+ w:"Friendship stops being a status transaction. Rare, uncomfortable, and it makes the other person safe to be around.",
+ x:"Only befriending peers. Curating a circle where you're the interesting one.",
+ f:"Keep the friend whose life is going better than yours."},
+{n:"Stay close through a friend's crisis when they're not fun",k:"intimacy",d:3,h:"months",c:["time"],L:0,
+ w:"Most friendships quietly end here, without anyone naming it. Not ending is the whole act.",
+ x:"Checking in periodically. Being available if they reach out.",
+ f:"Set a recurring reminder to contact them. Don't wait to be asked."},
+{n:"Sit in someone's grief without fixing it",k:"intimacy",d:2,h:"days",c:["courage"],L:0,
+ w:"Every instinct you have will offer a solution. Withholding it, and staying, is a skill nobody teaches you.",
+ x:"Sending food and a card. Solving the logistics instead.",
+ f:"Go over. Say almost nothing. Stay past the point it's comfortable."},
+{n:"Be forgiven for something you can't undo",k:"intimacy",d:3,h:"years",c:["grief","status"],L:0,
+ w:"You have to sit with the damage as permanent and be received anyway. It is the only cure for a certain kind of self-image.",
+ x:"An apology that was really a request to stop feeling bad.",
+ f:"Name the harm plainly, ask nothing, and let them decide."},
+{n:"Forgive someone who never apologised",k:"intimacy",d:3,h:"years",c:["grief"],L:0,
+ w:"You give up the debt without collection. It costs more than reconciliation and it's the only version fully in your control.",
+ x:"Deciding you don't care. Indifference is not forgiveness.",
+ f:"Write down what you're owed, then what holding it has cost you."},
+{n:"Confess something to a face",k:"intimacy",d:2,h:"days",c:["courage"],L:0,
+ w:"Text gives you an edit buffer and an exit. Saying it while watching someone's expression is a categorically different act.",
+ x:"Writing it in a journal. Telling a stranger who won't remember.",
+ f:"Pick the person who has the standing to hear it."},
+{n:"Say it first, without knowing it's returned",k:"intimacy",d:2,h:"days",c:["courage"],L:0,
+ w:"Deliberately taking the exposed position instead of waiting for safety. The habit generalises to everything else.",
+ x:"Escalating slowly until the answer is already obvious.",
+ f:"Stop waiting for certainty. It isn't coming."},
+{n:"End something kindly",k:"intimacy",d:3,h:"days",c:["courage"],L:0,
+ w:"Ending a relationship without making the other person the villain requires you to hold your own reasons without inflating them.",
+ x:"Fading out. Provoking them into ending it.",
+ f:"Say it directly, in person, without a list of their faults."},
+{n:"Reconnect after years of silence",k:"intimacy",d:1,h:"days",c:["courage"],L:0,
+ w:"The gap is almost always heavier to you than to them. Finding that out is worth the message.",
+ x:"Following their life quietly online.",
+ f:"Send it without explaining the silence."},
+{n:"Love someone whose values you can't share",k:"intimacy",d:3,h:"years",c:["courage"],L:0,
+ w:"You learn that a person is not their positions, which is the only honest basis for anything long-term.",
+ x:"Tolerating the difference by never discussing it.",
+ f:"Ask the person you've written off how they got there."},
+{n:"Live with people you aren't dating, as an adult",k:"intimacy",d:2,h:"years",c:["status"],L:1,
+ w:"Unstructured daily proximity is how close friendships actually form after school. Privacy is the thing you trade for it.",
+ x:"Seeing friends on a schedule. A roommate you avoid.",
+ f:"Ask the friends you'd actually want it with, before your lease renews."},
+{n:"Have a mentor and be one, at the same time",k:"intimacy",d:2,h:"years",c:["time"],L:0,
+ w:"Holding both roles at once keeps you honest about how much of your competence was given to you.",
+ x:"Networking upward. Advice given in one-off conversations.",
+ f:"Ask one person above you and offer one person below you. Same week."},
+{n:"Attend the unglamorous events of one life for decades",k:"intimacy",d:4,h:"decades",c:["time"],L:0,
+ w:"Weddings are easy. Hospital rooms, courtrooms, moving days and funerals are what being a witness to a life actually means.",
+ x:"The celebrations only. Congratulations without attendance.",
+ f:"Go to the next one that's inconvenient."},
+{n:"Know one family across three generations",k:"intimacy",d:3,h:"decades",c:["time"],L:0,
+ w:"You see traits, wounds and repairs travel down a line. It changes how you read your own family.",
+ x:"Knowing one person well and their relatives as names.",
+ f:"Accept the next invitation that includes the grandparents."},
+{n:"Stay committed past the end of novelty",k:"intimacy",d:4,h:"decades",c:["years"],L:1,
+ w:"Everything distinctive about long partnership happens after the interesting part ends and choosing becomes a daily act.",
+ x:"Serial two-year relationships. Ending at the first plateau.",
+ f:"Notice whether you leave at the same point every time."},
+// ---- mortality ----
+{n:"Be in the room at a death",k:"mortality",d:4,h:"days",c:["grief"],L:0,
+ w:"The abstraction you've organised your life around becomes a physical event you attended. Nothing reads the same afterward.",
+ x:"Arriving after. The funeral is a different experience entirely.",
+ f:"If someone you love is dying, be there for the end, not the visit."},
+{n:"Be in the room at a birth",k:"mortality",d:3,h:"days",c:["courage"],L:0,
+ w:"The other end of the same fact. Violent, ordinary, and it happens constantly without your knowledge.",
+ x:"Meeting the baby the next day.",
+ f:"Ask, well in advance, of someone who'd want you there."},
+{n:"Watch a parent become someone who needs you",k:"mortality",d:4,h:"years",c:["grief","time"],L:1,
+ w:"The reversal is slow and unmistakable. You are the adult now, and the evidence arrives in small humiliating details.",
+ x:"Managing it by phone. Delegating to a sibling.",
+ f:"Have the conversation about what they want, before you need to."},
+{n:"Empty a dead person's house",k:"mortality",d:3,h:"days",c:["grief"],L:0,
+ w:"You handle every object someone kept and decide what survives them. It permanently changes what you buy.",
+ x:"Hiring the clearance service. Taking one keepsake.",
+ f:"Volunteer for it when it comes."},
+{n:"Stand where an atrocity happened",k:"mortality",d:2,h:"days",c:["grief"],L:0,
+ w:"Scale that reading cannot deliver. The physical dimensions of the place do something a number can't.",
+ x:"The documentary. The museum in another country.",
+ f:"Go to the site itself, and go alone."},
+{n:"Write your own eulogy without flattering yourself",k:"mortality",d:1,h:"days",c:["courage"],L:0,
+ w:"Two pages, honest, in someone else's voice. The gap between it and your calendar is the whole diagnosis.",
+ x:"A values exercise. A list of goals.",
+ f:"Write it tonight. Reread it in a year."},
+// ---- service ----
+{n:"Do something costly and anonymous",k:"service",d:1,h:"days",c:["money"],L:0,
+ w:"Removing credit removes the part of generosity that was really about you. What's left is small and clarifying.",
+ x:"Giving publicly. Telling one person afterward.",
+ f:"Do it this week and tell nobody, including later."},
+{n:"Stay with one organisation for years, boring roles included",k:"service",d:3,h:"years",c:["time"],L:1,
+ w:"Rotating through causes is tourism. Institutions are held up by people who do the unglamorous shift repeatedly.",
+ x:"Annual volunteering days. The photogenic events only.",
+ f:"Pick one. Commit to a year of the same slot."},
+{n:"Give until you feel the absence",k:"service",d:2,h:"years",c:["money"],L:0,
+ w:"Below the threshold of noticing, giving is an accounting entry. Above it, it's a decision that costs something.",
+ x:"Round-ups. A percentage you never notice leaving.",
+ f:"Raise the number until it changes one thing you'd have bought."},
+{n:"Take setup and cleanup, repeatedly",k:"service",d:1,h:"months",c:["time"],L:0,
+ w:"The least visible work is where you learn whether you wanted to help or wanted to be seen helping.",
+ x:"Arriving for the event, leaving before the chairs get stacked.",
+ f:"Be the first there and the last out, three times running."},
+{n:"Sit on a local board",k:"service",d:2,h:"years",c:["time"],L:1,
+ w:"Governance at a scale where your vote actually moves something, and the consequences live down your street.",
+ x:"Complaining about the decisions. Signing petitions.",
+ f:"Find out when the co-op, school or association elects."},
+// ---- solitude ----
+{n:"Days without speaking to anyone",k:"solitude",d:1,h:"days",c:["courage"],L:0,
+ w:"The internal narration gets loud enough to hear properly, which is uncomfortable and then not.",
+ x:"Alone but online. The conversation just moved venue.",
+ f:"Take two days. Leave the phone in a drawer, not your pocket."},
+{n:"Eat alone in a good restaurant, no phone, no book",k:"solitude",d:1,h:"days",c:["courage"],L:0,
+ w:"A small, precise dose of being unaccompanied in public without a prop to explain yourself.",
+ x:"Solo lunch at a counter with your laptop open.",
+ f:"Book a table for one somewhere you'd take a date."},
+{n:"Take a trip you document for nobody",k:"solitude",d:2,h:"days",c:["courage"],L:0,
+ w:"No photos, no notes, no telling. You find out how much of the experience was being assembled for an audience.",
+ x:"Photographing everything and posting later. Same thing, delayed.",
+ f:"Leave the camera. Tell people afterward that you went."},
+{n:"Do something excellent and tell no one",k:"solitude",d:1,h:"months",c:["status"],L:0,
+ w:"The work has to be its own reason. Most people have never tested whether it can be.",
+ x:"A humblebrag. Waiting to be discovered.",
+ f:"Finish the next thing and don't post it."},
+{n:"Ten days of silence",k:"solitude",d:3,h:"days",c:["courage","time"],L:0,
+ w:"Long enough that the mind exhausts its material and something else starts. Reliably unpleasant in the middle.",
+ x:"A weekend retreat with talking at meals.",
+ f:"Find the course. They book out months ahead."},
+{n:"Walk with nothing in your ears and no destination",k:"solitude",d:1,h:"days",c:["time"],L:0,
+ w:"The cheapest entry on this chart and the most reliably skipped. Boredom has to be allowed to finish.",
+ x:"A walk with a podcast. That's listening, in motion.",
+ f:"Tomorrow. An hour. No input."},
+// ---- lineage ----
+{n:"Submit to a form older than you",k:"lineage",d:2,h:"years",c:["status","time"],L:1,
+ w:"A dojo, a congregation, a choir, a club with rules you didn't design and can't optimise. The submission is the mechanism.",
+ x:"An app-based version. Anything you can modify to suit yourself.",
+ f:"Go to one that's been running fifty years. Attend before deciding."},
+{n:"Learn where you can name your teacher's teacher",k:"lineage",d:2,h:"years",c:["time"],L:0,
+ w:"You inherit a position in a chain instead of a skill. It comes with obligations forward as well as back.",
+ x:"Learning from strangers online. Skill without provenance.",
+ f:"Ask your teacher who taught them, and what they were like."},
+{n:"Restore something older than you and pass it on",k:"lineage",d:2,h:"years",c:["time","money"],L:0,
+ w:"You become a temporary custodian rather than an owner. The object outlives the transaction.",
+ x:"Buying it already restored.",
+ f:"Buy the broken one. Find who knows how it works."},
+{n:"Do the thing your grandparents did",k:"lineage",d:2,h:"months",c:["time"],L:0,
+ w:"The trade, the recipe, the route, the language. Doing it with your hands recovers something reading about it can't.",
+ x:"Hearing the stories. Keeping the object in a drawer.",
+ f:"Ask the oldest relative to teach you one thing, in person."},
+{n:"Work on something you won't see finished",k:"lineage",d:3,h:"decades",c:["years"],L:0,
+ w:"A cathedral, a forest, an institution, a body of knowledge. Your relationship to your own lifespan changes.",
+ x:"Long projects that still end inside your career.",
+ f:"Find the multi-generational effort near you and join it small."},
+// ---- recalibration ----
+{n:"Live on very little on purpose",k:"recalibration",d:2,h:"months",c:["status"],L:0,
+ w:"Knowing from experience that you'd survive the downside makes every later decision cheaper and braver.",
+ x:"Budgeting while keeping the safety net visible.",
+ f:"Pick a season. Live at a fraction of your income and notice what you miss."},
+{n:"Meet real luxury once",k:"recalibration",d:1,h:"days",c:["money"],L:0,
+ w:"One good look at the top of the ladder, enough to learn it doesn't do what it advertises. Cheaper than a decade of assuming.",
+ x:"Aspirational content. Imagining it indefinitely.",
+ f:"Spend once, deliberately, on the thing you've fantasised about."},
+{n:"Lose money on something you believed in",k:"recalibration",d:2,h:"months",c:["money"],L:0,
+ w:"Conviction becomes a thing with a price attached, and you learn how much yours was actually worth.",
+ x:"Losses on something you were never invested in emotionally.",
+ f:"Back the thing with an amount that would sting."},
+{n:"Fail publicly with your name on it",k:"recalibration",d:3,h:"months",c:["status"],L:0,
+ w:"The imagined social death doesn't arrive. Discovering that removes a constraint you've been navigating around for years.",
+ x:"Failing privately and reframing it afterward.",
+ f:"Attach your name to the next risky thing instead of hedging."},
+{n:"Quit something you're good at",k:"recalibration",d:3,h:"months",c:["status"],L:0,
+ w:"Identity detaches from competence only when tested. Everyone finds out eventually; better to choose the timing.",
+ x:"Reducing it. Keeping it as a fallback.",
+ f:"Name what you're still doing mainly because you're good at it."},
+{n:"Be rejected badly and continue anyway",k:"recalibration",d:2,h:"months",c:["courage"],L:0,
+ w:"Not resilience in the abstract — a specific memory of continuing after a specific humiliation, available for reuse.",
+ x:"Rejections from things you didn't really want.",
+ f:"Apply for the one you assume you'd never get."},
+{n:"Drop a daily habit for a year",k:"recalibration",d:2,h:"years",c:["courage"],L:0,
+ w:"Anything daily is invisible. A year off is the only way to see what it was doing and who you are without it.",
+ x:"A month. Long enough to miss it, too short to learn anything.",
+ f:"Choose the one you'd defend most strongly. That's the signal."},
+// ---- awe ----
+{n:"A sky dark enough for the Milky Way",k:"awe",d:1,h:"days",c:["time"],L:0,
+ w:"Most people alive have never seen it. The first sight is physical, not intellectual.",
+ x:"Photographs. A stargazing app in a suburb.",
+ f:"Find the nearest dark-sky area. Go on a new moon."},
+{n:"Something very large and very old",k:"awe",d:1,h:"days",c:["money"],L:0,
+ w:"A glacier, a sequoia grove, a canyon wall. Scale that is spatial and temporal at once and refuses to fit in your head.",
+ x:"The scenic viewpoint you drove to and photographed in ten minutes.",
+ f:"Stay long enough to be bored in front of it."},
+{n:"Open ocean, out of sight of land",k:"awe",d:2,h:"days",c:["money","courage"],L:0,
+ w:"Indifference at scale. Nothing there is arranged for you, and the horizon makes the point better than any argument.",
+ x:"A coastal cruise. Land is always the thing that ruins it.",
+ f:"Crew a passage, or take the long ferry."},
+{n:"Totality",k:"awe",d:1,h:"days",c:["money"],L:0,
+ w:"Categorically different from a partial eclipse — people who've seen both don't consider them the same event.",
+ x:"99% coverage. The difference is not a percentage.",
+ f:"Look up the next path. Book accommodation a year out."},
+{n:"A city inhabited for thousands of years",k:"awe",d:1,h:"days",c:["money"],L:0,
+ w:"Continuous human occupation on a timescale that makes your own era look like one layer among many.",
+ x:"Ruins with no living city on top. The continuity is the point.",
+ f:"Walk the oldest quarter at dawn, before it's a destination."},
+// ---- making ----
+{n:"Carry a long work through its dead middle",k:"making",d:3,h:"years",c:["years"],L:0,
+ w:"The distinct experience is the stretch where it's no longer novel and not yet nearly done. Almost everything dies here.",
+ x:"Starting things. A folder of promising beginnings.",
+ f:"Return to the one you abandoned at 40 percent."},
+{n:"Make one thing for one specific person",k:"making",d:1,h:"months",c:["time"],L:0,
+ w:"Constraints from a real person beat any brief you'd write yourself, and the delivery is unlike shipping to an audience.",
+ x:"Something general that they might also like.",
+ f:"Pick the person. Build the thing only they need."},
+{n:"Show work to people free to dislike it",k:"making",d:2,h:"months",c:["courage"],L:0,
+ w:"Friends can't give you this. Indifference from strangers is more informative than praise from people who love you.",
+ x:"Sharing with your circle. Feedback from people with an incentive.",
+ f:"Put it where nobody knows you."},
+{n:"Collaborate until you can't tell whose idea it was",k:"making",d:2,h:"months",c:["status"],L:0,
+ w:"The result beats what either of you would make, and the authorship becomes genuinely unresolvable. Rare and addictive.",
+ x:"Dividing the work and merging it. That's coordination, not collaboration.",
+ f:"Build the next thing in one room with one other person."},
+{n:"Document one place or community for years",k:"making",d:3,h:"years",c:["time"],L:1,
+ w:"You stop being a visitor with a camera and become the record. Access changes completely around year two.",
+ x:"A photo essay from a week's visit.",
+ f:"Choose the subject you'd still be near in five years."},
+{n:"Teach in public, badly at first",k:"making",d:2,h:"months",c:["status"],L:0,
+ w:"Explaining exposes every gap you'd papered over, in front of people who can see the papering.",
+ x:"Teaching only what you've fully mastered.",
+ f:"Publish the explanation before you feel ready."}
+];
+
+/* ============ state ============ */
+const KEY="soundings:v1";
+let marks={};
+let f={nerves:new Set(),start:false,lock:false,marked:false,q:""};
+let open=null;
+const SYM={watching:"○",underway:"◐",lived:"●",declined:"⊘"};
+const ORDER=["watching","underway","lived","declined"];
+
+/* ============ storage ============ */
+async function load(){
+  try{
+    const r=await window.storage.get(KEY);
+    if(r&&r.value) marks=JSON.parse(r.value);
+  }catch(e){ marks={}; }
+  render(); bar();
+}
+async function save(){
+  try{ await window.storage.set(KEY,JSON.stringify(marks)); }
+  catch(e){ console.error("Couldn't save marks",e); }
+}
+
+/* ============ render ============ */
+function match(it){
+  if(f.nerves.size&&!f.nerves.has(it.k))return false;
+  if(f.start&&it.d>2)return false;
+  if(f.lock&&!it.L)return false;
+  if(f.marked&&!marks[it.n])return false;
+  if(f.q){
+    const s=(it.n+" "+it.k+" "+it.w+" "+it.x+" "+it.f).toLowerCase();
+    if(!s.includes(f.q))return false;
+  }
+  return true;
+}
+function render(){
+  const chart=document.getElementById("chart");
+  const vis=D.filter(match);
+  document.getElementById("count").textContent=vis.length+" of "+D.length;
+  if(!vis.length){
+    chart.innerHTML='<p class="empty">Nothing at this depth. Widen the filters.</p>';
+    return;
+  }
+  chart.innerHTML=BANDS.map(b=>{
+    const items=vis.filter(i=>i.d===b.d);
+    if(!items.length)return"";
+    return `<section class="band" data-d="${b.d}">
+      <div class="contour">
+        <span class="contour-fig">${b.fig}</span>
+        <span class="contour-name">${b.name}</span>
+        <span class="contour-gloss">${b.gloss}</span>
+      </div>
+      <div class="rows">${items.map(rowHTML).join("")}</div>
+    </section>`;
+  }).join("");
+  chart.querySelectorAll(".row").forEach(el=>{
+    el.addEventListener("click",()=>openSheet(el.dataset.n));
+  });
+}
+function rowHTML(it){
+  const st=marks[it.n]||"";
+  return `<button class="row" data-n="${esc(it.n)}" ${st?`data-s="${st}"`:""}>
+    <span class="row-head">
+      <span class="sym">${st?SYM[st]:"·"}</span>
+      <span class="row-name">${esc(it.n)}</span>
+    </span>
+    <span class="row-meta">${it.k} · ${it.h}${it.L?' · <span class="lock">▲ locks in</span>':""}</span>
+  </button>`;
+}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+
+/* ============ sheet ============ */
+function openSheet(name){
+  const it=D.find(x=>x.n===name); if(!it)return;
+  open=it;
+  const b=BANDS.find(x=>x.d===it.d);
+  const st=marks[it.n]||"";
+  document.getElementById("sheetScroll").innerHTML=`
+    <div class="sheet-depth"><span>${b.fig} fathoms · ${b.name}</span><span>${it.k}</span></div>
+    <h2 id="sheetTitle">${esc(it.n)}</h2>
+    <div class="field"><div class="field-label">Why it works</div><div class="field-body">${esc(it.w)}</div></div>
+    <div class="field caution"><div class="field-label">The counterfeit</div><div class="field-body">${esc(it.x)}</div></div>
+    <div class="field first"><div class="field-label">First move</div><div class="field-body">${esc(it.f)}</div></div>
+    <div class="tags">
+      <span class="tag">${it.h}</span>
+      ${it.c.map(c=>`<span class="tag">${c}</span>`).join("")}
+      ${it.L?'<span class="tag" style="color:var(--caution);border-color:var(--caution)">locks in</span>':""}
+    </div>
+    <div class="marks">
+      ${ORDER.map(o=>`<button class="mark" data-m="${o}" aria-pressed="${st===o}">${SYM[o]} ${o==="declined"?"not for me":o}</button>`).join("")}
+    </div>`;
+  document.getElementById("sheetScroll").querySelectorAll(".mark").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const m=btn.dataset.m;
+      if(marks[it.n]===m) delete marks[it.n]; else marks[it.n]=m;
+      save(); openSheet(it.n); render(); bar();
+    });
+  });
+  document.getElementById("sheet").classList.add("on");
+  document.getElementById("scrim").classList.add("on");
+}
+function closeSheet(){
+  open=null;
+  document.getElementById("sheet").classList.remove("on");
+  document.getElementById("scrim").classList.remove("on");
+}
+
+/* ============ bar ============ */
+function bar(){
+  const c={watching:0,underway:0,lived:0,declined:0};
+  Object.values(marks).forEach(v=>{if(c[v]!==undefined)c[v]++});
+  const total=c.watching+c.underway+c.lived+c.declined;
+  const el=document.getElementById("bar");
+  el.classList.toggle("on",total>0);
+  document.getElementById("barStats").innerHTML=
+    ORDER.map(o=>`<span>${SYM[o]} ${c[o]} ${o==="declined"?"declined":o}</span>`).join("");
+}
+
+/* ============ export ============ */
+function markdown(){
+  const today=new Date().toISOString().slice(0,10);
+  let out=`---\ndate: ${today}\ntags: [life-design, experiences, soundings]\nsummary: "Marked entries from the Soundings depth chart"\nstatus: draft\n---\n\n# Soundings — marked entries\n`;
+  ORDER.forEach(o=>{
+    const items=D.filter(i=>marks[i.n]===o);
+    if(!items.length)return;
+    out+=`\n## ${o==="declined"?"Not for me":o[0].toUpperCase()+o.slice(1)}\n\n`;
+    items.forEach(i=>{
+      const b=BANDS.find(x=>x.d===i.d);
+      out+=`### ${i.n}\n\n- **Depth:** ${b.fig} fathoms (${b.name}) · ${i.k} · ${i.h}${i.L?" · locks in":""}\n- **Why it works:** ${i.w}\n- **Counterfeit:** ${i.x}\n- **First move:** ${i.f}\n\n`;
+    });
+  });
+  return out;
+}
+document.getElementById("export").addEventListener("click",async e=>{
+  const btn=e.currentTarget;
+  try{
+    await navigator.clipboard.writeText(markdown());
+    btn.textContent="Copied";
+  }catch(err){
+    const ta=document.createElement("textarea");
+    ta.value=markdown();document.body.appendChild(ta);ta.select();
+    document.execCommand("copy");ta.remove();
+    btn.textContent="Copied";
+  }
+  setTimeout(()=>btn.textContent="Copy as Markdown",1600);
+});
+
+/* ============ controls ============ */
+const nerveRow=document.getElementById("nerveRow");
+NERVES.forEach(k=>{
+  const b=document.createElement("button");
+  b.className="chip";b.textContent=k;b.setAttribute("aria-pressed","false");
+  b.addEventListener("click",()=>{
+    if(f.nerves.has(k)){f.nerves.delete(k);b.setAttribute("aria-pressed","false")}
+    else{f.nerves.add(k);b.setAttribute("aria-pressed","true")}
+    render();
+  });
+  nerveRow.appendChild(b);
+});
+function toggle(id,key){
+  const el=document.getElementById(id);
+  el.addEventListener("click",()=>{
+    f[key]=!f[key];el.setAttribute("aria-pressed",String(f[key]));render();
+  });
+}
+toggle("fStart","start");toggle("fLock","lock");toggle("fMarked","marked");
+document.getElementById("fClear").addEventListener("click",()=>{
+  f={nerves:new Set(),start:false,lock:false,marked:false,q:""};
+  document.getElementById("q").value="";
+  document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  render();
+});
+document.getElementById("q").addEventListener("input",e=>{
+  f.q=e.target.value.trim().toLowerCase();render();
+});
+document.getElementById("scrim").addEventListener("click",closeSheet);
+document.getElementById("sheetClose").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){closeSheet()}
+  if(e.key==="/"&&document.activeElement.id!=="q"){e.preventDefault();document.getElementById("q").focus()}
+});
+
+load();
+</script>
+</body>
+</html>
