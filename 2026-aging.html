@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apparent Age — a leverage model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   Palette derived from H&E histology staining: hematoxylin
+   violet, eosin rose, on a deep aubergine ground.
+   ============================================================ */
+:root{
+  --ground:#14111B;
+  --panel:#1B1725;
+  --panel-2:#231E30;
+  --panel-3:#2B2439;
+  --line:#332B44;
+  --line-soft:#2A2338;
+
+  --text:#F0EAF4;
+  --dim:#A79DB8;
+  --mute:#736988;
+
+  --behavior:#4ED8B0;
+  --topical:#9B85F5;
+  --procedural:#F0708C;
+  --perceptual:#F5B23C;
+  --frontier:#5FAEF0;
+  --negative:#E0574F;
+
+  --f-display:'Bricolage Grotesque', 'Helvetica Neue', sans-serif;
+  --f-body:'Newsreader', Georgia, serif;
+  --f-mono:'IBM Plex Mono', ui-monospace, monospace;
+
+  --gut:clamp(18px,4vw,56px);
+  --maxw:1240px;
+}
+
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;background:var(--ground);color:var(--text);
+  font-family:var(--f-display);
+  font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.drawer-open{overflow:hidden;}
+
+/* ambient actinic wash — the one atmospheric flourish */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(1100px 620px at 78% -12%, rgba(155,133,245,.16), transparent 62%),
+    radial-gradient(760px 520px at 6% 8%, rgba(240,112,140,.09), transparent 60%);
+}
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--gut);}
+
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--topical);outline-offset:3px;border-radius:3px;}
+
+/* ============================================================
+   TYPE PRIMITIVES
+   ============================================================ */
+.eyebrow{
+  font-family:var(--f-mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--mute);
+}
+h1,h2,h3,h4{margin:0;font-weight:500;letter-spacing:-.025em;line-height:1.06;}
+h1{font-size:clamp(38px,7.2vw,80px);font-weight:600;letter-spacing:-.04em;}
+h2{font-size:clamp(27px,4.1vw,44px);}
+h3{font-size:clamp(18px,2.3vw,23px);letter-spacing:-.015em;line-height:1.2;}
+h4{font-size:15px;letter-spacing:-.005em;line-height:1.3;}
+.prose{font-family:var(--f-body);font-size:17.5px;line-height:1.62;color:var(--dim);}
+.prose strong{color:var(--text);font-weight:600;}
+.prose em{color:var(--text);font-style:italic;}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;}
+
+/* ============================================================
+   SECTION SHELL
+   ============================================================ */
+section{padding:clamp(60px,8vw,116px) 0;position:relative;}
+section + section{border-top:1px solid var(--line-soft);}
+.shead{display:flex;flex-direction:column;gap:14px;margin-bottom:40px;max-width:78ch;}
+.shead .lede{font-family:var(--f-body);font-size:clamp(16.5px,2vw,19px);line-height:1.6;color:var(--dim);}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{padding-top:clamp(40px,7vw,84px);padding-bottom:clamp(32px,4vw,48px);}
+.hero-top{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:clamp(38px,6vw,72px);}
+.hero h1{max-width:16ch;margin-bottom:26px;}
+.hero h1 .em{
+  font-family:var(--f-body);font-style:italic;font-weight:400;
+  background:linear-gradient(96deg,var(--topical),var(--procedural) 62%,var(--perceptual));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  padding-right:.06em;
+}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,64px);align-items:end;}
+.hero-sub{font-family:var(--f-body);font-size:clamp(17px,2.1vw,20.5px);line-height:1.58;color:var(--dim);max-width:52ch;}
+.hero-sub strong{color:var(--text);font-weight:600;}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.stat{background:var(--panel);padding:16px 15px;}
+.stat b{display:block;font-family:var(--f-mono);font-size:23px;font-weight:500;letter-spacing:-.03em;margin-bottom:5px;}
+.stat span{font-size:11.5px;line-height:1.35;color:var(--mute);display:block;}
+.s1 b{color:var(--behavior);} .s2 b{color:var(--topical);} .s3 b{color:var(--perceptual);}
+
+/* ============================================================
+   THE FIELD — signature element
+   ============================================================ */
+.field-shell{
+  border:1px solid var(--line);border-radius:16px;background:
+    linear-gradient(180deg,rgba(43,36,57,.55),rgba(20,17,27,.5));
+  overflow:hidden;
+}
+.field-bar{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(20,17,27,.45);
+}
+.filters{display:flex;gap:6px;flex-wrap:wrap;}
+.chip{
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:6px 11px;border-radius:999px;border:1px solid var(--line);
+  background:transparent;color:var(--mute);cursor:pointer;transition:.16s;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+.chip:hover{color:var(--text);border-color:var(--panel-3);}
+.chip.on{color:var(--ground);border-color:transparent;font-weight:600;}
+.chip.on[data-cat=behavior]{background:var(--behavior);}
+.chip.on[data-cat=topical]{background:var(--topical);}
+.chip.on[data-cat=procedural]{background:var(--procedural);}
+.chip.on[data-cat=perceptual]{background:var(--perceptual);}
+.chip.on[data-cat=frontier]{background:var(--frontier);}
+.chip.on[data-cat=all]{background:var(--text);}
+
+.viewtoggle{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+.viewtoggle button{
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 13px;background:transparent;border:0;color:var(--mute);cursor:pointer;transition:.16s;
+}
+.viewtoggle button.on{background:var(--panel-3);color:var(--text);}
+
+.plotbox{position:relative;padding:8px 8px 0;}
+#plot{width:100%;height:auto;display:block;touch-action:manipulation;}
+.axis-label{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;fill:var(--mute);}
+.tick-label{font-family:var(--f-mono);font-size:9px;fill:var(--mute);}
+.gridline{stroke:var(--line-soft);stroke-width:1;}
+.gridline.major{stroke:var(--line);}
+.node{cursor:pointer;transition:opacity .18s;}
+.node circle{transition:.18s;}
+.node:hover circle.core{stroke:var(--text);stroke-width:1.6;}
+.node.dim{opacity:.1;pointer-events:none;}
+.node-label{font-family:var(--f-mono);font-size:8.5px;fill:var(--dim);pointer-events:none;}
+
+.tip{
+  position:absolute;pointer-events:none;opacity:0;transform:translateY(4px);
+  transition:opacity .13s,transform .13s;z-index:20;
+  background:#100D16;border:1px solid var(--line);border-radius:9px;
+  padding:9px 12px;max-width:250px;box-shadow:0 12px 32px rgba(0,0,0,.6);
+}
+.tip.show{opacity:1;transform:translateY(0);}
+.tip h5{margin:0 0 5px;font-size:13.5px;font-weight:600;letter-spacing:-.01em;}
+.tip p{margin:0;font-family:var(--f-mono);font-size:10px;color:var(--dim);line-height:1.5;}
+
+.plot-legend{
+  display:flex;gap:20px;flex-wrap:wrap;padding:12px 20px 16px;
+  font-family:var(--f-mono);font-size:10px;color:var(--mute);letter-spacing:.05em;
+  border-top:1px solid var(--line-soft);
+}
+.plot-legend span{display:inline-flex;align-items:center;gap:7px;}
+.lg-ring{width:14px;height:14px;border-radius:50%;border:1px solid var(--mute);display:inline-block;}
+.lg-ring.sm{width:8px;height:8px;}
+
+/* list view */
+#listview{display:none;padding:4px 0 8px;}
+#listview.on{display:block;}
+.plotbox.off{display:none;}
+.lrow{
+  display:grid;grid-template-columns:minmax(0,1fr) 74px 74px 60px;gap:12px;align-items:center;
+  padding:11px 20px;border-bottom:1px solid var(--line-soft);cursor:pointer;transition:.14s;
+}
+.lrow:hover{background:var(--panel-2);}
+.lrow.dim{display:none;}
+.lrow-head{
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);
+  cursor:default;background:rgba(20,17,27,.5);
+}
+.lrow-head:hover{background:rgba(20,17,27,.5);}
+.lname{display:flex;align-items:center;gap:9px;min-width:0;}
+.lname .swatch{width:3px;height:24px;border-radius:2px;flex:none;}
+.lname b{font-weight:500;font-size:14.5px;letter-spacing:-.01em;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lname small{font-family:var(--f-mono);font-size:9.5px;color:var(--mute);letter-spacing:.05em;}
+.lcell{font-family:var(--f-mono);font-size:12px;color:var(--dim);text-align:right;}
+.lcell.big{color:var(--text);font-size:13.5px;}
+.evbar{display:flex;gap:2px;justify-content:flex-end;}
+.evbar i{width:5px;height:12px;border-radius:1px;background:var(--line);display:block;}
+.evbar i.f{background:var(--dim);}
+
+/* ============================================================
+   DRAWER
+   ============================================================ */
+.scrim{position:fixed;inset:0;background:rgba(8,6,12,.72);opacity:0;pointer-events:none;transition:.22s;z-index:90;backdrop-filter:blur(2px);}
+.scrim.on{opacity:1;pointer-events:auto;}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(520px,100%);z-index:100;
+  background:var(--panel);border-left:1px solid var(--line);
+  transform:translateX(102%);transition:transform .28s cubic-bezier(.3,.8,.3,1);
+  display:flex;flex-direction:column;
+}
+.drawer.on{transform:translateX(0);}
+.drawer-head{padding:22px 26px 18px;border-bottom:1px solid var(--line);position:relative;flex:none;}
+.drawer-head .eyebrow{margin-bottom:9px;display:block;}
+.drawer-head h3{padding-right:36px;}
+.dclose{
+  position:absolute;top:18px;right:18px;width:30px;height:30px;border-radius:50%;
+  background:var(--panel-3);border:1px solid var(--line);color:var(--dim);cursor:pointer;
+  font-size:16px;line-height:1;display:grid;place-items:center;transition:.15s;
+}
+.dclose:hover{background:var(--line);color:var(--text);}
+.drawer-body{padding:22px 26px 60px;overflow-y:auto;flex:1;}
+.dmetrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:22px;}
+.dmetric{background:var(--panel-2);padding:11px 12px;}
+.dmetric b{display:block;font-family:var(--f-mono);font-size:16px;font-weight:500;margin-bottom:3px;}
+.dmetric span{font-family:var(--f-mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--mute);}
+.dblock{margin-bottom:20px;}
+.dblock .eyebrow{display:block;margin-bottom:7px;}
+.dblock p{margin:0;font-family:var(--f-body);font-size:15.5px;line-height:1.6;color:var(--dim);}
+.dblock p strong{color:var(--text);font-weight:600;}
+.dtags{display:flex;flex-wrap:wrap;gap:6px;}
+.dtag{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:4px 9px;border-radius:4px;background:var(--panel-3);color:var(--dim);border:1px solid var(--line);}
+.dcaveat{border-left:2px solid var(--procedural);padding-left:14px;}
+.dcaveat p{color:var(--text);}
+
+/* ============================================================
+   MECHANISM CHANNELS
+   ============================================================ */
+.chan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:14px;}
+.chan{
+  border:1px solid var(--line);border-radius:12px;background:var(--panel);
+  padding:20px;position:relative;overflow:hidden;
+}
+.chan::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent,var(--line));}
+.chan .cnum{font-family:var(--f-mono);font-size:10px;color:var(--mute);letter-spacing:.14em;}
+.chan h4{margin:8px 0 9px;font-size:17px;}
+.chan p{margin:0 0 14px;font-family:var(--f-body);font-size:14.5px;line-height:1.55;color:var(--dim);}
+.chan-meta{display:flex;flex-direction:column;gap:7px;padding-top:13px;border-top:1px solid var(--line-soft);}
+.mrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--f-mono);font-size:10px;letter-spacing:.05em;}
+.mrow span:first-child{color:var(--mute);text-transform:uppercase;letter-spacing:.11em;}
+.mrow span:last-child{color:var(--text);text-align:right;}
+.bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden;flex:1;max-width:88px;}
+.bar i{display:block;height:100%;background:var(--accent,var(--dim));border-radius:2px;}
+
+/* ============================================================
+   PERCEPTUAL SIGNALS
+   ============================================================ */
+.sig-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.sig{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:14px 18px;align-items:center;background:var(--panel);border-bottom:1px solid var(--line-soft);}
+.sig:last-child{border-bottom:0;}
+.sig-name b{display:block;font-size:15px;font-weight:500;letter-spacing:-.01em;}
+.sig-name small{font-family:var(--f-mono);font-size:9.5px;color:var(--mute);letter-spacing:.06em;}
+.sig-right{display:flex;flex-direction:column;gap:7px;min-width:0;}
+.sig-bar{height:7px;border-radius:4px;background:var(--panel-3);overflow:hidden;}
+.sig-bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--perceptual),var(--procedural));}
+.sig p{margin:0;font-family:var(--f-body);font-size:14px;line-height:1.5;color:var(--dim);}
+
+/* ============================================================
+   TIERS
+   ============================================================ */
+.tier{border:1px solid var(--line);border-radius:13px;background:var(--panel);margin-bottom:14px;overflow:hidden;}
+.tier-head{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;cursor:pointer;transition:.15s;}
+.tier-head:hover{background:var(--panel-2);}
+.tier-tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.13em;padding:5px 9px;border-radius:5px;flex:none;margin-top:2px;}
+.tier-t0 .tier-tag{background:rgba(115,105,135,.2);color:var(--mute);}
+.tier-t1 .tier-tag{background:rgba(78,216,176,.15);color:var(--behavior);}
+.tier-t2 .tier-tag{background:rgba(240,112,140,.15);color:var(--procedural);}
+.tier-t3 .tier-tag{background:rgba(95,174,240,.15);color:var(--frontier);}
+.tier-title{flex:1;min-width:0;}
+.tier-title h4{font-size:18px;margin-bottom:5px;}
+.tier-title p{margin:0;font-family:var(--f-body);font-size:14.5px;color:var(--dim);line-height:1.5;}
+.tier-caret{font-family:var(--f-mono);color:var(--mute);font-size:13px;flex:none;transition:transform .2s;margin-top:4px;}
+.tier.open .tier-caret{transform:rotate(90deg);}
+.tier-body{display:none;padding:0 22px 22px;}
+.tier.open .tier-body{display:block;}
+.tier-body ul{margin:0;padding:0;list-style:none;border-top:1px solid var(--line-soft);}
+.tier-body li{padding:12px 0;border-bottom:1px solid var(--line-soft);display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline;}
+.tier-body li:last-child{border-bottom:0;}
+.tier-body li .k{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);white-space:nowrap;}
+.tier-body li .v{font-family:var(--f-body);font-size:15px;line-height:1.55;color:var(--dim);}
+.tier-body li .v strong{color:var(--text);font-weight:600;}
+
+/* ============================================================
+   FRONTIER TABLE
+   ============================================================ */
+.ftable{border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.frow{display:grid;grid-template-columns:200px 88px 1fr;gap:16px;padding:15px 18px;border-bottom:1px solid var(--line-soft);background:var(--panel);align-items:start;}
+.frow:last-child{border-bottom:0;}
+.frow.fhead{background:rgba(20,17,27,.5);font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);}
+.fname b{display:block;font-size:15px;font-weight:500;letter-spacing:-.01em;margin-bottom:3px;}
+.fname small{font-family:var(--f-mono);font-size:9.5px;color:var(--mute);}
+.grade{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;padding:4px 8px;border-radius:4px;display:inline-block;white-space:nowrap;}
+.g-b{background:rgba(78,216,176,.14);color:var(--behavior);}
+.g-c{background:rgba(245,178,60,.14);color:var(--perceptual);}
+.g-d{background:rgba(240,112,140,.14);color:var(--procedural);}
+.g-e{background:rgba(115,105,135,.16);color:var(--mute);}
+.fnote{font-family:var(--f-body);font-size:14.5px;line-height:1.55;color:var(--dim);}
+.fnote strong{color:var(--text);font-weight:600;}
+
+/* ============================================================
+   NEGATIVE LEVERAGE
+   ============================================================ */
+.neg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;}
+.neg{border:1px solid rgba(224,87,79,.28);border-radius:11px;background:rgba(224,87,79,.05);padding:17px 18px;}
+.neg h4{color:var(--negative);margin-bottom:7px;font-size:15.5px;}
+.neg p{margin:0;font-family:var(--f-body);font-size:14.5px;line-height:1.55;color:var(--dim);}
+
+/* ============================================================
+   AUDIT
+   ============================================================ */
+.audit{display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start;}
+.audit-list{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel);}
+.agroup-head{
+  padding:11px 18px;background:rgba(20,17,27,.55);border-bottom:1px solid var(--line);
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.aitem{display:flex;gap:12px;align-items:flex-start;padding:11px 18px;border-bottom:1px solid var(--line-soft);cursor:pointer;transition:.13s;}
+.aitem:hover{background:var(--panel-2);}
+.aitem:last-child{border-bottom:0;}
+.abox{
+  width:17px;height:17px;border-radius:4px;border:1.5px solid var(--line);flex:none;margin-top:2px;
+  display:grid;place-items:center;transition:.14s;font-size:11px;color:transparent;
+}
+.aitem.on .abox{background:var(--behavior);border-color:var(--behavior);color:var(--ground);}
+.aitem .atext{flex:1;min-width:0;}
+.aitem .atext b{display:block;font-weight:400;font-size:14.5px;letter-spacing:-.005em;}
+.aitem.on .atext b{color:var(--mute);text-decoration:line-through;text-decoration-color:var(--line);}
+.aitem .atext small{font-family:var(--f-mono);font-size:9.5px;color:var(--mute);letter-spacing:.05em;}
+.aitem .aval{font-family:var(--f-mono);font-size:11.5px;color:var(--dim);white-space:nowrap;margin-top:2px;}
+
+.panel-sticky{position:sticky;top:20px;display:flex;flex-direction:column;gap:12px;}
+.score{border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,var(--panel-3),var(--panel));padding:20px;}
+.score .eyebrow{display:block;margin-bottom:12px;}
+.big-num{font-family:var(--f-mono);font-size:44px;font-weight:500;letter-spacing:-.045em;line-height:1;color:var(--behavior);}
+.big-num small{font-size:15px;color:var(--mute);letter-spacing:0;margin-left:5px;}
+.score-sub{font-family:var(--f-body);font-size:14px;line-height:1.5;color:var(--dim);margin-top:9px;}
+.split{height:1px;background:var(--line);margin:16px 0;}
+.mini-num{font-family:var(--f-mono);font-size:26px;letter-spacing:-.03em;color:var(--perceptual);}
+.cover{display:flex;flex-direction:column;gap:6px;margin-top:12px;}
+.crow{display:flex;align-items:center;gap:9px;font-family:var(--f-mono);font-size:10px;letter-spacing:.05em;color:var(--mute);}
+.cdot{width:7px;height:7px;border-radius:50%;background:var(--line);flex:none;}
+.crow.covered{color:var(--dim);} .crow.covered .cdot{background:var(--behavior);}
+.next{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:18px 20px;}
+.next .eyebrow{display:block;margin-bottom:12px;}
+.next ol{margin:0;padding:0;list-style:none;counter-reset:n;}
+.next li{counter-increment:n;padding:9px 0;border-bottom:1px solid var(--line-soft);display:grid;grid-template-columns:20px 1fr;gap:9px;cursor:pointer;}
+.next li:last-child{border-bottom:0;}
+.next li:hover b{color:var(--topical);}
+.next li::before{content:counter(n);font-family:var(--f-mono);font-size:10px;color:var(--mute);padding-top:3px;}
+.next li b{font-weight:500;font-size:14px;display:block;letter-spacing:-.005em;transition:.14s;}
+.next li small{font-family:var(--f-mono);font-size:9.5px;color:var(--mute);}
+.reset{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  background:transparent;border:1px solid var(--line);color:var(--mute);
+  padding:8px 12px;border-radius:6px;cursor:pointer;transition:.15s;
+}
+.reset:hover{color:var(--text);border-color:var(--panel-3);}
+
+/* ============================================================
+   METHOD / FOOT
+   ============================================================ */
+.method{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:clamp(20px,3vw,30px);}
+.method h4{margin-bottom:12px;}
+.method p{margin:0 0 13px;font-family:var(--f-body);font-size:15px;line-height:1.6;color:var(--dim);}
+.method p:last-child{margin-bottom:0;}
+.method code{font-family:var(--f-mono);font-size:12.5px;background:var(--panel-3);padding:2px 6px;border-radius:4px;color:var(--text);}
+footer{padding:36px 0 56px;border-top:1px solid var(--line-soft);}
+.foot-in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--f-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1000px){
+  .audit{grid-template-columns:1fr;}
+  .panel-sticky{position:static;}
+  .hero-grid{grid-template-columns:1fr;align-items:start;gap:28px;}
+}
+@media (max-width:720px){
+  .frow{grid-template-columns:1fr;gap:8px;}
+  .frow.fhead{display:none;}
+  .sig{grid-template-columns:1fr;gap:9px;}
+  .lrow{grid-template-columns:minmax(0,1fr) 66px 52px;}
+  .lrow .lcell.hide-sm{display:none;}
+  .drawer{width:100%;}
+  .stat-row{grid-template-columns:1fr;}
+  .node-label{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation-duration:.01ms !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+<header class="hero">
+  <div class="hero-top">
+    <span class="eyebrow">Apparent age — a leverage model</span>
+    <span class="eyebrow">51 interventions / 7 damage channels</span>
+  </div>
+
+  <h1>Fifty-one things you can do. Five of them <span class="em">are half of it.</span></h1>
+
+  <div class="hero-grid">
+    <p class="hero-sub">Nearly everyone allocates effort in inverse proportion to what matters — buying serums while sleeping badly, avoiding sugar while ignoring their posture. This is a map of relative leverage: every intervention placed by <strong>how many years of apparent age it plausibly buys</strong> against <strong>how well that claim is evidenced</strong>. Run the model over all 51 and five items account for roughly <strong>55% of everything available</strong>. The next nine take you to 94%. Everything after that is decimals.</p>
+    <div class="stat-row">
+      <div class="stat s1"><b>~50%</b><span>Heritability of perceived age in twin studies. Half the outcome is settled before you act.</span></div>
+      <div class="stat s2"><b>80–90%</b><span>Share of visible facial aging attributed to ultraviolet exposure rather than time.</span></div>
+      <div class="stat s3"><b>~100ms</b><span>Time an observer needs to fix your apparent age. It is decided before you speak.</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════ FIELD ══════════════════════════════ -->
+<section id="field" style="padding-top:0;border-top:0;">
+  <div class="field-shell">
+    <div class="field-bar">
+      <div class="filters" id="filters">
+        <button class="chip on" data-cat="all">All 51</button>
+        <button class="chip" data-cat="behavior"><i class="dot" style="color:var(--behavior)"></i>Behavior</button>
+        <button class="chip" data-cat="perceptual"><i class="dot" style="color:var(--perceptual)"></i>Perceptual</button>
+        <button class="chip" data-cat="topical"><i class="dot" style="color:var(--topical)"></i>Topical</button>
+        <button class="chip" data-cat="procedural"><i class="dot" style="color:var(--procedural)"></i>Procedural</button>
+        <button class="chip" data-cat="frontier"><i class="dot" style="color:var(--frontier)"></i>Frontier</button>
+      </div>
+      <div class="viewtoggle">
+        <button id="vPlot" class="on">Field</button>
+        <button id="vList">Ranked</button>
+      </div>
+    </div>
+
+    <div class="plotbox" id="plotbox">
+      <svg id="plot" viewBox="0 0 900 520" role="img" aria-label="Scatter plot of interventions by evidence strength and estimated years of apparent age preserved"></svg>
+      <div class="tip" id="tip"><h5></h5><p></p></div>
+    </div>
+
+    <div id="listview">
+      <div class="lrow lrow-head">
+        <span>Intervention</span>
+        <span class="lcell">Years</span>
+        <span class="lcell hide-sm">Evidence</span>
+        <span class="lcell">Ratio</span>
+      </div>
+      <div id="listrows"></div>
+    </div>
+
+    <div class="plot-legend">
+      <span><i class="lg-ring sm"></i> low ongoing cost</span>
+      <span><i class="lg-ring"></i> high ongoing cost or risk</span>
+      <span>↑ years of apparent age preserved</span>
+      <span>→ strength of evidence</span>
+      <span style="color:var(--dim)">click any point for the full entry</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ CHANNELS ══════════════════════════════ -->
+<section id="channels">
+  <div class="shead">
+    <span class="eyebrow">Section 01 — mechanism</span>
+    <h2>Aging is seven processes running at once</h2>
+    <p class="lede">This is the single most useful reframe available. "Anti-aging" is not one problem, and the interventions that look redundant on a shelf are often hitting completely different channels — while three products you own may all hit the same one. Coverage beats intensity. A protocol that touches all seven weakly outperforms one that hammers two.</p>
+  </div>
+  <div class="chan-grid" id="chans"></div>
+</section>
+
+<!-- ══════════════════════════════ PERCEPTION ══════════════════════════════ -->
+<section id="perception">
+  <div class="shead">
+    <span class="eyebrow">Section 02 — perception</span>
+    <h2>What observers actually read</h2>
+    <p class="lede">People optimize skin because skin is what they see in the mirror at 30cm. But apparent age is assigned by strangers at two to five metres, in well under a second, using channels that mostly are not skin. Bars below are rough signal bandwidth — how much of the age judgment each channel carries at conversational distance.</p>
+  </div>
+  <div class="sig-list" id="signals"></div>
+</section>
+
+<!-- ══════════════════════════════ TIERS ══════════════════════════════ -->
+<section id="tiers">
+  <div class="shead">
+    <span class="eyebrow">Section 03 — protocol</span>
+    <h2>Four tiers, in the order they pay</h2>
+    <p class="lede">Tier 0 is assumed. If any of it is missing, nothing below it matters — the returns are so lopsided that Tier 1 work on a Tier 0 gap is wasted motion. Tiers ascend in cost and descend in certainty.</p>
+  </div>
+  <div id="tierlist"></div>
+</section>
+
+<!-- ══════════════════════════════ FRONTIER ══════════════════════════════ -->
+<section id="frontier">
+  <div class="shead">
+    <span class="eyebrow">Section 04 — frontier</span>
+    <h2>The experimental end, graded honestly</h2>
+    <p class="lede">Everything here has a real mechanism and insufficient human evidence. That combination is exactly what makes a field profitable to sell into. Grades reflect how much a careful person should currently believe, not how interesting the biology is.</p>
+  </div>
+  <div class="ftable" id="ftable"></div>
+</section>
+
+<!-- ══════════════════════════════ NEGATIVE ══════════════════════════════ -->
+<section id="negative">
+  <div class="shead">
+    <span class="eyebrow">Section 05 — negative leverage</span>
+    <h2>Things people do on purpose that add years</h2>
+    <p class="lede">Underdiscussed, and the failure mode of anyone who takes this seriously enough to overshoot. Each of these is chosen deliberately by someone trying to look younger.</p>
+  </div>
+  <div class="neg-grid" id="negs"></div>
+</section>
+
+<!-- ══════════════════════════════ AUDIT ══════════════════════════════ -->
+<section id="audit">
+  <div class="shead">
+    <span class="eyebrow">Section 06 — audit</span>
+    <h2>What you already hold, and what's left</h2>
+    <p class="lede">Tick what you genuinely do — consistently, not aspirationally. The model discounts overlapping interventions within a channel, so the total will be lower than the naive sum. That discount is the point: your fourth collagen-stimulating input is worth far less than your first.</p>
+  </div>
+  <div class="audit">
+    <div class="audit-list" id="auditlist"></div>
+    <div class="panel-sticky">
+      <div class="score">
+        <span class="eyebrow">Captured</span>
+        <div class="big-num" id="captured">0.0<small>yr</small></div>
+        <p class="score-sub" id="capsub">Nothing ticked yet. Start with the six highest-leverage items and see how quickly the curve flattens.</p>
+        <div class="split"></div>
+        <span class="eyebrow">Still on the table</span>
+        <div class="mini-num" id="remaining">0.0 yr</div>
+        <div class="cover" id="coverage"></div>
+        <div class="split"></div>
+        <button class="reset" id="reset">Clear all</button>
+      </div>
+      <div class="next">
+        <span class="eyebrow">Highest next moves</span>
+        <ol id="nextlist"></ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ METHOD ══════════════════════════════ -->
+<section id="method">
+  <div class="shead">
+    <span class="eyebrow">Section 07 — method</span>
+    <h2>How to read the numbers</h2>
+  </div>
+  <div class="method">
+    <p><strong>The year values are modeled estimates, not measurements.</strong> No literature reports "tretinoin buys you 3.9 years of apparent age." What exists is: RCTs on wrinkle scores and collagen histology, observational data on perceived-age ratings, twin studies, and photoaging asymmetry cases. The numbers here are a synthesis — a defensible ordering with honest ranges, built so that relative magnitudes are useful even where absolute values are soft. Treat the ranking as reliable and the decimals as decoration.</p>
+    <p><strong>Baseline assumption:</strong> a person adopting the intervention around age 30 and holding it for 30+ years, measured as the gap in perceived age against an otherwise identical person who did not. Starting later compresses the range, sometimes a lot — the <code>starts late</code> field in each entry says how much.</p>
+    <p><strong>Evidence tiers.</strong> <code>1</code> mechanism or in-vitro only. <code>2</code> small, uncontrolled, or surrogate-endpoint human data. <code>3</code> consistent observational evidence in humans. <code>4</code> randomized trials, limited in size or endpoint. <code>5</code> multiple RCTs or overwhelming convergent evidence.</p>
+    <p><strong>The stacking discount.</strong> Within a damage channel, the <em>n</em>th intervention is credited at 0.62<sup>n−1</sup> of its standalone value. Four retinoid-adjacent collagen inputs do not sum. This is why coverage across channels beats depth within one, and why the audit's total will look disappointingly small once you've ticked the obvious things — which is the correct feeling.</p>
+    <p><strong>What this model cannot see:</strong> your genotype, your phototype, your bone structure, your hormonal trajectory, and the specific face you're working with. Every number here is a population estimate applied to an individual, which is the oldest error in health reasoning. Nothing on this page is medical advice; the prescription-only and procedural entries in particular require a clinician who can look at you.</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-in">
+      <span>Apparent age leverage model — v1</span>
+      <span>Modeled estimates · not medical advice</span>
+    </div>
+  </div>
+</footer>
+
+<!-- drawer -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+  <div class="drawer-head">
+    <span class="eyebrow" id="dCat">—</span>
+    <h3 id="dTitle">—</h3>
+    <button class="dclose" id="dClose" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-body" id="dBody"></div>
+</aside>
+
+<script>
+/* ==================================================================
+   DATA
+   channels: uv | matrix | glyc | senes | pigm | struct | barrier
+   ================================================================== */
+const CH = {
+  uv:      {n:'Photodamage',        c:'#F5B23C'},
+  matrix:  {n:'Matrix loss',        c:'#9B85F5'},
+  glyc:    {n:'Glycation',          c:'#F0708C'},
+  senes:   {n:'Senescence',         c:'#5FAEF0'},
+  pigm:    {n:'Pigment',            c:'#4ED8B0'},
+  struct:  {n:'Structure',          c:'#E08CB8'},
+  barrier: {n:'Barrier & turnover', c:'#8AA0C8'}
+};
+
+const CAT = {
+  behavior:{n:'Behavior',c:'#4ED8B0'},
+  perceptual:{n:'Perceptual',c:'#F5B23C'},
+  topical:{n:'Topical',c:'#9B85F5'},
+  procedural:{n:'Procedural',c:'#F0708C'},
+  frontier:{n:'Frontier',c:'#5FAEF0'}
+};
+
+/* yr:[low,high] · ev:1-5 · cost:1-5 (effort+money+risk) · ch:[channels] */
+const D = [
+/* ── BEHAVIOR ────────────────────────────────────────────────── */
+{id:'smoke',cat:'behavior',n:'No nicotine, in any form',yr:[6,10],ev:5,cost:1,ch:['matrix','uv','struct'],
+ what:'The largest single modifiable factor, and it is not close. Nicotine constricts dermal microvasculature; tobacco smoke upregulates matrix metalloproteinases that actively chew through collagen, while suppressing the tissue inhibitors that restrain them. Repetitive perioral muscle action adds the vertical lip lines independently.',
+ dose:'Zero. Vaping is not established as safe here — nicotine itself drives the vasoconstriction, and the perioral muscle pattern is identical.',
+ caveat:'Twin studies show the smoking twin reads visibly older in side-by-side photographs, often by 5–10 years, with the effect concentrated in the lower eyelids, nasolabial folds and upper lip. It is the one intervention where the before/after is legible to a layperson.',
+ late:'Cessation halts further MMP-driven degradation within months and restores perfusion, but established elastosis and lip rhytides do not resolve. Still worth doing at any age.',
+ stack:'Independent of everything else. Nothing on this list compensates for it.'},
+
+{id:'spf',cat:'behavior',n:'Daily broad-spectrum SPF, unconditionally',yr:[4,8],ev:5,cost:2,ch:['uv','pigm','matrix'],
+ what:'UVA reaches the dermis, passes through window glass, is roughly constant across seasons and weather, and does not burn — so it accumulates entirely without feedback. It drives elastin degradation, MMP induction and pigment dysregulation simultaneously.',
+ dose:'SPF 30+ with high UVA protection (PA++++ or EU UVA circle), applied every morning regardless of forecast or plans. Roughly 1/4 teaspoon for the face, which is about twice what most people use.',
+ caveat:'The Nambour trial (Hughes et al., 4.5 years, randomized) found the daily-use group showed no detectable increase in skin aging over the study period versus clear progression in discretionary users. This is the only intervention on this page with randomized evidence for slowing visible aging directly.',
+ late:'Highly worthwhile at any age — it stops accrual, and the pigment component partially reverses over 1–2 years.',
+ stack:'Foundational. A retinoid without daily sunscreen is a partially self-defeating protocol.'},
+
+{id:'uvbeh',cat:'behavior',n:'UV behavior beyond sunscreen',yr:[1.5,3.5],ev:4,cost:2,ch:['uv','pigm'],
+ what:'Sunscreen is the last line, not the first. Structural avoidance — shade, timing, geometry — removes dose rather than attenuating it, and does not depend on reapplication discipline.',
+ dose:'Wide-brim hat over cap. UPF 50 sleeves when outdoors for hours. Ceramic window film on your car\'s driver side and any desk-adjacent window. Sunglasses that wrap. Choosing the shaded side of the street, which is free and adds up over decades.',
+ caveat:'The 2012 NEJM photograph of a 69-year-old truck driver with 28 years of left-side window exposure is the reference case: one half of a face decades older than the other, same genes, same age. Car windscreens block UVA; side windows generally do not.',
+ late:'Fully effective from the day you start.',
+ stack:'Multiplies with SPF rather than duplicating it — reduces the dose sunscreen has to handle, which matters because real-world application is always under-dosed.'},
+
+{id:'sleep',cat:'behavior',n:'Sleep duration and regularity',yr:[2,4],ev:4,cost:3,ch:['matrix','barrier','senes'],
+ what:'Barrier repair, collagen synthesis and growth-hormone pulsatility are concentrated in sleep. Chronic restriction raises evening cortisol, which is directly catabolic to collagen, and impairs transepidermal water loss recovery.',
+ dose:'7–9 hours, but regularity of timing matters as much as duration — a consistent 7 hours outperforms an erratic 8.',
+ caveat:'A Karolinska experimental study found naive observers rated sleep-deprived faces as less healthy and more tired after a single night. The acute effect is mostly periorbital and reverses; the chronic effect does not.',
+ late:'Effective immediately; the acute component is visible within days.',
+ stack:'Sits upstream of nearly everything — cortisol, glycemic control, and recovery from any procedural intervention all route through it.'},
+
+{id:'position',cat:'behavior',n:'Sleep position and surface',yr:[0.5,1.5],ev:2,cost:1,ch:['matrix','struct'],
+ what:'Compression creases from side and stomach sleeping become fixed over decades as the dermis loses the elasticity to spring back. Distinct from expression lines: they run vertically and asymmetrically, favoring whichever side you prefer.',
+ dose:'Supine if you can tolerate it. Failing that, a silk or satin pillowcase reduces friction and drag, and a specifically shaped pillow can keep the face off the surface.',
+ caveat:'Genuinely visible in dermatology practice and reliably asymmetric — a useful diagnostic tell. But the evidence is clinical observation, not trials, and retraining sleep position is harder than it sounds.',
+ late:'Existing sleep lines are largely fixed; stopping prevents deepening.',
+ stack:'Independent. One of very few things that addresses mechanical creasing at all.'},
+
+{id:'resist',cat:'behavior',n:'Resistance training, 3× weekly',yr:[2,4],ev:3,cost:3,ch:['struct','glyc','senes'],
+ what:'Works through four routes at once: preserved muscle mass and posture (the signals visible before your face resolves), improved insulin sensitivity (glycation), reduced systemic inflammatory tone, and maintained bone density including facial bone.',
+ dose:'Three sessions weekly, compound movements, progressive load. Include direct posterior chain and upper-back work — thoracic extension is the specific thing that reads as young at distance.',
+ caveat:'The facial-appearance evidence is indirect. The postural, gait and body-composition evidence is strong, and those channels carry more apparent-age signal than most people credit.',
+ late:'Older starters gain proportionally more — sarcopenia is reversible well into the seventies.',
+ stack:'Overlaps with glycemic control on the glycation channel; largely independent on structure.'},
+
+{id:'cardio',cat:'behavior',n:'Aerobic base, zone 2',yr:[1,3],ev:3,cost:3,ch:['senes','glyc','barrier'],
+ what:'Dermal perfusion, mitochondrial density, insulin sensitivity and inflammatory tone. A small McMaster study found endurance-trained older adults had dermal and epidermal composition resembling much younger people.',
+ dose:'150+ minutes weekly at conversational intensity, plus occasional higher intensity.',
+ caveat:'The McMaster finding is small and heavily confounded — people who run at 65 differ from people who do not in a hundred ways. The mechanism is plausible; the effect size is not established.',
+ late:'Effective at any starting point.',
+ stack:'Redundant with resistance training on the metabolic channels; additive on perfusion.'},
+
+{id:'glyc',cat:'behavior',n:'Glycemic control and low-AGE cooking',yr:[1.5,3],ev:3,cost:3,ch:['glyc','matrix'],
+ what:'Sugars bind non-enzymatically to collagen and elastin, forming cross-links that convert springy fiber into stiff, brittle, yellowed matrix. Collagen has a half-life measured in years to decades, so cross-links accumulate almost irreversibly.',
+ dose:'Flatten postprandial excursions rather than chasing a specific diet — fiber and protein before starch, walk after meals, avoid liquid sugar. Separately, reduce dietary AGEs: dry high-heat cooking (searing, grilling, roasting) generates far more than wet methods (steaming, poaching, braising).',
+ caveat:'The pathway is well-characterized biochemistry; the human trial evidence connecting dietary AGEs to facial appearance is thin. HbA1c correlates with perceived age in observational work, which is suggestive but confounded by everything.',
+ late:'Existing cross-links are essentially permanent — no proven human agent breaks them. This is a preventive channel only, which raises the value of starting early.',
+ stack:'The most commonly uncovered channel in an otherwise sophisticated protocol.'},
+
+{id:'alc',cat:'behavior',n:'Alcohol minimization',yr:[1,3],ev:4,cost:3,ch:['barrier','senes','matrix'],
+ what:'Four separate mechanisms: dehydration and barrier disruption, vasodilation progressing to fixed telangiectasia, acetaldehyde-driven inflammation, and sleep architecture destruction — the last of which drags the sleep channel down with it.',
+ dose:'The dose-response appears roughly linear with no protective floor for skin specifically. Fewer drinking days beats fewer drinks per day.',
+ caveat:'Perceived-age effects in observational data are consistent but confounded with smoking, sleep and sun behavior. The facial flushing/telangiectasia component is the most visibly aging and the most permanent.',
+ late:'Barrier and hydration effects reverse within weeks; established telangiectasia needs vascular laser.',
+ stack:'Its damage to the sleep channel means cutting it can produce gains that look larger than the direct effect.'},
+
+{id:'weight',cat:'behavior',n:'Weight stability',yr:[1,2],ev:3,cost:3,ch:['struct','matrix'],
+ what:'Repeated large weight cycling stretches and fails to fully recover dermal elasticity, and empties then refills facial fat compartments unevenly.',
+ dose:'Stability over optimality. If losing weight, slower is better for skin, and preserving lean mass matters more than the scale figure.',
+ caveat:'Direction reverses with age. In Guyuron\'s twin study, higher BMI correlated with looking older under 40 and younger over 40 — facial fat cushions the volume loss that defines older faces. The lean-at-55 look is often a lean-and-gaunt look.',
+ late:'Relevant at any age; the over-40 reversal makes aggressive late-life leanness a genuine trade-off.',
+ stack:'Interacts strongly with GLP-1 use — see the frontier entry.'},
+
+{id:'protein',cat:'behavior',n:'Adequate protein intake',yr:[0.5,2],ev:3,cost:2,ch:['struct','matrix'],
+ what:'Substrate for collagen synthesis and, more importantly, for the muscle mass that carries the postural signal. Older adults have blunted anabolic sensitivity and need more, not less.',
+ dose:'Roughly 1.6 g/kg bodyweight daily, distributed across meals rather than concentrated in one.',
+ caveat:'Protein sufficiency is permissive, not stimulatory — you cannot build collagen by eating past adequacy. The gains are in preventing deficiency, which is common in older and in aggressively dieting adults.',
+ late:'Increasingly important with age.',
+ stack:'Required for resistance training to convert into anything.'},
+
+{id:'stress',cat:'behavior',n:'Chronic stress load management',yr:[1,2],ev:2,cost:3,ch:['senes','matrix','barrier'],
+ what:'Glucocorticoids are catabolic to dermal collagen and impair barrier recovery. Chronic psychological stress is associated with shorter telomeres and accelerated epigenetic aging in longitudinal work.',
+ dose:'Whatever actually reduces your load rather than whatever is fashionable. The mechanism is cortisol exposure, not any particular practice.',
+ caveat:'Among the hardest things here to evidence — reverse causation is rampant, and self-reported stress is a weak proxy for glucocorticoid exposure. Mechanistically sound, empirically soft.',
+ late:'Effective whenever adopted.',
+ stack:'Heavily entangled with sleep; improving one usually moves the other.'},
+
+{id:'air',cat:'behavior',n:'Air quality and particulate exposure',yr:[0.5,2],ev:3,cost:2,ch:['pigm','senes','barrier'],
+ what:'Traffic-related PM2.5 and polycyclic aromatic hydrocarbons are associated with pigment spots and nasolabial fold severity in cohort studies. Particulates penetrate the follicular route and drive oxidative and inflammatory signaling.',
+ dose:'HEPA filtration where you sleep, avoid running along arterial roads, cleanse in the evening if you spend days in traffic.',
+ caveat:'The SALIA and Chinese cohort data are consistent, with pigmentation the most robust endpoint. Effect sizes are modest and the exposure is largely determined by where you live.',
+ late:'Effective on accrual from the start.',
+ stack:'Adds to the pigment channel, which is where antioxidant topicals also live.'},
+
+{id:'squint',cat:'behavior',n:'Reduce habitual squinting and expression load',yr:[0.5,1.5],ev:2,cost:1,ch:['matrix','uv'],
+ what:'Dynamic lines become static ones through repeated folding of increasingly inelastic dermis. Squinting is the highest-frequency and most avoidable of these.',
+ dose:'Correct your refraction. Wear sunglasses reflexively outdoors. Lower screen brightness in dark rooms and raise it in bright ones. Check whether you frown while concentrating.',
+ caveat:'Sunglasses do double duty — they prevent squinting and shield the thin, high-UV-exposure periorbital skin, which is where photoaging shows first.',
+ late:'Prevents deepening; will not undo set lines.',
+ stack:'Sits below neuromodulators, which address the same mechanism pharmacologically and more expensively.'},
+
+{id:'friction',cat:'behavior',n:'Mechanical restraint with the face',yr:[0.5,1],ev:2,cost:1,ch:['barrier','struct','pigm'],
+ what:'Eye rubbing, aggressive cleansing, harsh physical exfoliants, hot water, and forceful towel drying all cause repeated micro-trauma to skin that is only 0.5mm thick at the eyelid, and drive post-inflammatory pigmentation in darker phototypes.',
+ dose:'Lukewarm water, no scrubbing, pat dry. Treat the allergy or dryness that makes you rub your eyes. Retire anything gritty.',
+ caveat:'Enthusiasts overshoot here constantly — a maximalist routine with daily acids and physical exfoliation does net damage to the barrier, and a compromised barrier fails at everything else.',
+ late:'Immediate.',
+ stack:'Protects the barrier channel, which gates the tolerability of retinoids and acids.'},
+
+/* ── PERCEPTUAL ──────────────────────────────────────────────── */
+{id:'hair',cat:'perceptual',n:'Treat androgenetic hair loss early',yr:[3,7],ev:5,cost:3,ch:['struct'],
+ what:'Hair is the highest-bandwidth age signal at conversational distance — density, hairline position and pigmentation are read instantly and weighted heavily. A full head of pigmented hair can subtract most of a decade from a lined face.',
+ dose:'If you have androgenetic alopecia: 5-alpha-reductase inhibition and/or topical minoxidil, started at the first Norwood change rather than the third. Efficacy is overwhelmingly about preservation, not regrowth.',
+ caveat:'Finasteride carries a real, if uncommon, side-effect profile including sexual dysfunction and mood effects, with a contested persistent-symptom minority. This is a genuine trade-off requiring a clinician, not a default. Topical formulations reduce but do not eliminate systemic exposure.',
+ late:'The single most time-sensitive item on this page. Follicles lost to miniaturization do not return; every year of delay permanently reduces the ceiling.',
+ stack:'Independent of everything skin-related, and larger than most of it.'},
+
+{id:'teeth',cat:'perceptual',n:'Dental maintenance and incisor display',yr:[2,4],ev:3,cost:4,ch:['struct'],
+ what:'Two mechanisms. Cosmetic: whiteness, wear, gum recession. Structural: tooth loss accelerates alveolar bone resorption dramatically, and lower-face height collapse is one of the fastest routes to reading old. Young faces show upper incisors at rest; older faces show more lower teeth as the upper lip lengthens and descends.',
+ dose:'Guard against bruxism if you grind — enamel wear is cumulative and irreversible. Keep cleanings. Treat recession early. Retain orthodontic corrections for life. Replace missing teeth promptly with implants rather than leaving gaps, specifically to preserve bone.',
+ caveat:'Whitening is the least important item and gets nearly all the attention. Vertical dimension and bone preservation are what actually carry apparent age, and they are invisible until they are not.',
+ late:'Bone loss after extraction is fastest in the first year — this is an urgency item, not a maintenance one.',
+ stack:'Directly supports the structural channel, and no topical or laser reaches it.'},
+
+{id:'posture',cat:'perceptual',n:'Posture and thoracic mobility',yr:[1,3],ev:3,cost:2,ch:['struct'],
+ what:'Readable at thirty metres, long before the face resolves. Thoracic kyphosis, forward head position, shortened stride and slow turning speed are all coded as "old" pre-attentively. Probably the most underrated item here.',
+ dose:'Thoracic extension work, deep neck flexor strengthening, posterior chain loading, and hip mobility. Gait speed is itself trainable and is one of the strongest general aging biomarkers we have.',
+ caveat:'Structural kyphosis from vertebral changes differs from postural kyphosis from habit — the first needs medical assessment, the second responds well to training.',
+ late:'Postural components improve at any age; structural ones need earlier intervention.',
+ stack:'Comes largely free with resistance training done properly.'},
+
+{id:'style',cat:'perceptual',n:'Grooming and style currency',yr:[2,5],ev:3,cost:2,ch:[],
+ what:'Most people freeze their hairstyle, eyewear silhouette, and clothing proportions somewhere between 25 and 30, then hold that for forty years. Nothing dates a face faster than a haircut from a specific decade, and the observer reads the whole package before parsing the skin inside it.',
+ dose:'Rotate eyewear frames every few years. Let someone competent choose your haircut rather than repeating the one you had at 26. Update trouser and jacket proportions. Watch for era-lock in facial hair.',
+ caveat:'The failure mode in the other direction — dressing conspicuously young — reads as older, not younger, because it signals effort and misjudgment. Aim for current and age-appropriate, not youthful.',
+ late:'Instantly effective at any age, and by far the cheapest large effect available. Reversible in an afternoon.',
+ stack:'Fully independent. Nothing else on this list competes on cost-effectiveness.'},
+
+{id:'contrast',cat:'perceptual',n:'Facial contrast maintenance',yr:[1,3],ev:3,cost:1,ch:['pigm'],
+ what:'Porcheron\'s work found luminance and color contrast between features — eyes, lips, brows — and the surrounding skin declines measurably with age across ethnic groups, and that manipulating contrast alone shifts perceived age. Conventional makeup is essentially a contrast-restoration technology.',
+ dose:'Maintain brow density (they thin and lighten with age; this is fixable). Address scleral yellowing and lash thinning. For those who use it, makeup targeting contrast — defined brows, lash line, lip color — is unusually effective per unit effort.',
+ caveat:'Independent of wrinkles. In experimental work, evenness of skin tone and feature contrast can shift perceived age more than rhytides do, which is nearly the opposite of where most spending goes.',
+ late:'Immediate.',
+ stack:'Complements the pigment channel; addresses a signal nothing else on this list touches.'},
+
+{id:'voice',cat:'perceptual',n:'Voice and animation',yr:[0.5,2],ev:2,cost:2,ch:[],
+ what:'Vocal fold atrophy produces pitch instability, breathiness and reduced resonance, all of which are read as age. Separately, faces that move a lot read as younger — low expressivity from temperament, depression, or overtreatment codes as older.',
+ dose:'Voice use itself is protective; so is hydration and avoiding chronic throat clearing. Singing or speech training measurably helps. On the animation side: this is mostly an argument for restraint with neuromodulators.',
+ caveat:'The weakest-evidenced item here, included because the effect is real in perceptual studies and literally nobody optimizes it.',
+ late:'Trainable at any age.',
+ stack:'Independent.'},
+
+/* ── TOPICAL ─────────────────────────────────────────────────── */
+{id:'tret',cat:'topical',n:'Topical retinoid, nightly',yr:[3,5],ev:5,cost:3,ch:['matrix','pigm','barrier'],
+ what:'The best-evidenced topical intervention that exists, with four decades of trial data. Binds nuclear retinoic acid receptors, upregulates procollagen I and III, downregulates MMPs, normalizes keratinocyte differentiation and disperses melanosomes — it hits three channels at once, which is rare.',
+ dose:'Tretinoin 0.025–0.1% nightly, or adapalene / retinaldehyde if tolerance is limiting. Pea-sized amount for the whole face, on dry skin. Build frequency over 8–12 weeks. Effects on wrinkles take 6–12 months; effects on pigment appear sooner.',
+ caveat:'Over-the-counter retinol is roughly an order of magnitude weaker than prescription tretinoin, and most marketed "retinoid" products are underdosed or unstable. The gap between the evidence base and what most people are actually applying is enormous.',
+ late:'One of very few interventions with genuine repair evidence in already-photoaged skin, not just prevention. Worth starting at any age.',
+ stack:'Occupies the top of the matrix channel, so subsequent collagen-stimulating topicals add little. Requires the barrier and sunscreen channels to be handled.'},
+
+{id:'vitc',cat:'topical',n:'Vitamin C, morning',yr:[1,2],ev:3,cost:2,ch:['uv','pigm','matrix'],
+ what:'Cofactor for prolyl and lysyl hydroxylase in collagen synthesis, plus an antioxidant that quenches UV-generated free radicals before they trigger MMP cascades, plus tyrosinase inhibition for pigment.',
+ dose:'L-ascorbic acid 10–20% at low pH, ideally with vitamin E and ferulic acid, applied in the morning under sunscreen. Formulation stability is the whole game — oxidized product turns orange and is inert or worse.',
+ caveat:'The mechanistic case is strong, the trial evidence is moderate and mostly industry-run. The reliable, well-demonstrated effect is on pigmentation and photoprotection augmentation, not wrinkles.',
+ late:'Effective at any point, with pigment as the most visible endpoint.',
+ stack:'Genuinely additive with sunscreen (different mechanism — quenching versus blocking). Substantially redundant with a retinoid on the collagen channel.'},
+
+{id:'niac',cat:'topical',n:'Niacinamide',yr:[0.5,1.5],ev:3,cost:1,ch:['barrier','pigm'],
+ what:'Boosts ceramide synthesis and barrier function, inhibits melanosome transfer to keratinocytes, reduces sebum and inflammatory tone. Unusually well tolerated and unusually cheap.',
+ dose:'4–5%. Higher concentrations increase irritation without much added benefit.',
+ caveat:'A quietly effective, low-drama ingredient with decent trial support for barrier and pigment endpoints. The claims that go beyond that are marketing.',
+ late:'Immediate.',
+ stack:'Complements a retinoid well by supporting the barrier that retinoids stress.'},
+
+{id:'pigmtx',cat:'topical',n:'Targeted pigment agents',yr:[1,2],ev:3,cost:2,ch:['pigm'],
+ what:'Fink and Matts found that manipulating skin tone evenness alone — with no wrinkle changes — shifted perceived age by several years. Mottled pigmentation may signal age more powerfully than lines do, and it is more tractable.',
+ dose:'Azelaic acid 15–20%, tranexamic acid, cysteamine, or hydroquinone in short supervised courses. Choice depends on the pigment type — solar lentigines, melasma and post-inflammatory hyperpigmentation respond differently.',
+ caveat:'Absolutely dependent on rigorous photoprotection, including visible light for melasma. Treating pigment without blocking the input is a treadmill, and hydroquinone specifically carries rebound and ochronosis risk with prolonged unsupervised use.',
+ late:'Among the highest-yield late interventions — pigment is more reversible than structure.',
+ stack:'Overlaps with retinoid, vitamin C and IPL on this channel; pick one or two, not four.'},
+
+{id:'barrier',cat:'topical',n:'Barrier support and night occlusion',yr:[0.5,1.5],ev:3,cost:1,ch:['barrier'],
+ what:'Falling ceramides, reduced natural moisturizing factor and rising transepidermal water loss make aged skin look duller and reveal fine lines that hydrated skin conceals entirely. Some of "looking tired" is purely optical.',
+ dose:'Ceramide-containing moisturizer, applied to damp skin, with an occlusive layer at night if the climate is dry. Petrolatum remains the most effective occlusive available and costs almost nothing.',
+ caveat:'This is cosmetic and immediate rather than structural — it changes how skin looks today, not how it ages. That is still worth having, and it materially improves retinoid tolerance.',
+ late:'Immediate.',
+ stack:'Enables everything irritating. Weak alone, load-bearing in combination.'},
+
+{id:'tinted',cat:'topical',n:'Iron-oxide tinted sunscreen',yr:[1,2],ev:3,cost:1,ch:['uv','pigm'],
+ what:'Standard sunscreens do not block visible light or infrared-A, both of which contribute to pigmentation — particularly in phototypes III–VI and in melasma. Iron oxides absorb visible light; standard filters do not.',
+ dose:'A tinted mineral or hybrid sunscreen containing iron oxides, used in place of untinted for anyone with pigment concerns.',
+ caveat:'The clearest evidence is in melasma, where tinted formulations outperform untinted at equal SPF. For general photoaging the increment over good UVA protection is smaller but real.',
+ late:'Immediate.',
+ stack:'Replaces rather than adds to your existing sunscreen.'},
+
+{id:'hrt',cat:'topical',n:'Estrogen replacement, where indicated',yr:[2,5],ev:4,cost:4,ch:['matrix','barrier','struct'],
+ what:'The menopausal collagen drop is the steepest natural change either sex undergoes — roughly 30% of skin collagen lost in the first five postmenopausal years. Estrogen supports collagen synthesis, hyaluronic acid content, sebum production and wound healing.',
+ dose:'Systemic MHT where clinically appropriate, or topical estriol for skin-specific effect. Strictly a clinician decision — the risk/benefit calculus involves cardiovascular, breast and thrombotic considerations entirely outside cosmetic scope.',
+ caveat:'Skin appearance should never be the primary indication. But for those taking MHT for other reasons, the dermal effect is real, well-documented and larger than any topical. Earlier initiation relative to menopause appears to matter for both skin and systemic outcomes.',
+ late:'The window matters — starting long after menopause captures less, as the collagen loss has already occurred.',
+ stack:'Sits at the top of the matrix channel for postmenopausal women, above retinoid.'},
+
+{id:'peptides',cat:'topical',n:'Cosmetic peptides',yr:[0,1],ev:2,cost:2,ch:['matrix'],
+ what:'Signal peptides (palmitoyl pentapeptide), carrier peptides (copper tripeptide) and neurotransmitter-inhibiting peptides (argireline) each claim different mechanisms for collagen support or expression softening.',
+ dose:'As formulated; concentrations are rarely disclosed meaningfully.',
+ caveat:'The most oversold category in skincare. Some in-vitro and small-trial support exists, effect sizes are small, penetration of larger peptides through intact stratum corneum is questionable, and almost all the research is funded by ingredient suppliers. Not harmful, rarely worth the price premium.',
+ late:'Marginal at any age.',
+ stack:'Sits behind retinoid on the same channel and is discounted heavily as a result.'},
+
+{id:'oralphoto',cat:'topical',n:'Oral photoprotection adjuncts',yr:[0.5,1],ev:2,cost:2,ch:['uv','pigm'],
+ what:'Polypodium leucotomos extract and astaxanthin raise the minimal erythema dose modestly and reduce UV-induced oxidative markers, providing a thin systemic layer under topical protection.',
+ dose:'PLE 240mg daily is the commonly studied dose; astaxanthin 4–12mg.',
+ caveat:'Real but small — roughly equivalent to a low single-digit SPF, and absolutely not a sunscreen substitute. Worth considering only as a supplement to rigorous topical protection, most sensibly in people with melasma or high unavoidable exposure.',
+ late:'Immediate, marginal.',
+ stack:'Additive to sunscreen but the magnitude is small enough that it should never displace effort from application discipline.'},
+
+/* ── PROCEDURAL ──────────────────────────────────────────────── */
+{id:'ipl',cat:'procedural',n:'IPL / BBL for pigment and vessels',yr:[1,3],ev:4,cost:4,ch:['pigm','senes'],
+ what:'Broadband light selectively targets melanin and hemoglobin, clearing solar lentigines and telangiectasia. Given how heavily pigment evenness weighs in perceived-age judgments, this is unusually high yield per session.',
+ dose:'Typically a series of 3, then maintenance once or twice yearly.',
+ caveat:'Risky in darker phototypes — epidermal melanin competes for the energy and can cause burns or paradoxical hyperpigmentation. A Stanford study found repeated BBL shifted gene expression in treated skin toward a younger profile, which is intriguing but a surrogate endpoint, not an appearance one. Absolutely contraindicated in melasma, which it worsens.',
+ late:'Excellent late intervention — pigment is the most reversible visible aging sign.',
+ stack:'Overlaps with topical pigment agents; the combination is standard but the marginal gain diminishes.'},
+
+{id:'nonabl',cat:'procedural',n:'Non-ablative fractional resurfacing',yr:[1,3],ev:4,cost:4,ch:['matrix','pigm','barrier'],
+ what:'Fractionated 1550nm columns of thermal injury into the dermis trigger a wound-healing collagen response while leaving the epidermis intact, so downtime is days rather than weeks.',
+ dose:'3–5 sessions spaced monthly, then occasional maintenance.',
+ caveat:'Materially gentler and materially less effective than ablative. Good for texture and mild-moderate photoaging; will not address significant laxity or deep rhytides. Multiple sessions are not optional.',
+ late:'Works on established damage, which is its point.',
+ stack:'Same channel as retinoid; sequential rather than additive.'},
+
+{id:'abl',cat:'procedural',n:'Ablative fractional CO₂ / erbium',yr:[2,5],ev:4,cost:5,ch:['matrix','pigm','barrier'],
+ what:'The most effective non-surgical resurfacing available. Vaporizes columns of tissue through the epidermis into the dermis, producing substantial neocollagenesis and genuine textural remodeling.',
+ dose:'One to two sessions, with 1–2 weeks of visible downtime and months of erythema.',
+ caveat:'The highest-risk item in this category. Prolonged erythema, infection, scarring, and delayed hypopigmentation that can appear years later and is permanent. Operator skill dominates the outcome. Much less safe in darker phototypes. Genuinely effective, genuinely consequential.',
+ late:'The strongest option for established photodamage short of surgery.',
+ stack:'Supersedes non-ablative rather than adding to it.'},
+
+{id:'rfmn',cat:'procedural',n:'Radiofrequency microneedling',yr:[1,3],ev:3,cost:4,ch:['matrix','struct'],
+ what:'Insulated needles deliver RF energy at controlled dermal depth, causing thermal collagen contraction and a remodeling response, with the epidermis bypassed rather than heated.',
+ dose:'3 sessions monthly, maintenance annually.',
+ caveat:'Popular partly because it is safe across skin tones — the energy bypasses epidermal melanin, so post-inflammatory pigmentation risk is much lower than with light-based devices. Trial quality is mediocre and effect sizes are modest. There are case reports of fat pad atrophy with aggressive settings, which is the opposite of what you want.',
+ late:'Reasonable for mild-moderate laxity.',
+ stack:'Same channel as lasers and biostimulators; combining several is common practice and mostly commercial.'},
+
+{id:'mfu',cat:'procedural',n:'Microfocused ultrasound',yr:[0.5,2],ev:3,cost:4,ch:['struct','matrix'],
+ what:'Delivers focused thermal coagulation points at fixed depths including the SMAS layer, aiming for fascial contraction rather than dermal remodeling.',
+ dose:'Single session, results developing over 3–6 months, repeat every 1–2 years.',
+ caveat:'Results are modest and highly variable; the "non-surgical facelift" framing substantially overstates it. Painful. Occasional reports of fat atrophy. Safe across phototypes, which is its main advantage.',
+ late:'Best in mild laxity; poor value in advanced laxity, where surgery is the honest answer.',
+ stack:'Structure channel, alongside biostimulators.'},
+
+{id:'biostim',cat:'procedural',n:'Collagen biostimulators',yr:[1,3],ev:4,cost:4,ch:['struct','matrix'],
+ what:'Poly-L-lactic acid and calcium hydroxylapatite provoke a controlled foreign-body fibroblast response, producing gradual diffuse collagen deposition rather than immediate volume.',
+ dose:'2–3 sessions, results over 3–6 months, lasting roughly 2 years.',
+ caveat:'Restores diffuse dermal thickness rather than filling defined areas, which is closer to what actually ages. But nodule formation is a real risk with poor technique or inadequate dilution, and results are slow enough that overtreatment is easy — the temptation to add more before the first round has worked is the main failure mode.',
+ late:'Well suited to established volume loss.',
+ stack:'Structure channel with fillers and MFU; less redundant with them than it looks, since the mechanism differs.'},
+
+{id:'neuro',cat:'procedural',n:'Neuromodulator, conservative dosing',yr:[1,3],ev:5,cost:4,ch:['matrix'],
+ what:'Reduces the repetitive muscular folding that converts dynamic lines into static ones. The best-evidenced procedural intervention on this page, with strong preventive as well as corrective data.',
+ dose:'Low-dose, high-frequency-of-use areas only — glabella, lateral canthal, frontalis. Preventive micro-dosing before lines are etched is better supported than chasing established creases.',
+ caveat:'The overtreatment penalty is severe and non-obvious: a fully immobile upper face reads as older, not younger, because low expressivity is itself an age signal and observers detect the distortion without being able to name it. Long-term high-dose use causes muscle atrophy and compensatory recruitment elsewhere. Restraint is the entire skill.',
+ late:'Established deep lines respond less; combination with resurfacing is standard.',
+ stack:'Distinct mechanism from everything else — this is the one procedural item that is genuinely additive rather than redundant.'},
+
+{id:'filler',cat:'procedural',n:'Filler, structural and minimal',yr:[0,3],ev:4,cost:5,ch:['struct'],
+ what:'Hyaluronic acid replacing volume in deflated deep fat compartments — deep medial cheek, temple, pyriform aperture — rather than filling lines.',
+ dose:'Small volumes in deep structural planes, spaced widely in time. Under 2ml per year for most faces.',
+ caveat:'The widest outcome distribution of anything here, and the only item with a genuinely negative tail. Overfilled faces read as strange rather than young; observers reliably detect it and it becomes its own aging signal. HA is hygroscopic and some product persists for years beyond the marketed duration, accumulating silently. Rare but serious vascular occlusion risk. If in doubt, do less or nothing.',
+ late:'Addresses the volume loss that actually defines older faces — when done minimally.',
+ stack:'Structure channel; the marginal value of the third syringe is often negative.'},
+
+{id:'peel',cat:'procedural',n:'Chemical peels',yr:[1,2],ev:4,cost:3,ch:['pigm','barrier','matrix'],
+ what:'Controlled chemical injury to a defined depth, driving epidermal turnover and, at medium depth, dermal remodeling. The oldest well-evidenced resurfacing modality.',
+ dose:'Superficial glycolic or salicylic series for tone; medium-depth TCA 20–35% or Jessner for meaningful photodamage.',
+ caveat:'Depth control is everything and is operator-dependent. Post-inflammatory hyperpigmentation risk is significant in darker phototypes, requiring priming and conservative depth. Excellent value relative to lasers for pigment and texture; less effective for laxity.',
+ late:'Good on established photodamage.',
+ stack:'Overlaps heavily with lasers and retinoids.'},
+
+{id:'ortho',cat:'procedural',n:'Orthodontic and occlusal maintenance',yr:[1,3],ev:3,cost:4,ch:['struct'],
+ what:'Vertical facial height and lower-face support depend on dentition. Wear, collapse and tooth loss shorten the lower third and rotate the mandible — a shape change no skin intervention can address.',
+ dose:'Lifetime retention after any orthodontic work. Restore worn dentition before vertical dimension is lost. Treat bruxism.',
+ caveat:'Almost entirely absent from the cosmetic conversation despite being structural rather than superficial. Restoring lost vertical dimension after the fact is expensive, complex prosthodontics; preventing its loss is routine dentistry.',
+ late:'Preventive value drops sharply once collapse occurs.',
+ stack:'Structure channel, and the only entry that addresses the skeletal contribution directly.'},
+
+/* ── FRONTIER ────────────────────────────────────────────────── */
+{id:'raptop',cat:'frontier',n:'Topical rapamycin',yr:[0,3],ev:2,cost:3,ch:['senes','matrix'],
+ what:'mTOR inhibition applied to skin, targeting cellular senescence directly. A Drexel randomized trial applied 10 µM rapamycin cream to the hands of adults over 40 for 6–8 months and reported reduced p16INK4A expression, increased dermal collagen and clinical improvement versus placebo.',
+ dose:'Compounded, off-label, dermatologist-supervised. No standardized consumer formulation exists.',
+ caveat:'The trial enrolled 36 and lost 19 to follow-up, which is a serious limitation. Endpoints were partly molecular. It remains the most credible single clinical signal in the senolytic-for-skin space, and that says as much about the space as about the trial. Systemic absorption at these doses appears negligible but is not fully characterized.',
+ late:'Unknown; the trial population was already photoaged, which is encouraging.',
+ stack:'Would occupy the senescence channel, which almost nothing else on this list touches — that is what makes it interesting despite the thin evidence.'},
+
+{id:'senol',cat:'frontier',n:'Senolytics (fisetin, D+Q)',yr:[0,3],ev:1,cost:3,ch:['senes'],
+ what:'Selectively induce apoptosis in senescent cells, which secrete an inflammatory profile that degrades surrounding tissue and propagates dysfunction. Compelling animal data across multiple tissues.',
+ dose:'Intermittent high-dose protocols are what is being trialed. Dasatinib plus quercetin is the most studied combination; fisetin is the most accessible.',
+ caveat:'Essentially no human appearance data. Dasatinib is a chemotherapeutic with a real toxicity profile. Consumer "senolytic" skincare launched well ahead of evidence — the compounds with genuine senolytic activity are not the ones in over-the-counter formulations, and topical delivery to dermal fibroblasts is unresolved. A 2026 Nature Cell Biology paper identifying GPX4-dependent ferroptosis as a senescence vulnerability suggests the next generation may be more selective. Promising field, premature product category.',
+ late:'Theoretically better later, since senescent burden accumulates.',
+ stack:'Same channel as topical rapamycin.'},
+
+{id:'pn',cat:'frontier',n:'Polynucleotides / PDRN',yr:[1,2],ev:3,cost:4,ch:['matrix','barrier'],
+ what:'Purified DNA fragments, typically salmon-derived, injected intradermally. Proposed to act through adenosine A2A receptor signaling to promote fibroblast activity, angiogenesis and extracellular matrix renewal — regeneration rather than volume.',
+ dose:'A series of 3 sessions spaced 2–4 weeks, then maintenance.',
+ caveat:'The best-supported item in this section. Two systematic reviews in early 2026 found positive associations with elasticity, hydration and wrinkle depth — and both concluded larger standardized trials are still needed. Regulatory status varies sharply by country; widespread in Korea and Europe, less established in the US. Good safety profile so far.',
+ late:'Promising for skin quality rather than structure.',
+ stack:'Matrix channel, so discounted heavily if you already run a retinoid and resurfacing.'},
+
+{id:'exo',cat:'frontier',n:'Exosomes',yr:[0,2],ev:2,cost:5,ch:['senes','matrix'],
+ what:'Extracellular vesicles carrying growth factors and regulatory RNA, usually applied after microneedling or laser. A 2026 systematic review and meta-analysis in Aesthetic Surgery Journal found signals for elasticity, wrinkle depth and hydration.',
+ dose:'Adjunct to a resurfacing procedure. Sourcing and characterization vary enormously between products.',
+ caveat:'No exosome product has FDA approval for aesthetic use, and the FDA position holds regardless of how the product is labeled once a structure-or-function claim is made. Product heterogeneity is the core problem — "exosomes" describes a preparation method, not a defined therapeutic, and two clinics can be selling completely different things under the same word. Interesting biology, unregulated marketplace, expensive.',
+ late:'Unknown.',
+ stack:'Marketed as additive to almost everything, which is a commercial claim rather than a demonstrated one.'},
+
+{id:'profhilo',cat:'frontier',n:'HA bioremodelers',yr:[0.5,2],ev:3,cost:4,ch:['barrier','matrix'],
+ what:'High-concentration, low-crosslink hyaluronic acid injected at fixed points to spread through the dermis, hydrating and mildly stimulating fibroblasts. Explicitly not a volumizer.',
+ dose:'Two sessions four weeks apart, then every 6 months.',
+ caveat:'Effects on hydration and skin quality are real and reasonably well documented; effects on laxity are modest and temporary. It is a maintenance treatment with an ongoing cost, not a structural change. Overlaps considerably with polynucleotides in claimed effect.',
+ late:'Fine at any age; benefits are transient regardless.',
+ stack:'Redundant with polynucleotides for most purposes.'},
+
+{id:'rapsys',cat:'frontier',n:'Systemic low-dose rapamycin',yr:[0,3],ev:1,cost:4,ch:['senes','glyc'],
+ what:'The most robust pharmacological lifespan extender in mammalian models, effective even when started late in life. Off-label weekly dosing is increasingly common in longevity-oriented practice.',
+ dose:'Typically 5–7mg weekly in the protocols being used, though there is no consensus and no approved indication.',
+ caveat:'No human data on appearance whatsoever, and the healthspan data in humans is limited to small trials with immune and surrogate endpoints. Real risks: impaired glucose tolerance, mouth ulcers, dyslipidemia, immunosuppression at higher doses. The gap between mouse lifespan data and a human taking this for their face is enormous. Requires a physician who is honest about how experimental this is.',
+ late:'Animal data suggests late initiation still works, which is unusual and part of the appeal.',
+ stack:'Systemic; overlaps with the topical version on the senescence channel.'},
+
+{id:'metf',cat:'frontier',n:'Metformin',yr:[0,1],ev:1,cost:2,ch:['glyc','senes'],
+ what:'AMPK activation, improved insulin sensitivity, reduced glycation substrate. The TAME trial was designed to test it as a geroprotector and has struggled with funding for years.',
+ dose:'Standard glycemic dosing where clinically indicated.',
+ caveat:'The epidemiological signal in diabetics is confounded by the comparison group. Evidence in non-diabetics is weak, and metformin appears to blunt the adaptive response to resistance training in older adults — which would trade a well-evidenced apparent-age benefit for a speculative one. Worth taking if you need it for glucose; hard to justify for appearance.',
+ late:'Unclear.',
+ stack:'Glycation channel, where behavior change is better evidenced and has no exercise trade-off.'},
+
+{id:'nad',cat:'frontier',n:'NAD⁺ precursors (NR / NMN)',yr:[0,0.5],ev:1,cost:3,ch:['senes'],
+ what:'NAD⁺ declines with age; precursors reliably raise blood NAD⁺ levels. That much is established.',
+ dose:'250–1000mg daily in trials.',
+ caveat:'Raising a biomarker is not the same as improving an outcome, and this is the cleanest example of that confusion in the entire supplement space. Human trials have consistently shown elevated NAD⁺ with minimal functional benefit. Zero appearance data. Heavily marketed, expensive, mechanistically appealing, empirically unimpressive so far.',
+ late:'No basis for a claim.',
+ stack:'Nothing demonstrated.'},
+
+{id:'collagen',cat:'frontier',n:'Oral collagen peptides',yr:[0,1],ev:2,cost:2,ch:['matrix'],
+ what:'Specific di- and tripeptides such as prolyl-hydroxyproline survive digestion and appear in circulation, where they may act as signaling molecules to fibroblasts rather than as building material.',
+ dose:'2.5–10g daily in the trials.',
+ caveat:'More evidence than reflexive skeptics allow and far less than the marketing claims. Meta-analyses show statistically significant improvements in skin hydration and elasticity — with small effect sizes, short durations, and near-total industry funding. Not harmful, not expensive, probably does something modest. Do not let it displace a retinoid.',
+ late:'Similar at any age.',
+ stack:'Matrix channel; heavily discounted behind retinoid.'},
+
+{id:'clocks',cat:'frontier',n:'Epigenetic clock testing',yr:[0,0.5],ev:2,cost:3,ch:[],
+ what:'DNA methylation clocks estimate biological age or pace of aging. DunedinPACE measures rate rather than accumulated age and responds fastest to intervention — the CALERIE caloric restriction trial found a 2–3% slowing.',
+ dose:'Consumer tests exist; test–retest reliability varies substantially by provider and clock generation.',
+ caveat:'This is measurement, not intervention — it cannot buy you years, only tell you something about them. And the field is actively contested: a 2026 MACRO trial analysis explicitly cautioned against treating epigenetic aging as a causal, modifiable target, since short-term clock movement may not track underlying physiology. Useful as a longitudinal signal on yourself; unreliable as a single reading, and only loosely connected to how your face looks.',
+ late:'Applicable at any age.',
+ stack:'Informational only.'},
+
+{id:'glp1',cat:'frontier',n:'GLP-1 agonists — the facial trade-off',yr:[0,1],ev:3,cost:4,ch:['struct','glyc'],
+ what:'Included as a caution rather than a recommendation. Substantial rapid weight loss empties facial fat compartments, and the resulting hollowing is one of the fastest ways to add apparent years to a face — the phenomenon has acquired a nickname for a reason.',
+ dose:'Where clinically indicated. Slower titration, adequate protein and resistance training meaningfully reduce the facial cost.',
+ caveat:'The metabolic benefit is real and, for many people, decisively worth it — this is not an argument against the drugs. But the facial effect is predictable and gets ignored in the decision. Recall the Guyuron finding: over 40, higher BMI correlates with looking younger. Aggressive late-life leanness is a genuine appearance trade-off, not a free win, and the aesthetics industry has built an entire treatment category around reversing it.',
+ late:'The effect is more pronounced with age, as skin recoil and fat compartment resilience are already reduced.',
+ stack:'Interacts negatively with the structure channel while helping glycation. One of the few genuinely bidirectional entries here.'}
+];
+
+/* channel definitions for section 01 */
+const CHANNELS=[
+ {k:'uv',n:'Photodamage',c:'#F5B23C',p:'UVA reaches the dermis, passes through glass, and does not burn — so it accumulates without any feedback signal telling you to stop. It induces matrix metalloproteinases, degrades elastin into abnormal elastotic material, and dysregulates melanocytes. Visible light and infrared-A contribute too, which standard sunscreen ignores.',speed:'Fastest',rev:20,revl:'Largely permanent',best:'Daily SPF, UV behavior'},
+ {k:'matrix',n:'Matrix degradation',c:'#9B85F5',p:'Type I and III collagen decline roughly 1% per year after the mid-twenties, accelerating sharply at menopause — about 30% of skin collagen in the first five postmenopausal years. Elastin is not meaningfully replaced in adults at all. This is the channel most products claim to address.',speed:'Steady',rev:45,revl:'Partly reversible',best:'Retinoid, resurfacing, MHT'},
+ {k:'glyc',n:'Glycation',c:'#F0708C',p:'Sugars bind non-enzymatically to long-lived structural proteins, forming cross-links that turn springy collagen stiff, brittle and yellowed. Because collagen turns over across years to decades, cross-links accumulate almost irreversibly. No human agent reliably breaks them.',speed:'Slow',rev:8,revl:'Effectively permanent',best:'Glycemic control, cooking method'},
+ {k:'senes',n:'Senescence & inflammaging',c:'#5FAEF0',p:'Aged fibroblasts stop producing matrix and start secreting an inflammatory profile — the senescence-associated secretory phenotype — that degrades surrounding tissue and pushes neighboring cells toward the same state. Damage becomes self-propagating rather than merely accumulated.',speed:'Accelerating',rev:30,revl:'Emerging targets',best:'Sleep, exercise; rapamycin experimentally'},
+ {k:'pigm',n:'Pigment irregularity',c:'#4ED8B0',p:'Underrated. Experimental work manipulating only skin tone evenness — no wrinkle changes — shifted perceived age by several years. Mottling and lentigines may signal age more powerfully than lines do, and they respond far better to treatment.',speed:'Moderate',rev:80,revl:'Highly reversible',best:'IPL, tinted SPF, pigment topicals'},
+ {k:'struct',n:'Volume, bone & ligament',c:'#E08CB8',p:'The face changes shape, not just texture. The orbital aperture widens, the maxilla recedes and rotates back, the mandibular angle opens. Discrete fat compartments deflate while others descend, and retaining ligaments loosen. This is what "skin tightening" fundamentally cannot reach.',speed:'Steady, then steep',rev:35,revl:'Replaceable, not restorable',best:'Dental, biostimulators, minimal filler'},
+ {k:'barrier',n:'Barrier & turnover',c:'#8AA0C8',p:'Epidermal turnover slows from roughly 28 days at twenty to 45–60 days at fifty. Ceramides and natural moisturizing factor fall, transepidermal water loss rises. Much of "looking tired" is purely optical — hydrated skin conceals fine lines that dehydrated skin displays.',speed:'Gradual',rev:90,revl:'Fully reversible',best:'Ceramides, occlusion, niacinamide'}
+];
+
+/* perceptual bandwidth */
+const SIGNALS=[
+ {n:'Hair',d:'density · hairline · pigment',w:100,t:'The highest-bandwidth channel at conversational distance, and the most time-sensitive to act on. Miniaturized follicles do not come back.'},
+ {n:'Posture & gait',d:'readable at 30m',w:88,t:'Resolves before the face does. Thoracic kyphosis, forward head, shortened stride and slow turning speed are read pre-attentively and almost never optimized.'},
+ {n:'Skin tone evenness',d:'mottling · lentigines',w:80,t:'Experimentally shown to shift perceived age more than wrinkles in some conditions. Also among the most treatable things on this list.'},
+ {n:'Teeth & lower face',d:'wear · display · vertical height',w:76,t:'Young faces show upper incisors at rest; older faces show more lower teeth. Bone resorption after tooth loss collapses the lower third permanently.'},
+ {n:'Style currency',d:'hair · eyewear · silhouette',w:72,t:'Era-lock around age 25–30 is nearly universal and instantly legible. Reversible in an afternoon, which makes it the best cost-to-effect ratio available.'},
+ {n:'Facial contrast',d:'eyes · brows · lips vs skin',w:64,t:'Declines measurably with age across ethnic groups. Restoring it lowers perceived age independent of any change to skin texture.'},
+ {n:'Volume distribution',d:'temple · midface · jaw',w:60,t:'Hollow above and heavy below is the signature pattern. Shape change, not surface change — which is why surface treatments plateau.'},
+ {n:'Wrinkles',d:'static rhytides',w:44,t:'What almost all spending targets, and a middling signal. Real, but consistently overweighted relative to everything above it.'},
+ {n:'Eyes',d:'sclera · limbal ring',w:38,t:'Scleral whiteness and the dark limbal ring at the iris edge both fade with age, and both measurably affect perceived age.'},
+ {n:'Voice',d:'pitch stability · resonance',w:30,t:'Vocal fold atrophy produces breathiness and pitch instability. Trainable, and optimized by essentially nobody.'}
+];
+
+const TIERS=[
+ {t:0,tag:'TIER 0',n:'The non-negotiables',s:'If any of these is missing, nothing below it is worth doing. The returns are lopsided enough that Tier 1 effort on a Tier 0 gap is wasted motion.',items:[
+  ['Nicotine','Zero, in any form. Larger than everything else on this page combined.'],
+  ['Sunscreen','Broad-spectrum SPF 30+ with high UVA protection, every morning, no exceptions for weather or plans. Quarter-teaspoon for the face.'],
+  ['Sleep','7–9 hours with consistent timing. Regularity is roughly as important as duration.'],
+  ['Retinoid','Prescription tretinoin nightly if tolerated. The single best-evidenced topical that exists.'],
+  ['Alcohol','Minimize. It damages three channels directly and destroys the sleep channel indirectly.']
+ ]},
+ {t:1,tag:'TIER 1',n:'Where sophisticated people underinvest',s:'This is the tier that separates people who do the basics from people who are genuinely good at this. Mostly cheap, mostly behavioral, mostly ignored because it is not sold to you.',items:[
+  ['Hair, early','If you have androgenetic alopecia, act at the first Norwood change. This is the most time-sensitive item on the page — every year of delay permanently lowers the ceiling.'],
+  ['Dental structure','Bruxism guard, lifetime retention, prompt replacement of missing teeth to preserve alveolar bone. Vertical dimension loss is the fastest route to reading old, and it is invisible until it is not.'],
+  ['Posture','Thoracic extension, deep neck flexors, posterior chain. Read at thirty metres, before your face resolves.'],
+  ['UV geometry','Ceramic window film on the car and any desk-adjacent window. Hats over caps. Reflexive sunglasses. Structural removal of dose beats attenuation.'],
+  ['Glycemic flattening','Postprandial walks, fiber and protein before starch, no liquid sugar. Wet cooking methods over dry high-heat. Glycation is permanent, which makes it purely preventive.'],
+  ['Style currency','Rotate eyewear. Let someone competent choose the haircut. Watch for era-lock. Best cost-to-effect ratio available and reversible in an afternoon.'],
+  ['Pigment discipline','Tinted iron-oxide sunscreen if you have any pigment tendency, plus one targeted agent. Tone evenness carries more age signal than lines do.'],
+  ['Sleep position','Supine if possible; silk surface if not. Compression creases become permanent and asymmetric.'],
+  ['Protein & resistance','1.6 g/kg, three sessions weekly. Buys posture, bone, insulin sensitivity and the facial fat you will want after 40.']
+ ]},
+ {t:2,tag:'TIER 2',n:'Clinical, when Tiers 0 and 1 are genuinely solid',s:'Real effects, real costs, real risk. Order matters: address pigment before texture, texture before volume, and volume last and least.',items:[
+  ['Pigment first','IPL or BBL for lentigines and vessels, or peels if darker-phototype. Highest yield per session because pigment carries disproportionate signal and reverses well.'],
+  ['Then texture','Non-ablative fractional as the moderate option; ablative fractional CO₂ as the strong one. The latter is the most consequential item in this tier — operator skill dominates the outcome, and hypopigmentation can appear years later and be permanent.'],
+  ['Neuromodulator, conservatively','The best-evidenced procedural intervention here and the easiest to ruin. Low dose, high-motion areas only. A fully immobile upper face reads older, not younger.'],
+  ['Structure, last and least','Biostimulators for diffuse dermal thickness before fillers for volume. If you use filler, under 2ml a year, deep planes, and stop early. This is the only category with a negative tail.'],
+  ['Hormonal, where indicated','MHT is a clinician decision made on systemic grounds. Where it is already appropriate, the dermal effect exceeds any topical — and the initiation window matters.']
+ ]},
+ {t:3,tag:'TIER 3',n:'Experimental — spend attention, not money',s:'Everything here has a plausible mechanism and inadequate human evidence. That combination is precisely what makes a category profitable to sell into.',items:[
+  ['Worth watching closely','Topical rapamycin — the only credible clinical senolytic signal in skin, from one small trial with heavy dropout. Polynucleotides — best-evidenced item in this tier, with two 2026 systematic reviews positive and both calling for larger trials.'],
+  ['Interesting, unregulated','Exosomes. Real biology, a 2026 meta-analysis with positive signals, no FDA approval for aesthetic use, and enormous product heterogeneity — the word describes a preparation method, not a defined therapeutic.'],
+  ['Mechanistically appealing, empirically thin','Systemic rapamycin, senolytics, metformin. Strong animal data, no human appearance data, genuine side-effect profiles. Metformin may blunt training adaptation, which trades an evidenced benefit for a speculative one.'],
+  ['Probably not worth it','NAD⁺ precursors — raising a biomarker reliably while failing to move outcomes. Cosmetic peptides. Most antioxidant serums other than well-formulated vitamin C.'],
+  ['Measurement, not intervention','Epigenetic clocks. DunedinPACE responds fastest to intervention, but a 2026 trial analysis cautioned explicitly against treating clock movement as a causal target. Useful longitudinally on yourself; unreliable as a single reading.']
+ ]}
+];
+
+const FRONTIER=[
+ {n:'Polynucleotides / PDRN',s:'injectable',g:'B',gc:'g-b',t:'The strongest item in this section. Two systematic reviews in early 2026 found positive associations with elasticity, hydration and wrinkle depth; <strong>both concluded larger standardized trials are still needed</strong>. Good safety record. Regulatory status varies sharply by country.'},
+ {n:'Topical rapamycin',s:'compounded',g:'C+',gc:'g-c',t:'A randomized trial in adults over 40 reported reduced p16INK4A, increased dermal collagen and clinical improvement after 6–8 months. <strong>36 enrolled, 19 lost to follow-up.</strong> The most credible senolytic signal in skin, which says as much about the field as the trial.'},
+ {n:'HA bioremodelers',s:'injectable',g:'C+',gc:'g-c',t:'Reasonable evidence for hydration and skin quality, modest and temporary effects on laxity. A maintenance treatment with a permanent ongoing cost. Substantially overlaps polynucleotides.'},
+ {n:'Oral collagen peptides',s:'supplement',g:'C',gc:'g-c',t:'More evidence than reflexive skeptics allow, far less than the marketing. Meta-analyses show significant hydration and elasticity effects with <strong>small effect sizes, short durations and near-total industry funding</strong>. Harmless; should not displace a retinoid.'},
+ {n:'Exosomes',s:'injectable / topical',g:'C−',gc:'g-c',t:'A 2026 meta-analysis found signals for elasticity and wrinkle depth. <strong>No FDA-approved exosome product exists for aesthetic use.</strong> Product heterogeneity is the core issue — two clinics may sell entirely different preparations under the same word. Expensive.'},
+ {n:'Senolytics (fisetin, D+Q)',s:'systemic',g:'D',gc:'g-d',t:'Excellent animal data, essentially no human appearance data. Dasatinib is a chemotherapeutic. Consumer "senolytic" skincare launched far ahead of evidence; the compounds with real activity are not the ones in OTC products. A 2026 ferroptosis-vulnerability finding suggests better selectivity may be coming.'},
+ {n:'Systemic rapamycin',s:'off-label Rx',g:'D',gc:'g-d',t:'The most robust mammalian lifespan extender known, effective even started late. <strong>Zero human appearance data.</strong> Real risks: glucose intolerance, mouth ulcers, dyslipidemia, immunosuppression. The mouse-to-face inferential gap is enormous.'},
+ {n:'Metformin',s:'off-label Rx',g:'D',gc:'g-d',t:'Epidemiological signal in diabetics is confounded by the comparison group. Appears to <strong>blunt resistance-training adaptation in older adults</strong> — trading a well-evidenced apparent-age benefit for a speculative one. Take it if you need it for glucose.'},
+ {n:'NAD⁺ precursors',s:'supplement',g:'E',gc:'g-e',t:'Reliably raises blood NAD⁺. Human trials consistently show elevated biomarker with minimal functional benefit. <strong>The cleanest example in the space of confusing a biomarker for an outcome.</strong> No appearance data.'},
+ {n:'Partial reprogramming, plasma exchange, klotho',s:'preclinical',g:'E',gc:'g-e',t:'Yamanaka-factor reprogramming dramatically reduces epigenetic age in animals. Translation to humans is unsolved, with oncogenic risk the central obstacle. <strong>Nothing here is a decision you can act on.</strong> Worth following, not funding.'}
+];
+
+const NEGS=[
+ {n:'Overfilling',t:'The most common self-inflicted aging in aesthetics. HA is hygroscopic and some product persists years past its marketed duration, accumulating silently across sessions. Observers reliably read the result as strange rather than young — and distortion is itself an age signal.'},
+ {n:'Over-neuromodulation',t:'A fully immobile upper face reads older, not younger. Low expressivity codes as aged regardless of skin quality, and long-term high dosing causes muscle atrophy with compensatory recruitment elsewhere. Restraint is the entire skill.'},
+ {n:'Chronic leanness after 40',t:'Facial fat cushions the volume loss that defines older faces. In twin data, higher BMI correlated with looking older under 40 and younger over 40. Aggressive late-life dieting — including on GLP-1s — buys metabolic health at a real facial cost.'},
+ {n:'Barrier destruction',t:'Daily acids, physical exfoliants, high-strength actives layered without recovery. A compromised barrier fails at hydration, tolerates nothing, and inflames — which feeds the senescence channel you were trying to protect.'},
+ {n:'Any tanning',t:'Including "base tans," tanning beds and deliberate exposure. A tan is a DNA damage response, visible proof the dose was too high. The short-term appearance gain is real, which is exactly what makes it costly.'},
+ {n:'Style era-lock',t:'Freezing your haircut, eyewear and silhouette at 27 and holding for four decades. Instantly legible, entirely free to fix, and nearly universal. The failure in the other direction — dressing conspicuously young — reads older still.'}
+];
+
+/* ==================================================================
+   RENDER
+   ================================================================== */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const mid=d=>(d.yr[0]+d.yr[1])/2;
+const EVL={1:'Mechanism only',2:'Small human data',3:'Observational',4:'RCT, limited',5:'Multiple RCTs'};
+
+/* ---- channels ---- */
+$('#chans').innerHTML=CHANNELS.map((c,i)=>`
+<div class="chan" style="--accent:${c.c}">
+  <div class="cnum">CHANNEL ${String(i+1).padStart(2,'0')}</div>
+  <h4 style="color:${c.c}">${c.n}</h4>
+  <p>${c.p}</p>
+  <div class="chan-meta">
+    <div class="mrow"><span>Onset</span><span>${c.speed}</span></div>
+    <div class="mrow"><span>Reversible</span><div class="bar"><i style="width:${c.rev}%"></i></div></div>
+    <div class="mrow"><span></span><span style="font-size:9.5px;color:var(--dim)">${c.revl}</span></div>
+    <div class="mrow"><span>Best levers</span><span style="font-size:9.5px">${c.best}</span></div>
+  </div>
+</div>`).join('');
+
+/* ---- signals ---- */
+$('#signals').innerHTML=SIGNALS.map(s=>`
+<div class="sig">
+  <div class="sig-name"><b>${s.n}</b><small>${s.d}</small></div>
+  <div class="sig-right">
+    <div class="sig-bar"><i style="width:${s.w}%"></i></div>
+    <p>${s.t}</p>
+  </div>
+</div>`).join('');
+
+/* ---- tiers ---- */
+$('#tierlist').innerHTML=TIERS.map((t,i)=>`
+<div class="tier tier-t${t.t}${i===1?' open':''}">
+  <div class="tier-head" role="button" tabindex="0" aria-expanded="${i===1}">
+    <span class="tier-tag">${t.tag}</span>
+    <div class="tier-title"><h4>${t.n}</h4><p>${t.s}</p></div>
+    <span class="tier-caret">▸</span>
+  </div>
+  <div class="tier-body"><ul>${t.items.map(([k,v])=>`<li><span class="k">${k}</span><span class="v">${v}</span></li>`).join('')}</ul></div>
+</div>`).join('');
+$$('.tier-head').forEach(h=>{
+  const go=()=>{const t=h.parentElement;t.classList.toggle('open');h.setAttribute('aria-expanded',t.classList.contains('open'));};
+  h.addEventListener('click',go);
+  h.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+});
+
+/* ---- frontier ---- */
+$('#ftable').innerHTML='<div class="frow fhead"><span>Intervention</span><span>Believe</span><span>Where it stands</span></div>'+
+ FRONTIER.map(f=>`<div class="frow">
+   <div class="fname"><b>${f.n}</b><small>${f.s}</small></div>
+   <div><span class="grade ${f.gc}">${f.g}</span></div>
+   <div class="fnote">${f.t}</div></div>`).join('');
+
+/* ---- negatives ---- */
+$('#negs').innerHTML=NEGS.map(n=>`<div class="neg"><h4>${n.n}</h4><p>${n.t}</p></div>`).join('');
+
+/* ==================================================================
+   FIELD PLOT
+   ================================================================== */
+const W=900,H=520,M={t:28,r:34,b:56,l:60};
+const px=e=>M.l+((e-0.6)/(5.4-0.6))*(W-M.l-M.r);
+const py=v=>H-M.b-((v-0)/10.5)*(H-M.t-M.b);
+const rr=c=>4.5+c*1.9;
+let activeCat='all';
+
+function jitter(id){let h=0;for(let i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))|0;return ((h%100)/100-0.5);}
+
+function drawPlot(){
+  const svg=$('#plot');
+  let g='';
+  /* gridlines + y ticks */
+  for(let v=0;v<=10;v+=2){
+    const y=py(v);
+    g+=`<line class="gridline${v===0?' major':''}" x1="${M.l}" y1="${y}" x2="${W-M.r}" y2="${y}"/>`;
+    g+=`<text class="tick-label" x="${M.l-10}" y="${y+3}" text-anchor="end">${v}</text>`;
+  }
+  for(let e=1;e<=5;e++){
+    const x=px(e);
+    g+=`<line class="gridline" x1="${x}" y1="${M.t}" x2="${x}" y2="${H-M.b}"/>`;
+    g+=`<text class="tick-label" x="${x}" y="${H-M.b+18}" text-anchor="middle">${e}</text>`;
+    g+=`<text class="tick-label" x="${x}" y="${H-M.b+31}" text-anchor="middle" style="font-size:7.5px">${EVL[e].toUpperCase()}</text>`;
+  }
+  g+=`<text class="axis-label" x="${M.l}" y="${H-8}">Evidence →</text>`;
+  g+=`<text class="axis-label" transform="translate(16,${M.t+8}) rotate(-90)" text-anchor="end">← Years of apparent age preserved</text>`;
+
+  /* high-leverage quadrant wash */
+  g+=`<rect x="${px(3.5)}" y="${M.t}" width="${W-M.r-px(3.5)}" height="${py(3)-M.t}" fill="rgba(78,216,176,.045)" stroke="rgba(78,216,176,.16)" stroke-dasharray="3 4"/>`;
+  g+=`<text class="tick-label" x="${W-M.r-8}" y="${M.t+15}" text-anchor="end" style="fill:var(--behavior);letter-spacing:.13em">HIGH LEVERAGE</text>`;
+
+  /* nodes, largest first so small ones stay clickable */
+  const sorted=[...D].sort((a,b)=>b.cost-a.cost);
+  sorted.forEach(d=>{
+    const x=px(d.ev+jitter(d.id)*0.34), y=py(mid(d)+jitter(d.id+'y')*0.24);
+    const c=CAT[d.cat].c, r=rr(d.cost);
+    const big=mid(d)>=3.2;
+    g+=`<g class="node" data-id="${d.id}" data-cat="${d.cat}" tabindex="0" role="button" aria-label="${d.n}">
+      <circle cx="${x}" cy="${y}" r="${r+7}" fill="${c}" opacity=".07"/>
+      <circle class="core" cx="${x}" cy="${y}" r="${r}" fill="${c}" fill-opacity=".3" stroke="${c}" stroke-width="1.3"/>
+      ${big?`<text class="node-label" x="${x}" y="${y-r-6}" text-anchor="middle">${d.n.length>26?d.n.slice(0,25)+'…':d.n}</text>`:''}
+    </g>`;
+  });
+  svg.innerHTML=g;
+  bindNodes();
+  applyFilter();
+}
+
+function bindNodes(){
+  const tip=$('#tip'), box=$('#plotbox');
+  $$('#plot .node').forEach(n=>{
+    const d=D.find(x=>x.id===n.dataset.id);
+    const show=e=>{
+      const br=box.getBoundingClientRect();
+      const cx=n.querySelector('.core').getBoundingClientRect();
+      tip.querySelector('h5').textContent=d.n;
+      tip.querySelector('p').textContent=`${d.yr[0]}–${d.yr[1]} yr · evidence ${d.ev}/5 · ${CAT[d.cat].n.toLowerCase()}`;
+      tip.classList.add('show');
+      let L=cx.left-br.left+cx.width/2-tip.offsetWidth/2;
+      L=Math.max(6,Math.min(L,br.width-tip.offsetWidth-6));
+      tip.style.left=L+'px';
+      tip.style.top=(cx.top-br.top-tip.offsetHeight-8)+'px';
+    };
+    n.addEventListener('mouseenter',show);
+    n.addEventListener('focus',show);
+    n.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+    n.addEventListener('blur',()=>tip.classList.remove('show'));
+    n.addEventListener('click',()=>openDrawer(d.id));
+    n.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDrawer(d.id);}});
+  });
+}
+
+/* ---- list view ---- */
+function drawList(){
+  const rows=[...D].sort((a,b)=>(mid(b)/b.cost)-(mid(a)/a.cost));
+  $('#listrows').innerHTML=rows.map(d=>`
+  <div class="lrow" data-id="${d.id}" data-cat="${d.cat}">
+    <div class="lname">
+      <span class="swatch" style="background:${CAT[d.cat].c}"></span>
+      <span style="min-width:0"><b>${d.n}</b><small>${CAT[d.cat].n.toUpperCase()}</small></span>
+    </div>
+    <span class="lcell big">${d.yr[0]}–${d.yr[1]}</span>
+    <span class="lcell hide-sm"><span class="evbar">${[1,2,3,4,5].map(i=>`<i class="${i<=d.ev?'f':''}"></i>`).join('')}</span></span>
+    <span class="lcell">${(mid(d)/d.cost).toFixed(1)}</span>
+  </div>`).join('');
+  $$('#listrows .lrow').forEach(r=>r.addEventListener('click',()=>openDrawer(r.dataset.id)));
+}
+
+function applyFilter(){
+  $$('#plot .node').forEach(n=>n.classList.toggle('dim',activeCat!=='all'&&n.dataset.cat!==activeCat));
+  $$('#listrows .lrow').forEach(r=>r.classList.toggle('dim',activeCat!=='all'&&r.dataset.cat!==activeCat));
+}
+
+$('#filters').addEventListener('click',e=>{
+  const b=e.target.closest('.chip'); if(!b)return;
+  $$('#filters .chip').forEach(c=>c.classList.remove('on'));
+  b.classList.add('on'); activeCat=b.dataset.cat; applyFilter();
+});
+$('#vPlot').addEventListener('click',()=>{
+  $('#vPlot').classList.add('on');$('#vList').classList.remove('on');
+  $('#plotbox').classList.remove('off');$('#listview').classList.remove('on');
+});
+$('#vList').addEventListener('click',()=>{
+  $('#vList').classList.add('on');$('#vPlot').classList.remove('on');
+  $('#plotbox').classList.add('off');$('#listview').classList.add('on');
+});
+
+/* ==================================================================
+   DRAWER
+   ================================================================== */
+function openDrawer(id){
+  const d=D.find(x=>x.id===id); if(!d)return;
+  $('#dCat').textContent=CAT[d.cat].n+' · '+(d.ch.length?d.ch.map(c=>CH[c].n).join(' / '):'perceptual only');
+  $('#dTitle').textContent=d.n;
+  $('#dBody').innerHTML=`
+  <div class="dmetrics">
+    <div class="dmetric"><b style="color:${CAT[d.cat].c}">${d.yr[0]}–${d.yr[1]}</b><span>Years</span></div>
+    <div class="dmetric"><b>${d.ev}<span style="color:var(--mute);font-size:11px">/5</span></b><span>Evidence</span></div>
+    <div class="dmetric"><b>${(mid(d)/d.cost).toFixed(1)}</b><span>Per unit cost</span></div>
+  </div>
+  <div class="dblock"><span class="eyebrow">Mechanism</span><p>${d.what}</p></div>
+  <div class="dblock"><span class="eyebrow">Protocol</span><p>${d.dose}</p></div>
+  <div class="dblock dcaveat"><span class="eyebrow">The sharp edge</span><p>${d.caveat}</p></div>
+  <div class="dblock"><span class="eyebrow">If you start late</span><p>${d.late}</p></div>
+  <div class="dblock"><span class="eyebrow">Stacking</span><p>${d.stack}</p></div>
+  <div class="dblock"><span class="eyebrow">Damage channels</span>
+    <div class="dtags">${d.ch.length?d.ch.map(c=>`<span class="dtag" style="border-color:${CH[c].c}44;color:${CH[c].c}">${CH[c].n}</span>`).join(''):'<span class="dtag">Perceptual signal only</span>'}</div>
+  </div>`;
+  $('#drawer').classList.add('on'); $('#scrim').classList.add('on');
+  document.body.classList.add('drawer-open');
+  $('#dClose').focus();
+}
+function closeDrawer(){
+  $('#drawer').classList.remove('on');$('#scrim').classList.remove('on');
+  document.body.classList.remove('drawer-open');
+}
+$('#dClose').addEventListener('click',closeDrawer);
+$('#scrim').addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+/* ==================================================================
+   AUDIT + STACKING MODEL
+   ================================================================== */
+const DISCOUNT=0.62;
+let done=new Set();
+
+function buildAudit(){
+  const order=['behavior','perceptual','topical','procedural','frontier'];
+  $('#auditlist').innerHTML=order.map(cat=>{
+    const items=D.filter(d=>d.cat===cat).sort((a,b)=>mid(b)-mid(a));
+    return `<div class="agroup-head"><span>${CAT[cat].n}</span><span>${items.length}</span></div>`+
+      items.map(d=>`<div class="aitem" data-id="${d.id}">
+        <span class="abox">✓</span>
+        <span class="atext"><b>${d.n}</b><small>${d.yr[0]}–${d.yr[1]} yr · ev ${d.ev}/5</small></span>
+      </div>`).join('');
+  }).join('');
+  $$('#auditlist .aitem').forEach(el=>el.addEventListener('click',()=>{
+    const id=el.dataset.id;
+    done.has(id)?done.delete(id):done.add(id);
+    el.classList.toggle('on',done.has(id));
+    recompute(); persist();
+  }));
+}
+
+/* credit an intervention set with per-channel diminishing returns */
+function creditSet(ids){
+  const counters={}; let total=0;
+  const chosen=D.filter(d=>ids.has(d.id)).sort((a,b)=>mid(b)-mid(a));
+  chosen.forEach(d=>{
+    const v=mid(d);
+    if(!d.ch.length){ total+=v; return; }          // perceptual-only: no channel overlap
+    let worst=1;                                    // most-saturated channel governs
+    d.ch.forEach(c=>{ worst=Math.min(worst,Math.pow(DISCOUNT,counters[c]||0)); });
+    total+=v*worst;
+    d.ch.forEach(c=>counters[c]=(counters[c]||0)+1);
+  });
+  return {total,counters};
+}
+
+function recompute(){
+  const {total,counters}=creditSet(done);
+  const all=creditSet(new Set(D.map(d=>d.id)));
+  $('#captured').innerHTML=total.toFixed(1)+'<small>yr</small>';
+  $('#remaining').textContent=Math.max(0,all.total-total).toFixed(1)+' yr';
+
+  const n=done.size;
+  $('#capsub').textContent = n===0
+    ? 'Nothing ticked yet. Start with the six highest-leverage items and watch how fast the curve flattens.'
+    : n<6 ? `${n} ticked. You are on the steep part of the curve — each addition is still worth close to its full value.`
+    : n<14 ? `${n} ticked. Diminishing returns are engaging within your covered channels. Look at uncovered channels below before adding more of the same.`
+    : `${n} ticked. You are deep into the flat part. Marginal additions within covered channels are worth a fraction of face value; the remaining gains are in coverage gaps and perceptual signals.`;
+
+  /* channel coverage */
+  $('#coverage').innerHTML=Object.keys(CH).map(k=>{
+    const c=counters[k]||0;
+    return `<div class="crow ${c>0?'covered':''}"><i class="cdot"></i>${CH[k].n}${c>0?` · ${c}`:' · uncovered'}</div>`;
+  }).join('');
+
+  /* next moves: marginal value per unit cost, given what's already done */
+  const base=total;
+  const cand=D.filter(d=>!done.has(d.id)).map(d=>{
+    const t=new Set(done); t.add(d.id);
+    return {d, gain:creditSet(t).total-base};
+  }).sort((a,b)=>(b.gain/b.d.cost)-(a.gain/a.d.cost)).slice(0,6);
+
+  $('#nextlist').innerHTML=cand.map(({d,gain})=>
+    `<li data-id="${d.id}"><b>${d.n}</b><small>+${gain.toFixed(1)} yr · cost ${d.cost}/5 · ev ${d.ev}/5</small></li>`).join('');
+  $$('#nextlist li').forEach(li=>li.addEventListener('click',()=>openDrawer(li.dataset.id)));
+}
+
+$('#reset').addEventListener('click',()=>{
+  done.clear();
+  $$('#auditlist .aitem').forEach(e=>e.classList.remove('on'));
+  recompute(); persist();
+});
+
+/* optional persistence — degrades silently to in-memory */
+async function persist(){
+  try{ if(window.storage) await window.storage.set('aging:done',JSON.stringify([...done])); }catch(e){}
+}
+async function restore(){
+  try{
+    if(!window.storage) return;
+    const r=await window.storage.get('aging:done');
+    if(r&&r.value){
+      done=new Set(JSON.parse(r.value));
+      $$('#auditlist .aitem').forEach(e=>e.classList.toggle('on',done.has(e.dataset.id)));
+      recompute();
+    }
+  }catch(e){}
+}
+
+/* ---- boot ---- */
+drawPlot();
+drawList();
+buildAudit();
+recompute();
+restore();
+window.addEventListener('resize',()=>{ $('#tip').classList.remove('show'); });
+</script>
+</body>
+</html>
