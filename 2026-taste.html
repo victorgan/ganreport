@@ -1,0 +1,1389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How to Taste &mdash; a working atlas of flavour</title>
+<meta name="description" content="The vocabulary and diagnostics of eating well: the ten levers of flavour, a taxonomy of dishes by how their flavour was made, and what to look for in a great version of each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Karla:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#161310;
+  --panel:#1E1A15;
+  --panel2:#282219;
+  --line:#3A322A;
+  --bone:#EFE6D6;
+  --bone2:#AFA490;
+  --bone3:#8C8271;
+  --time:#C79AD1;
+  --water:#79BFC9;
+  --fire:#E58C3C;
+  --hand:#B7CE6E;
+  --r:2px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ink);color:var(--bone);
+  font-family:Karla,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  padding-bottom:70px;
+}
+h1,h2,h3,.disp{font-family:"Bodoni Moda","Didot",Georgia,serif;font-weight:400;margin:0;letter-spacing:-.005em}
+.mono,.eyebrow,.tab,.chip .k{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+.eyebrow{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone3)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--fire);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* ---------- masthead + fault finder (hero) ---------- */
+.masthead{padding:36px 0 8px}
+.masthead h1{font-size:clamp(40px,10vw,86px);line-height:.92;font-weight:500}
+.masthead h1 i{font-style:italic;font-weight:400}
+.thesis{max-width:54ch;color:var(--bone2);margin:18px 0 0;font-size:16px}
+.finder{margin:26px 0 6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0 18px}
+.finder h2{font-size:15px;font-family:Karla,sans-serif;font-weight:600;margin-bottom:10px;letter-spacing:0}
+.faults{display:flex;flex-wrap:wrap;gap:7px}
+.fault{border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:14px;color:var(--bone2);background:var(--panel)}
+.fault:hover{color:var(--bone);border-color:var(--bone3)}
+.fault[aria-pressed="true"]{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.answer{margin-top:14px;min-height:64px}
+.answer .fix{font-family:"Bodoni Moda",Georgia,serif;font-size:clamp(19px,4vw,26px);line-height:1.25;margin:0 0 8px}
+.answer .fix b{font-style:italic;font-weight:400;color:var(--fire)}
+.answer .why{color:var(--bone2);font-size:14.5px;max-width:64ch;margin:0}
+.answer .egs{margin-top:9px;display:flex;flex-wrap:wrap;gap:6px}
+.answer .idle{color:var(--bone3);font-size:14.5px;margin:0}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.answer>div{animation:fade .22s ease}
+
+/* ---------- tabs ---------- */
+.tabbar{position:sticky;top:0;z-index:40;background:var(--ink);border-bottom:1px solid var(--line)}
+.tabbar .wrap{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:14px 13px 12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone3);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--bone);border-bottom-color:var(--fire)}
+
+.view{display:none;padding:30px 0 50px}
+.view.on{display:block}
+.vhead{max-width:64ch;margin-bottom:24px}
+.vhead h2{font-size:clamp(26px,5.5vw,38px);margin:8px 0 10px;font-weight:400}
+.vhead h2 i{font-style:italic}
+.vhead p{margin:0;color:var(--bone2);font-size:15px}
+
+/* ---------- shared bits ---------- */
+.f-time{color:var(--time)} .f-water{color:var(--water)} .f-fire{color:var(--fire)} .f-hand{color:var(--hand)}
+.bg-time{background:var(--time)} .bg-water{background:var(--water)} .bg-fire{background:var(--fire)} .bg-hand{background:var(--hand)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+.legend span{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone2);border:1px solid var(--line);border-radius:99px;padding:5px 11px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:13.5px;line-height:1.2;color:var(--bone);margin:0 4px 4px 0}
+.chip:hover{background:var(--panel2);border-color:var(--bone3)}
+.chip svg{display:block}
+.hint{color:var(--bone3);font-size:12.5px;margin-top:10px}
+.searchbox{width:100%;max-width:340px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);color:var(--bone);padding:9px 11px;font:inherit;font-size:14px}
+.searchbox::placeholder{color:var(--bone3)}
+select{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);color:var(--bone);padding:8px 10px;font:inherit;font-size:13.5px}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--bone3);font-family:"JetBrains Mono",monospace}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:16px}
+
+/* ---------- elements (levers) ---------- */
+.levers{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:700px){.levers{grid-template-columns:1fr 1fr}}
+.lever{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);padding:16px 17px}
+.lever h3{font-size:23px;display:flex;align-items:baseline;gap:10px}
+.lever h3 span{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone3)}
+.lever .job{margin:8px 0 12px;font-size:14.5px;color:var(--bone)}
+.lever dl{display:grid;grid-template-columns:74px 1fr;gap:3px 10px;margin:0;font-size:13.5px}
+.lever dt{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone3);padding-top:3px}
+.lever dd{margin:0 0 5px;color:var(--bone2)}
+.lever .egs{margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+
+/* ---------- forces taxonomy ---------- */
+.force{margin:0 0 38px;border-top:1px solid var(--line);padding-top:16px}
+.force-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.force-head h3{font-size:30px}
+.force-head .n{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--bone3)}
+.force-def{color:var(--bone2);font-size:14.5px;max-width:62ch;margin:8px 0 20px}
+.fam{margin:0 0 20px;padding-left:15px;border-left:1px solid var(--line)}
+.fam h4{margin:0;font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;font-weight:500}
+.fam p{color:var(--bone3);font-size:13px;margin:4px 0 10px;max-width:60ch}
+.alsos{display:inline-flex;gap:3px;margin-left:2px}
+.alsos i{width:5px;height:5px;border-radius:50%;display:block}
+
+/* ---------- balance plot ---------- */
+.plot{width:100%;height:auto;display:block;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.plot .grid{stroke:var(--line);stroke-width:.5}
+.plot .diag{stroke:var(--bone3);stroke-width:.6;stroke-dasharray:3 3}
+.plot .zone{font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;fill:var(--bone3)}
+.plot .alab{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;fill:var(--bone2)}
+.plot .plab{font-family:Karla,sans-serif;font-size:8.4px;fill:var(--bone2)}
+.plot circle{cursor:pointer}
+
+/* ---------- words ---------- */
+.wordgrid{display:grid;gap:0;grid-template-columns:1fr}
+.word{border-bottom:1px solid var(--line);padding:15px 0;display:grid;gap:4px 20px;grid-template-columns:1fr}
+@media(min-width:760px){.word{grid-template-columns:210px 1fr}}
+.word .term{font-family:"Bodoni Moda",Georgia,serif;font-size:21px}
+.word .cat{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--bone3);display:block;margin-top:2px}
+.word .def{margin:0;font-size:14.5px}
+.word .use{margin:6px 0 0;font-size:13.5px;color:var(--bone2)}
+.word .use b{color:var(--hand);font-weight:500}
+.word .vs{margin:4px 0 0;font-size:13.5px;color:var(--bone3)}
+.word .vs b{color:var(--bone2);font-weight:500}
+
+/* ---------- training ---------- */
+.tsect{margin-bottom:40px}
+.tsect > h3{font-size:26px;margin-bottom:6px}
+.tsect > p.intro{color:var(--bone2);font-size:14.5px;max-width:62ch;margin:0 0 18px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;max-width:70ch}
+.steps li{counter-increment:s;position:relative;padding:0 0 16px 42px;border-left:1px solid var(--line);margin-left:9px}
+.steps li:last-child{border-left-color:transparent}
+.steps li::before{content:counter(s);position:absolute;left:-9px;top:0;width:19px;height:19px;border-radius:50%;background:var(--ink);border:1px solid var(--fire);color:var(--fire);font-family:"JetBrains Mono",monospace;font-size:10px;display:flex;align-items:center;justify-content:center}
+.steps b{display:block;font-size:15.5px;font-weight:600}
+.steps span{color:var(--bone2);font-size:14px}
+.ladders{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:760px){.ladders{grid-template-columns:1fr 1fr}}
+.ladder{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);padding:15px 16px}
+.ladder h4{margin:0 0 3px;font-family:"Bodoni Moda",Georgia,serif;font-size:20px;font-weight:400}
+.ladder .sub{color:var(--bone3);font-size:12.5px;margin:0 0 11px}
+.rungs{list-style:none;margin:0;padding:0;counter-reset:r}
+.rungs li{counter-increment:r;display:grid;grid-template-columns:20px 1fr;gap:9px;padding:6px 0;border-top:1px solid var(--line);font-size:13.5px;align-items:baseline}
+.rungs li::before{content:counter(r);font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--bone3)}
+.rungs em{font-style:normal;color:var(--bone3);display:block;font-size:12.5px}
+.drills{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:700px){.drills{grid-template-columns:1fr 1fr}}
+.drill{border:1px solid var(--line);border-radius:var(--r);padding:14px 15px}
+.drill h4{margin:0 0 5px;font-size:15.5px;font-weight:600;font-family:Karla,sans-serif}
+.drill p{margin:0;font-size:13.5px;color:var(--bone2)}
+.drill .kit{margin-top:7px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--bone3)}
+
+/* ---------- compare ---------- */
+.picker{position:relative;max-width:400px}
+.sugg{position:absolute;z-index:20;left:0;right:0;background:var(--panel2);border:1px solid var(--bone3);border-radius:var(--r);max-height:230px;overflow:auto;display:none}
+.sugg.on{display:block}
+.sugg button{display:block;width:100%;text-align:left;padding:8px 11px;font-size:13.5px;border-bottom:1px solid var(--line)}
+.sugg button:hover{background:var(--ink)}
+.picked{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 20px}
+.pc{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:5px 7px 5px 13px;font-size:13.5px}
+.pc button{width:19px;height:19px;border-radius:50%;background:var(--panel2);font-size:12px;line-height:1}
+.cmp{display:grid;gap:24px;grid-template-columns:1fr}
+@media(min-width:840px){.cmp{grid-template-columns:minmax(260px,380px) 1fr}}
+.prints{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.overlay{width:100%;max-width:380px;height:auto;display:block;margin:0 auto}
+.keyline{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:6px}
+.keyline span{display:flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--bone2)}
+.prints figure{margin:0;text-align:center}
+.prints figcaption{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--bone2);margin-top:4px}
+.ctable{width:100%;min-width:440px;border-collapse:collapse;font-size:13.5px}
+.ctable th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--bone3);font-weight:400;padding:10px 12px 10px 0;vertical-align:top;width:104px;border-bottom:1px solid var(--line)}
+.ctable td{padding:10px 12px 10px 0;vertical-align:top;border-bottom:1px solid var(--line);color:var(--bone)}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(10,8,6,.62);opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:70;background:var(--panel);border-left:1px solid var(--line);top:0;right:0;bottom:0;width:min(450px,93vw);transform:translateX(103%);transition:transform .26s cubic-bezier(.2,.7,.3,1);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.drawer.on{transform:none}
+@media(max-width:640px){.drawer{top:auto;left:0;width:100%;height:88vh;border-left:0;border-top:1px solid var(--line);border-radius:12px 12px 0 0;transform:translateY(103%)}}
+.din{padding:20px 22px 60px}
+.dclose{position:sticky;top:0;float:right;width:31px;height:31px;border:1px solid var(--line);border-radius:50%;background:var(--panel);font-size:15px}
+.dname{font-size:31px;line-height:1.06;margin:6px 0 3px}
+.dorigin{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.09em;color:var(--bone3)}
+.dprint{display:flex;justify-content:center;padding:14px 0 6px}
+.dsect{margin:16px 0}
+.dsect h5{margin:0 0 4px;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone3);font-weight:400}
+.dsect p{margin:0;font-size:14.5px}
+.look{border-left:2px solid var(--fire);padding-left:12px}
+.fail{border-left:2px solid var(--line);padding-left:12px;color:var(--bone2)}
+.teaches{font-family:"Bodoni Moda",Georgia,serif;font-size:19px;line-height:1.35;font-style:italic;color:var(--bone)}
+.tastebars{margin:14px 0}
+.tbar{display:grid;grid-template-columns:52px 1fr 16px;gap:9px;align-items:center;margin-bottom:5px}
+.tbar span:first-child{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone2)}
+.tbar .trk{height:7px;display:flex;gap:2px}
+.tbar .trk i{flex:1;border-radius:1px;background:var(--panel2)}
+.tbar .trk i.on{background:var(--bone2)}
+.tbar .v{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--bone3)}
+.seesaw{border:1px solid var(--line);border-radius:var(--r);padding:12px 13px;margin:14px 0}
+.seesaw .row{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone3);margin-bottom:6px}
+.seesaw .beam{height:10px;display:flex;border-radius:2px;overflow:hidden;background:var(--panel2)}
+.seesaw .beam i:first-child{background:var(--fire);opacity:.85}
+.seesaw .beam i:last-child{background:var(--water);opacity:.85}
+.seesaw .verdict{font-size:13px;color:var(--bone2);margin:8px 0 0}
+.texchips i{font-style:normal;display:inline-block;border:1px solid var(--line);border-radius:99px;padding:2px 9px;font-size:12.5px;color:var(--bone2);margin:0 4px 4px 0}
+footer{border-top:1px solid var(--line);margin-top:20px}
+footer .wrap{padding:26px 20px 56px;color:var(--bone3);font-size:12.5px}
+footer p{max-width:72ch;margin:0 0 9px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="wrap masthead">
+  <p class="eyebrow">A working atlas of flavour</p>
+  <h1>How to <i>taste</i></h1>
+  <p class="thesis">Taste is not a gift you are born with or without. It is a vocabulary, a set of things to notice, and the habit of asking what a dish is doing. Everything here is meant to be used at the table.</p>
+  <p class="eyebrow" id="counts" style="margin-top:14px"></p>
+
+  <section class="finder">
+    <h2>Start here: something tastes off. Which is it?</h2>
+    <div class="faults" id="faults" role="group" aria-label="Common faults"></div>
+    <div class="answer" id="answer" aria-live="polite"><p class="idle">Pick a fault. Nearly every disappointing plate is one of these eight, and each has a specific fix &mdash; that is the whole trick.</p></div>
+  </section>
+</header>
+
+<nav class="tabbar"><div class="wrap" role="tablist" id="tabs">
+  <button class="tab" role="tab" id="t-levers" aria-controls="v-levers" data-v="levers" aria-selected="true">Ten levers</button>
+  <button class="tab" role="tab" id="t-forces" aria-controls="v-forces" data-v="forces" aria-selected="false" tabindex="-1">How it's made</button>
+  <button class="tab" role="tab" id="t-balance" aria-controls="v-balance" data-v="balance" aria-selected="false" tabindex="-1">Balance</button>
+  <button class="tab" role="tab" id="t-words" aria-controls="v-words" data-v="words" aria-selected="false" tabindex="-1">Words</button>
+  <button class="tab" role="tab" id="t-training" aria-controls="v-training" data-v="training" aria-selected="false" tabindex="-1">Training</button>
+  <button class="tab" role="tab" id="t-compare" aria-controls="v-compare" data-v="compare" aria-selected="false" tabindex="-1">Compare</button>
+</div></nav>
+
+<main class="wrap">
+  <section class="view on" id="v-levers" role="tabpanel" aria-labelledby="t-levers" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">The controls</p>
+      <h2>Everything you taste is <i>ten levers</i> in some combination</h2>
+      <p>Five of them are tastes proper, detected on the tongue. The rest are sensations the brain files under flavour anyway: fat, burn, smell, texture, temperature. A cook adjusts these; an eater learns to hear them separately. Learn to ask which lever is pulled hard, and which one is missing.</p>
+    </div>
+    <div class="levers" id="levers"></div>
+  </section>
+
+  <section class="view" id="v-forces" role="tabpanel" aria-labelledby="t-forces" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Taxonomy</p>
+      <h2>Four forces make <i>every</i> flavour there is</h2>
+      <p>Classifying food by country tells you where it was eaten, not what it tastes like. Classify instead by what was done to it. Flavour comes from time, from water, from fire, or from the hand &mdash; and the dishes people rate highest almost always stack two or three of those forces on one plate. Each dish below shows its main force, with dots for the others it borrows.</p>
+    </div>
+    <div class="legend" id="forcelegend"></div>
+    <div class="controls"><div class="ctl"><label for="dishsearch">Find a dish</label><input type="text" id="dishsearch" class="searchbox" placeholder="ceviche, brisket, croissant&hellip;" autocomplete="off"></div></div>
+    <div id="forces"></div>
+  </section>
+
+  <section class="view" id="v-balance" role="tabpanel" aria-labelledby="t-balance" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">The central tension</p>
+      <h2>Richness has to be <i>paid for</i></h2>
+      <p>The oldest rule in cooking is that fat needs acid. Fat coats the tongue and dulls it; acid strips it clean and resets the palate for the next bite. Plot the two against each other and the food you keep going back to sits on the diagonal &mdash; every gain in richness matched by something sharp. The corners are where dishes fail, and each corner fails in its own recognisable way.</p>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="bx">Horizontal</label><select id="bx"></select></div>
+      <div class="ctl"><label for="by">Vertical</label><select id="by"></select></div>
+      <div class="ctl"><label for="bf">Show</label><select id="bf"><option value="all">All four forces</option><option value="time">Time</option><option value="water">Water</option><option value="fire">Fire</option><option value="hand">Hand</option></select></div>
+    </div>
+    <svg class="plot" id="plot" viewBox="0 0 400 400" role="img" aria-label="Plot of dishes by two flavour axes"></svg>
+    <p class="hint" id="plothint"></p>
+  </section>
+
+  <section class="view" id="v-words" role="tabpanel" aria-labelledby="t-words" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Vocabulary</p>
+      <h2>Words that <i>do work</i></h2>
+      <p>Vague praise is the enemy of a developing palate: if the best you can say is "amazing", you cannot tell tomorrow what you liked. These are the terms worth owning, each with the case it actually fits and the near-neighbour people mix it up with. Use one precise word and the memory sticks.</p>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="wordsearch">Search</label><input type="text" id="wordsearch" class="searchbox" placeholder="unctuous, koku, finish&hellip;" autocomplete="off"></div>
+      <div class="ctl"><label for="wordcat">Describes</label><select id="wordcat"></select></div>
+    </div>
+    <div class="wordgrid" id="words"></div>
+  </section>
+
+  <section class="view" id="v-training" role="tabpanel" aria-labelledby="t-training" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Practice</p>
+      <h2>A palate is <i>trained</i>, not issued</h2>
+      <p>Three things move it: paying attention in a fixed order so nothing gets skipped, tasting things side by side so differences have something to be different from, and climbing gradually into flavours that are unpleasant at first and load-bearing later.</p>
+    </div>
+    <div class="tsect">
+      <h3>The order of attention</h3>
+      <p class="intro">Run this on one dish per meal. It takes fifteen seconds and it is the entire difference between eating and tasting.</p>
+      <ol class="steps" id="protocol"></ol>
+    </div>
+    <div class="tsect">
+      <h3>Calibration drills</h3>
+      <p class="intro">Each one is a side-by-side comparison you can run at home for the price of a few ingredients. Tasting one thing teaches you almost nothing; tasting two things that differ in exactly one way teaches you that one thing permanently.</p>
+      <div class="drills" id="drills"></div>
+    </div>
+    <div class="tsect">
+      <h3>At the table</h3>
+      <p class="intro">Most eating happens in restaurants, where you are choosing rather than cooking. These are the moves that turn a meal into information.</p>
+      <div class="drills" id="tabletips"></div>
+    </div>
+    <div class="tsect">
+      <h3>Climbing into acquired tastes</h3>
+      <p class="intro">Bitterness, funk and burn are defensive reflexes &mdash; the body reading possible poison. Tolerance is built by repeated safe exposure, in order, which is why these are numbered. Each rung should stop being difficult before you step to the next.</p>
+      <div class="ladders" id="ladders"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-compare" role="tabpanel" aria-labelledby="t-compare" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Side by side</p>
+      <h2>Two dishes, <i>one difference</i></h2>
+      <p>The useful comparisons isolate a single variable: the same broth clear or emulsified (phở against tonkotsu), the same fish raw or cured (ōtoro against salt-cured anchovy), the same sugar sweet or burnt (gelato against crème brûlée).</p>
+    </div>
+    <div class="picker"><input type="text" id="cin" class="searchbox" placeholder="Add a dish&hellip;" autocomplete="off" aria-label="Add a dish to compare"><div class="sugg" id="csugg"></div></div>
+    <div class="picked" id="cpicked"></div>
+    <div class="cmp">
+      <div><svg class="overlay" id="coverlay" viewBox="0 0 264 216" role="img" aria-label="Overlaid taste-prints of the selected dishes"></svg><p class="hint" id="ckey"></p></div>
+      <div class="scrollx"><table class="ctable" id="ctable"></table></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p><b>On the numbers.</b> Every dish is scored 0&ndash;5 on eight axes. The scores describe a good, standard version of the dish as it is normally served, not the most extreme example that exists — regional versions and individual cooks move them around. They are for comparison between dishes, not measurement.</p>
+  <p><b>On authority.</b> Nothing here is a ruling about what is good. Balance, contrast and restraint are near-universal in dishes that people return to, but the pleasure of a food is not a property of the food alone: it is the food plus your history with it. Use the vocabulary to describe your own taste more precisely, not to overrule it.</p>
+  <p><b>On the acquired tastes.</b> Bitter, funky and burning foods are learned, and the learning is real — repeated exposure measurably shifts what registers as pleasant. But there is no obligation to climb any of these ladders. Preferring mild food is not an unfinished palate.</p>
+</div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Dish detail"><div class="din" id="din"></div></aside>
+<script>
+const AX = [["sw","Sweet"],["sa","Salt"],["fa","Fat"],["um","Umami"],["bi","Bitter"],["ar","Aroma"],["so","Sour"],["he","Heat"]];
+
+const FORCES = [
+  {id:"time", n:"Time", sub:"microbes, enzymes, salt, patience",
+   def:"Flavour made by leaving things alone under control. Bacteria, moulds and the food's own enzymes break big flavourless molecules into small loud ones: amino acids for savour, acids for tang, esters for perfume. Nothing you can do in a pan produces what a year produces."},
+  {id:"water", n:"Water", sub:"stock, braise, steam, simmer",
+   def:"Flavour moved rather than made. Water below boiling extracts what is inside ingredients and redistributes it, dissolves collagen into gelatin, and cooks gently enough that things still taste of themselves. This is the force behind clarity and depth without any browning at all."},
+  {id:"fire", n:"Fire", sub:"browning, caramel, char, smoke",
+   def:"Flavour invented by heat. Above about 140C sugars and amino acids collide into hundreds of new compounds that existed nowhere in the raw ingredient — roast, toast, malt, crust, char. It is the biggest single lever in cooking and the easiest to overrun."},
+  {id:"hand", n:"Hand", sub:"cutting, emulsion, seasoning, contrast",
+   def:"Flavour arranged rather than transformed. Choosing the ingredient, cutting it a certain way, binding fat and water into one sauce, putting something sharp beside something rich. No chemistry required, and nowhere to hide: this force depends entirely on the quality of what went in."}
+];
+
+const FAMS = {
+  cure:{f:"time",n:"Curing and drying",d:"Salt pulls out water, concentrates everything left, and buys years for enzymes to work."},
+  lactic:{f:"time",n:"Lactic fermentation",d:"Salt-tolerant bacteria turn sugars into lactic acid: sour, alive, faintly fizzy."},
+  koji:{f:"time",n:"Mould and koji ferments",d:"Deliberate moulds break protein into free amino acids — the deepest savour available to cooking."},
+  age:{f:"time",n:"Ageing",d:"Enzymes working slowly on protein and fat, in cheese caves and meat lockers."},
+  pickle:{f:"time",n:"Pickling and preserving in acid",d:"Sourness added rather than grown, plus crunch held in suspension."},
+  stock:{f:"water",n:"Stock and broth",d:"Extraction: the flavour of many things dissolved into one liquid."},
+  braise:{f:"water",n:"Braising and stewing",d:"Long, low, partly submerged — tough cuts turned to gelatin and sauce."},
+  steam:{f:"water",n:"Steaming",d:"Cooking in vapour: nothing washed away, nothing browned, texture preserved exactly."},
+  simmer:{f:"water",n:"Simmering",d:"Ingredients cooked in the liquid they will be served in, so nothing is lost."},
+  infuse:{f:"water",n:"Infusion",d:"Water pulled through leaves or grounds, extracting some compounds and not others."},
+  grill:{f:"fire",n:"Grill and char",d:"Direct radiant heat: surface browning fast enough that the inside stays juicy."},
+  roast:{f:"fire",n:"Roasting",d:"Dry ambient heat that browns the outside while cooking through."},
+  fry:{f:"fire",n:"Frying",d:"Hot fat as the medium — the fastest, most even browning there is, and the crispest."},
+  bake:{f:"fire",n:"Baking and crust",d:"Dough set by heat, with the crust as a separate ingredient from the crumb."},
+  caramel:{f:"fire",n:"Caramel and sugar work",d:"Sugar taken past sweet into bitter, which is where sweetness gets interesting."},
+  wok:{f:"fire",n:"Wok and high heat",d:"Extreme heat, constant motion, seconds not minutes; browning without stewing."},
+  smoke:{f:"fire",n:"Smoke",d:"Aroma compounds from burning wood deposited on the surface over hours."},
+  raw:{f:"hand",n:"Raw and sliced",d:"No transformation at all: the ingredient, the knife, and the seasoning."},
+  emulsion:{f:"hand",n:"Emulsion and binding",d:"Fat and water forced into one stable, glossy thing that coats the tongue."},
+  pound:{f:"hand",n:"Pounding and pastes",d:"Cell walls broken to release aromatics, then bound into a paste that carries them."},
+  assemble:{f:"hand",n:"Assembly and contrast",d:"Dishes whose whole argument is the collision of separate parts."},
+  chill:{f:"hand",n:"Chilling and freezing",d:"Cold as a texture technique, and as a mute button on aroma and sweetness."},
+  season:{f:"hand",n:"Seasoning and condiment",d:"Things that exist only to be added to other things."}
+};
+
+const D = [
+// ================= TIME =================
+{id:"jamon",n:"Jamón ibérico de bellota",aka:"acorn-fed Iberian ham",o:"Spain",force:"time",fam:"cure",also:[],course:"start",
+ t:{sw:1,sa:3,fa:4,um:5,bi:0,ar:4,so:0,he:0},tex:["silky","melting","fibrous"],contrast:1,weight:3,acq:1,
+ what:"A pig's hind leg salted and hung for three to four years until the fat is unsaturated enough to melt at body heat.",
+ look:"Cut thin enough to read through, served at room temperature. The fat should turn translucent and disappear on your tongue within seconds, leaving nutty, almost sweet savour. If it is cold it will taste of nothing but salt.",
+ fail:"Refrigerated, sliced thick, or over-salted — the fat stays waxy and the meat reads as jerky.",
+ teaches:"Fat is a flavour carrier, and temperature decides whether it works.",next:["parmigiano","anchovy"]},
+{id:"anchovy",n:"Salt-cured anchovy",aka:"boquerón, alici",o:"Mediterranean",force:"time",fam:"cure",also:[],course:"season",
+ t:{sw:0,sa:5,fa:2,um:5,bi:0,ar:3,so:1,he:0},tex:["soft","yielding"],contrast:1,weight:2,acq:3,
+ what:"Small oily fish packed in salt for months until the flesh breaks down into pure savour.",
+ look:"A good one is firm, rose-brown, and tastes of the sea rather than of fish; melted into hot oil it should vanish completely and leave the dish savoury with no fishiness detectable at all.",
+ fail:"Grey, mushy and aggressively fishy — a sign of poor fish or a rushed cure.",
+ teaches:"Umami can be invisible: you notice its absence, not its presence.",next:["fish-sauce","parmigiano"]},
+{id:"sourdough",n:"Sourdough bread",aka:"pain au levain",o:"worldwide",force:"time",fam:"lactic",also:["fire"],course:"base",
+ t:{sw:1,sa:2,fa:1,um:2,bi:1,ar:3,so:2,he:0},tex:["crisp","chewy","open","shattering"],contrast:4,weight:3,acq:1,
+ what:"Flour and water fermented by wild yeast and lactic bacteria, then baked hot enough to build a real crust.",
+ look:"Crackle when you squeeze it. A deep mahogany crust with blistering, a crumb that is irregular and translucent-looking rather than fluffy and white, and a sourness that arrives late and mild. Should taste of wheat first, sour second.",
+ fail:"Pale soft crust, uniform bubbles, and a vinegary sharpness up front — over-fermented, under-baked, or just yeasted bread with sour flavouring.",
+ teaches:"The crust and the crumb are two ingredients, not one.",next:["baguette","croissant"]},
+{id:"kimchi",n:"Kimchi",aka:"baechu-kimchi",o:"Korea",force:"time",fam:"lactic",also:[],course:"side",
+ t:{sw:1,sa:3,fa:0,um:4,bi:0,ar:4,so:4,he:3},tex:["crunchy","juicy","yielding"],contrast:3,weight:2,acq:2,
+ what:"Salted cabbage packed with chilli, garlic, ginger and salted seafood, then left to sour.",
+ look:"The leaf should still snap at the stem end after weeks. Sourness, chilli warmth, garlic and a low seafood savour should read as one thing rather than four. Fresh kimchi is crisp and bright; old kimchi turns soft, sharply sour and is meant for cooking.",
+ fail:"Limp, flat-tasting and only hot — salt too low, or chilli used to cover a ferment that never happened.",
+ teaches:"Sourness that grew is rounder than sourness that was added.",next:["tsukemono","stinky-tofu"]},
+{id:"miso-soup",n:"Miso soup",aka:"misoshiru",o:"Japan",force:"time",fam:"koji",also:["water"],course:"start",
+ t:{sw:1,sa:3,fa:0,um:5,bi:0,ar:2,so:0,he:0},tex:["silky","clouded"],contrast:2,weight:1,acq:1,
+ what:"Dashi seasoned with fermented soybean paste, never boiled after the miso goes in.",
+ look:"Cloudy but not muddy, gently steaming rather than hot. Taste it with your eyes closed: you should find sea, then a slow sweetness, then savour that keeps going after you swallow. It should taste rounder and less salty than it smells.",
+ fail:"Boiled after adding miso — the aroma flashes off and what remains is salty and slightly harsh.",
+ teaches:"Heat destroys the aromatics of a ferment; add it last.",next:["dashi","natto"]},
+{id:"natto",n:"Nattō",aka:"fermented soybeans",o:"Japan",force:"time",fam:"koji",also:[],course:"side",
+ t:{sw:0,sa:1,fa:1,um:5,bi:2,ar:5,so:0,he:0},tex:["sticky","stringy","slippery","firm"],contrast:2,weight:2,acq:5,
+ what:"Soybeans fermented with a bacillus that turns them sticky, stringy and enormously savoury.",
+ look:"Stir it hard until the threads turn white and foamy — that aeration is the point, and it softens the ammonia note. Beans should stay whole and firm. The flavour underneath the smell is nutty and deeply meaty.",
+ fail:"Cold, unstirred and eaten alone, where the ammonia dominates. Old natto turns bitter and genuinely unpleasant.",
+ teaches:"Some flavours are gated behind a texture you must get used to first.",next:["stinky-tofu","century-egg"]},
+{id:"stilton",n:"Blue cheese",aka:"Stilton, Roquefort, Gorgonzola",o:"Britain, France, Italy",force:"time",fam:"age",also:[],course:"end",
+ t:{sw:1,sa:4,fa:5,um:5,bi:2,ar:5,so:1,he:0},tex:["creamy","crumbly","granular"],contrast:3,weight:4,acq:4,
+ what:"Cheese deliberately colonised by penicillium mould, which digests fat into sharp, peppery compounds.",
+ look:"Blue veining should be evenly spread, the paste ivory rather than chalk-white, and the texture creamy at the edges. Salt, fat and the metallic bite of the mould should arrive in that order. Serve at room temperature or you will taste only salt.",
+ fail:"Fridge-cold, waxy, and burning at the back of the throat with ammonia — over-aged or badly wrapped.",
+ teaches:"Strong flavour needs a foil: sweetness, or plain bread, or a sweet wine.",next:["parmigiano","dark-chocolate"]},
+{id:"parmigiano",n:"Parmigiano Reggiano",aka:"aged 30 months",o:"Emilia, Italy",force:"time",fam:"age",also:[],course:"season",
+ t:{sw:1,sa:4,fa:4,um:5,bi:0,ar:4,so:1,he:0},tex:["granular","crystalline","brittle"],contrast:3,weight:3,acq:1,
+ what:"Cow's milk cheese aged two to four years until amino acids crystallise inside it.",
+ look:"Crunch. Those white crystals are tyrosine, and they should crackle between the teeth — the single best marker of real age. Flavour should be pineapple-bright at the front, then broth-like and long. Snap a piece off rather than slicing it.",
+ fail:"Rubbery, uniformly pale, and only salty — young cheese sold as old, or pre-grated and oxidised.",
+ teaches:"Crystals mean time. You can hear the age before you taste it.",next:["jamon","dashi"]},
+{id:"dry-aged-steak",n:"Dry-aged beef",aka:"45-day ribeye",o:"USA, Britain",force:"time",fam:"age",also:["fire"],course:"main",
+ t:{sw:1,sa:3,fa:5,um:5,bi:1,ar:4,so:0,he:0},tex:["tender","juicy","crusted"],contrast:4,weight:5,acq:2,
+ what:"Beef hung in cold dry air for weeks: moisture leaves, enzymes tenderise, and the surface develops a funk that is trimmed away.",
+ look:"A dark, dry, deeply browned crust against a rosy interior with no grey band between them. The flavour should be nutty and faintly cheesy, closer to blue cheese than to fresh beef. It should need salt and nothing else.",
+ fail:"Sauced heavily, cooked past medium, or aged wet in plastic and sold as dry — the funk is missing and only chew remains.",
+ teaches:"Ageing trades juiciness for concentration. That is the deal.",next:["stilton","picanha"]},
+{id:"fish-sauce",n:"Fish sauce",aka:"nước mắm, nam pla",o:"Southeast Asia",force:"time",fam:"koji",also:[],course:"season",
+ t:{sw:1,sa:5,fa:0,um:5,bi:0,ar:5,so:0,he:0},tex:["thin"],contrast:1,weight:1,acq:3,
+ what:"Anchovies and salt in a barrel for a year; the liquid that drains off is almost pure amino acid.",
+ look:"First-press sauce is clear amber-brown, not muddy black, and smells sharp in the bottle but disappears into a dish. A teaspoon in a stew should make everything taste more like itself without tasting of fish.",
+ fail:"Cheap sauce cut with hydrolysed protein and caramel colour — flat, chemically salty, and it stays fishy in the finished dish.",
+ teaches:"The best seasonings are undetectable in the result.",next:["som-tam","anchovy"]},
+{id:"century-egg",n:"Century egg",aka:"pídàn",o:"China",force:"time",fam:"cure",also:[],course:"start",
+ t:{sw:0,sa:3,fa:3,um:5,bi:1,ar:5,so:0,he:0},tex:["gelatinous","creamy","dense"],contrast:3,weight:2,acq:5,
+ what:"An egg cured in an alkaline clay mix for weeks, which sets the white to dark jelly and the yolk to soft grey-green cream.",
+ look:"The white should be amber and translucent with pine-branch crystal patterns, and the yolk should be creamy at the centre, not chalky. Ammonia should be a background note, not the headline. Eaten with pickled ginger and cold tofu, which cut it precisely.",
+ fail:"Overwhelming ammonia and a rubbery white: over-cured, or too old.",
+ teaches:"Alkalinity is a fifth way to transform food, alongside heat, acid, salt and microbes.",next:["natto","stinky-tofu"]},
+{id:"yoghurt",n:"Thick yoghurt",aka:"labneh, Greek-style",o:"Levant, Balkans",force:"time",fam:"lactic",also:[],course:"side",
+ t:{sw:1,sa:1,fa:4,um:1,bi:0,ar:1,so:3,he:0},tex:["creamy","thick","cooling"],contrast:1,weight:2,acq:1,
+ what:"Milk soured by bacteria until the protein sets, then often strained to concentrate it.",
+ look:"It should be tart but clean, with no chalkiness and no gritty edge, and it should cling to a spoon rather than pour. Full-fat yoghurt tastes sweeter than low-fat at identical acidity, because fat mutes sourness.",
+ fail:"Thickened with starch or gums instead of straining — the texture is smooth but the taste is flat and the mouthfeel goes slimy.",
+ teaches:"Fat and acid regulate each other in both directions.",next:["kimchi","panna-cotta"]},
+{id:"tsukemono",n:"Japanese pickles",aka:"tsukemono",o:"Japan",force:"time",fam:"pickle",also:[],course:"side",
+ t:{sw:1,sa:3,fa:0,um:2,bi:0,ar:2,so:3,he:0},tex:["crunchy","crisp","firm"],contrast:4,weight:1,acq:1,
+ what:"Vegetables preserved briefly in salt, rice bran, vinegar or miso, and served in small quantities to reset the mouth.",
+ look:"Loud crunch, restrained flavour. They exist to interrupt rice and fat, so the salt and acid should be noticeable but brief, with no lingering sweetness. Colour should look like the vegetable, not like dye.",
+ fail:"Neon yellow, sugary and soft — factory pickles built for shelf life.",
+ teaches:"A palate cleanser is a structural component of a meal, not a garnish.",next:["kimchi","nigiri"]},
+{id:"dark-chocolate",n:"Single-origin dark chocolate",aka:"70% bar",o:"Ecuador, Madagascar, Ghana",force:"time",fam:"koji",also:["fire"],course:"end",
+ t:{sw:2,sa:0,fa:5,um:1,bi:4,ar:5,so:2,he:0},tex:["brittle","melting","smooth"],contrast:3,weight:3,acq:3,
+ what:"Cacao beans fermented in their own pulp for days, dried, roasted, and ground fine with sugar.",
+ look:"A clean snap at room temperature and a glossy break. It should melt smoothly with no waxiness, and the flavour should move: fruit or flowers first, then roast, then a bitterness that fades cleanly. Madagascan tastes of red fruit and citrus; Ghanaian of malt and earth.",
+ fail:"A dusty, flat bitterness with no aroma and a greasy melt — poor fermentation on the farm, then over-roasting to hide it.",
+ teaches:"Almost everything people call chocolate flavour was made by fermentation, before any roasting.",next:["espresso","red-wine"]},
+{id:"red-wine",n:"Red wine",aka:"—",o:"worldwide",force:"time",fam:"lactic",also:[],course:"drink",
+ t:{sw:1,sa:0,fa:0,um:2,bi:2,ar:5,so:3,he:1},tex:["drying","astringent","smooth"],contrast:2,weight:3,acq:3,
+ what:"Grape juice fermented with skins, which contribute colour, tannin and most of the aroma.",
+ look:"Notice the drying grip on your gums after you swallow — that is tannin, not bitterness, and it is what makes wine work with fatty food. Acidity should make you salivate. Alcohol should feel warm, not hot.",
+ fail:"Jammy sweetness with no acid and soft tannin: pleasant alone, useless with food, tiring by the third glass.",
+ teaches:"Astringency is a texture, not a taste.",next:["dark-chocolate","stilton"]},
+{id:"stinky-tofu",n:"Stinky tofu",aka:"chòu dòufu",o:"China, Taiwan",force:"time",fam:"lactic",also:["fire"],course:"snack",
+ t:{sw:1,sa:3,fa:3,um:5,bi:1,ar:5,so:2,he:3},tex:["crisp","molten","soft"],contrast:5,weight:3,acq:5,
+ what:"Tofu steeped in a fermented brine until it is powerfully aromatic, then usually deep-fried.",
+ look:"The smell and the taste are almost unrelated: fried well, the crust is crisp and clean and the inside is mild, custardy and savoury. Served with pickled cabbage and chilli, which are doing structural work, not decoration.",
+ fail:"Soggy crust, so the brine seeps and the aroma stops being contained by texture.",
+ teaches:"Aroma and taste can point in completely opposite directions.",next:["natto","century-egg"]},
+
+// ================= WATER =================
+{id:"dashi",n:"Dashi",aka:"ichiban dashi",o:"Japan",force:"water",fam:"stock",also:["time"],course:"base",
+ t:{sw:1,sa:1,fa:0,um:5,bi:0,ar:3,so:0,he:0},tex:["clean","thin"],contrast:1,weight:1,acq:1,
+ what:"Kelp steeped below a simmer, then smoked-and-fermented bonito flakes steeped for less than a minute.",
+ look:"Pale gold and completely clear. It should smell faintly of the sea and taste of almost nothing for a second, then flood the whole mouth with savour that lasts far longer than the sip did. That delayed arrival is the mark of glutamate and inosinate working together.",
+ fail:"Boiled kombu makes it slimy and bitter; over-steeped bonito makes it sour and fishy. Both faults are irreversible.",
+ teaches:"Umami is measured by how long it stays, not how loud it starts.",next:["miso-soup","tonkotsu"]},
+{id:"tonkotsu",n:"Tonkotsu ramen",aka:"pork bone ramen",o:"Fukuoka, Japan",force:"water",fam:"stock",also:["time","fire"],course:"main",
+ t:{sw:1,sa:4,fa:5,um:5,bi:0,ar:4,so:0,he:1},tex:["unctuous","springy","chewy"],contrast:4,weight:5,acq:2,
+ what:"Pork bones boiled hard for a day until fat and collagen emulsify into the water and turn it opaque.",
+ look:"The broth should coat your lips and cling to the spoon, and should taste of pork rather than of salt — the salt lives in the tare at the bottom of the bowl. Noodles must be firm enough to resist. Pickled ginger and spring onion are there to cut the fat; use them.",
+ fail:"Thin greyish broth with a fat slick floating separately on top: the emulsion broke or never formed.",
+ teaches:"An emulsified broth is a different substance from a clear one.",next:["pho","dashi"]},
+{id:"pho",n:"Phở bò",aka:"Vietnamese beef noodle soup",o:"Vietnam",force:"water",fam:"stock",also:["hand","fire"],course:"main",
+ t:{sw:2,sa:3,fa:2,um:5,bi:0,ar:5,so:1,he:1},tex:["slippery","tender","clean"],contrast:4,weight:3,acq:1,
+ what:"Beef bones simmered gently for hours with charred ginger and onion and whole warm spices, kept clear.",
+ look:"You should be able to see the bottom of the bowl. Smell it before adding anything: star anise, cinnamon and charred onion should be present but behind the beef. Herbs, lime and chilli go in a few at a time, because the point is to change the bowl as you eat it.",
+ fail:"Cloudy, greasy, and tasting mainly of spice — boiled too hard, or built on powder.",
+ teaches:"Clarity is a flavour decision, not just an appearance.",next:["tonkotsu","hainanese-chicken"]},
+{id:"french-onion",n:"French onion soup",aka:"soupe à l'oignon gratinée",o:"France",force:"water",fam:"stock",also:["fire"],course:"start",
+ t:{sw:3,sa:3,fa:4,um:4,bi:1,ar:3,so:1,he:0},tex:["soft","stringy","soggy","molten"],contrast:3,weight:4,acq:1,
+ what:"Onions cooked down for an hour until they caramelise, then simmered in beef stock under melted cheese and bread.",
+ look:"The colour of the broth tells you how long the onions were cooked: mahogany, not tan. It should taste sweet first and savoury second, with a bitter edge from the browning that stops the sweetness from cloying. A splash of wine or sherry at the end is what keeps it from being heavy.",
+ fail:"Pale, salty and one-dimensional — onions sweated rather than caramelised, then covered with stock cube.",
+ teaches:"Caramelised sugars bring bitterness with them, and the bitterness is the useful part.",next:["boeuf-bourguignon","tarte-tatin"]},
+{id:"boeuf-bourguignon",n:"Bœuf bourguignon",aka:"beef braised in red wine",o:"Burgundy, France",force:"water",fam:"braise",also:["fire","time"],course:"main",
+ t:{sw:2,sa:3,fa:4,um:5,bi:1,ar:4,so:2,he:0},tex:["tender","gelatinous","glossy"],contrast:2,weight:5,acq:1,
+ what:"Beef browned hard, then cooked for hours in red wine and stock until the connective tissue becomes sauce.",
+ look:"The meat should give to a spoon but still hold its shape, not shred into threads. The sauce should be glossy and cling — that shine is dissolved collagen, not butter — and the wine should read as depth and faint sourness, never as raw alcohol.",
+ fail:"Dry meat in thin liquid: cooked too hot, so the muscle squeezed out its water before the collagen had time to melt.",
+ teaches:"Slow braising is a race between collagen melting and muscle drying.",next:["osso-buco","birria"]},
+{id:"osso-buco",n:"Osso buco alla milanese",aka:"braised veal shank",o:"Lombardy, Italy",force:"water",fam:"braise",also:["hand"],course:"main",
+ t:{sw:1,sa:3,fa:4,um:5,bi:0,ar:4,so:2,he:0},tex:["tender","gelatinous","unctuous"],contrast:3,weight:5,acq:2,
+ what:"Cross-cut veal shank braised with wine and stock, finished with a raw lemon-zest-garlic-parsley gremolata.",
+ look:"The marrow in the centre of the bone should be soft enough to spoon out — that is the dish's name and its point. Judge the gremolata: scattered on at the last second, it should hit the nose as citrus and cut a very rich braise in half. Cooked into the dish, it does nothing.",
+ fail:"No gremolata, or added early — the braise becomes heavy and monotone with nothing to lift it.",
+ teaches:"A raw aromatic added at the end is a structural counterweight.",next:["boeuf-bourguignon","dal-tadka"]},
+{id:"birria",n:"Birria",aka:"—",o:"Jalisco, Mexico",force:"water",fam:"braise",also:["fire"],course:"main",
+ t:{sw:2,sa:4,fa:5,um:5,bi:2,ar:5,so:2,he:3},tex:["tender","juicy","crisp"],contrast:5,weight:5,acq:2,
+ what:"Goat or beef braised in a paste of toasted dried chillies and spices, served with the strained broth for dipping.",
+ look:"The consommé on the side should be deep red with a layer of chilli-stained fat on top, and taste smoky-fruity rather than merely hot. Dried chillies give raisin, cocoa and tobacco notes; if all you can taste is burn, the chillies were scorched during toasting.",
+ fail:"Bitter, acrid broth from over-toasted chillies, or an orange grease slick with no depth beneath.",
+ teaches:"Dried chillies are a fruit ingredient first and a heat source second.",next:["mole","boeuf-bourguignon"]},
+{id:"hainanese-chicken",n:"Hainanese chicken rice",aka:"—",o:"Hainan, Singapore, Malaysia",force:"water",fam:"steam",also:["hand"],course:"main",
+ t:{sw:1,sa:3,fa:4,um:4,bi:0,ar:4,so:1,he:2},tex:["silky","gelatinous","tender"],contrast:3,weight:3,acq:2,
+ what:"A whole chicken poached just below a simmer and plunged into ice, served with rice cooked in its fat and stock.",
+ look:"A layer of set jelly between the skin and the flesh — that is the proof of gentle poaching and a cold shock, and it is the whole dish. Meat should be barely opaque at the bone. The rice should be distinctly greasy and fragrant with ginger and pandan, and the chilli-ginger sauce sharp enough to cut both.",
+ fail:"Chicken boiled hard: no jelly, dry breast, and rice that tastes of plain stock.",
+ teaches:"Restraint of heat is a technique in its own right.",next:["congee","pho"]},
+{id:"xiao-long-bao",n:"Xiǎolóngbāo",aka:"soup dumplings",o:"Shanghai, China",force:"water",fam:"steam",also:["hand"],course:"start",
+ t:{sw:2,sa:3,fa:4,um:5,bi:0,ar:3,so:2,he:0},tex:["slippery","tender","molten","chewy"],contrast:4,weight:3,acq:1,
+ what:"Pork filling and set aspic wrapped in a thin skin; the jelly melts into soup while it steams.",
+ look:"Count the pleats — eighteen or more is the traditional marker of a skilled hand — and check that the skin is translucent but not torn under the weight of the soup. The soup inside should be rich but clear, and there should be enough to matter. Vinegar and ginger on the side are compulsory, not optional.",
+ fail:"Thick doughy skin, or no soup at all because the aspic was skimped or the dumpling was over-steamed.",
+ teaches:"Texture can be a container: the same broth in a bowl is a different dish.",next:["har-gow","chawanmushi"]},
+{id:"har-gow",n:"Har gow",aka:"prawn dumplings",o:"Guangdong, China",force:"water",fam:"steam",also:["hand"],course:"start",
+ t:{sw:2,sa:2,fa:2,um:4,bi:0,ar:2,so:0,he:0},tex:["springy","translucent","snappy","chewy"],contrast:4,weight:2,acq:1,
+ what:"Whole prawns wrapped in a wheat-starch skin that turns translucent when steamed.",
+ look:"The skin should be thin enough to see the pink through it, and should stretch rather than crack when lifted with chopsticks. The prawn must snap between the teeth — that bounce comes from a brief salt-and-alkaline cure, and its absence means the prawn was frozen and tired.",
+ fail:"Gummy, opaque wrapper and soft mushy prawn. Steamed too long, or made hours earlier.",
+ teaches:"Bounce in seafood is a sign of freshness and technique, not of rubberiness.",next:["xiao-long-bao","nigiri"]},
+{id:"chawanmushi",n:"Chawanmushi",aka:"savoury steamed custard",o:"Japan",force:"water",fam:"steam",also:[],course:"start",
+ t:{sw:1,sa:2,fa:2,um:5,bi:0,ar:2,so:0,he:0},tex:["silky","wobbling","barely-set"],contrast:2,weight:1,acq:2,
+ what:"Dashi and egg steamed gently until just set, with a few things hidden at the bottom of the cup.",
+ look:"A surface that trembles as a single sheet and a spoon that slips in with no resistance. There should be no bubbles or holes — those mean the steam was too hot — and the custard should taste of dashi, with the egg providing body and almost no flavour of its own.",
+ fail:"Curdled, weeping, honeycombed texture: too much heat, and the whole point of the dish is gone.",
+ teaches:"Texture alone can be the reason a dish exists.",next:["dashi","french-omelette"]},
+{id:"congee",n:"Congee",aka:"jūk, okayu",o:"China and East Asia",force:"water",fam:"simmer",also:[],course:"main",
+ t:{sw:1,sa:2,fa:2,um:3,bi:0,ar:2,so:0,he:1},tex:["creamy","smooth","soft"],contrast:4,weight:2,acq:1,
+ what:"Rice simmered with far too much water for hours until the grains dissolve into a savoury cream.",
+ look:"It should pour slowly and look glossy rather than watery or pasty, with no whole grains left standing. Almost all the flavour comes from what goes on top — fried shallots, century egg, ginger, crullers, white pepper — so judge the balance of the toppings as much as the base.",
+ fail:"Watery and grainy: too little time, or rice added to already-boiling water.",
+ teaches:"A neutral base makes contrast the entire flavour of a dish.",next:["hainanese-chicken","chawanmushi"]},
+{id:"green-curry",n:"Thai green curry",aka:"kaeng khiao wan",o:"Thailand",force:"water",fam:"simmer",also:["hand","fire"],course:"main",
+ t:{sw:3,sa:4,fa:5,um:5,bi:1,ar:5,so:2,he:4},tex:["creamy","tender","juicy"],contrast:3,weight:4,acq:2,
+ what:"A pounded paste of green chillies, galangal, lemongrass and shrimp paste fried in coconut cream, then loosened with coconut milk.",
+ look:"The paste should be fried until the coconut fat separates and turns green and glossy before any liquid goes in — that step is what makes the difference. The finished curry should be sweet, salty, hot and aromatic at once, with no one of the four winning, and it should smell of makrut lime and basil from a metre away.",
+ fail:"Thin, dull and merely hot, from paste boiled straight into milk without frying. Also too sweet, the common export failure.",
+ teaches:"Frying a spice paste in fat is what unlocks aroma; boiling it does not.",next:["laksa","mole"]},
+{id:"laksa",n:"Laksa lemak",aka:"curry laksa",o:"Malaysia, Singapore",force:"water",fam:"stock",also:["hand","fire"],course:"main",
+ t:{sw:2,sa:4,fa:5,um:5,bi:1,ar:5,so:2,he:4},tex:["unctuous","slippery","springy"],contrast:4,weight:5,acq:2,
+ what:"A rempah spice paste fried down, cut with coconut milk and prawn or fish stock, poured over noodles.",
+ look:"An orange oil slick on top is correct here — it is fried spice paste, and it carries the aroma. The broth should be thick enough to coat but not claggy, and shrimp paste should give a low funky bass note under the coconut. Lime and sambal on the side to sharpen it as you go.",
+ fail:"Coconut milk doing all the work: sweet, heavy, and lacking the fermented-seafood depth underneath.",
+ teaches:"Fat carries aroma, which is why the slick on a good curry is not a fault.",next:["green-curry","tonkotsu"]},
+{id:"dal-tadka",n:"Dal tadka",aka:"tempered lentils",o:"India",force:"water",fam:"simmer",also:["fire"],course:"main",
+ t:{sw:1,sa:3,fa:3,um:3,bi:1,ar:5,so:2,he:2},tex:["creamy","soft","crunchy"],contrast:3,weight:3,acq:1,
+ what:"Lentils simmered soft, finished by pouring over hot fat in which whole spices have been bloomed for seconds.",
+ look:"You should hear the tadka hit the dal and smell it across the room — that is the aroma leaving the fat. Cumin should be brown, not black. The lentils underneath should be creamy but still have some grain, and a squeeze of lemon at the end should make the whole thing lift.",
+ fail:"Burnt tempering, which turns the whole pot acrid, or spices added at the start, in which case the dish smells of nothing.",
+ teaches:"Aroma compounds are fat-soluble and fragile: add them last, hot and fast.",next:["osso-buco","chile-crisp"]},
+{id:"matcha",n:"Matcha",aka:"whisked green tea",o:"Uji, Japan",force:"water",fam:"infuse",also:[],course:"drink",
+ t:{sw:1,sa:0,fa:0,um:5,bi:4,ar:4,so:0,he:0},tex:["frothy","fine","drying"],contrast:2,weight:2,acq:4,
+ what:"Shade-grown tea leaves stone-ground to powder and suspended, not steeped, in water below boiling.",
+ look:"Vivid jade green, never olive, and a fine even foam. Good matcha is startlingly savoury — shading raises the amino acids that make it taste almost like broth — with bitterness arriving after the umami and a sweetness in the aftertaste. Water above 80C makes it harsh and destroys this entirely.",
+ fail:"Dull khaki colour, flat bitterness, no sweet finish: old, cheap, or brewed too hot.",
+ teaches:"Bitterness and umami can be the same sip, arriving in sequence.",next:["espresso","dashi"]},
+
+// ================= FIRE =================
+{id:"neapolitan-pizza",n:"Pizza napoletana",aka:"—",o:"Naples, Italy",force:"fire",fam:"bake",also:["time","hand"],course:"main",
+ t:{sw:2,sa:3,fa:3,um:4,bi:1,ar:4,so:2,he:0},tex:["airy","chewy","soupy","charred"],contrast:5,weight:3,acq:1,
+ what:"A slack, slow-fermented dough baked for ninety seconds in a wood oven at around 450C.",
+ look:"Leopard spotting on the puffed rim, irregular open holes inside it, and a centre so wet it will not hold flat when lifted — all three are correct, not faults. The sauce should taste of raw tomato and salt, because it never cooked long enough to become anything else.",
+ fail:"Uniform golden crust with a dry, cracker-like base: an oven that was too cool for too long.",
+ teaches:"Extreme heat for a short time makes a completely different food from moderate heat for longer.",next:["sourdough","paella"]},
+{id:"baguette",n:"Baguette de tradition",aka:"—",o:"France",force:"fire",fam:"bake",also:["time"],course:"base",
+ t:{sw:1,sa:2,fa:0,um:2,bi:1,ar:3,so:1,he:0},tex:["shattering","crisp","chewy","open"],contrast:5,weight:2,acq:1,
+ what:"Four ingredients — flour, water, salt, yeast — fermented slowly and baked with steam.",
+ look:"It should be noisy: crust that shatters and sheds splinters when you tear it, and a crumb that is cream-coloured and glossy with irregular holes. Deep golden-brown ends taste best, because crust is where all the flavour is. Should still be good with nothing on it.",
+ fail:"Pale, soft, and cottony inside — rushed fermentation, no steam, and it will be stale in three hours.",
+ teaches:"Contrast between crust and crumb is what makes bread interesting.",next:["sourdough","croissant"]},
+{id:"croissant",n:"Croissant",aka:"—",o:"France, via Austria",force:"fire",fam:"bake",also:["time","hand"],course:"start",
+ t:{sw:2,sa:2,fa:5,um:1,bi:1,ar:4,so:0,he:0},tex:["flaky","shattering","airy","chewy"],contrast:5,weight:3,acq:1,
+ what:"Yeasted dough folded around a slab of butter until it is dozens of alternating layers, then baked so the water in the butter steams them apart.",
+ look:"Pull it apart rather than biting: you should see a honeycomb of open cells and stringy layers, not bread. The shell should shatter and make a mess. It should smell and taste of cultured butter, and leave your fingers greasy but not oily.",
+ fail:"Bready inside, uniformly soft, and slightly waxy: the butter melted into the dough instead of staying in sheets.",
+ teaches:"Layers are structure, and structure you can hear is a flavour of its own.",next:["baguette","baklava"]},
+{id:"peking-duck",n:"Peking duck",aka:"Běijīng kǎoyā",o:"Beijing, China",force:"fire",fam:"roast",also:["time","hand"],course:"main",
+ t:{sw:3,sa:3,fa:5,um:5,bi:1,ar:4,so:1,he:0},tex:["crisp","glassy","tender","yielding"],contrast:5,weight:4,acq:1,
+ what:"A duck inflated to separate skin from flesh, scalded, coated in maltose, dried for a day, then roasted.",
+ look:"Skin like glass — it should crack audibly and be almost dry to the touch, with the fat rendered out rather than sitting under it. Eat the first pieces of skin alone with sugar, as intended. In the pancake, the hoisin, spring onion and cucumber exist to cut fat; the ratio matters more than the quantity of duck.",
+ fail:"Flabby skin with a layer of soft fat beneath: not dried long enough before roasting.",
+ teaches:"Removing water is the precondition for crispness.",next:["char-siu","roast-chicken"]},
+{id:"roast-chicken",n:"Roast chicken",aka:"poulet rôti",o:"everywhere",force:"fire",fam:"roast",also:[],course:"main",
+ t:{sw:1,sa:3,fa:4,um:4,bi:0,ar:4,so:0,he:0},tex:["crisp","juicy","tender"],contrast:4,weight:3,acq:1,
+ what:"The reference dish of Western cooking: a whole bird, salt, heat, time, and nothing else to hide behind.",
+ look:"Salt it a day ahead and leave it uncovered in the fridge; the difference is not subtle. Look for skin that is uniformly bronze and taut, juices that run clear at the thigh, and breast meat that is still just faintly pink at the bone. The best part is the sticky brown residue in the pan.",
+ fail:"Dry breast with rubbery skin: cooked from cold, in a slack oven, and rushed to the table without resting.",
+ teaches:"Salt applied early is seasoning; salt applied late is only surface.",next:["peking-duck","picanha"]},
+{id:"char-siu",n:"Char siu",aka:"Cantonese barbecue pork",o:"Guangdong, China",force:"fire",fam:"roast",also:["time"],course:"main",
+ t:{sw:4,sa:4,fa:4,um:5,bi:2,ar:4,so:1,he:0},tex:["sticky","charred","tender","juicy"],contrast:4,weight:4,acq:1,
+ what:"Pork shoulder marinated in fermented bean paste, soy, honey and spice, then roasted hanging until the edges blacken.",
+ look:"You want blackened, slightly bitter edges against sweet lacquer and a red ring beneath — the char is the flavour, and pork with no black on it has been cooked too gently. The meat should be fatty cuts, and the glaze should be tacky rather than wet.",
+ fail:"Uniformly red, sweet and soft, with no bitterness anywhere: sugar and colouring standing in for fire.",
+ teaches:"Burnt edges are seasoning when the rest of the dish is sweet.",next:["yakitori","peking-duck"]},
+{id:"yakitori",n:"Yakitori",aka:"—",o:"Japan",force:"fire",fam:"grill",also:[],course:"main",
+ t:{sw:2,sa:3,fa:4,um:5,bi:1,ar:4,so:0,he:0},tex:["charred","juicy","springy","crisp"],contrast:4,weight:2,acq:2,
+ what:"Chicken cut by part and grilled over binchōtan charcoal, which burns hot with almost no smoke or flame.",
+ look:"Each skewer is a different part with a different correct texture — thigh juicy, skin crisp, heart snappy, liver creamy — so judge them separately. Char should be spotted, not general, and salt-only skewers should taste more of chicken than tare-glazed ones do.",
+ fail:"Flame-licked and sooty, or glazed to cover dryness. Charcoal aroma should be clean, never acrid.",
+ teaches:"Cutting a single animal into parts is itself a flavour technique.",next:["tandoori","grilled-octopus"]},
+{id:"tandoori",n:"Tandoori chicken",aka:"—",o:"Punjab",force:"fire",fam:"grill",also:["time"],course:"main",
+ t:{sw:1,sa:4,fa:3,um:4,bi:1,ar:5,so:3,he:3},tex:["charred","juicy","tender"],contrast:4,weight:3,acq:1,
+ what:"Chicken marinated in yoghurt, lemon and spice, then cooked against the wall of a clay oven at very high heat.",
+ look:"Blistered black spots, a dry-looking surface, and meat that is still visibly juicy underneath. The yoghurt should have tenderised without turning the flesh mushy, and you should taste sourness and smoke together. Natural colour is brick-brown, not fluorescent red.",
+ fail:"Dry, dyed and one-note: an oven that was not hot enough, so the chicken baked rather than seared.",
+ teaches:"Acid in a marinade is a texture tool, and it has a time limit.",next:["yakitori","jerk"]},
+{id:"brisket",n:"Central Texas brisket",aka:"smoked brisket",o:"Texas, USA",force:"fire",fam:"smoke",also:["time"],course:"main",
+ t:{sw:1,sa:4,fa:5,um:5,bi:2,ar:5,so:0,he:1},tex:["crusted","tender","juicy","melting"],contrast:5,weight:5,acq:1,
+ what:"A whole brisket rubbed with salt and pepper and smoked over post oak for twelve hours or more.",
+ look:"A black peppery bark, a pink smoke ring beneath it, and a slice that bends over your finger but does not fall apart. Fat should be rendered to jelly, never chewy. If you need sauce, the meat has failed; the seasoning is meant to be salt, pepper and smoke only.",
+ fail:"Dry, crumbling slices, or a bitter tarry crust from dirty smoke and a smouldering fire.",
+ teaches:"Smoke is a seasoning with a dose, and too much reads as ashtray.",next:["picanha","char-siu"]},
+{id:"picanha",n:"Picanha",aka:"rump cap",o:"Brazil",force:"fire",fam:"grill",also:[],course:"main",
+ t:{sw:1,sa:4,fa:5,um:5,bi:1,ar:3,so:0,he:0},tex:["crusted","juicy","tender","chewy"],contrast:4,weight:5,acq:1,
+ what:"The cap of the rump, scored, salted coarsely and grilled with the fat facing the fire.",
+ look:"Cut against the grain, always, or it eats like rope. The fat cap should be browned and crackling on the outside and soft underneath, and the interior a wide even pink. Coarse salt should still be visible in places; that is the only seasoning it needs.",
+ fail:"Fat left flabby and untouched by heat, or the meat sliced with the grain.",
+ teaches:"How you cut cooked meat changes its texture more than how you cooked it.",next:["dry-aged-steak","brisket"]},
+{id:"grilled-octopus",n:"Grilled octopus",aka:"htapodi sti schara",o:"Greece, Spain, Japan",force:"fire",fam:"grill",also:["water"],course:"start",
+ t:{sw:1,sa:3,fa:3,um:4,bi:1,ar:3,so:3,he:0},tex:["charred","tender","springy"],contrast:5,weight:2,acq:2,
+ what:"Octopus simmered slowly until tender, then finished over hard direct heat for char.",
+ look:"Two textures on one piece: blackened, crisp suckers and a yielding interior that offers slight resistance and no rubber. It should arrive with lemon and good oil, and taste faintly sweet. Rubberiness means it went to the grill without the braise.",
+ fail:"Bouncy and squeaky throughout — the two-stage cooking was skipped.",
+ teaches:"Many great dishes are two techniques on one ingredient, in the right order.",next:["yakitori","paella"]},
+{id:"tempura",n:"Tempura",aka:"—",o:"Japan",force:"fire",fam:"fry",also:[],course:"main",
+ t:{sw:1,sa:2,fa:4,um:3,bi:0,ar:2,so:1,he:0},tex:["crisp","lacy","brittle","tender"],contrast:5,weight:2,acq:1,
+ what:"Seafood and vegetables in a barely-mixed cold batter, fried briefly in hot oil so the coating dries rather than browns.",
+ look:"Pale gold, never brown, with a thin lacy shell that cracks under a chopstick and does not soften on the plate. The prawn inside should be barely cooked and sweet. It should be near weightless; the batter's job is to steam the ingredient inside a crust, not to add flavour.",
+ fail:"Thick, heavy, greasy and beige — batter overmixed, oil too cool, or the piece left in too long.",
+ teaches:"Frying is a drying technique. Grease means the temperature was wrong.",next:["korean-fried-chicken","falafel"]},
+{id:"korean-fried-chicken",n:"Korean fried chicken",aka:"yangnyeom-tongdak",o:"Korea",force:"fire",fam:"fry",also:["hand"],course:"main",
+ t:{sw:3,sa:4,fa:5,um:4,bi:0,ar:4,so:2,he:3},tex:["shattering","crisp","juicy","sticky"],contrast:5,weight:4,acq:1,
+ what:"Chicken fried twice — once to cook, once hot to dry the crust — then tossed in a glossy sweet-hot glaze.",
+ look:"The test is whether it is still crunchy several minutes after saucing. That is what the second fry buys. The glaze should be sticky rather than wet, sweetness balanced by chilli, garlic and vinegar, and the meat inside should still run with juice.",
+ fail:"Soggy within a minute of saucing, or crust so thick it detaches from the meat in a sheet.",
+ teaches:"Crispness is water absence, so anything wet is on a countdown.",next:["tempura","char-siu"]},
+{id:"falafel",n:"Falafel",aka:"—",o:"Levant, Egypt",force:"fire",fam:"fry",also:["hand"],course:"main",
+ t:{sw:1,sa:3,fa:4,um:2,bi:1,ar:5,so:1,he:1},tex:["crisp","crumbly","fluffy"],contrast:5,weight:3,acq:1,
+ what:"Soaked raw chickpeas ground with herbs and spices, never cooked first, then deep-fried.",
+ look:"Split one open: it should be bright green inside from parsley and coriander, steaming, and light rather than dense. Made from soaked raw pulses it is fluffy; made from cooked chickpeas or tinned ones it turns to paste. Should be eaten within minutes of frying.",
+ fail:"Dense, grey, dry pucks that need sauce to swallow.",
+ teaches:"An ingredient's state before cooking decides the texture after.",next:["hummus","tempura"]},
+{id:"creme-brulee",n:"Crème brûlée",aka:"—",o:"France",force:"fire",fam:"caramel",also:["water"],course:"end",
+ t:{sw:4,sa:1,fa:5,um:0,bi:2,ar:3,so:0,he:0},tex:["silky","brittle","molten","dense"],contrast:5,weight:4,acq:1,
+ what:"Cream and egg yolk baked gently to a set custard, with sugar burnt to glass on top at the last moment.",
+ look:"Crack the top with a spoon: it should give a single sharp report and break into shards, with the custard cold beneath it. The caramel should be bitter enough to offset the cream. Custard should be barely set, wobble as one piece, and have no bubbles.",
+ fail:"A soft weeping sugar layer, meaning it was torched too early, or grainy scrambled custard from an oven that was too hot.",
+ teaches:"Temperature and texture contrast on one spoon is a design, not an accident.",next:["tarte-tatin","panna-cotta"]},
+{id:"tarte-tatin",n:"Tarte Tatin",aka:"—",o:"France",force:"fire",fam:"caramel",also:["hand"],course:"end",
+ t:{sw:4,sa:1,fa:4,um:0,bi:3,ar:4,so:2,he:0},tex:["sticky","tender","flaky","dense"],contrast:4,weight:4,acq:1,
+ what:"Apples cooked in butter and caramel in the pan, covered with pastry, baked and turned out upside down.",
+ look:"The apples should be deep amber and hold their shape, not slump into sauce, and the caramel should be taken dark enough to be properly bitter. That bitterness plus the apples' own acidity is what keeps a very sweet dish from cloying. Crème fraîche on the side is structural.",
+ fail:"Pale sweet apples in butter, with a soggy pastry base and no bitter edge — the caramel was pulled too early.",
+ teaches:"Sweet dishes need bitterness or acid for the same reason savoury ones do.",next:["creme-brulee","french-onion"]},
+{id:"baklava",n:"Baklava",aka:"—",o:"Turkey, Levant, Greece",force:"fire",fam:"bake",also:["hand"],course:"end",
+ t:{sw:5,sa:1,fa:5,um:1,bi:1,ar:4,so:1,he:0},tex:["shattering","flaky","sticky","crunchy"],contrast:4,weight:4,acq:1,
+ what:"Dozens of sheets of filo layered with butter and nuts, baked, then soaked in syrup at a contrasting temperature.",
+ look:"It should still crackle after syruping — the trick is hot pastry and cold syrup, or the reverse — and the layers should stay separate rather than merging into a wet slab. Pistachio should taste green and fresh, and the syrup should carry lemon or blossom water to stop it being pure sugar.",
+ fail:"Sodden, chewy, and cloying, with rancid nuts. Once filo goes limp there is no recovery.",
+ teaches:"A syrup is a texture decision as much as a sweetness one.",next:["croissant","gelato"]},
+{id:"mapo-tofu",n:"Mápó dòufu",aka:"—",o:"Sichuan, China",force:"fire",fam:"wok",also:["time"],course:"main",
+ t:{sw:1,sa:5,fa:5,um:5,bi:1,ar:5,so:1,he:5},tex:["silky","slippery","crunchy","glossy"],contrast:4,weight:4,acq:3,
+ what:"Silken tofu simmered in a fiery sauce of fermented broad-bean paste, chilli and Sichuan pepper over hard heat.",
+ look:"Look for red oil pooling on the surface and tofu cubes still intact. The defining sensation is málà: chilli burn plus the buzzing numbness of Sichuan pepper, which should tingle on the lips for a minute after. Fermented bean paste should give a deep salty funk beneath the heat.",
+ fail:"Broken crumbled tofu in a gloopy cornflour sauce, hot but with no numbing and no ferment depth.",
+ teaches:"Heat is not one sensation; burn and numbness are different nerves.",next:["chile-crisp","stinky-tofu"]},
+{id:"paella",n:"Paella valenciana",aka:"—",o:"Valencia, Spain",force:"fire",fam:"roast",also:["water"],course:"main",
+ t:{sw:1,sa:3,fa:3,um:5,bi:1,ar:4,so:1,he:0},tex:["crusted","chewy","dry","crisp"],contrast:5,weight:4,acq:1,
+ what:"Rice cooked flat and undisturbed in a wide pan until the stock is gone and the bottom layer toasts.",
+ look:"Scrape the bottom: the socarrat, a caramelised crust of rice, is the point of the dish. Grains should be separate, dry to the eye, and no more than two grains deep. Saffron should read as aroma and colour, not as bitterness. Never stir it, and never expect it to be creamy.",
+ fail:"Wet, stirred, yellow from dye, and piled deep — that is rice stew, and the crust never forms.",
+ teaches:"Some dishes are designed around the part that touches the pan.",next:["risotto","neapolitan-pizza"]},
+{id:"espresso",n:"Espresso",aka:"—",o:"Italy",force:"fire",fam:"roast",also:["time","water"],course:"drink",
+ t:{sw:2,sa:0,fa:2,um:2,bi:4,ar:5,so:3,he:0},tex:["syrupy","drying","dense"],contrast:2,weight:2,acq:3,
+ what:"Roasted, fermented coffee seeds ground fine and pressurised water pushed through in half a minute.",
+ look:"A good shot tastes sweet and sour before it tastes bitter, with a syrupy body and an aftertaste that lasts minutes. Sour and thin means under-extracted; harsh, ashy and drying means over-extracted or over-roasted. Crema is a sign of freshness, not of quality.",
+ fail:"Flat, uniformly bitter, and burnt — dark roast covering cheap beans, which is what most people think coffee tastes like.",
+ teaches:"Bitterness should be a note in a sequence, not the whole chord.",next:["dark-chocolate","matcha"]},
+{id:"french-omelette",n:"French omelette",aka:"—",o:"France",force:"fire",fam:"roast",also:["hand"],course:"start",
+ t:{sw:1,sa:2,fa:5,um:3,bi:0,ar:2,so:0,he:0},tex:["silky","creamy","tender","barely-set"],contrast:2,weight:3,acq:2,
+ what:"Three eggs, butter, salt, constant motion, and low heat — the classic test of a cook's hands.",
+ look:"Pale yellow with no browning anywhere, rolled smooth, and slightly runny at the centre when cut. The surface should look like suede. Any brown speckling means the pan was too hot, which is the difference between a French omelette and a diner one.",
+ fail:"Browned, rubbery and dry: too much heat, too little butter, not enough stirring.",
+ teaches:"With three ingredients, technique is the only variable left.",next:["chawanmushi","risotto"]},
+{id:"jerk",n:"Jerk chicken",aka:"—",o:"Jamaica",force:"fire",fam:"smoke",also:["hand"],course:"main",
+ t:{sw:2,sa:4,fa:3,um:4,bi:2,ar:5,so:2,he:5},tex:["charred","juicy","crusted"],contrast:4,weight:4,acq:3,
+ what:"Chicken marinated in scotch bonnet, allspice, thyme and scallion, then cooked slowly over pimento wood smoke.",
+ look:"The heat should arrive late and build, behind a wall of allspice and smoke. A blackened, spiced crust with juicy meat under it, and a marinade that tastes green and warm rather than only fiery.",
+ fail:"Grilled fast with sauce brushed on — hot, sweet and shallow, with no smoke and no allspice depth.",
+ teaches:"Chilli heat is more pleasant when something aromatic arrives first.",next:["brisket","tandoori"]},
+
+// ================= HAND =================
+{id:"otoro",n:"Ōtoro sashimi",aka:"fatty tuna belly",o:"Japan",force:"hand",fam:"raw",also:[],course:"start",
+ t:{sw:2,sa:1,fa:5,um:5,bi:0,ar:2,so:0,he:0},tex:["melting","buttery","silky"],contrast:1,weight:3,acq:2,
+ what:"The fattiest part of a tuna belly, sliced against the sinew and served cold but not chilled.",
+ look:"It should dissolve rather than need chewing, leaving a warm, sweet, faintly metallic finish. Marbling should be fine and even, the colour pink-rose rather than deep red or grey-brown. Soy should be a touch on the fish side, never a bath.",
+ fail:"Chewy sinew running through the slice, a sour edge from age, or so cold that the fat stays solid and tastes of nothing.",
+ teaches:"Knife direction is a cooking technique in raw food.",next:["nigiri","oysters"]},
+{id:"oysters",n:"Raw oysters",aka:"—",o:"Atlantic, Pacific coasts",force:"hand",fam:"raw",also:[],course:"start",
+ t:{sw:2,sa:4,fa:1,um:4,bi:0,ar:3,so:1,he:0},tex:["slippery","plump","yielding","briny"],contrast:2,weight:1,acq:4,
+ what:"A live bivalve, opened and eaten with its own liquor, tasting of the water it grew in.",
+ look:"Ask for the liquor to be intact and the meat to be plump and unshrunken. Chew it — swallowing whole wastes the point. The sequence should be salt, then sweet, then a mineral or cucumber finish. Different beds taste genuinely different; that variation is the whole appeal.",
+ fail:"Dry, torn from the shell, cut from the muscle badly, or drowned in vinegar to hide a tired oyster.",
+ teaches:"Some foods carry place directly, unmediated by technique.",next:["otoro","tomato-salad"]},
+{id:"tartare",n:"Steak tartare",aka:"—",o:"France, Belgium",force:"hand",fam:"raw",also:[],course:"main",
+ t:{sw:1,sa:4,fa:4,um:5,bi:1,ar:4,so:3,he:2},tex:["tender","yielding","crunchy"],contrast:4,weight:3,acq:3,
+ what:"Raw beef chopped by hand and seasoned aggressively with capers, shallot, mustard, egg yolk and acid.",
+ look:"Hand-cut, not minced: you want distinct small cubes with bite, not paste. The seasoning should be assertive enough to make raw beef taste bright, with acid and capers doing the work fat would otherwise need. Cold from the fridge but not icy.",
+ fail:"Ground to mush, under-seasoned, and tasting of iron and cold fat.",
+ teaches:"Raw protein needs acid and salt the way cooked protein needs browning.",next:["ceviche","otoro"]},
+{id:"ceviche",n:"Ceviche",aka:"—",o:"Peru",force:"hand",fam:"raw",also:[],course:"start",
+ t:{sw:2,sa:4,fa:1,um:4,bi:0,ar:4,so:5,he:3},tex:["firm","yielding","crunchy"],contrast:4,weight:2,acq:2,
+ what:"Raw fish dressed in lime juice, chilli and salt minutes before serving, so the surface firms but the centre stays raw.",
+ look:"Modern Peruvian ceviche is marinated for minutes, not hours: the fish should be opaque at the edge and translucent inside. The leche de tigre left in the bowl should be drinkable — sharp, salty, hot, and slightly thickened by the fish. Sweet potato and corn on the plate exist to blunt the acid.",
+ fail:"Fish left in lime until it is chalky and dry all the way through, which is the texture of overcooking without heat.",
+ teaches:"Acid denatures protein like heat does, and can be overdone the same way.",next:["tartare","som-tam"]},
+{id:"nigiri",n:"Nigiri sushi",aka:"—",o:"Edo, Japan",force:"hand",fam:"raw",also:["time"],course:"main",
+ t:{sw:2,sa:2,fa:3,um:5,bi:0,ar:2,so:2,he:1},tex:["yielding","loose","silky"],contrast:3,weight:2,acq:2,
+ what:"A slice of fish pressed onto seasoned rice at body temperature, aged or cured as each fish requires.",
+ look:"Judge the rice, which is where the craft lives: it should be at skin temperature, loosely packed enough to fall apart in the mouth but not on the way there, and noticeably seasoned with vinegar and salt. Fish is often aged for days, not served straight from the sea.",
+ fail:"Cold, dense, over-compressed rice — the fish can be flawless and the piece will still be wrong.",
+ teaches:"In many dishes the humble component is the one being judged.",next:["otoro","tsukemono"]},
+{id:"carbonara",n:"Carbonara",aka:"—",o:"Rome, Italy",force:"hand",fam:"emulsion",also:["water","time"],course:"main",
+ t:{sw:1,sa:5,fa:5,um:5,bi:1,ar:3,so:0,he:1},tex:["glossy","creamy","chewy","crisp"],contrast:4,weight:5,acq:1,
+ what:"Egg yolk, hard sheep's cheese, rendered guanciale fat and starchy pasta water whisked into a sauce off the heat.",
+ look:"The sauce should be glossy and pourable and coat each strand, with no scrambled egg and no cream — cream is a substitute for the technique. Pepper should be coarse and present. Guanciale should be rendered until the fat is soft and the edges crisp.",
+ fail:"Grainy scrambled egg, or a claggy paste that seizes on the plate: too much heat, or not enough pasta water.",
+ teaches:"An emulsion is temperature control plus agitation, nothing more.",next:["cacio-e-pepe","hollandaise"]},
+{id:"cacio-e-pepe",n:"Cacio e pepe",aka:"—",o:"Rome, Italy",force:"hand",fam:"emulsion",also:["water"],course:"main",
+ t:{sw:0,sa:5,fa:4,um:5,bi:2,ar:3,so:1,he:2},tex:["glossy","creamy","chewy"],contrast:2,weight:4,acq:1,
+ what:"Pecorino, black pepper and starchy water, made into a sauce with nothing else at all.",
+ look:"Three ingredients, so there is nowhere to hide: the sauce must be a smooth cream that clings, the pepper must be toasted and coarsely cracked so it is aromatic rather than merely hot, and the pecorino should be sharp and salty enough that no extra salt is needed.",
+ fail:"Stringy clumps of cheese in watery liquid — the pan was too hot when the cheese went in.",
+ teaches:"Starch is an emulsifier, which is why the pasta water is an ingredient.",next:["carbonara","risotto"]},
+{id:"hollandaise",n:"Hollandaise",aka:"—",o:"France",force:"hand",fam:"emulsion",also:[],course:"season",
+ t:{sw:1,sa:3,fa:5,um:2,bi:0,ar:3,so:3,he:1},tex:["velvety","thick","glossy"],contrast:1,weight:4,acq:1,
+ what:"Butter whisked into egg yolk and acid over gentle heat until it holds as a warm, thick sauce.",
+ look:"It should be barely warm, thick enough to hold a ribbon for a second, and noticeably lemony — the acid is what stops a cup of butter from being unbearable. Colour should be pale gold, and the texture completely smooth with no oiliness at the edges.",
+ fail:"Split and oily, or heavy and flat because the acid was skimped. A hollandaise that only tastes of butter has failed.",
+ teaches:"Rich sauces are held together by acid as much as by egg.",next:["carbonara","risotto"]},
+{id:"risotto",n:"Risotto",aka:"—",o:"Lombardy, Italy",force:"hand",fam:"emulsion",also:["water"],course:"main",
+ t:{sw:1,sa:3,fa:5,um:5,bi:1,ar:3,so:1,he:0},tex:["creamy","chewy","glossy","flowing"],contrast:3,weight:4,acq:1,
+ what:"Short-grain rice cooked slowly in stock and beaten with cold butter and cheese at the end.",
+ look:"It should spread slowly across a flat plate when shaken — the Italians call it all onda, the wave — and never sit in a mound. Each grain must be distinct and still firm at the core inside a creamy suspension. The creaminess is released starch and emulsified butter, not cream.",
+ fail:"Stodgy and set, or soupy and bland. Both come from wrong heat and inattention at the final beating.",
+ teaches:"Starch plus fat plus agitation equals cream, with no cream involved.",next:["cacio-e-pepe","paella"]},
+{id:"pesto",n:"Pesto alla genovese",aka:"—",o:"Liguria, Italy",force:"hand",fam:"pound",also:[],course:"season",
+ t:{sw:1,sa:4,fa:5,um:4,bi:2,ar:5,so:0,he:0},tex:["coarse","oily","creamy"],contrast:2,weight:3,acq:1,
+ what:"Basil, pine nuts, garlic, two cheeses and oil crushed in a mortar rather than cut in a blade.",
+ look:"Bright, almost fluorescent green with visible texture. Pounding bruises basil open without heating or oxidising it; blades do both, which is why blended pesto turns khaki and tastes of grass and metal within hours. Should smell overwhelmingly of basil when the jar opens.",
+ fail:"Dark, bitter, and dominated by garlic and oil — old basil, hot blades, or too little cheese.",
+ teaches:"How you break an ingredient decides which molecules you get.",next:["chile-crisp","hummus"]},
+{id:"mole",n:"Mole poblano",aka:"—",o:"Puebla, Mexico",force:"hand",fam:"pound",also:["fire","time"],course:"main",
+ t:{sw:3,sa:4,fa:5,um:5,bi:3,ar:5,so:2,he:3},tex:["velvety","thick","glossy"],contrast:2,weight:5,acq:3,
+ what:"Twenty to forty ingredients — several dried chillies, nuts, seeds, spices, fruit, chocolate — toasted separately, ground and simmered for hours.",
+ look:"The mark of a good mole is that nothing is identifiable. Chocolate should not read as chocolate, chilli should not read as heat; it should be one dark, glossy, faintly bitter, endlessly layered thing. The texture must be completely smooth and thick enough to hold a line on the plate.",
+ fail:"Sweet, gritty, or with one element shouting over the rest, usually the chocolate or the cinnamon.",
+ teaches:"Complexity is achieved by making ingredients disappear, not by adding more.",next:["birria","green-curry"]},
+{id:"hummus",n:"Hummus",aka:"—",o:"Levant",force:"hand",fam:"pound",also:["water"],course:"start",
+ t:{sw:1,sa:3,fa:4,um:2,bi:1,ar:3,so:3,he:0},tex:["velvety","smooth","creamy"],contrast:2,weight:3,acq:1,
+ what:"Chickpeas cooked to collapse and whipped with tahini, lemon and garlic until it is aerated and pale.",
+ look:"Warm, pale, and light enough to be almost mousse-like — good hummus is served at room temperature or warmer, never fridge-cold. Tahini should dominate over chickpea, lemon should be assertive, and there should be a bitter sesame edge in the finish. A pool of olive oil on top is not decoration.",
+ fail:"Cold, dense, grainy and mainly garlic — under-cooked chickpeas and a stingy hand with the tahini.",
+ teaches:"Serving temperature can matter more than any ingredient.",next:["falafel","yoghurt"]},
+{id:"som-tam",n:"Som tam",aka:"green papaya salad",o:"Thailand, Laos",force:"hand",fam:"pound",also:["time"],course:"start",
+ t:{sw:3,sa:5,fa:1,um:4,bi:1,ar:5,so:5,he:5},tex:["crunchy","juicy","fibrous"],contrast:5,weight:1,acq:3,
+ what:"Shredded unripe papaya bruised in a mortar with lime, fish sauce, palm sugar, garlic and chillies.",
+ look:"This is the clearest demonstration of four-way balance in any cuisine: sour, salty, sweet and hot should all be at maximum and none should win. Papaya must stay crunchy — bruised just enough to take up dressing, never crushed. Taste it and try to name which one is loudest; in a good one you cannot.",
+ fail:"Sugar-forward and one-note, or pounded to mush so the salad is wet and limp.",
+ teaches:"Balance does not mean moderation; it can mean four extremes cancelling.",next:["larb","ceviche"]},
+{id:"larb",n:"Larb",aka:"—",o:"Laos, Isaan Thailand",force:"hand",fam:"assemble",also:["fire","time"],course:"main",
+ t:{sw:1,sa:5,fa:3,um:5,bi:2,ar:5,so:5,he:5},tex:["crumbly","crunchy","juicy"],contrast:5,weight:2,acq:3,
+ what:"Minced meat dressed with lime, fish sauce, chilli and a large quantity of toasted ground rice and herbs.",
+ look:"The toasted rice powder is the signature: it should give a nutty smell and a fine sandy grit that stops the dish being wet. Herbs should arrive by the handful, not as garnish. Served warm or at room temperature with sticky rice and raw vegetables to moderate it.",
+ fail:"Wet, herbless and merely spicy, with no toasted rice and no sourness.",
+ teaches:"A dry, crunchy element can be the thing that makes a wet dish work.",next:["som-tam","banh-mi"]},
+{id:"banh-mi",n:"Bánh mì",aka:"—",o:"Vietnam",force:"hand",fam:"assemble",also:["time","fire"],course:"main",
+ t:{sw:2,sa:4,fa:4,um:5,bi:0,ar:5,so:4,he:3},tex:["shattering","crisp","soft","crunchy"],contrast:5,weight:3,acq:1,
+ what:"A rice-flour baguette filled with pâté, mayonnaise, roast or cured pork, pickled carrot and daikon, coriander and chilli.",
+ look:"The best example anywhere of contrast as a design principle: crisp shell, soft crumb, fatty pâté, sharp pickle, cool herb, sudden chilli. The bread must shatter, and the pickle must be sour enough to cut the mayonnaise. If any one element is missing you can feel the gap immediately.",
+ fail:"Soft bread and too little pickle, which turns it into a heavy, monotone sandwich.",
+ teaches:"Contrast is a structure you can design deliberately.",next:["larb","tsukemono"]},
+{id:"gazpacho",n:"Gazpacho",aka:"—",o:"Andalusia, Spain",force:"hand",fam:"pound",also:[],course:"start",
+ t:{sw:2,sa:3,fa:3,um:4,bi:0,ar:3,so:4,he:0},tex:["smooth","cooling","velvety"],contrast:2,weight:2,acq:1,
+ what:"Ripe raw tomatoes, bread, oil, vinegar and garlic blended and chilled, emulsified into a smooth soup.",
+ look:"Colour should be salmon-orange rather than red — that pale shade means the oil is properly emulsified in. It should taste sweeter than it looks, with vinegar arriving at the end, and be served cold but not ice-cold, because extreme cold flattens the tomato.",
+ fail:"Watery, separated and sour, or made with pale winter tomatoes, in which case nothing can save it.",
+ teaches:"Cold suppresses aroma and sweetness, so cold dishes need over-seasoning.",next:["tomato-salad","hummus"]},
+{id:"tomato-salad",n:"Tomato and salt",aka:"insalata di pomodoro",o:"Mediterranean",force:"hand",fam:"season",also:[],course:"side",
+ t:{sw:3,sa:4,fa:2,um:5,bi:0,ar:4,so:3,he:0},tex:["juicy","yielding","crisp"],contrast:3,weight:1,acq:1,
+ what:"Ripe tomatoes, salt, oil, and time to sit — the simplest possible demonstration of seasoning.",
+ look:"Salt ten minutes before serving and you will see liquid drawn out; that liquid is tomato glutamate in solution, and it is the dressing. Tomatoes should never be refrigerated, which destroys their aroma compounds irreversibly. Judge by smell at the stem end first.",
+ fail:"Cold, unseasoned, and cut just before serving: crunchy, watery, and flavourless.",
+ teaches:"Salt does not only taste salty. It pulls flavour out and concentrates it.",next:["oysters","gazpacho"]},
+{id:"chile-crisp",n:"Chilli crisp",aka:"làjiāo yóu",o:"China",force:"hand",fam:"season",also:["fire"],course:"season",
+ t:{sw:1,sa:4,fa:5,um:5,bi:1,ar:5,so:0,he:4},tex:["crunchy","oily","brittle"],contrast:5,weight:2,acq:2,
+ what:"Chillies, alliums, soybeans and spices fried in oil until crisp and kept suspended in it.",
+ look:"The solids must stay audibly crunchy in the oil for months — that is the craft. Look for a deep red oil, a visible variety of textures in the jar, and heat that sits behind savour and crunch rather than in front of them.",
+ fail:"Sludge at the bottom of soft, over-fried bits in dull oil, or heat with no aromatic depth at all.",
+ teaches:"Crunch suspended in fat is a texture trick that keeps working.",next:["pesto","mapo-tofu"]},
+{id:"gelato",n:"Gelato",aka:"—",o:"Italy",force:"hand",fam:"chill",also:[],course:"end",
+ t:{sw:4,sa:1,fa:4,um:1,bi:1,ar:5,so:1,he:0},tex:["dense","smooth","elastic","cold"],contrast:1,weight:3,acq:1,
+ what:"A milk-heavy custard churned slowly with little air and served warmer than ice cream, around minus 12C.",
+ look:"Less fat, less air and a higher serving temperature than ice cream — which is exactly why it tastes more intense, since cold and fat both mute flavour. It should be dense and elastic on the spatula, stored in covered pozzetti rather than piled in bright mounds, and pistachio should be brown-green, not lurid.",
+ fail:"Fluffy, icy, or so cold it numbs. Whipped volume and freezer burn are the two giveaways of industrial product.",
+ teaches:"Serving temperature is a flavour control, not just comfort.",next:["mochi","dark-chocolate"]},
+{id:"panna-cotta",n:"Panna cotta",aka:"—",o:"Piedmont, Italy",force:"hand",fam:"chill",also:["water"],course:"end",
+ t:{sw:3,sa:1,fa:5,um:0,bi:0,ar:3,so:1,he:0},tex:["wobbling","silky","barely-set","cold"],contrast:2,weight:3,acq:1,
+ what:"Cream sweetened, infused, and set with the smallest possible amount of gelatin.",
+ look:"It should wobble alarmingly and collapse under a spoon, holding its shape only just — the whole skill is using as little gelatin as will stand up. It should melt to liquid cream in the mouth immediately. A sharp fruit or caramel accompaniment is doing necessary work against the fat.",
+ fail:"Rubbery, bouncy and slow to melt, which means too much gelatin, and it will coat your palate unpleasantly.",
+ teaches:"The best set textures are the ones that only just hold.",next:["creme-brulee","gelato"]},
+{id:"pavlova",n:"Pavlova",aka:"—",o:"Australia, New Zealand",force:"fire",fam:"bake",also:["hand"],course:"end",
+ t:{sw:5,sa:1,fa:4,um:0,bi:0,ar:4,so:4,he:0},tex:["shattering","marshmallow","creamy","juicy"],contrast:5,weight:3,acq:1,
+ what:"A meringue baked so the shell crisps while the centre stays soft, loaded with cream and sharp fruit.",
+ look:"Three textures in one forkful: crisp shell, marshmallow interior, cold unsweetened cream. The fruit must be genuinely tart — passionfruit, raspberry, rhubarb — because the meringue is pure sugar and cannot be balanced any other way. Vinegar or cornflour in the mix is what preserves the soft middle.",
+ fail:"Crisp all the way through, or weeping syrup, and topped with sweetened cream and sweet fruit, which makes it inedible after two bites.",
+ teaches:"Extreme sweetness demands an equally extreme acid to survive a whole portion.",next:["creme-brulee","yoghurt"]},
+{id:"peach",n:"A peak-season peach",aka:"—",o:"everywhere, briefly",force:"hand",fam:"raw",also:[],course:"end",
+ t:{sw:5,sa:0,fa:0,um:0,bi:0,ar:5,so:3,he:0},tex:["juicy","yielding","tender"],contrast:1,weight:1,acq:1,
+ what:"Fruit picked ripe and eaten within days, which is a completely different product from fruit picked hard.",
+ look:"Smell the stem end: ripe fruit announces itself, and fruit with no smell will never develop one. Flesh should yield to a thumb at the shoulder. What makes it extraordinary is sugar and acid rising together while aromatic compounds peak — a window of about three days that refrigeration ends permanently.",
+ fail:"Sweet but mealy and scentless: picked early for transport, ripened in a warehouse, chilled in transit.",
+ teaches:"Ripeness is sugar, acid and aroma converging, not just sweetness.",next:["oysters","tomato-salad"]},
+{id:"mochi",n:"Mochi",aka:"daifuku",o:"Japan",force:"hand",fam:"pound",also:["water"],course:"end",
+ t:{sw:4,sa:1,fa:1,um:1,bi:0,ar:2,so:0,he:0},tex:["chewy","elastic","sticky","soft"],contrast:3,weight:2,acq:2,
+ what:"Glutinous rice steamed and pounded into a smooth elastic dough, usually wrapped around sweet bean paste.",
+ look:"Freshly pounded mochi is soft, faintly warm and stretches without tearing; a day later it is stiff and must be grilled. The pleasure is almost entirely textural — resistance then release — with sweetness kept low and the bean paste providing an earthy edge.",
+ fail:"Cold, hard and cracking, or so sweet the bean paste tastes only of sugar.",
+ teaches:"Texture can be the main event, with flavour as the accompaniment.",next:["har-gow","gelato"]}
+];
+
+const WORDS = [
+{t:"Umami",c:"taste",d:"The savoury taste of free glutamate, reinforced by nucleotides in meat and dried fish. Broth, aged cheese, tomato, soy, mushroom.",u:"When something tastes deep and mouth-filling without being salty or fatty.",x:"Not salt. Salt is sharp and immediate; umami is round and slow, and it lingers."},
+{t:"Kokumi",c:"taste",d:"Not a taste but a thickening effect: certain peptides in aged and fermented foods make other tastes seem fuller and longer.",u:"When a broth seems to have body and continuity beyond its actual ingredients.",x:"Not umami. Kokumi has no flavour of its own — it amplifies what is already there."},
+{t:"Acidity",c:"taste",d:"Sourness, but used as a structural term: the component that makes you salivate and resets the palate between bites.",u:"When a dish is rich and yet you want the next mouthful.",x:"Not sourness as a fault. Sour is a taste; acidity is a job."},
+{t:"Astringency",c:"mouthfeel",d:"A drying, puckering roughness as tannins bind the proteins in your saliva. Tea, red wine, unripe fruit, walnut skins.",u:"When your gums feel scoured after a sip and your mouth feels less wet than before.",x:"Not bitterness, though they usually travel together. Bitterness is a taste; astringency is a sensation on the tissue."},
+{t:"Tannin",c:"mouthfeel",d:"The polyphenols responsible for astringency, drawn from skins, seeds, wood and leaves.",u:"When talking about wine, tea or anything that dries and grips.",x:"Not a taste at all, which is why sweetness cannot cancel it — fat and protein can."},
+{t:"Unctuous",c:"mouthfeel",d:"Richly coating and slightly viscous, in a way that is pleasurable rather than greasy. Braised pork belly, tonkotsu broth, oxtail.",u:"For fat plus dissolved gelatin, which together cling to the mouth.",x:"Not greasy. Greasy is fat sitting on the surface; unctuous is fat suspended in the dish."},
+{t:"Cloying",c:"judgement",d:"Sweet or rich to the point that you cannot take a second mouthful. The specific failure of unbalanced richness.",u:"When one bite is wonderful and four are unbearable.",x:"Not just sweet. A sweet dish with enough acid or bitterness never cloys."},
+{t:"Finish",c:"judgement",d:"What remains after you swallow, and for how long. Also called length or persistence.",u:"When judging quality: long, evolving finishes are the most reliable marker of a well-made thing.",x:"Not aftertaste, which implies an unwanted residue."},
+{t:"Palate",c:"judgement",d:"Two senses: the whole apparatus of taste, and the middle phase of eating — attack, palate, finish.",u:"Mid-palate describes what happens after the first impression and before the swallow.",x:"Not the roof of the mouth, in this usage, although that is its literal meaning."},
+{t:"Attack",c:"judgement",d:"The first thing you register, in the first second: usually salt, acid, sweetness or heat.",u:"When separating what a dish announces from what it actually delivers.",x:"Not the aroma, which arrives before the attack and belongs to the nose."},
+{t:"Retronasal aroma",c:"aroma",d:"Smell perceived from inside the mouth, travelling up the back of the throat while you chew. It is most of what you call flavour.",u:"To explain why food tastes flat with a blocked nose.",x:"Not orthonasal smell, which is what you get from sniffing the plate. They are genuinely different perceptions."},
+{t:"Volatile",c:"aroma",d:"An aroma molecule light enough to evaporate at eating temperature and reach your nose.",u:"Explaining why warm food smells more, and why cold mutes everything.",x:"Not the same as strong. Some powerful aromas are only released by fat, heat or chewing."},
+{t:"Maillard reaction",c:"structure",d:"Amino acids and sugars reacting above about 140C to produce hundreds of new brown, savoury, roasted compounds.",u:"Crust on bread, sear on steak, roast on coffee, colour on a chip.",x:"Not caramelisation, which is sugar alone browning, with no protein involved."},
+{t:"Caramelisation",c:"structure",d:"Sugar breaking down under heat into darker, more bitter, more complex compounds.",u:"Onions cooked an hour, the top of a brûlée, a dark caramel sauce.",x:"Not burning, which is what happens a minute later and is irreversible."},
+{t:"Emulsion",c:"structure",d:"Fat and water held in suspension in one another, made stable by egg, starch, mustard or cheese proteins.",u:"Carbonara, hollandaise, vinaigrette, tonkotsu broth, risotto.",x:"Not a mixture. An emulsion holds; a mixture separates on the plate."},
+{t:"Reduction",c:"structure",d:"Boiling liquid away to concentrate flavour and thicken by removing water rather than adding starch.",u:"Sauces that coat a spoon and taste more intense than what they were made from.",x:"Not thickening. A reduced sauce has less water; a thickened one has more starch."},
+{t:"Deglaze",c:"structure",d:"Dissolving the browned residue stuck to a hot pan using liquid, so it becomes the sauce.",u:"When the best flavour in the pan is the part that looks burnt on.",x:"Not cleaning up. Those brown bits, the fond, are the concentrated Maillard products."},
+{t:"Fond",c:"structure",d:"The stuck-on brown residue left in a pan after searing. Pure Maillard flavour.",u:"When explaining why the sauce is better than the meat.",x:"Not scorching. Fond is brown and sweet-smelling; scorch is black and acrid."},
+{t:"Tempering",c:"structure",d:"Blooming whole spices in hot fat for seconds and pouring the result over a finished dish. Tadka, chaunk.",u:"Indian cooking especially, where the aroma is added last on purpose.",x:"Not the same as toasting spices dry, which develops different, deeper notes."},
+{t:"Mother sauce",c:"structure",d:"One of the five French bases — béchamel, velouté, espagnole, hollandaise, tomato — from which classical sauces are derived.",u:"When you want to see that most Western sauces are five ideas in variation.",x:"Not a recipe so much as a template."},
+{t:"Seasoning",c:"judgement",d:"The adjustment of salt and acid until a dish tastes most like itself.",u:"The single most common gap between home cooking and restaurant cooking.",x:"Not spicing, which adds new flavours. Seasoning amplifies flavours already present."},
+{t:"Flat",c:"judgement",d:"Tasting of less than the sum of its parts. Almost always missing salt, acid, or both.",u:"When you can identify every ingredient but the dish does not come together.",x:"Not bland, which means under-flavoured. Flat food can be intensely flavoured and still fall over."},
+{t:"Muddled",c:"judgement",d:"Too many competing aromatics, so nothing is identifiable and the dish reads brown and vague.",u:"The classic failure of adding one more good idea.",x:"Not complex. Complexity resolves into distinguishable layers; muddle does not."},
+{t:"Balance",c:"judgement",d:"When no single element dominates and each has a counterweight — fat against acid, sweet against bitter, heat against dairy.",u:"The core criterion for whether a dish works at all.",x:"Not blandness or moderation. Som tam is maximally sour, salty, sweet and hot, and perfectly balanced."},
+{t:"Contrast",c:"judgement",d:"Deliberate opposition of texture, temperature or taste within one bite.",u:"Crisp against soft, cold against hot, sharp pickle against fat.",x:"Not variety. Contrast happens inside a mouthful; variety happens across a plate."},
+{t:"Lift",c:"judgement",d:"The brightening effect of acid or fresh aromatics added late, which makes a heavy dish feel lighter.",u:"Gremolata on osso buco, lime in a curry, vinegar in a stew.",x:"Not dilution. Lift raises perceived intensity while lowering perceived weight."},
+{t:"Depth",c:"judgement",d:"The sense of layers underneath the obvious flavour, usually from long cooking, fermentation or ageing.",u:"When a simple-tasting dish keeps giving you more.",x:"Not strength. A powerful flavour can be entirely shallow."},
+{t:"Weight or body",c:"mouthfeel",d:"How heavy something feels in the mouth, driven by fat, gelatin, sugar and dissolved solids.",u:"When comparing a consommé to a bisque made from the same shellfish.",x:"Not richness of flavour. A thin liquid can be intensely flavoured."},
+{t:"Mouthcoating",c:"mouthfeel",d:"A film left behind on the tongue and palate, usually from fat, which mutes the next few bites.",u:"When explaining why a second bite of something rich tastes less than the first.",x:"Not lingering flavour, which is a virtue. Mouthcoating dulls; length illuminates."},
+{t:"Al dente",c:"mouthfeel",d:"Cooked until it still resists the tooth, with a pale firm core visible when broken.",u:"Pasta, rice, beans, vegetables — anywhere bite is structural.",x:"Not undercooked. Undercooked is chalky and dry at the centre; al dente is firm and hydrated."},
+{t:"Snap and bounce",c:"mouthfeel",d:"Elastic resistance in seafood and noodles that springs back rather than yielding.",u:"Prawns in har gow, alkaline ramen noodles, fresh squid.",x:"Not toughness. Bounce releases quickly; toughness has to be chewed through."},
+{t:"Gelatinous",c:"mouthfeel",d:"Collagen dissolved into gelatin, giving lip-sticking body and a wobble when cool.",u:"Braised shank, pig trotter, chicken feet, good stock that sets in the fridge.",x:"Not slimy. Gelatin melts at body temperature; slime does not."},
+{t:"Crisp versus crunchy",c:"mouthfeel",d:"Crisp is thin and shatters — tempura, crackling, filo. Crunchy is thick and fractures — raw carrot, nuts, crackling toasted rice.",u:"When describing why two fried things feel completely different.",x:"Not interchangeable, and using them precisely is an immediate marker of attention."},
+{t:"Silky, velvety, creamy",c:"mouthfeel",d:"A ladder of increasing fat and viscosity: silky is smooth and thin, velvety has nap, creamy is thick and coating.",u:"Custards, purées and sauces, where the exact texture is the point.",x:"Not the same word three times. They describe measurably different thicknesses."},
+{t:"Mealy",c:"mouthfeel",d:"Dry, powdery collapse instead of juicy yield. The specific failure of old apples, stored peaches and over-cooked potatoes.",u:"When fruit is sweet enough but the texture has died.",x:"Not floury, which is a positive term for certain potatoes."},
+{t:"Brine and salinity",c:"taste",d:"Salt plus mineral and iodine notes, tasting specifically of seawater rather than of a salt shaker.",u:"Oysters, seaweed, salt-cured fish, some coastal cheeses.",x:"Not simply salty. Salinity implies a mineral character alongside the salt."},
+{t:"Minerality",c:"aroma",d:"Contested but useful: notes of wet stone, chalk, flint or iron, often alongside high acidity.",u:"White wine, spring water, some oysters and greens.",x:"Not literally minerals being tasted — the mechanism is disputed, the perception is real."},
+{t:"Funk",c:"aroma",d:"Aromas from fermentation that sit near the edge of spoilage: barnyard, cheese rind, fish sauce, durian, natto.",u:"When something smells challenging but tastes deep.",x:"Not rancidity or rot, which taste bitter, sharp and unpleasant rather than merely strong."},
+{t:"Rancid",c:"aroma",d:"Fat that has oxidised, giving crayon, cardboard and old-paint notes. A genuine fault.",u:"Old nuts, stale oil, long-open butter, cheap fried food.",x:"Not funk. Funk is made on purpose; rancidity is neglect."},
+{t:"Piquancy",c:"mouthfeel",d:"The burn of chilli, pepper or mustard — a pain and heat signal, not a taste.",u:"When distinguishing hot food from spiced food.",x:"Not spiciness. A dish can be heavily spiced and have no burn at all."},
+{t:"Málà",c:"mouthfeel",d:"Sichuan's numbing-and-hot combination: chilli burn plus the vibrating tingle of Sichuan pepper.",u:"Mapo tofu, dan dan noodles, Chongqing hotpot.",x:"Not simply very spicy. The numbness is a separate nerve response that changes what heat feels like."},
+{t:"Aftertaste",c:"judgement",d:"What is left when the pleasure has gone: metallic edges, bitterness, chemical sweetness, stale oil.",u:"Reserve it for the unwelcome things that linger.",x:"Not finish. Finish is the good version of the same phenomenon."},
+{t:"Palate fatigue",c:"judgement",d:"The dulling of perception after repeated exposure, especially to fat, salt and sweetness.",u:"Why the fourth oyster is less exciting, and why courses get smaller as they get richer.",x:"Not fullness. It happens long before you are full."},
+{t:"Terroir",c:"aroma",d:"The claim that place — soil, climate, water, local microbes — leaves a detectable signature in the food.",u:"Oysters, wine, coffee, honey, cheese; strongest where processing is lightest.",x:"Not marketing, though it is used that way. In lightly-processed foods the effect is real and measurable."},
+{t:"Ripeness",c:"judgement",d:"The narrow window where sugar, acid and aroma peak together, before texture collapses.",u:"Fruit, cheese, and anything that keeps changing after it leaves the farm.",x:"Not sweetness alone. Sweet fruit with no acid or aroma tastes like sugar water."},
+{t:"Umami synergy",c:"taste",d:"Glutamate and nucleotides together taste far more savoury than either alone — several times more, not slightly.",u:"Kombu with bonito, tomato with anchovy, mushroom with meat, parmesan on anything.",x:"Not just adding two savoury things. The effect is multiplicative, which is why these pairs recur worldwide."},
+{t:"Nixtamalisation",c:"structure",d:"Soaking maize in an alkaline solution, which loosens the hull, frees nutrients and creates the smell of real tortilla.",u:"Tortillas, tamales, hominy, pozole.",x:"Not just cooking corn. The alkali is what makes masa possible and gives it its aroma."},
+{t:"Socarrat",c:"structure",d:"The toasted crust of rice at the bottom of a paella pan, and the most prized part of the dish.",u:"Paella, and by analogy tahdig, nurungji and the crust in a claypot rice.",x:"Not burnt rice, though the line between them is about thirty seconds wide."},
+{t:"Bitterness",c:"taste",d:"The taste of alkaloids and polyphenols, evolved as a poison warning and learned as a pleasure.",u:"Coffee, cacao, chicory, radicchio, dark caramel, hops, brassica stems.",x:"Not sourness, which makes you salivate. Bitterness makes you swallow harder."},
+{t:"Sweetness as structure",c:"taste",d:"Sugar used not for sweet taste but to round edges, tame acid, and balance chilli.",u:"A pinch in a tomato sauce, palm sugar in a Thai dressing, honey in a marinade.",x:"Not making a dish sweet. If you can taste the sugar, too much went in."},
+{t:"Umami-rich versus salty",c:"taste",d:"The most useful diagnostic distinction there is: adding salt makes a dish sharper, adding umami makes it fuller.",u:"When a dish is well salted and still hollow — it needs anchovy, miso, parmesan or mushroom.",x:"Not the same lever, though salt is the reflex that gets pulled for both."},
+{t:"Seasonality",c:"judgement",d:"The window in which an ingredient is at its peak, which for most produce is weeks rather than months.",u:"When the same dish is extraordinary in August and pointless in February.",x:"Not availability. Almost everything is available all year; almost nothing is in season all year."},
+{t:"Carryover",c:"structure",d:"The continued cooking of hot food after it leaves the heat, as warmth keeps travelling inward from the surface.",u:"Why a steak is pulled early and rested, and why fish keeps cooking on the plate while you look at it.",x:"Not resting. Resting redistributes juice; carryover is the temperature still climbing."},
+{t:"Restraint",c:"judgement",d:"Leaving things out. The mark of confidence in a dish, and the hardest thing to learn.",u:"Three-ingredient pasta, single-species sashimi, salt-only steak.",x:"Not minimalism as a style. Restraint means every remaining element is load-bearing."}
+];
+
+const LEVERS = [
+{id:"salt",n:"Salt",sub:"the amplifier",
+ job:"Salt suppresses bitterness, raises sweetness and umami, and pulls aroma compounds into solution. It is the only ingredient that makes food taste more like itself, which is why it is the first fix for almost any dull dish.",
+ less:"Tastes hollow and vague; you can name the ingredients but they do not add up.",
+ more:"Sharp, unpleasant, drying, and impossible to reverse. Fat, starch and acid can hide it; water only dilutes everything else.",
+ meet:["tomato-salad","jamon","cacio-e-pepe"],
+ train:"Salt half a bowl of soup and leave the other half. Alternate spoons. The difference is not saltiness — it is that one side has flavours you could not detect in the other."},
+{id:"acid",n:"Acid",sub:"the cutter",
+ job:"Sourness makes you salivate, which physically clears fat from the tongue and resets you for the next bite. It is what makes a rich dish repeatable rather than merely impressive.",
+ less:"Heavy, cloying, tiring after two bites even though nothing tastes wrong.",
+ more:"Harsh and thin, hollowing the dish out. Fat, salt or a pinch of sugar pulls it back.",
+ meet:["ceviche","som-tam","banh-mi"],
+ train:"Take two spoons of the same stew and add a few drops of lemon to one. Notice that it does not taste of lemon — it tastes clearer, and the meat tastes more like meat."},
+{id:"sweet",n:"Sweetness",sub:"the rounder",
+ job:"Sugar smooths edges: it blunts acid, tames chilli, balances bitterness and gives browning something to work with. In savoury cooking it is usually invisible and always structural.",
+ less:"Angular and severe; sharp edges with nothing to soften them.",
+ more:"Cloying and childish, flattening everything else into one note. The commonest fault in exported versions of Asian dishes.",
+ meet:["char-siu","tarte-tatin","green-curry"],
+ train:"Taste a tomato sauce, then the same sauce with a quarter-teaspoon of sugar. The goal is a sauce that tastes rounder, not sweeter. If you can taste sugar, you have gone past it."},
+{id:"bitter",n:"Bitterness",sub:"the adult",
+ job:"Bitterness stops sweetness and fat from becoming sickly, adds the impression of depth, and is the taste most strongly associated with a developed palate because it is the one we are born rejecting.",
+ less:"Sweet dishes cloy; rich dishes feel shapeless.",
+ more:"Aggressive and drying, and it lingers longer than any other taste.",
+ meet:["espresso","matcha","tarte-tatin"],
+ train:"Eat dark chocolate at 55%, then 70%, then 85%, in that order, with a pause between. Notice bitterness moving from an obstacle to a flavour with fruit and roast inside it."},
+{id:"umami",n:"Umami",sub:"the deepener",
+ job:"Savour from free glutamate, multiplied several times over when nucleotides from meat, fish or mushroom are present too. It creates fullness and length rather than intensity, and it is what most people mean when they say a dish tastes of something.",
+ less:"Thin and hollow; the dish stops the moment you swallow.",
+ more:"Rare, but possible: a heavy, broth-cube flatness that dulls the palate.",
+ meet:["dashi","parmigiano","anchovy"],
+ train:"Make two cups of dashi, one with kombu only, one with kombu and bonito. Alone they are pleasant; together the savour is several times louder. That multiplication is the most useful fact in cooking."},
+{id:"fat",n:"Fat",sub:"the carrier",
+ job:"Fat dissolves aroma compounds and releases them slowly, coats the tongue, carries heat, and creates almost every texture people describe as luxurious. It is not a taste, but it changes every taste around it.",
+ less:"Dry, harsh, short-lived flavour with no lingering aroma.",
+ more:"Mouth-coating and dulling, and it needs acid, bitterness or crunch to stay pleasurable.",
+ meet:["otoro","tonkotsu","croissant"],
+ train:"Taste a herb in water and the same herb warmed in oil. The oil version is louder, rounder and lasts longer, because most aromatics are fat-soluble."},
+{id:"heat",n:"Burn",sub:"the pain that is not a taste",
+ job:"Capsaicin, piperine and mustard oils trigger heat and pain receptors, not taste buds. The burn raises heart rate and triggers endorphins, which is why it becomes pleasurable with exposure. It also builds cumulatively across a meal.",
+ less:"For dishes built around it, everything else tastes flabby.",
+ more:"Anaesthetises the palate and hides everything you paid for.",
+ meet:["mapo-tofu","som-tam","jerk"],
+ train:"Compare chilli burn to Sichuan pepper on separate bites. One is heat on the tongue and throat; the other is a physical vibration on the lips. Learn to name which one you are feeling."},
+{id:"aroma",n:"Aroma",sub:"most of what you call taste",
+ job:"The tongue detects five tastes. The nose detects thousands of compounds, and does so both by sniffing and through the back of the throat while chewing. Perhaps eighty percent of flavour is smell.",
+ less:"Everything tastes vaguely of nothing, as with a cold or with fridge-cold food.",
+ more:"Muddled: too many loud aromatics fighting, resolving into a brown vagueness.",
+ meet:["pho","dal-tadka","peach"],
+ train:"Pinch your nose, eat a jellybean, and chew. You will get sweet and sour only. Release your nose mid-chew and the actual flavour arrives at once. This is the single most convincing demonstration in food."},
+{id:"texture",n:"Texture",sub:"the structure of pleasure",
+ job:"Texture governs how fast flavour is released, how long a bite lasts, and how much attention it demands. Contrast within a mouthful — crisp against soft, dry against wet — is one of the most reliable sources of pleasure in food.",
+ less:"Monotone and tiring, however good the flavour. The commonest flaw in home cooking.",
+ more:"Fussy and effortful, where every bite is work.",
+ meet:["banh-mi","tempura","pavlova"],
+ train:"Eat a soup, then the same soup with croutons and herbs. Nothing about the flavour changed; the experience did. Ask what a dish gives you to bite against."},
+{id:"temp",n:"Temperature",sub:"the volume knob",
+ job:"Warmth releases volatile aromas and raises perceived sweetness. Cold suppresses both, which is why ice cream must be over-sweetened and gazpacho over-seasoned. Temperature contrast within a dish is a pleasure of its own.",
+ less:"Lukewarm food is the worst case: all mouthfeel, no aroma, nothing to interrupt it.",
+ more:"Too hot to taste, which anaesthetises the tongue and hides everything.",
+ meet:["hummus","gelato","creme-brulee"],
+ train:"Taste the same soup hot, warm and cold. Notice the salt seeming to rise as it cools and the aroma disappearing. Most restaurant plates are seasoned for the temperature they arrive at."}
+];
+
+const FAULTS = [
+{id:"flat",n:"Flat",fix:"Salt first, then <b>acid</b>",
+ why:"Flatness is almost never about missing ingredients. Salt raises umami and sweetness and suppresses bitterness; acid makes you salivate and separates the flavours out again. Add salt, taste, then a few drops of lemon or vinegar, and taste again. If it is still hollow after both, it needs umami — anchovy, miso, parmesan, mushroom — not more salt.",egs:["tomato-salad","dashi"]},
+{id:"heavy",n:"Heavy or cloying",fix:"Add <b>acid, bitterness, or something crunchy</b>",
+ why:"Richness needs a counterweight, and there are three: sourness that clears the tongue, bitterness that stops sweetness, and texture that interrupts. This is why pickles come with fatty meat, gremolata with braises, and tart fruit with cream. Note that adding more salt makes heaviness worse, and it is the reflex most people reach for.",egs:["banh-mi","osso-buco"]},
+{id:"harsh",n:"Harsh or too sharp",fix:"Add <b>fat, or a pinch of sugar</b>",
+ why:"The opposite failure. Too much acid or bitterness has nothing to land on. Fat coats the tongue and slows delivery; a small amount of sugar rounds off the edges without registering as sweetness. Dairy is the fastest fix because it does both at once, which is why yoghurt accompanies hot and sour food everywhere it exists.",egs:["yoghurt","hollandaise"]},
+{id:"muddled",n:"Muddled",fix:"Remove things. <b>Let one voice lead</b>",
+ why:"Too many aromatics competing produces a brown vagueness where nothing is identifiable. The fix is subtraction, not addition: pick which flavour is the point and let the others support it. A useful test is whether you can name three things in the dish with your eyes closed. Complexity resolves into layers; muddle does not.",egs:["mole","dashi"]},
+{id:"monotone",n:"Boring, though nothing is wrong",fix:"Add <b>contrast</b>, not more flavour",
+ why:"Every bite the same is the commonest flaw in competent home cooking. The fix is structural: something crisp on something soft, something cold on something hot, something raw on something cooked, something sharp on something rich. Herbs, pickles, nuts, crackling, a squeeze of citrus at the table.",egs:["banh-mi","congee"]},
+{id:"salty",n:"Too salty",fix:"Add <b>fat, starch or acid</b> — never water",
+ why:"Water dilutes the salt and everything else in equal measure, leaving a weak, still-salty dish. Fat coats the tongue and slows salt perception; starch absorbs and buffers; acid distracts the palate. Adding a sweet element also works. Doubling the batch is the honest answer when there is time.",egs:["risotto","yoghurt"]},
+{id:"watery",n:"Thin or watery",fix:"Reduce it, or add <b>gelatin, starch or fat</b>",
+ why:"Body is a separate property from flavour, and thin liquid tastes weak even when it is well seasoned. Boil the water off rather than adding thickener where you can; the flavour concentrates at the same time. Gelatin from bones gives the lip-sticking weight that starch cannot imitate.",egs:["tonkotsu","boeuf-bourguignon"]},
+{id:"dull",n:"Smells of nothing",fix:"Serve it <b>warmer</b>, add fat, and finish with something fresh",
+ why:"Aroma is most of flavour, and aroma compounds must be volatile to reach your nose. Cold suppresses them, fat carries them, and heat releases them. The professional move is to add a raw aromatic at the very end — herbs, zest, a spoon of hot spiced fat — so it arrives at the table still evaporating.",egs:["dal-tadka","gazpacho"]}
+];
+
+const PROTOCOL = [
+{b:"Smell it before you touch it",s:"Lean over the plate for two seconds. This is the only moment you get the orthonasal aroma clean, before your own chewing takes over. Name one thing you can smell."},
+{b:"Take the first bite plain",s:"No sauce, no bread, no drink. Notice what arrives first — salt, sour, sweet, heat — and how fast. That is the attack, and it is usually what the cook wanted you to notice."},
+{b:"Chew slowly and breathe out through your nose",s:"This is retronasal aroma, and it is most of the flavour. It arrives a beat after the taste. Try to notice the moment it opens up."},
+{b:"Register the texture separately",s:"Ask what you are biting against, and whether it changes. Texture decides how fast flavour is released and whether the fifth bite is still interesting."},
+{b:"Wait after you swallow",s:"Count to five. What is still there, and is it pleasant? A long, evolving finish is the most reliable marker of something well made; a flavour that stops dead is not."},
+{b:"Ask the two questions",s:"What is holding this together — where is the acid, fat, salt or crunch that makes it work? And what would I add? Even a wrong answer trains you faster than praise does."}
+];
+
+const DRILLS = [
+{n:"The salt ladder",kit:"one soup, salt",p:"Put four spoons of an unsalted soup in four cups. Leave one alone; add a tiny pinch of salt to the second, twice that to the third, twice again to the fourth. Taste in order. You are looking for the point where the flavours suddenly separate and become nameable — and then the point where the whole thing turns sharp. Those are your two boundaries, and they are closer together than you expect."},
+{n:"The acid test",kit:"any stew, lemon",p:"Take two spoons of the same rich dish and add three drops of lemon to one. Taste the plain one, then the acidified one, then the plain one again. The second does not taste of lemon: it tastes cleaner, and the meat tastes more like meat. Once you have felt this you will never cook without a lemon nearby."},
+{n:"Umami multiplication",kit:"kombu, bonito flakes",p:"Steep kombu in hot water for ten minutes; taste. Steep bonito flakes alone; taste. Combine them and taste again. Alone, each is mild. Together, the savour is several times stronger. This is glutamate-nucleotide synergy, and it explains tomato with anchovy, mushroom with beef, and parmesan on everything."},
+{n:"The nose clip",kit:"a jellybean or two spices",p:"Pinch your nose shut, put a jellybean in your mouth, and chew. You will taste sweet and slightly sour, and nothing else. Release your nose while still chewing. The identity of the flavour arrives instantly. Nothing else demonstrates so clearly that most of taste is smell."},
+{n:"Temperature sweep",kit:"one soup, patience",p:"Taste a soup hot, at room temperature, and cold from the fridge. The salt seems to rise as it cools, the sweetness falls, and the aroma disappears almost entirely. This is why cold dishes are seasoned harder, and why lukewarm food is the least pleasant of all."},
+{n:"Fat as a carrier",kit:"rosemary or chilli, oil, water",p:"Warm the same aromatic gently in water and in oil, then taste both. The oil version is louder, rounder and lasts far longer, because most aroma compounds dissolve in fat and not in water. This is the whole reason for blooming spices and for finishing sauces with butter."},
+{n:"Contrast, added and removed",kit:"soup, croutons, herbs",p:"Eat a bowl of smooth soup, then a second bowl with croutons, herbs and a swirl of oil. The flavour is identical; the experience is not. Do the reverse with a dish you like: mentally remove the crunchy part and ask what would be lost."},
+{n:"Bitter ramp",kit:"three chocolate bars",p:"Taste 55%, 70% and 85% chocolate in order, with water between. Early on, the 85% will read as an obstacle. After a few sessions across weeks it will read as fruit, roast and length. This is measurable tolerance shifting, and it works the same way for coffee, chicory and hops."}
+];
+
+const TABLE = [
+{n:"Order the plainest thing on the menu",kit:"any restaurant",p:"A roast chicken, a plate of pasta with three ingredients, a simple broth, a green salad. Complicated dishes hide their faults under sauce and garnish; the simple ones have nowhere to hide, so they tell you whether the kitchen can season, control heat and buy well. If the simplest dish is good, everything else probably is."},
+{n:"Taste before you season",kit:"discipline",p:"Salt and pepper on the table before the first bite is a reflex worth breaking. Someone made a decision about seasoning; find out what it was. If the dish needs salt, that is real information about the kitchen — and if it does not, you have learned what correctly seasoned tastes like."},
+{n:"Notice what arrives alongside",kit:"attention",p:"Pickled ginger with fatty broth, lemon with fried fish, mint with lamb, cornichons with pâté, lime with a curry. These pairings are load-bearing rather than decorative, and they are the fastest way to learn which counterweight goes with which richness. Eat a bite without the accompaniment, then with."},
+{n:"Ask one specific question",kit:"nerve",p:"Not is this good, which nobody can answer, but how long is the broth cooked, or which chilli is in this. Specific questions get real answers from people who care, and the answer usually explains the thing you were tasting but could not name."},
+{n:"Eat in the order the kitchen intended",kit:"patience",p:"Courses get richer, and richness accumulates on the palate. Within a plate, work from the mildest element to the strongest, or the strong one will flatten everything after it. When something acidic or pickled is on the plate, it is there to be returned to, not finished first."},
+{n:"Write one sentence afterwards",kit:"a phone",p:"Not a review — a description. The one dish you would order again, and the specific reason: it was sharper than expected, the crust held, there was something bitter underneath. A month of one-sentence notes does more for a palate than any amount of reading, because it forces you to convert sensation into language while it is still fresh."}
+];
+
+const LADDERS = [
+{n:"Bitterness",sub:"The most useful ladder, because bitterness underpins coffee, chocolate, beer, greens and dark caramel.",
+ r:[{n:"Dark chocolate at 55%",e:"Sweet enough to carry it"},{n:"Espresso with milk",e:"Fat blunts the edge"},{n:"Grilled radicchio or endive with something sweet",e:"Bitter as a vegetable"},{n:"Black coffee, single origin, lighter roast",e:"Acidity and fruit become visible"},{n:"Matcha, campari, 85% chocolate",e:"Bitterness as the point of the drink"}]},
+{n:"Fermented funk",sub:"Ferment aromas sit deliberately close to spoilage. The line is learned, not innate.",
+ r:[{n:"Yoghurt and aged cheddar",e:"Lactic tang, familiar"},{n:"Kimchi, sauerkraut, sourdough",e:"Sour with vegetal funk"},{n:"Fish sauce and anchovy in cooked dishes",e:"Funk hidden inside savour"},{n:"Washed-rind cheese, blue cheese",e:"Smell far ahead of taste"},{n:"Nattō, century egg, stinky tofu",e:"Aroma and flavour fully separated"}]},
+{n:"Chilli heat",sub:"Capsaicin tolerance builds physically with regular exposure, and fades if you stop.",
+ r:[{n:"Black pepper and paprika",e:"Warmth without burn"},{n:"Fresh mild chilli in a fatty dish",e:"Dairy and oil moderate it"},{n:"Dried chilli pastes, gochujang, harissa",e:"Heat with fruit behind it"},{n:"Sichuan mála dishes",e:"Burn plus numbness together"},{n:"Scotch bonnet and bird's eye at full strength",e:"Heat as the main event"}]},
+{n:"Difficult textures",sub:"Slippery, gelatinous and sticky textures are rejected culturally, not universally.",
+ r:[{n:"Soft-set custards and panna cotta",e:"Wobble, but familiar"},{n:"Braised pork belly, chicken skin",e:"Gelatin as luxury"},{n:"Oysters, raw scallop",e:"Slippery and cold"},{n:"Okra, mountain yam, jellyfish",e:"Deliberate sliminess"},{n:"Nattō, sea cucumber, chicken feet",e:"Sticky and cartilaginous"}]},
+{n:"Blood and iron",sub:"Offal and rare meat read as alarming until they read as rich.",
+ r:[{n:"Chicken liver pâté",e:"Fat and salt lead"},{n:"Steak cooked medium-rare",e:"Juices, not blood"},{n:"Grilled liver, heart skewers",e:"Iron in the open"},{n:"Steak tartare, raw beef",e:"No heat at all"},{n:"Blood sausage, tripe, kidney",e:"Iron as the point"}]}
+];
+</script>
+<script>
+const $ = s => document.querySelector(s);
+const byId = Object.fromEntries(D.map(d => [d.id, d]));
+const FORCE = Object.fromEntries(FORCES.map(f => [f.id, f]));
+const forceName = id => (FORCE[id] ? FORCE[id].n : id);
+const famName = id => (FAMS[id] ? FAMS[id].n : id);
+const HEX = {time:"#C79AD1", water:"#79BFC9", fire:"#E58C3C", hand:"#B7CE6E"};
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const AXN = Object.fromEntries(AX);
+
+/* ---------- signature: the taste-print ---------- */
+function print(d, size, labelled){
+  const R = labelled ? 74 : 40, C = labelled ? 108 : 50;
+  const boxW = labelled ? 264 : C*2, boxH = C*2, CX = boxW/2, CY = C;
+  const col = HEX[d.force];
+  const pt = (i, r) => {
+    const a = -Math.PI/2 + i*2*Math.PI/8;
+    return [(CX + Math.cos(a)*r).toFixed(1), (CY + Math.sin(a)*r).toFixed(1)];
+  };
+  let g = "";
+  // guide rings
+  const rings = labelled ? [1,0.6,0.2] : [1];
+  rings.forEach(f => {
+    g += `<polygon points="${AX.map((_,i)=>pt(i,R*f).join(",")).join(" ")}" fill="none" stroke="#3A322A" stroke-width="${labelled?0.8:0.7}"/>`;
+  });
+  if(labelled) AX.forEach((_,i)=>{ const [x,y]=pt(i,R); g += `<line x1="${CX}" y1="${CY}" x2="${x}" y2="${y}" stroke="#3A322A" stroke-width="0.6"/>`; });
+  const poly = AX.map(([k],i)=>pt(i, R*(0.13 + d.t[k]/5*0.87)).join(",")).join(" ");
+  g += `<polygon points="${poly}" fill="${col}" fill-opacity="0.2" stroke="${col}" stroke-width="${labelled?1.8:1.5}" stroke-linejoin="round"/>`;
+  if(labelled){
+    AX.forEach(([k,n],i)=>{
+      const [x,y] = pt(i, R+17);
+      const a = -Math.PI/2 + i*2*Math.PI/8;
+      const anchor = Math.abs(Math.cos(a))<0.3 ? "middle" : (Math.cos(a)>0?"start":"end");
+      g += `<text x="${x}" y="${(+y+3).toFixed(1)}" text-anchor="${anchor}" fill="#AFA490" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1">${n.toUpperCase()}</text>`;
+    });
+  }
+  return `<svg viewBox="0 0 ${boxW} ${boxH}" width="${size}" height="${(size*boxH/boxW).toFixed(0)}" aria-hidden="true">${g}</svg>`;
+}
+
+/* ---------- drawer ---------- */
+function seesaw(d){
+  const rich = d.t.fa*1.25 + d.weight*0.9 + d.t.sw*0.5;
+  const cut  = d.t.so*1.3 + d.t.bi*0.8 + d.contrast*0.95 + d.t.ar*0.35;
+  const p = Math.round(rich/(rich+cut)*100);
+  const parts = [[d.t.so,"acidity"],[d.t.bi,"bitterness"],[d.contrast,"texture contrast"],[d.t.ar,"aromatic lift"]]
+    .filter(x=>x[0]>=3).sort((a,b)=>b[0]-a[0]).slice(0,2).map(x=>x[1]);
+  let verdict;
+  if(p>=62) verdict = parts.length ? `Richness leads, held in check by ${parts.join(" and ")}.` : `Richness leads with little to cut it — a small dish, or one that needs a sharp partner on the table.`;
+  else if(p<=42) verdict = `Sharpness leads. The fat and sweetness present are what stop it from being harsh.`;
+  else verdict = parts.length ? `Evenly matched: richness paid for by ${parts.join(" and ")}.` : `Evenly matched, and light on both sides — a quiet dish that rewards attention.`;
+  return `<div class="seesaw"><div class="row"><span>Richness ${p}%</span><span>Counterweight ${100-p}%</span></div>
+    <div class="beam"><i style="width:${p}%"></i><i style="width:${100-p}%"></i></div>
+    <p class="verdict">${verdict}</p></div>`;
+}
+function bars(d){
+  return `<div class="tastebars">${AX.map(([k,n])=>{
+    let cells=""; for(let i=1;i<=5;i++) cells += `<i class="${i<=d.t[k]?"on":""}"></i>`;
+    return `<div class="tbar"><span>${n}</span><span class="trk">${cells}</span><span class="v">${d.t[k]}</span></div>`;
+  }).join("")}</div>`;
+}
+const ACQ = ["","immediate","easy","takes a couple of tries","acquired","fully acquired"];
+function openDish(id){
+  const d = byId[id]; if(!d) return;
+  $("#din").innerHTML = `
+    <button class="dclose" id="dclose" aria-label="Close">&times;</button>
+    <p class="eyebrow f-${d.force}">${forceName(d.force)} &middot; ${famName(d.fam)}</p>
+    <h2 class="dname">${esc(d.n)}</h2>
+    <p class="dorigin">${esc(d.aka)} &middot; ${esc(d.o)}</p>
+    <div class="dprint">${print(d, 250, true)}</div>
+    <div class="dsect"><h5>What it is</h5><p>${esc(d.what)}</p></div>
+    <div class="dsect"><h5>What to look for</h5><p class="look">${esc(d.look)}</p></div>
+    <div class="dsect"><h5>How it goes wrong</h5><p class="fail">${esc(d.fail)}</p></div>
+    <div class="dsect"><h5>The principle</h5><p class="teaches">${esc(d.teaches)}</p></div>
+    ${bars(d)}
+    ${seesaw(d)}
+    <div class="dsect"><h5>Texture</h5><p class="texchips">${d.tex.map(t=>`<i>${esc(t)}</i>`).join("")}</p></div>
+    <div class="dsect"><h5>Difficulty</h5><p>${d.acq}/5 &mdash; ${ACQ[d.acq]}</p></div>
+    ${d.also.length?`<div class="dsect"><h5>Also draws on</h5><p>${d.also.map(f=>`<span class="f-${f}">${forceName(f)}</span>`).join(", ")}</p></div>`:""}
+    <div class="dsect"><h5>If this interests you</h5><p>${d.next.filter(n=>byId[n]).map(n=>`<button class="chip" data-go="${n}">${print(byId[n],20)}${esc(byId[n].n)}</button>`).join("")}</p></div>`;
+  $("#drawer").classList.add("on"); $("#scrim").classList.add("on");
+  $("#drawer").scrollTop = 0; $("#dclose").focus();
+}
+let lastFocus = null;
+function closeDrawer(){
+  $("#drawer").classList.remove("on"); $("#scrim").classList.remove("on");
+  if(lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  lastFocus = null;
+}
+$("#drawer").addEventListener("keydown", e=>{
+  if(e.key !== "Tab") return;
+  const f = [...$("#drawer").querySelectorAll("button, [href], input, select")];
+  if(!f.length) return;
+  const first = f[0], last = f[f.length-1];
+  if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
+$("#scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeDrawer(); });
+document.addEventListener("click", e=>{
+  const g = e.target.closest("[data-go]");
+  if(g){ if(!$("#drawer").classList.contains("on")) lastFocus = g.closest("button") || g; openDish(g.dataset.go); return; }
+  if(e.target.closest("#dclose")) closeDrawer();
+});
+const dishChip = id => `<button class="chip" data-go="${id}">${print(byId[id],22)}${esc(byId[id].n)}</button>`;
+
+/* ---------- tabs ---------- */
+function selectTab(t){
+  document.querySelectorAll(".tab").forEach(x=>{
+    const on = x===t;
+    x.setAttribute("aria-selected", String(on));
+    x.tabIndex = on ? 0 : -1;
+  });
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on", v.id==="v-"+t.dataset.v));
+  if(t.dataset.v==="balance") drawPlot();
+}
+$("#tabs").addEventListener("click", e=>{ const t = e.target.closest(".tab"); if(t) selectTab(t); });
+$("#tabs").addEventListener("keydown", e=>{
+  if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key)) return;
+  const tabs = [...document.querySelectorAll(".tab")];
+  const i = tabs.indexOf(document.activeElement); if(i<0) return;
+  e.preventDefault();
+  const n = e.key==="Home" ? 0 : e.key==="End" ? tabs.length-1
+          : (i + (e.key==="ArrowRight"?1:-1) + tabs.length) % tabs.length;
+  tabs[n].focus(); selectTab(tabs[n]);
+});
+
+$("#counts").textContent = `${D.length} dishes · ${WORDS.length} terms · ${FORCES.length} forces · ${LEVERS.length} levers`;
+
+/* ---------- hero: fault finder ---------- */
+$("#faults").innerHTML = FAULTS.map(f=>`<button class="fault" data-f="${f.id}" aria-pressed="false">${f.n}</button>`).join("");
+$("#faults").addEventListener("click", e=>{
+  const b = e.target.closest(".fault"); if(!b) return;
+  document.querySelectorAll(".fault").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+  const f = FAULTS.find(x=>x.id===b.dataset.f);
+  $("#answer").innerHTML = `<div><p class="fix">${f.fix}</p><p class="why">${f.why}</p>
+    <div class="egs">${f.egs.filter(e2=>byId[e2]).map(dishChip).join("")}</div></div>`;
+});
+
+/* ---------- ten levers ---------- */
+$("#levers").innerHTML = LEVERS.map(l=>`
+  <article class="lever">
+    <h3>${l.n} <span>${l.sub}</span></h3>
+    <p class="job">${l.job}</p>
+    <dl>
+      <dt>Too little</dt><dd>${l.less}</dd>
+      <dt>Too much</dt><dd>${l.more}</dd>
+      <dt>Train it</dt><dd>${l.train}</dd>
+    </dl>
+    <div class="egs">${l.meet.filter(m=>byId[m]).map(dishChip).join("")}</div>
+  </article>`).join("");
+
+/* ---------- forces taxonomy ---------- */
+$("#forcelegend").innerHTML = FORCES.map(f=>`<span><i class="dot bg-${f.id}"></i>${f.n} &mdash; ${f.sub}</span>`).join("");
+$("#forces").innerHTML = FORCES.map(f=>{
+  const list = D.filter(d=>d.force===f.id);
+  const fams = Object.keys(FAMS).filter(k=>FAMS[k].f===f.id && list.some(d=>d.fam===k));
+  return `<section class="force">
+    <div class="force-head"><h3 class="f-${f.id}">${f.n}</h3><span class="n">${list.length} dishes &middot; ${fams.length} families</span></div>
+    <p class="force-def">${f.def}</p>
+    ${fams.map(k=>`<div class="fam" data-fam="${k}">
+      <h4 class="f-${f.id}">${FAMS[k].n}</h4><p>${FAMS[k].d}</p>
+      <div>${list.filter(d=>d.fam===k).map(d=>
+        `<button class="chip" data-go="${d.id}" data-name="${esc((d.n+" "+d.aka+" "+d.o).toLowerCase())}">${print(d,22)}${esc(d.n)}${d.also.length?`<span class="alsos">${d.also.map(a=>`<i class="bg-${a}"></i>`).join("")}</span>`:""}</button>`).join("")}</div>
+    </div>`).join("")}
+  </section>`;
+}).join("");
+$("#dishsearch").addEventListener("input", e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("#forces .chip").forEach(c=>{
+    c.style.display = (!q || c.dataset.name.includes(q)) ? "" : "none";
+  });
+  document.querySelectorAll("#forces .fam").forEach(f=>{
+    const any = [...f.querySelectorAll(".chip")].some(c=>c.style.display!=="none");
+    f.style.display = any ? "" : "none";
+  });
+  document.querySelectorAll("#forces .force").forEach(s=>{
+    const any = [...s.querySelectorAll(".fam")].some(f=>f.style.display!=="none");
+    s.style.opacity = any ? "1" : "0.25";
+  });
+});
+
+/* ---------- balance plot ---------- */
+const AXES = AX.concat([["weight","Weight"],["contrast","Texture contrast"],["acq","Difficulty"]]);
+AXES.forEach(([k,n])=>{
+  $("#bx").insertAdjacentHTML("beforeend", `<option value="${k}">${n}</option>`);
+  $("#by").insertAdjacentHTML("beforeend", `<option value="${k}">${n}</option>`);
+});
+$("#bx").value = "fa"; $("#by").value = "so";
+const v = (d,k) => (k in d.t) ? d.t[k] : d[k];
+const hash = s => { let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))|0; return h; };
+function drawPlot(){
+  const kx = $("#bx").value, ky = $("#by").value, filt = $("#bf").value;
+  const L=44,R=16,T=18,Bt=42,W=400,H=400;
+  const sx = t => L + t/5.4*(W-L-R), sy = t => (H-Bt) - t/5.4*(H-T-Bt);
+  let g = "";
+  for(let i=0;i<=5;i++){
+    g += `<line class="grid" x1="${sx(i)}" y1="${T}" x2="${sx(i)}" y2="${H-Bt}"/><line class="grid" x1="${L}" y1="${sy(i)}" x2="${W-R}" y2="${sy(i)}"/>`;
+    g += `<text class="alab" x="${sx(i)}" y="${H-Bt+14}" text-anchor="middle">${i}</text><text class="alab" x="${L-9}" y="${sy(i)+3}" text-anchor="end">${i}</text>`;
+  }
+  const isDefault = kx==="fa" && ky==="so";
+  if(isDefault){
+    g += `<line class="diag" x1="${sx(0)}" y1="${sy(0)}" x2="${sx(5)}" y2="${sy(5)}"/>`;
+    const z = [[1.2,4.7,"sharp — needs body"],[4.2,4.7,"rich and lifted"],
+               [4.2,0.32,"heavy — needs a cut"],[1.2,0.32,"delicate, or flat"]];
+    z.forEach(([x,y,t])=>{ g += `<text class="zone" x="${sx(x)}" y="${sy(y)}" text-anchor="middle" opacity="0.55">${t}</text>`; });
+  }
+  const nx = AXES.find(a=>a[0]===kx)[1], ny = AXES.find(a=>a[0]===ky)[1];
+  g += `<text class="alab" x="${W-R}" y="${H-8}" text-anchor="end">${nx} &rarr;</text>`;
+  g += `<text class="alab" transform="translate(13,${T}) rotate(-90)" text-anchor="end">${ny} &rarr;</text>`;
+  const shown = D.filter(d=>filt==="all"||d.force===filt);
+  const dist = d => Math.hypot(v(d,kx)-2.5, v(d,ky)-2.5);
+  const pos = {};
+  shown.forEach(d=>{
+    const h = hash(d.id);
+    pos[d.id] = [sx(v(d,kx)) + ((h%13)/13-0.5)*13, sy(v(d,ky)) + (((h>>4)%11)/11-0.5)*13];
+  });
+  // greedy: label the most extreme dishes first, skipping any that would collide
+  const taken = [], labelled = new Set();
+  const overlaps = (a1,b1) => !(a1[2] < b1[0] || b1[2] < a1[0] || a1[3] < b1[1] || b1[3] < a1[1]);
+  const dotBoxes = shown.map(d=>{ const [x,y]=pos[d.id], r=3.2+d.weight*0.5+1.5; return [x-r,y-r,x+r,y+r]; });
+  const side = {};
+  shown.slice().sort((a,b)=>dist(b)-dist(a)).forEach(d=>{
+    if(labelled.size >= 16) return;
+    const [x,y] = pos[d.id];
+    if(y < T+8 || y > H-Bt-4) return;
+    const w = d.n.length*4.3 + 6;
+    const gap = 3.2 + d.weight*0.5 + 3.5;
+    const order = x > W*0.62 ? [true,false] : [false,true];
+    for(const flip of order){
+      const box = flip ? [x-gap-w, y-5, x-gap, y+5] : [x+gap, y-5, x+gap+w, y+5];
+      if(box[0] < L-2 || box[2] > W-2) continue;
+      if(taken.some(t=>overlaps(box,t))) continue;
+      if(dotBoxes.some((t,i)=>shown[i].id!==d.id && overlaps(box,t))) continue;
+      taken.push(box); labelled.add(d.id); side[d.id]=flip; break;
+    }
+  });
+  shown.forEach(d=>{
+    const [x,y] = pos[d.id];
+    const flip = !!side[d.id];
+    g += `<g data-go="${d.id}"><title>${esc(d.n)}</title>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(3.2+d.weight*0.5).toFixed(1)}" fill="${HEX[d.force]}" fill-opacity="0.55" stroke="${HEX[d.force]}" stroke-width="0.9"/>
+      ${labelled.has(d.id)?`<text class="plab" x="${(flip?x-(3.2+d.weight*0.5+3.5):x+(3.2+d.weight*0.5+3.5)).toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="${flip?"end":"start"}">${esc(d.n)}</text>`:""}</g>`;
+  });
+  $("#plot").innerHTML = g;
+  $("#plothint").textContent = isDefault
+    ? `${shown.length} dishes. The diagonal is the balance line: dishes on it pay for their richness with acidity. Dishes below and to the right do not — and look at what they are served with. Tonkotsu arrives with pickled ginger, jamón with sherry, brisket with pickles, mole with lime. The cut is on the table rather than in the pot, but it is never absent. Tap any dish for its card.`
+    : `${shown.length} dishes plotted on ${nx.toLowerCase()} against ${ny.toLowerCase()}. Only the extremes are labelled; tap any dot for the full card.`;
+}
+let axPrev = {"#bx":"fa","#by":"so"};
+function syncAxes(changed){
+  if(changed && $("#bx").value === $("#by").value){
+    // the axis the user did not touch takes the one they just left, so it reads as a swap
+    const other = changed === "#bx" ? "#by" : "#bx";
+    $(other).value = axPrev[changed];
+  }
+  axPrev = {"#bx":$("#bx").value, "#by":$("#by").value};
+  [...$("#bx").options].forEach(o=>{ o.disabled = o.value === $("#by").value; });
+  [...$("#by").options].forEach(o=>{ o.disabled = o.value === $("#bx").value; });
+}
+["#bx","#by"].forEach(s=>$(s).addEventListener("change", ()=>{ syncAxes(s); drawPlot(); }));
+$("#bf").addEventListener("change", drawPlot);
+syncAxes(null);
+drawPlot();
+
+/* ---------- words ---------- */
+const CATS = ["taste","mouthfeel","aroma","structure","judgement"];
+$("#wordcat").innerHTML = `<option value="all">Everything</option>` + CATS.map(c=>`<option value="${c}">${c[0].toUpperCase()+c.slice(1)}</option>`).join("");
+function drawWords(){
+  const q = $("#wordsearch").value.trim().toLowerCase(), c = $("#wordcat").value;
+  const list = WORDS.filter(w=>(c==="all"||w.c===c) && (!q || (w.t+" "+w.d+" "+w.u).toLowerCase().includes(q)));
+  $("#words").innerHTML = list.length ? list.map(w=>`
+    <div class="word"><div><span class="term">${esc(w.t)}</span><span class="cat">${w.c}</span></div>
+      <div><p class="def">${esc(w.d)}</p><p class="use"><b>Use it</b> ${esc(w.u)}</p><p class="vs"><b>Not</b> ${esc(w.x)}</p></div></div>`).join("")
+    : `<p class="hint">No term matches that. Try a shorter word, or switch the filter back to everything.</p>`;
+}
+$("#wordsearch").addEventListener("input", drawWords);
+$("#wordcat").addEventListener("change", drawWords);
+drawWords();
+
+/* ---------- training ---------- */
+$("#protocol").innerHTML = PROTOCOL.map(p=>`<li><b>${p.b}</b><span>${p.s}</span></li>`).join("");
+$("#tabletips").innerHTML = TABLE.map(d=>`<div class="drill"><h4>${d.n}</h4><p>${d.p}</p><p class="kit">Needs: ${d.kit}</p></div>`).join("");
+$("#drills").innerHTML = DRILLS.map(d=>`<div class="drill"><h4>${d.n}</h4><p>${d.p}</p><p class="kit">Needs: ${d.kit}</p></div>`).join("");
+$("#ladders").innerHTML = LADDERS.map(l=>`<div class="ladder"><h4>${l.n}</h4><p class="sub">${l.sub}</p>
+  <ol class="rungs">${l.r.map(r=>`<li><span>${r.n}<em>${r.e}</em></span></li>`).join("")}</ol></div>`).join("");
+
+/* ---------- compare ---------- */
+let picked = ["dashi","tonkotsu","pho"];
+const cin = $("#cin"), csugg = $("#csugg");
+cin.addEventListener("input", ()=>{
+  const q = cin.value.trim().toLowerCase();
+  if(!q){ csugg.classList.remove("on"); return; }
+  const hits = D.filter(d=>(d.n+" "+d.aka+" "+d.o).toLowerCase().includes(q) && !picked.includes(d.id)).slice(0,8);
+  csugg.innerHTML = hits.map(d=>`<button data-add="${d.id}">${esc(d.n)} <span style="color:var(--bone3);font-size:11px">${esc(forceName(d.force))}</span></button>`).join("");
+  csugg.classList.toggle("on", hits.length>0);
+});
+csugg.addEventListener("click", e=>{
+  const b = e.target.closest("[data-add]"); if(!b) return;
+  if(picked.length>=3) picked.shift();
+  picked.push(b.dataset.add); cin.value=""; csugg.classList.remove("on"); drawCompare();
+});
+$("#cpicked").addEventListener("click", e=>{
+  const b = e.target.closest("[data-rm]"); if(!b) return;
+  picked = picked.filter(p=>p!==b.dataset.rm); drawCompare();
+});
+const CMPCOL = ["#EFE6D6","#E58C3C","#79BFC9"];
+function drawOverlay(){
+  const R = 74, CX = 132, CY = 108;
+  const pt = (i,r)=>{ const ang=-Math.PI/2+i*2*Math.PI/8; return [(CX+Math.cos(ang)*r).toFixed(1),(CY+Math.sin(ang)*r).toFixed(1)]; };
+  let g = "";
+  [1,0.6,0.2].forEach(f=>{ g += `<polygon points="${AX.map((_,i)=>pt(i,R*f).join(",")).join(" ")}" fill="none" stroke="#3A322A" stroke-width="0.8"/>`; });
+  AX.forEach(([k,n],i)=>{
+    const [x,y] = pt(i,R); g += `<line x1="${CX}" y1="${CY}" x2="${x}" y2="${y}" stroke="#3A322A" stroke-width="0.6"/>`;
+    const [lx,ly] = pt(i,R+17);
+    const ang = -Math.PI/2+i*2*Math.PI/8;
+    const anc = Math.abs(Math.cos(ang))<0.3 ? "middle" : (Math.cos(ang)>0?"start":"end");
+    g += `<text x="${lx}" y="${(+ly+3).toFixed(1)}" text-anchor="${anc}" fill="#AFA490" font-family="JetBrains Mono, monospace" font-size="8.5" letter-spacing="1">${n.toUpperCase()}</text>`;
+  });
+  picked.forEach((id,i)=>{
+    const d = byId[id]; if(!d) return;
+    const poly = AX.map(([k],j)=>pt(j, R*(0.13 + d.t[k]/5*0.87)).join(",")).join(" ");
+    g += `<polygon points="${poly}" fill="${CMPCOL[i]}" fill-opacity="0.10" stroke="${CMPCOL[i]}" stroke-width="1.7" stroke-linejoin="round"/>`;
+  });
+  $("#coverlay").innerHTML = g;
+  $("#ckey").innerHTML = picked.length
+    ? `<span class="keyline">${picked.map((id,i)=>`<span><i class="dot" style="background:${CMPCOL[i]}"></i>${esc(byId[id].n)}</span>`).join("")}</span>`
+    : "Add a dish above to start comparing.";
+}
+function drawCompare(){
+  $("#cpicked").innerHTML = picked.map((id,i)=>`<span class="pc"><i class="dot" style="background:${CMPCOL[i]}"></i>${esc(byId[id].n)}<button data-rm="${id}" aria-label="Remove ${esc(byId[id].n)}">&times;</button></span>`).join("")
+    + (picked.length<3?`<span class="pc" style="color:var(--bone3);border-style:dashed">add ${3-picked.length} more</span>`:"");
+  drawOverlay();
+  const rows = [
+    ["Force", d=>`<span class="f-${d.force}">${forceName(d.force)}</span>${d.also.length?` <span style="color:var(--bone3)">+ ${d.also.map(a=>forceName(a).toLowerCase()).join(", ")}</span>`:""}`],
+    ["Family", d=>famName(d.fam)],
+    ["Origin", d=>esc(d.o)],
+    ["What it is", d=>esc(d.what)],
+    ["What to look for", d=>esc(d.look)],
+    ["How it fails", d=>esc(d.fail)],
+    ["Texture", d=>d.tex.join(", ")],
+    ["Loudest", d=>{const m=Math.max(...AX.map(([k])=>d.t[k])); return AX.filter(([k])=>d.t[k]===m).map(([,n])=>n.toLowerCase()).join(", ")+` (${m}/5)`;}],
+    ["Difficulty", d=>`${d.acq}/5 — ${ACQ[d.acq]}`],
+    ["The principle", d=>`<i>${esc(d.teaches)}</i>`]
+  ];
+  if(!picked.length){ $("#ctable").innerHTML = ""; return; }
+  $("#ctable").innerHTML = `<thead><tr><th></th>${picked.map(id=>`<th style="color:${HEX[byId[id].force]}">${esc(byId[id].n)}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(([l,fn])=>`<tr><th>${l}</th>${picked.map(id=>`<td>${fn(byId[id])}</td>`).join("")}</tr>`).join("")}</tbody>`;
+}
+drawCompare();
+</script>
+</body>
+</html>
