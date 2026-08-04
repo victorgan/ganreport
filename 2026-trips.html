@@ -1,0 +1,1385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Shape of a Trip</title>
+<meta name="description" content="An atlas of trip archetypes: six shapes a journey can take, eight dials that set how it feels, and what a good version of each one looks like.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E3E7EB; --paper2:#EFF2F4; --paper3:#D4DAE0;
+  --ink:#141A22; --ink2:#454F5B; --ink3:#545E6A; --rule:#C0C8D0;
+  --anchor:#0F6E74; --line:#C0402B; --loop:#8F6410; --hop:#57499B; --orbit:#2C6640; --chase:#9C2E66;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font-family:Newsreader,Georgia,serif;font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;padding-bottom:64px}
+h1,h2,h3,h4,.disp{font-family:"Bricolage Grotesque","Helvetica Neue",sans-serif;font-weight:600;margin:0;letter-spacing:-.02em;line-height:1.05}
+.mono,.eyebrow,.tab{font-family:"Space Mono",ui-monospace,Menlo,monospace}
+.eyebrow{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--line);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+/* masthead + slider hero */
+.masthead{padding:38px 0 6px}
+.masthead h1{font-size:clamp(42px,11vw,96px);font-weight:800;letter-spacing:-.035em}
+.masthead h1 em{font-style:normal;font-weight:400}
+.thesis{max-width:52ch;margin:20px 0 0;color:var(--ink2);font-size:17px}
+.counts{margin-top:12px}
+.dialbox{margin:28px 0 4px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:18px 0 20px}
+.dialbox h2{font-family:Newsreader,serif;font-weight:400;font-size:16px;color:var(--ink2);letter-spacing:0;margin-bottom:16px}
+.slidewrap{max-width:640px}
+input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--ink);border-radius:2px}
+input[type=range]::-moz-range-track{height:2px;background:var(--ink);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--paper2);border:2px solid var(--ink);margin-top:-10px}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--paper2);border:2px solid var(--ink)}
+.poles{display:flex;justify-content:space-between;font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-top:9px}
+.verdict{margin:20px 0 0;max-width:60ch}
+.verdict .big{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:clamp(20px,4.4vw,28px);letter-spacing:-.02em;line-height:1.15;margin:0 0 8px}
+.verdict .sml{margin:0;color:var(--ink2);font-size:15px}
+.picks{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+
+/* tabs */
+.tabbar{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--rule)}
+.tabbar .wrap{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:14px 13px 12px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.view{display:none;padding:30px 0 50px}
+.view.on{display:block}
+.vhead{max-width:60ch;margin-bottom:24px}
+.vhead h2{font-size:clamp(27px,5.6vw,40px);margin:8px 0 12px;font-weight:600}
+.vhead p{margin:0;color:var(--ink2);font-size:16px}
+
+/* shape colours */
+.s-anchor{color:var(--anchor)} .s-line{color:var(--line)} .s-loop{color:var(--loop)}
+.s-hop{color:var(--hop)} .s-orbit{color:var(--orbit)} .s-chase{color:var(--chase)}
+.b-anchor{background:var(--anchor)} .b-line{background:var(--line)} .b-loop{background:var(--loop)}
+.b-hop{background:var(--hop)} .b-orbit{background:var(--orbit)} .b-chase{background:var(--chase)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 auto}
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 22px}
+.diagkey{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:-8px 0 22px;padding:12px 14px;border:1px solid var(--rule);background:var(--paper2);border-radius:2px}
+.diagkey b{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--ink3)}
+.diagkey span{display:flex;align-items:center;gap:6px;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--ink2)}
+.legend span{display:flex;align-items:center;gap:7px;font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);border:1px solid var(--rule);background:var(--paper2);border-radius:99px;padding:5px 11px}
+
+/* archetype chip */
+.chip{display:inline-flex;align-items:center;gap:9px;background:var(--paper2);border:1px solid var(--rule);border-radius:2px;padding:6px 12px 6px 7px;font-size:15px;line-height:1.2;margin:0 5px 5px 0;text-align:left}
+.chip:hover{background:#fff;border-color:var(--ink2)}
+.chip svg{display:block;flex:0 0 auto}
+
+/* shapes taxonomy */
+.shape{margin:0 0 42px;border-top:2px solid var(--ink);padding-top:16px}
+.shape-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.shape-head h3{font-size:clamp(28px,6vw,40px);font-weight:800;letter-spacing:-.03em}
+.shape-head .n{font-family:"Space Mono",monospace;font-size:10.5px;color:var(--ink3)}
+.shape-def{color:var(--ink2);font-size:16px;max-width:60ch;margin:10px 0 22px}
+.fam{margin:0 0 22px;padding-left:16px;border-left:1px solid var(--rule)}
+.fam h4{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin:0}
+.fam p{color:var(--ink3);font-size:14px;margin:5px 0 11px;max-width:58ch}
+
+/* dials view */
+.dials{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:720px){.dials{grid-template-columns:1fr 1fr}}
+.dialcard{border:1px solid var(--rule);background:var(--paper2);border-radius:2px;padding:17px 18px}
+.dialcard h3{font-size:25px;font-weight:600}
+.dialcard .scale{display:flex;justify-content:space-between;font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);margin:10px 0 4px}
+.hist{display:flex;align-items:flex-end;gap:3px;height:30px;margin-bottom:14px}
+.hist i{flex:1;background:var(--paper3);border-bottom:2px solid var(--ink2);min-height:2px}
+.dialcard p{margin:0 0 10px;font-size:15px}
+.dialcard dl{display:grid;grid-template-columns:66px 1fr;gap:3px 10px;margin:0;font-size:14.5px}
+.dialcard dt{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding-top:4px}
+.dialcard dd{margin:0 0 6px;color:var(--ink2)}
+.egs{margin-top:12px;padding-top:11px;border-top:1px solid var(--rule)}
+
+/* plot */
+.plot{width:100%;height:auto;display:block;background:var(--paper2);border:1px solid var(--rule)}
+.plot .grid{stroke:var(--rule);stroke-width:.5}
+.plot .diag{stroke:var(--ink3);stroke-width:.6;stroke-dasharray:3 3}
+.plot .zone{font-family:"Space Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;fill:var(--ink3)}
+.plot .alab{font-family:"Space Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;fill:var(--ink2)}
+.plot .plab{font-family:Newsreader,serif;font-size:8.6px;fill:var(--ink2)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:16px}
+.ctl{display:flex;flex-direction:column;gap:5px}
+.ctl label{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3)}
+select,input[type=text]{font:inherit;font-size:15px;background:var(--paper2);border:1px solid var(--rule);border-radius:2px;color:var(--ink);padding:8px 10px}
+.hint{color:var(--ink3);font-size:13px;margin-top:10px;max-width:70ch}
+
+/* words */
+.word{border-bottom:1px solid var(--rule);padding:15px 0;display:grid;gap:4px 22px;grid-template-columns:1fr}
+@media(min-width:760px){.word{grid-template-columns:200px 1fr}}
+.word .term{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:20px;letter-spacing:-.015em}
+.word .cat{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);display:block;margin-top:3px}
+.word p{margin:0;font-size:15.5px}
+.word .use{margin-top:6px;font-size:14.5px;color:var(--ink2)}
+.word .use b,.word .vs b{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.word .use b{color:var(--orbit)}
+.word .vs{margin-top:4px;font-size:14.5px;color:var(--ink3)}
+.word .vs b{color:var(--line)}
+
+/* craft + faults */
+.craft{display:grid;gap:0;grid-template-columns:1fr;max-width:78ch}
+.rule{border-top:1px solid var(--rule);padding:18px 0;display:grid;gap:6px 24px;grid-template-columns:1fr}
+@media(min-width:700px){.rule{grid-template-columns:230px 1fr}}
+.rule h4{font-size:20px;font-weight:600}
+.rule p{margin:0;font-size:15.5px;color:var(--ink2)}
+.faults{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.fault{border:1px solid var(--rule);background:var(--paper2);border-radius:99px;padding:7px 14px;font-size:15px;color:var(--ink2)}
+.fault:hover{border-color:var(--ink2);color:var(--ink)}
+.fault[aria-pressed="true"]{background:var(--ink);color:var(--paper2);border-color:var(--ink)}
+.answer{min-height:70px;max-width:66ch}
+.answer .fix{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:clamp(19px,4vw,26px);letter-spacing:-.02em;margin:0 0 8px}
+.answer .fix b{color:var(--line);font-weight:600}
+.answer .why{margin:0;color:var(--ink2);font-size:15.5px}
+.answer .idle{color:var(--ink3);margin:0;font-size:15px}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.answer>div{animation:fade .2s ease}
+
+/* compare */
+.picker{position:relative;max-width:400px}
+.sugg{position:absolute;z-index:20;left:0;right:0;background:#fff;border:1px solid var(--ink2);border-radius:2px;max-height:230px;overflow:auto;display:none}
+.sugg.on{display:block}
+.sugg button{display:block;width:100%;text-align:left;padding:8px 11px;font-size:15px;border-bottom:1px solid var(--rule)}
+.sugg button:hover{background:var(--paper3)}
+.picked{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 22px}
+.pc{display:flex;align-items:center;gap:9px;border:1px solid var(--rule);background:var(--paper2);border-radius:99px;padding:5px 7px 5px 13px;font-size:14.5px}
+.pc button{width:19px;height:19px;border-radius:50%;background:var(--paper3);font-size:12px;line-height:1}
+.cmpdiagrams{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:24px}
+.cmpdiagrams figure{margin:0;text-align:center}
+.cmpdiagrams figcaption{font-family:"Space Mono",monospace;font-size:10px;color:var(--ink2);margin-top:4px}
+.track{margin-bottom:15px}
+.track .tl{display:flex;justify-content:space-between;font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.track .tr{position:relative;height:20px}
+.track .tr::before{content:"";position:absolute;left:0;right:0;top:9px;height:1px;background:var(--paper3)}
+.track .tr i{position:absolute;top:4px;width:13px;height:13px;border-radius:50%;margin-left:-6.5px;border:2px solid var(--paper)}
+.ctable{width:100%;min-width:460px;border-collapse:collapse;font-size:15px}
+.ctable th{text-align:left;font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);font-weight:400;padding:11px 12px 11px 0;vertical-align:top;width:110px;border-bottom:1px solid var(--rule)}
+.ctable td{padding:11px 12px 11px 0;vertical-align:top;border-bottom:1px solid var(--rule)}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,26,34,.42);opacity:0;pointer-events:none;transition:opacity .2s;z-index:60}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;z-index:70;background:var(--paper2);border-left:1px solid var(--ink2);top:0;right:0;bottom:0;width:min(460px,93vw);transform:translateX(103%);transition:transform .26s cubic-bezier(.2,.7,.3,1);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.drawer.on{transform:none}
+@media(max-width:640px){.drawer{top:auto;left:0;width:100%;height:88vh;border-left:0;border-top:2px solid var(--ink);border-radius:10px 10px 0 0;transform:translateY(103%)}}
+.din{padding:20px 22px 60px}
+.dclose{position:sticky;top:0;float:right;width:31px;height:31px;border:1px solid var(--rule);border-radius:50%;background:var(--paper2);font-size:15px}
+.dname{font-size:31px;font-weight:600;margin:6px 0 3px;letter-spacing:-.025em}
+.daka{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:var(--ink3)}
+.ddiagram{display:flex;justify-content:center;padding:16px 0 4px}
+.dsect{margin:17px 0}
+.dsect h5{margin:0 0 5px;font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:400}
+.dsect p{margin:0;font-size:15.5px}
+.good{border-left:2px solid var(--anchor);padding-left:12px}
+.bad{border-left:2px solid var(--line);padding-left:12px;color:var(--ink2)}
+.principle{font-family:"Bricolage Grotesque",sans-serif;font-weight:400;font-size:18px;line-height:1.3;letter-spacing:-.015em}
+.kv{display:grid;grid-template-columns:88px 1fr;gap:2px 10px;font-size:14.5px;margin:16px 0}
+.kv dt{font-family:"Space Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);padding-top:4px}
+.kv dd{margin:0 0 6px}
+.dbar{display:grid;grid-template-columns:70px 1fr 16px;gap:9px;align-items:center;margin-bottom:6px}
+.dbar span:first-child{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2)}
+.dbar .trk{height:7px;display:flex;gap:2px}
+.dbar .trk i{flex:1;background:var(--paper3)}
+.dbar .trk i.on{background:var(--ink)}
+.dbar .v{font-family:"Space Mono",monospace;font-size:10px;color:var(--ink3)}
+footer{border-top:1px solid var(--rule);margin-top:20px}
+footer .wrap{padding:26px 20px 56px;color:var(--ink3);font-size:13.5px}
+footer p{max-width:74ch;margin:0 0 9px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="wrap masthead">
+  <p class="eyebrow">An atlas of trip archetypes</p>
+  <h1>The shape<br>of a <em>trip</em></h1>
+  <p class="thesis">Where you go matters less than the shape of how you go. One base or seven, a line or a loop, a place seen once or the same place for twenty years — that structure decides the pace, the cost, the tiredness and what you remember, long before the destination gets a say.</p>
+  <p class="eyebrow counts" id="counts"></p>
+
+  <section class="dialbox">
+    <h2>Start with the only question that matters: what do you want to be true when you get home?</h2>
+    <div class="slidewrap">
+      <input type="range" id="hero" min="0" max="10" step="1" value="5" aria-label="From rested to changed">
+      <div class="poles"><span>come back rested</span><span>come back changed</span></div>
+    </div>
+    <div class="verdict" id="verdict" aria-live="polite"></div>
+  </section>
+</header>
+
+<nav class="tabbar"><div class="wrap" role="tablist" id="tabs">
+  <button class="tab" role="tab" id="t-shapes" aria-controls="v-shapes" data-v="shapes" aria-selected="true">Six shapes</button>
+  <button class="tab" role="tab" id="t-dials" aria-controls="v-dials" data-v="dials" aria-selected="false" tabindex="-1">Eight dials</button>
+  <button class="tab" role="tab" id="t-plot" aria-controls="v-plot" data-v="plot" aria-selected="false" tabindex="-1">Rest &amp; story</button>
+  <button class="tab" role="tab" id="t-words" aria-controls="v-words" data-v="words" aria-selected="false" tabindex="-1">Words</button>
+  <button class="tab" role="tab" id="t-craft" aria-controls="v-craft" data-v="craft" aria-selected="false" tabindex="-1">Designing one</button>
+  <button class="tab" role="tab" id="t-compare" aria-controls="v-compare" data-v="compare" aria-selected="false" tabindex="-1">Compare</button>
+</div></nav>
+
+<main class="wrap">
+  <section class="view on" id="v-shapes" role="tabpanel" aria-labelledby="t-shapes" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Taxonomy</p>
+      <h2>Six shapes, and everything is one of them</h2>
+      <p>Sort trips by destination and you get a map. Sort them by structure and you get something more useful: an anchor and a hop can go to the same country and produce opposite weeks. Each archetype below is drawn as its own route — the number of circles is how many bases, their size is how long you stay, and the line between them is how you move.</p>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="diagkey" id="diagkey"></div>
+    <div class="controls"><div class="ctl"><label for="find">Find an archetype</label><input type="text" id="find" placeholder="cabin, ferry, eclipse…" autocomplete="off"></div></div>
+    <div id="shapes"></div>
+  </section>
+
+  <section class="view" id="v-dials" role="tabpanel" aria-labelledby="t-dials" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Vocabulary</p>
+      <h2>Eight dials set how a trip feels</h2>
+      <p>The shape decides the structure; these decide the texture. Most disappointing trips are not badly chosen so much as badly set — a pace that suited nobody, a planning level that trapped you, comfort bought where access was needed. Learn to read a proposed trip as eight settings, and to say which one is wrong.</p>
+    </div>
+    <div class="dials" id="dialcards"></div>
+  </section>
+
+  <section class="view" id="v-plot" role="tabpanel" aria-labelledby="t-plot" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">The central trade-off</p>
+      <h2>Rest and story pull against each other</h2>
+      <p>Almost every trip is sold as both restorative and transformative. Most are not: effort, unfamiliarity and early starts are what make a trip memorable, and they are the same things that stop it being restful. The dashed line marks a combined score of seven. Two kinds of trip get past it — the long ones, and the ones where somebody else is carrying the logistics — and nothing at all reaches ten.</p>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="px">Horizontal</label><select id="px"></select></div>
+      <div class="ctl"><label for="py">Vertical</label><select id="py"></select></div>
+      <div class="ctl"><label for="pf">Show</label><select id="pf"><option value="all">All six shapes</option></select></div>
+    </div>
+    <svg class="plot" id="plot" viewBox="0 0 400 400" role="img" aria-label="Plot of trip archetypes by two attributes"></svg>
+    <p class="hint" id="plothint"></p>
+  </section>
+
+  <section class="view" id="v-words" role="tabpanel" aria-labelledby="t-words" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Vocabulary</p>
+      <h2>Words worth having</h2>
+      <p>Some are industry terms that quietly cost you money when you do not know them. Some name a thing you have felt and could not describe. Each comes with the case it fits and the near-neighbour it gets confused with.</p>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="wsearch">Search</label><input type="text" id="wsearch" placeholder="stopover, dwell, peak-end…" autocomplete="off"></div>
+      <div class="ctl"><label for="wcat">About</label><select id="wcat"></select></div>
+    </div>
+    <div id="words"></div>
+  </section>
+
+  <section class="view" id="v-craft" role="tabpanel" aria-labelledby="t-craft" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Craft</p>
+      <h2>Designing one</h2>
+      <p><span id="rulecount">Nine</span> rules that hold across every shape, and a post-mortem for the trips that did not work.</p>
+    </div>
+    <div class="craft" id="craft"></div>
+    <div style="margin-top:44px">
+      <p class="eyebrow">Post-mortem</p>
+      <h3 style="font-size:clamp(23px,5vw,32px);margin:8px 0 16px">The last trip disappointed. Which way?</h3>
+      <div class="faults" id="faults" role="group" aria-label="Common failures"></div>
+      <div class="answer" id="answer" aria-live="polite"><p class="idle">Eight ways a trip goes wrong. Each has a structural cause rather than a bad-luck one, which is why each has a fix.</p></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-compare" role="tabpanel" aria-labelledby="t-compare" tabindex="0">
+    <div class="vhead">
+      <p class="eyebrow">Side by side</p>
+      <h2>Two shapes, same fortnight</h2>
+      <p>The instructive comparisons are between trips that could occupy exactly the same two weeks and the same budget: one city or four, a loop or a base, this year's new place or the one you have been to eleven times.</p>
+    </div>
+    <div class="picker"><input type="text" id="cin" placeholder="Add an archetype…" autocomplete="off" aria-label="Add an archetype to compare"><div class="sugg" id="csugg"></div></div>
+    <div class="picked" id="cpicked"></div>
+    <div class="cmpdiagrams" id="cdiagrams"></div>
+    <div id="ctracks"></div>
+    <div class="scrollx"><table class="ctable" id="ctable"></table></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p><b>On the ratings.</b> Every archetype is scored 0–5 on eight dials plus rest and story. They describe a typical good version of that shape as it is normally done — a cheap version of an expensive shape exists, and so does a punishing version of a gentle one. The numbers are for comparing shapes with each other, not for grading a specific trip.</p>
+  <p><b>On taste.</b> There is no ranking here and no shape that is more sophisticated than another. The package holiday is extremely good at what it does, and the six-month overland is a bad answer to most questions. The only real error is choosing a shape whose costs you did not intend to pay.</p>
+  <p><b>On other people.</b> Nearly every rule here bends for the people you travel with. A shape that suits you and nobody else in the party is the wrong shape, and the negotiation is best done over the dials, before anything is booked, rather than on day four.</p>
+</div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Archetype detail"><div class="din" id="din"></div></aside>
+<script>
+const DIALS = [
+  ["pa","Pace","one place, slowly","somewhere new daily"],
+  ["ef","Effort","no exertion","athletic"],
+  ["pl","Planning","turn up and see","booked to the hour"],
+  ["co","Comfort","rough","cosseted"],
+  ["im","Immersion","sealed off","inside local life"],
+  ["so","Company","solitary","constant company"],
+  ["un","Uncertainty","nothing can go wrong","improvised"],
+  ["ct","Cost","cheap","expensive"]
+];
+
+const SHAPES = [
+  {id:"anchor", n:"Anchor", sub:"one base, and you stay in it", mark:"a single point",
+   def:"You unpack once. Everything else — day trips, meals, boredom, the discovery that the good bakery is the second one — happens around a fixed point. The anchor is the only shape that lets a place become ordinary to you, which is the precondition for actually knowing it."},
+  {id:"line", n:"Line", sub:"A to B, never doubling back", mark:"a path with an end",
+   def:"You start somewhere and finish somewhere else, and the trip is the distance between. Lines have a built-in narrative — beginning, middle, arrival — which is why almost every travel book ever written is about one. They are also the least forgiving: fall behind and the route does not wait."},
+  {id:"loop", n:"Loop", sub:"out and back to the same door", mark:"a closed circuit",
+   def:"A line bent until its ends meet. You get the momentum of a journey without the logistics of a one-way, which is why loops dominate road trips, cruises and safaris. The cost is that the second half is always heading home, and you can feel it."},
+  {id:"hop", n:"Hop", sub:"separate places, gaps between", mark:"scattered nodes",
+   def:"Discrete stops joined by transit you would rather skip. The hop is what people default to when time is short and the list is long, and it is the single most over-chosen shape there is: each stop takes a day to arrive into and a day to leave, so three stops in a week is one day of actual travel."},
+  {id:"orbit", n:"Orbit", sub:"the same place, again, for years", mark:"a point returned to",
+   def:"Not one trip but a series. The same house each August, the same mountain each February, the same city every time work sends you. Orbits are dismissed as unadventurous and they produce the deepest knowledge of a place available to anyone who does not live there — you see it change."},
+  {id:"chase", n:"Chase", sub:"the event picks the place", mark:"a target that moves",
+   def:"Something is happening somewhere at a fixed time — an eclipse, a migration, a swell, a race, a bloom — and the itinerary is whatever gets you there. Chases invert normal planning: the date is immovable, everything else negotiable, and failure is a real outcome."}
+];
+
+const FAMS = {
+  still:{s:"anchor",n:"Stay put",d:"The base is the destination. Leaving it is optional and often skipped."},
+  radiate:{s:"anchor",n:"Base and radiate",d:"A fixed bed, with days out and back. Everything within a couple of hours is in range."},
+  livethere:{s:"anchor",n:"Live there for a while",d:"Long enough to have a routine, a laundry problem, and a local shop."},
+  hosted:{s:"anchor",n:"Somebody's home",d:"You are a guest, not a customer, which changes every part of the trip."},
+  onfoot:{s:"line",n:"On foot",d:"Walking speed, carrying what you need, sleeping wherever the day ends."},
+  rails:{s:"line",n:"On rails",d:"The vehicle is part of the experience rather than the tax you pay for it."},
+  onroad:{s:"line",n:"On the road",d:"Point to point by vehicle, with the freedom and the driving fatigue that implies."},
+  onwater:{s:"line",n:"On water",d:"Rivers and coasts, where the route is fixed by the water rather than by you."},
+  circuit:{s:"loop",n:"Circuit drives and rides",d:"A route that returns to its start, usually because that is where the car or the flight is."},
+  seaLoop:{s:"loop",n:"Loops by ship",d:"The bed moves with you and returns to port. Everything ashore is a day trip."},
+  wildLoop:{s:"loop",n:"Camp to camp",d:"A circuit through wild country, moving between fixed camps or huts."},
+  shortLoop:{s:"loop",n:"Short loops from home",d:"Out and back inside a weekend, often starting from your own front door."},
+  islands:{s:"hop",n:"Island and coast hopping",d:"Ferries and short crossings, where the transit is half the pleasure."},
+  cities:{s:"hop",n:"City hopping",d:"Two or three nights each, joined by trains or budget flights."},
+  air:{s:"hop",n:"Hops by air",d:"Distant nodes joined by flights, including stopovers built into a long-haul ticket."},
+  attached:{s:"hop",n:"Attached to something else",d:"A trip that exists because you were going to be there anyway."},
+  seasonal:{s:"orbit",n:"Seasonal return",d:"The same place at the same time of year, repeatedly, on purpose."},
+  kin:{s:"orbit",n:"Kinship and roots",d:"Return governed by family rather than by preference."},
+  ritual:{s:"orbit",n:"Annual ritual",d:"A fixture on the calendar that organises the rest of the year around itself."},
+  sky:{s:"chase",n:"Sky and weather",d:"Phenomena with a date and a narrow viewing corridor, or none at all."},
+  wild:{s:"chase",n:"Wildlife and season",d:"Living things doing something on their own schedule, approximately."},
+  fixture:{s:"chase",n:"Events and fixtures",d:"A date set by humans: a race, a festival, a final, a harvest."},
+  deal:{s:"chase",n:"Led by the deal",d:"The price appears first and the destination is whatever it is attached to."}
+};
+
+const A = [
+// ---------------- ANCHOR ----------------
+{id:"resort",n:"The all-inclusive resort",aka:"package beach holiday",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:7,len:"7 nights",
+ d:{pa:0,ef:0,pl:1,co:4,im:0,so:3,un:0,ct:3},rest:5,stim:1,
+ what:"A single property that supplies bed, food, drink and entertainment so that no decision needs making for a week.",
+ good:"Judge it by what it removes rather than what it adds. A good one deletes decision-making, cost anxiety and logistics entirely, and the tell is that by day three you have stopped checking the time. A bad one fills the vacuum with a schedule.",
+ fail:"Sold as a destination when it is really a decision-free zone; guests arrive expecting a country and get a compound.",
+ teaches:"Removing choices is a legitimate design goal, not a failure of ambition.",
+ when:"Cheapest and hottest in the shoulder weeks either side of school holidays.",next:["beach-week","honeymoon"]},
+{id:"beach-week",n:"The rented beach house",aka:"villa week, cottage week",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:7,len:"7–14 nights",
+ d:{pa:0,ef:1,pl:2,co:3,im:1,so:4,un:1,ct:3},rest:5,stim:1,
+ what:"A house near water, rented for a week or two, usually shared with people you already know.",
+ good:"The good version has a rhythm rather than a plan: one shop run, one long lunch, one walk, repeat. The house matters more than the location — a kitchen you want to cook in and somewhere to sit outside will decide the week.",
+ fail:"Too many people, too few bathrooms, and no agreement about money or cooking before arrival.",
+ teaches:"On group trips the logistics of the house are the trip.",
+ when:"Book a year ahead for peak weeks; the same house is half price in September.",next:["cabin-week","villa-group"]},
+{id:"cabin-week",n:"The remote cabin",aka:"bothy week, hytte, dacha",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:5,len:"3–10 nights",
+ d:{pa:0,ef:1,pl:2,co:2,im:1,so:1,un:2,ct:2},rest:5,stim:2,
+ what:"A small building a long way from other buildings, with limited services and no timetable.",
+ good:"Look for a genuine absence of infrastructure — poor signal, wood heat, water you have to think about. The chores are the point: they give the day a shape that nothing else supplies. Two nights is not enough for the mental gear change; the third day is where it happens.",
+ fail:"Treated as a hotel with scenery, so you arrive with no plan for the boredom and leave on day two.",
+ teaches:"Boredom is the raw material of rest, and it takes about three days to arrive.",
+ when:"Off-season is better; the point is emptiness.",next:["onsen-stay","silent-retreat"]},
+{id:"onsen-stay",n:"The bath town stay",aka:"ryokan, thermal spa, kur",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:2,len:"2–14 nights",
+ d:{pa:0,ef:0,pl:2,co:4,im:3,so:2,un:0,ct:3},rest:5,stim:2,
+ what:"A stay organised entirely around bathing, with meals and sleep arranged to support it.",
+ good:"The day should be shapeless in a structured way: bathe, eat, sleep, bathe again, with the meals arriving at fixed times so you never decide anything. In Japan judge the ryokan by the food and the bath water source; in central Europe, judge the kur by whether anyone is in a hurry.",
+ fail:"Booked for one night, which turns a rhythm into an appointment.",
+ teaches:"Some places only work if you surrender your schedule to them.",
+ when:"Cold months. Bathing in winter is the entire idea.",next:["silent-retreat","resort"]},
+{id:"silent-retreat",n:"The silent retreat",aka:"vipassana, monastery stay",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:7,len:"3–10 nights",
+ d:{pa:0,ef:2,pl:3,co:1,im:2,so:0,un:2,ct:1},rest:3,stim:4,
+ what:"A residential stay under a rule: no talking, no devices, a fixed timetable, often no cost beyond a donation.",
+ good:"Judge it by the container rather than the teaching. Clear rules, a schedule that never asks you to decide anything, and staff who leave you alone. Days two and three are usually awful and that is not a fault of the retreat.",
+ fail:"Chosen as a rest, which it is not. It is voluntary discomfort with an unusually good return.",
+ teaches:"Restful and restorative are not the same word.",
+ when:"Book months ahead; the good ones have waiting lists.",next:["writing-retreat","cabin-week"]},
+{id:"writing-retreat",n:"The working retreat",aka:"writer's cabin, maker week",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:5,len:"3–10 nights",
+ d:{pa:0,ef:1,pl:2,co:2,im:1,so:1,un:1,ct:2},rest:3,stim:3,
+ what:"Going somewhere specifically to work on one thing, with the travel arranged to protect the work.",
+ good:"The setting should be slightly boring — beauty is a distraction and a good view is worse than a blank wall. What you want is a long table, no obligations, food solved in advance, and a hard stop each day so the evening is genuinely free.",
+ fail:"Somewhere too interesting, or too many people, so the week becomes a holiday with guilt attached.",
+ teaches:"Choosing a place for what it prevents is a real design move.",
+ when:"Any season. Bad weather helps.",next:["residency","cabin-week"]},
+{id:"villa-group",n:"The group house",aka:"friends' villa, birthday house",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:4,len:"3–7 nights",
+ d:{pa:1,ef:1,pl:3,co:3,im:1,so:5,un:2,ct:3},rest:3,stim:3,
+ what:"Six to twenty people in one house for a fixed occasion, where the group is the destination.",
+ good:"The good ones are organised like a small event: someone owns the money, someone owns the food, and there is at least one scheduled thing per day that people can opt out of. Bedrooms should be allocated before arrival, in writing.",
+ fail:"No structure at all, so the group spends the first two days negotiating and the last two recovering.",
+ teaches:"With a group, unspoken assumptions are the main hazard, not the itinerary.",
+ when:"Whenever everyone can actually come. Availability beats weather.",next:["beach-week","reunion"]},
+{id:"basecamp",n:"The gateway base",aka:"park town, trailhead hotel",shape:"anchor",fam:"radiate",med:"road",nodes:1,dwell:5,len:"4–8 nights",
+ d:{pa:2,ef:3,pl:3,co:2,im:2,so:2,un:2,ct:2},rest:3,stim:3,
+ what:"One bed in a town at the edge of somewhere wild, with days out into it and evenings back in comfort.",
+ good:"The whole efficiency of the shape is not packing. A good base is under an hour from the thing you came for, has somewhere decent to eat at nine at night, and lets you swap the plan for weather without penalty. Two bases beat five.",
+ fail:"A base chosen for price that is ninety minutes from everything, which quietly costs three hours a day.",
+ teaches:"Unpacking once is worth more than any single sight.",
+ when:"Shoulder season: the trails empty and the town still functions.",next:["park-loop","hut-to-hut"]},
+{id:"city-immersion",n:"One city, properly",aka:"the single-city week",shape:"anchor",fam:"radiate",med:"none",nodes:1,dwell:7,len:"5–10 nights",
+ d:{pa:1,ef:2,pl:2,co:3,im:4,so:2,un:2,ct:3},rest:3,stim:4,
+ what:"A week or more in a single city with no day trips, deliberately declining everything else in the country.",
+ good:"By day four you should be returning to places rather than finding them: the same coffee, the same walk at dusk, a market you now understand. Pick a neighbourhood over a landmark. The measure of success is having a routine, not a list of sights completed.",
+ fail:"Filled with day trips, which converts the anchor into a hop and dissolves the one thing it offered.",
+ teaches:"Depth in one place beats coverage of five, and it is cheaper.",
+ when:"Shoulder season, when the city is being used by the people who live in it.",next:["month-abroad","hotel-weekend"]},
+{id:"hotel-weekend",n:"The city weekend",aka:"two nights away",shape:"anchor",fam:"radiate",med:"rail",nodes:1,dwell:2,len:"2–3 nights",
+ d:{pa:3,ef:2,pl:3,co:4,im:2,so:3,un:1,ct:3},rest:2,stim:3,
+ what:"Two nights in a city, usually within a few hours of home, built around one or two fixed things.",
+ good:"Book one anchor per day and nothing else — a restaurant, an exhibition, a bath house — and let the gaps fill themselves. A short trip is ruined by ambition; three planned things across two days is the ceiling.",
+ fail:"Compressed into a checklist, so you queue for four sights and remember the queuing.",
+ teaches:"Short trips need fewer plans, not tighter ones.",
+ when:"Any. Weather matters more than season at this length.",next:["city-immersion","bleisure"]},
+{id:"month-abroad",n:"A month somewhere else",aka:"work from anywhere, slowmad month",shape:"anchor",fam:"livethere",med:"none",nodes:1,dwell:30,len:"3–8 weeks",
+ d:{pa:0,ef:1,pl:2,co:3,im:5,so:2,un:2,ct:3},rest:4,stim:4,
+ what:"Living somewhere for a month or more while continuing your ordinary work and obligations.",
+ good:"The gear change is at about week two, when the novelty stops and the place becomes somewhere you live. Get a routine early — one gym, one café, one market day — because the trap is spending the month as a tourist and being exhausted by week three.",
+ fail:"Treated as a long holiday: you burn out sightseeing and never get the thing only length can give.",
+ teaches:"Living somewhere and visiting it are different activities with different rewards.",
+ when:"Match the season to what you want the ordinary days to feel like.",next:["language-school","residency"]},
+{id:"language-school",n:"The language stay",aka:"immersion course",shape:"anchor",fam:"livethere",med:"none",nodes:1,dwell:14,len:"2–12 weeks",
+ d:{pa:1,ef:3,pl:3,co:2,im:5,so:4,un:2,ct:3},rest:2,stim:5,
+ what:"Weeks in one place with mornings in a classroom and the rest of the day spent failing to speak the language.",
+ good:"The school is less important than the afternoons. Look for a homestay or a shared flat rather than a hotel, a class small enough that you cannot hide, and a town where nobody switches to English out of kindness.",
+ fail:"Spent socialising with other students in English, which produces a pleasant holiday and no language.",
+ teaches:"Immersion is a function of discomfort, not of location.",
+ when:"Term-time, so the town is real rather than a resort.",next:["month-abroad","cooking-school"]},
+{id:"residency",n:"The residency",aka:"artist or research residency",shape:"anchor",fam:"livethere",med:"none",nodes:1,dwell:21,len:"2 weeks – 3 months",
+ d:{pa:0,ef:2,pl:4,co:2,im:3,so:3,un:2,ct:1},rest:3,stim:4,
+ what:"A funded or subsidised stay where the price of the bed is that you are working on something.",
+ good:"Judge it by the other residents and the amount of enforced socialising. The best ones supply a studio, a shared dinner, and otherwise leave you completely alone. Applications close six to twelve months out.",
+ fail:"Over-programmed with talks and open studios, so it becomes a conference with a bedroom.",
+ teaches:"The right constraint is more valuable than the right view.",
+ when:"Whenever you are accepted; you do not choose the dates.",next:["writing-retreat","month-abroad"]},
+{id:"house-swap",n:"The house swap",aka:"home exchange, sitting",shape:"anchor",fam:"hosted",med:"none",nodes:1,dwell:10,len:"1–4 weeks",
+ d:{pa:0,ef:1,pl:3,co:3,im:4,so:1,un:2,ct:1},rest:4,stim:3,
+ what:"Living in somebody's actual home while they live in yours, or while they are away and you feed the cat.",
+ good:"You get a neighbourhood rather than a district, a kitchen with equipment in it, and the small revelation of another household's routines. The good ones come with a note about which shop is good, which is worth more than any guidebook.",
+ fail:"Underestimating the obligations — pets, plants, a house that is not yours to be careless in.",
+ teaches:"The most local accommodation is somebody's actual life.",
+ when:"Longer is better; the admin is the same for one week or four.",next:["month-abroad","staying-with-family"]},
+{id:"staying-with-family",n:"Staying with people you know",aka:"the visit",shape:"anchor",fam:"hosted",med:"none",nodes:1,dwell:5,len:"3–10 nights",
+ d:{pa:1,ef:1,pl:1,co:2,im:5,so:5,un:2,ct:0},rest:2,stim:3,
+ what:"A trip whose accommodation, schedule and social calendar are set by your hosts.",
+ good:"Assume it is their trip, not yours. The pleasure is the ordinary stuff — their supermarket, their friends, the local thing they think is boring — and the skill is asking for one afternoon alone without it being a rejection. Bring something specific; leave before the welcome thins.",
+ fail:"Treated as free lodging in a city you wanted to sightsee, which exhausts everyone and costs you the relationship.",
+ teaches:"Hospitality has a shape, and you are not the one who sets it.",
+ when:"Shorter than you think, and never during their busy week.",next:["reunion","house-swap"]},
+{id:"farm-stay",n:"The farm stay",aka:"agriturismo, work exchange",shape:"anchor",fam:"hosted",med:"none",nodes:1,dwell:4,len:"3–14 nights",
+ d:{pa:1,ef:2,pl:2,co:2,im:4,so:3,un:2,ct:2},rest:4,stim:3,
+ what:"Staying on a working farm, eating what it produces, sometimes helping in exchange for the bed.",
+ good:"It must be a working farm rather than a converted one — the tell is that dinner is whatever is ready, the animals wake you, and the family eats with you. Where work is part of the deal, agree the hours in writing before arriving.",
+ fail:"A hotel with a token vineyard, priced as agriculture and run as hospitality.",
+ teaches:"Eating where food is made changes what you think food is.",
+ when:"Harvest, if you want to see the place working.",next:["cooking-school","house-swap"]},
+
+// ---------------- LINE ----------------
+{id:"thru-hike",n:"The thru-hike",aka:"long trail, end to end",shape:"line",fam:"onfoot",med:"foot",nodes:14,dwell:1,len:"3 weeks – 6 months",
+ d:{pa:4,ef:5,pl:4,co:0,im:3,so:3,un:4,ct:1},rest:2,stim:5,
+ what:"Walking a named long-distance trail from one end to the other, carrying or resupplying as you go.",
+ good:"Everything reduces to water, food, feet and weather, and the simplification is the reward. Judge your own version by whether you are still enjoying week three, when novelty is gone and the trail is just a job you chose. Town days matter more than summit days.",
+ fail:"Treated as an athletic target with a deadline, which turns a long walk into a commute with a heavier bag.",
+ teaches:"Beyond about ten days, a journey stops being an event and becomes a life.",
+ when:"Dictated by snowmelt and heat, not preference.",next:["camino","overland"]},
+{id:"hut-to-hut",n:"Hut to hut",aka:"alpine traverse, refuge walk",shape:"line",fam:"onfoot",med:"foot",nodes:6,dwell:1,len:"4–10 days",
+ d:{pa:4,ef:4,pl:4,co:2,im:2,so:4,un:3,ct:2},rest:2,stim:4,
+ what:"A multi-day mountain route sleeping in staffed huts, so you carry a day pack rather than a house.",
+ good:"The system is the pleasure: you arrive, boots off, soup, dormitory, up at six. Book huts the day they open for reservations. A good route has an escape valley at the halfway point, because weather will eventually make the decision for you.",
+ fail:"Booked at your best-day pace rather than your fourth-day pace, with no bail-out and no spare day.",
+ teaches:"Infrastructure can make hard country accessible without softening it.",
+ when:"A narrow window; most hut systems open ten to fourteen weeks a year.",next:["trek-circuit","ski-traverse"]},
+{id:"camino",n:"The pilgrim walk",aka:"Camino, Shikoku, Kumano Kodo",shape:"line",fam:"onfoot",med:"foot",nodes:20,dwell:1,len:"1–5 weeks",
+ d:{pa:4,ef:4,pl:2,co:1,im:4,so:4,un:3,ct:1},rest:3,stim:5,
+ what:"An old route walked for centuries, with a hostel infrastructure that assumes you will arrive on foot and alone.",
+ good:"The route does the planning, which frees you completely. What makes it unlike other long walks is the enforced sociability — the same faces each evening, conversations with strangers that skip ten years of preamble. Walk the less-trafficked variants if you want the landscape as well.",
+ fail:"Walked at speed with luggage transfer and pre-booked hotels, which removes the exact mechanism that makes it work.",
+ teaches:"A route with its own culture gives you more than a route with better scenery.",
+ when:"Avoid high summer on the popular ones; heat and crowds are both bad.",next:["thru-hike","inn-to-inn"]},
+{id:"inn-to-inn",n:"Inn to inn",aka:"supported walking holiday",shape:"line",fam:"onfoot",med:"foot",nodes:6,dwell:1,len:"5–10 days",
+ d:{pa:3,ef:3,pl:4,co:3,im:3,so:2,un:1,ct:3},rest:3,stim:4,
+ what:"Walking a route day by day while a van moves your luggage between comfortable places to sleep.",
+ good:"The best version of walking for most people: real distance, real landscape, a bath and a proper dinner at the end. Judge it by daily distance against your slowest companion and by whether the route avoids road walking. Twelve to eighteen kilometres a day is the sweet spot.",
+ fail:"Sold as gentle and routed along verges between villages that were chosen for their hotels.",
+ teaches:"Removing the pack changes who can do the trip without changing what the trip is.",
+ when:"Spring and autumn; the point is walking all day in comfortable air.",next:["camino","cycle-tour"]},
+{id:"rail-journey",n:"The great train journey",aka:"Trans-Siberian, the Canadian, Rocky Mountaineer",shape:"line",fam:"rails",med:"rail",nodes:4,dwell:2,len:"3 days – 2 weeks",
+ d:{pa:3,ef:0,pl:3,co:3,im:2,so:3,un:1,ct:4},rest:4,stim:3,
+ what:"A named long-distance train where the ride itself is the destination and the stops are punctuation.",
+ good:"The pleasure is enforced idleness with a moving window, and the good ones have a dining car where strangers are seated together. Break the journey at least once; days on a train are wonderful and three consecutive ones are not.",
+ fail:"Booked as transport between two cities you actually wanted, so the middle becomes an endurance test.",
+ teaches:"Transit becomes pleasure the moment it stops being the fastest option.",
+ when:"Winter for the snow routes, which is when they look like the photographs.",next:["sleeper-hop","river-cruise"]},
+{id:"sleeper-hop",n:"Sleeper trains, one way",aka:"Interrail, night train chain",shape:"line",fam:"rails",med:"rail",nodes:6,dwell:2,len:"1–4 weeks",
+ d:{pa:4,ef:2,pl:2,co:2,im:3,so:3,un:3,ct:2},rest:2,stim:4,
+ what:"A one-way crossing of a continent by rail, sleeping on the train on the long legs.",
+ good:"Sleeper legs buy you a night's accommodation and a morning arrival, which is the trick that makes the whole shape work. Two nights minimum per city or it becomes a blur. Book the night trains early — they sell out and there are far fewer than there used to be.",
+ fail:"One night per city, so the entire trip is stations, luggage and the two hours after check-in.",
+ teaches:"Overnight transit is the only kind that gives you time instead of taking it.",
+ when:"Late spring; night trains in high summer are hot and full.",next:["city-hop","rail-journey"]},
+{id:"road-trip-line",n:"The one-way road trip",aka:"open-jaw drive",shape:"line",fam:"onroad",med:"road",nodes:7,dwell:2,len:"1–3 weeks",
+ d:{pa:4,ef:2,pl:3,co:3,im:2,so:3,un:3,ct:3},rest:2,stim:3,
+ what:"Driving from one city to another and flying home from the far end, never retracing the route.",
+ good:"Plan in driving hours rather than distance, and cap it at three hours on a good day. The one-way drop fee is almost always worth it — the alternative is spending half your holiday driving back past things you have already seen. Two nights minimum wherever you stop.",
+ fail:"An itinerary built from map distances, so the trip is mostly windscreen with sights attached.",
+ teaches:"A day of driving costs a day, and route planning is holiday planning.",
+ when:"Off-season, when the road is empty and the small places still open.",next:["ring-road","park-loop"]},
+{id:"motorcycle-tour",n:"The motorcycle tour",aka:"—",shape:"line",fam:"onroad",med:"road",nodes:8,dwell:1,len:"4 days – 3 weeks",
+ d:{pa:4,ef:3,pl:3,co:1,im:3,so:2,un:4,ct:3},rest:1,stim:4,
+ what:"A route ridden rather than driven, where weather, fatigue and road surface are experienced directly.",
+ good:"The road is the attraction, so the route should be chosen for corners and passes rather than destinations. Ride less than you think: 250 to 350 kilometres is a full day. The stops end up being conversations, because a bike attracts them.",
+ fail:"Distance targets in bad weather, which is how the tour turns into a survival exercise.",
+ teaches:"Direct exposure to the route is a different sense of a country.",
+ when:"Dry season, and shoulder months for the passes.",next:["road-trip-line","cycle-tour"]},
+{id:"cycle-tour",n:"The cycle tour",aka:"loaded touring, credit-card touring",shape:"line",fam:"onroad",med:"bike",nodes:9,dwell:1,len:"3 days – months",
+ d:{pa:4,ef:5,pl:3,co:1,im:4,so:2,un:3,ct:2},rest:2,stim:4,
+ what:"Riding a bicycle between places over consecutive days, carrying luggage or paying someone to move it.",
+ good:"Cycling covers ground fast enough to feel a country change and slow enough to smell it, which no other mode manages. Judge a route by traffic and by the gap between food stops. Sixty to a hundred kilometres a day, with a rest day every fourth.",
+ fail:"Route planned on a map with no elevation profile, which is how a pleasant week becomes a climbing camp.",
+ teaches:"Speed determines resolution: what you notice is a function of how fast you pass it.",
+ when:"Spring and autumn. Headwinds matter more than temperature.",next:["motorcycle-tour","bikepack-loop"]},
+{id:"overland",n:"The overland crossing",aka:"Cape to Cairo, the Pan-American",shape:"line",fam:"onroad",med:"mixed",nodes:20,dwell:3,len:"2 months – 2 years",
+ d:{pa:3,ef:4,pl:4,co:1,im:5,so:3,un:5,ct:3},rest:1,stim:5,
+ what:"Crossing a continent by whatever transport exists locally, over months, with borders as the structuring events.",
+ good:"The journey is made of admin — visas, carnets, borders, breakdowns — and the people who love it love that part. Judge readiness by whether a lost day makes you anxious. Everything takes three times as long as the map suggests and the delays are where the trip actually happens.",
+ fail:"Run to a schedule, which is impossible, and abandoned in month two when the schedule breaks.",
+ teaches:"At long durations, friction stops being an obstacle and becomes the content.",
+ when:"Governed by rainy seasons and visa windows, not by preference.",next:["thru-hike","sleeper-hop"]},
+{id:"river-descent",n:"The river descent",aka:"canoe route, packraft, Grand Canyon",shape:"line",fam:"onwater",med:"water",nodes:8,dwell:1,len:"3 days – 3 weeks",
+ d:{pa:3,ef:4,pl:5,co:1,im:2,so:3,un:4,ct:3},rest:3,stim:5,
+ what:"Travelling downstream over days, camping on the bank, with the river deciding the itinerary.",
+ good:"Rivers are one-way, so the trip has no exit and that concentrates everything wonderfully. Permits for the famous ones are lotteries booked a year out. Judge a party by its worst paddler and its willingness to portage; judge a route by its flow rate on the week you go, not its reputation.",
+ fail:"Under-scouted at high water, where a route that is a picnic in August is genuinely dangerous in June.",
+ teaches:"A committed route removes the option of changing your mind, which is both the risk and the gift.",
+ when:"Entirely dictated by water levels.",next:["sailing-passage","thru-hike"]},
+{id:"sailing-passage",n:"The passage",aka:"delivery, ocean crossing",shape:"line",fam:"onwater",med:"water",nodes:2,dwell:1,len:"3 days – 4 weeks",
+ d:{pa:2,ef:4,pl:5,co:1,im:1,so:3,un:5,ct:2},rest:2,stim:5,
+ what:"Crossing open water under sail from one port to another, standing watches, with no way to get off.",
+ good:"Watch-keeping restructures time completely: four hours on, eight off, day and night meaningless within about seventy-two hours. Judge the boat and the skipper, in that order, and never join a passage where you cannot ask about safety gear without embarrassment.",
+ fail:"Joining a crew you have not met for a crossing longer than your tolerance for other people.",
+ teaches:"Some trips are not about a place at all.",
+ when:"Set by trade winds and hurricane seasons, precisely.",next:["sail-charter","river-descent"]},
+{id:"ski-traverse",n:"The ski traverse",aka:"Haute Route, ski touring line",shape:"line",fam:"onfoot",med:"foot",nodes:6,dwell:1,len:"4–8 days",
+ d:{pa:4,ef:5,pl:5,co:1,im:1,so:3,un:5,ct:4},rest:1,stim:5,
+ what:"A multi-day high-mountain crossing on skis, hut to hut, moving under your own power over glaciated terrain.",
+ good:"Serious mountaineering with real avalanche exposure, so the guide and the forecast decide everything. The reward is being in high country in winter with nobody else in it. Fitness is the entry ticket, not the achievement — the skill is descending tired with a pack.",
+ fail:"Attempted at the limit of the party's ability, so the weather window becomes a pressure to go anyway.",
+ teaches:"When conditions govern, flexibility is a safety feature.",
+ when:"March and April, when the snowpack has settled and the days are long.",next:["hut-to-hut","seasonal-ski"]},
+
+// ---------------- LOOP ----------------
+{id:"park-loop",n:"The national park loop",aka:"the park circuit drive",shape:"loop",fam:"circuit",med:"road",nodes:4,dwell:3,len:"7–14 days",
+ d:{pa:3,ef:3,pl:4,co:2,im:1,so:2,un:2,ct:3},rest:2,stim:3,
+ what:"A driving circuit between two to five parks, sleeping in or beside each, returning to the start airport.",
+ good:"Three nights per park, not one: the second morning is when you get an empty trail at dawn instead of a car park at eleven. Book accommodation inside the park a year ahead or accept a long drive each morning. Two parks done properly beats five sampled.",
+ fail:"Five parks in ten days, which is a driving holiday with viewpoints, and is how most people do it.",
+ teaches:"In wild places, being there early is worth more than being there at all.",
+ when:"Shoulder weeks. Peak season in famous parks is a traffic experience.",next:["ring-road","basecamp"]},
+{id:"ring-road",n:"The ring road",aka:"grand circle, island loop",shape:"loop",fam:"circuit",med:"road",nodes:8,dwell:2,len:"7–21 days",
+ d:{pa:4,ef:2,pl:3,co:2,im:2,so:2,un:2,ct:3},rest:2,stim:3,
+ what:"A circuit of a country or island on its one obvious road, moving most days and ending where you began.",
+ good:"The shape is honest: the road exists, you drive it, the country arrives in order. Go anticlockwise if the crowds go clockwise. Build in one place where you stay three nights, or the whole loop becomes a series of one-night stands.",
+ fail:"Rushed to fit the loop into the days available, which turns the second half into a drive home.",
+ teaches:"A loop needs at least one anchor inside it or it never lands.",
+ when:"Shoulder. In peak the road is the queue.",next:["park-loop","road-trip-line"]},
+{id:"food-circuit",n:"The eating circuit",aka:"wine region, whisky trail, food tour",shape:"loop",fam:"circuit",med:"road",nodes:5,dwell:2,len:"4–10 days",
+ d:{pa:2,ef:1,pl:4,co:4,im:3,so:3,un:1,ct:4},rest:3,stim:3,
+ what:"A short circuit of a producing region organised around meals, cellars and markets rather than sights.",
+ good:"Book the two hard-to-get tables and leave the rest open. Producers are the point: a morning with someone who makes something teaches more than four restaurants. Pace it — three serious meals in a row is the limit before your palate stops reporting.",
+ fail:"A tasting schedule with no gaps, driving between them, which is both unpleasant and illegal.",
+ teaches:"Palate fatigue is real, and an eating trip needs rest days like a walking trip does.",
+ when:"Harvest for atmosphere, spring for the producers' attention.",next:["cooking-school","farm-stay"]},
+{id:"safari",n:"The safari circuit",aka:"camp to camp game viewing",shape:"loop",fam:"wildLoop",med:"air",nodes:3,dwell:3,len:"7–14 days",
+ d:{pa:2,ef:1,pl:5,co:4,im:2,so:3,un:3,ct:5},rest:3,stim:5,
+ what:"Two or three camps in different ecosystems, joined by light aircraft, with dawn and dusk game drives.",
+ good:"The guide is the trip. A great one turns a bush with nothing in it into an hour of interest; a poor one drives you between animals. Three nights per camp minimum, private conservancies over crowded parks, and resist the urge to add a fourth camp.",
+ fail:"Booked as a checklist of large mammals, which produces disappointment and a convoy of vehicles at every sighting.",
+ teaches:"With wildlife, expertise is the difference between waiting and watching.",
+ when:"Dry season for sightings, green season for birds, price and space.",next:["migration-chase","expedition-cruise"]},
+{id:"trek-circuit",n:"The trekking circuit",aka:"Annapurna, Torres del Paine, Tour du Mont Blanc",shape:"loop",fam:"wildLoop",med:"foot",nodes:9,dwell:1,len:"5–18 days",
+ d:{pa:4,ef:5,pl:4,co:1,im:3,so:4,un:4,ct:2},rest:2,stim:4,
+ what:"A named walking circuit around a massif, sleeping in teahouses, refuges or camps, returning to the start.",
+ good:"Altitude, not distance, is the constraint on the high ones — build in acclimatisation days and treat them as part of the route rather than lost time. The famous circuits are busy; the variant routes beside them are usually empty and just as good.",
+ fail:"Ascending too fast because the schedule was built from kilometres, which is how altitude sickness happens.",
+ teaches:"On a circuit you cannot skip a section, so the plan must fit your worst day.",
+ when:"Post-monsoon or pre-monsoon; the shoulder weeks are crowded for a reason.",next:["hut-to-hut","basecamp"]},
+{id:"cruise",n:"The cruise",aka:"big ship cruising",shape:"loop",fam:"seaLoop",med:"water",nodes:6,dwell:1,len:"7–14 days",
+ d:{pa:3,ef:0,pl:2,co:5,im:0,so:5,un:0,ct:3},rest:4,stim:2,
+ what:"A floating hotel that visits a port a day and returns to where it started, with everything included aboard.",
+ good:"Understood correctly it is a resort that moves, and it is superb at what it does: no packing, no decisions, and a great deal of food. Ports are samples, not visits — treat a day ashore as a trailer for a future trip rather than as having been to the country.",
+ fail:"Counted as visiting the countries on the itinerary, which produces the illusion of travel with none of the contact.",
+ teaches:"Shore time is the shortest possible acquaintance with a place.",
+ when:"Shoulder season, when both the ships and the ports are quieter.",next:["river-cruise","coach-tour"]},
+{id:"river-cruise",n:"The river cruise",aka:"—",shape:"loop",fam:"seaLoop",med:"water",nodes:6,dwell:1,len:"7–14 days",
+ d:{pa:2,ef:1,pl:2,co:5,im:1,so:4,un:0,ct:4},rest:5,stim:2,
+ what:"A small ship moving overnight along a river, mooring in the middle of towns each morning.",
+ good:"You wake up in the centre of somewhere new having done nothing, which is the most restful shape in travel. Rivers put you in old town cores rather than industrial ports. The passenger average age is high, and that is a feature if you want quiet.",
+ fail:"Chosen by someone who wanted a journey; the pace is deliberately gentle and it does not change.",
+ teaches:"Moving in your sleep is the least costly way to cover ground.",
+ when:"Spring and autumn; low water in high summer can cancel legs.",next:["cruise","rail-journey"]},
+{id:"expedition-cruise",n:"The expedition ship",aka:"polar, Galápagos, remote coast",shape:"loop",fam:"seaLoop",med:"water",nodes:8,dwell:1,len:"8–21 days",
+ d:{pa:3,ef:3,pl:5,co:3,im:1,so:4,un:4,ct:5},rest:2,stim:5,
+ what:"A small ice-capable or permit-holding ship reaching places with no infrastructure, with landings by inflatable.",
+ good:"You are paying for access and for the staff — naturalists, not entertainers. Ships under 150 passengers land everyone; larger ones ration the shore time. Everything is weather-dependent, so judge the operator by how gracefully they change plans.",
+ fail:"Booked on a large ship for a landing-heavy itinerary, so most of the trip is watching from a rail.",
+ teaches:"In remote places the vessel is the infrastructure, and its size decides the trip.",
+ when:"The season is short and non-negotiable at both poles.",next:["safari","cruise"]},
+{id:"sail-charter",n:"The charter week",aka:"flotilla, bareboat, gulet",shape:"loop",fam:"seaLoop",med:"water",nodes:6,dwell:1,len:"7–14 days",
+ d:{pa:3,ef:2,pl:3,co:3,im:2,so:5,un:3,ct:4},rest:3,stim:3,
+ what:"A boat chartered for a week with a small group, moving between anchorages and returning to the marina.",
+ good:"Short hops, a swim stop at lunch, a different bay each night, and dinner ashore. Judge the itinerary by whether it allows a day of not moving. The group dynamic on a boat is intense — this is the shape where who you go with matters most.",
+ fail:"An over-ambitious route that turns a holiday into passage-making, with everyone hot and tired at the helm.",
+ teaches:"Confined quarters amplify group dynamics enormously, for better and worse.",
+ when:"Set by wind patterns; the famous grounds are steady and predictable.",next:["island-hop","liveaboard"]},
+{id:"bikepack-loop",n:"The bikepacking loop",aka:"weekend or week-long ride",shape:"loop",fam:"shortLoop",med:"bike",nodes:4,dwell:1,len:"2–7 days",
+ d:{pa:4,ef:5,pl:3,co:0,im:3,so:1,un:4,ct:1},rest:2,stim:4,
+ what:"A self-supported ride on dirt and back roads, camping or using cheap beds, finishing where it started.",
+ good:"The loop can start at your front door, which removes the entire travel overhead. Plan around resupply points rather than distance. Half the appeal is that the route is yours rather than a marketed one.",
+ fail:"Overpacked and over-planned, on surfaces that turn out to be unrideable when wet.",
+ teaches:"The nearest good trip is usually a loop from home.",
+ when:"Any dry spell. Short notice is part of the form.",next:["microadventure","cycle-tour"]},
+{id:"microadventure",n:"The overnighter",aka:"microadventure, one-night wild camp",shape:"loop",fam:"shortLoop",med:"foot",nodes:2,dwell:1,len:"1–2 nights",
+ d:{pa:3,ef:3,pl:1,co:0,im:2,so:1,un:3,ct:0},rest:3,stim:4,
+ what:"Leaving after work, sleeping outside somewhere near home, and being back at your desk the next morning.",
+ good:"The whole point is the ratio: almost no planning, almost no cost, and a night outdoors that resets you as thoroughly as a weekend away. Judge it by how little you took. It works because it is repeatable — monthly, not annually.",
+ fail:"Over-equipped until it needs a weekend of preparation, at which point it stops happening.",
+ teaches:"Frequency beats scale. Twelve small trips outweigh one big one.",
+ when:"Any month with a clear night.",next:["campervan","bikepack-loop"]},
+
+// ---------------- HOP ----------------
+{id:"island-hop",n:"Island hopping",aka:"ferry hopping",shape:"hop",fam:"islands",med:"water",nodes:4,dwell:3,len:"10–21 days",
+ d:{pa:3,ef:2,pl:3,co:2,im:3,so:3,un:3,ct:2},rest:3,stim:3,
+ what:"Three or four islands in a chain, joined by ferries, with the crossings as part of the pleasure.",
+ good:"Ferry timetables are the real itinerary, so build the trip around them and check the winter schedule if you are travelling off-season. Three islands in two weeks: one busy, one quiet, one very quiet, in that order. Islands reveal themselves slowly and each needs three nights minimum.",
+ fail:"An island a day, so the trip is a sequence of ports and the boats become a chore.",
+ teaches:"When transit is scenic and slow, it stops counting as lost time.",
+ when:"Shoulder season; many island services shrink drastically in winter.",next:["sail-charter","coastal-hop"]},
+{id:"coastal-hop",n:"The coast road, in stages",aka:"village-to-village on the coast",shape:"hop",fam:"islands",med:"mixed",nodes:4,dwell:3,len:"7–14 days",
+ d:{pa:3,ef:2,pl:3,co:3,im:3,so:2,un:2,ct:3},rest:4,stim:3,
+ what:"A few towns along one coastline, each for a few nights, moving by local transport rather than flying.",
+ good:"The right unit is the town, not the beach: somewhere with a market, a harbour and a bar where people are still out at eleven. Short legs mean you arrive before lunch and the day is not lost. Skip the famous one if it is the fourth stop.",
+ fail:"Built entirely from the coastline's most photographed villages, which are the ones that no longer function as towns.",
+ teaches:"Fame and pleasantness diverge sharply in small coastal places.",
+ when:"Just before or after peak; these towns close in deep winter.",next:["island-hop","city-hop"]},
+{id:"city-hop",n:"City hopping",aka:"multi-city Europe trip",shape:"hop",fam:"cities",med:"rail",nodes:4,dwell:3,len:"10–18 days",
+ d:{pa:4,ef:3,pl:3,co:3,im:2,so:3,un:2,ct:3},rest:1,stim:4,
+ what:"Three or four cities in one trip, joined by trains or short flights, with two or three nights in each.",
+ good:"The honest arithmetic: each move costs most of a day, so four cities in two weeks means three days lost to transit. Three nights per city is the floor. Trains between neighbouring cities beat flights on total door-to-door time almost every time under five hundred kilometres.",
+ fail:"Five cities in ten days — the classic first big trip, and the one everyone remembers as exhausting.",
+ teaches:"Every additional stop costs a day you do not see on the itinerary.",
+ when:"Shoulder season, when trains are cheap and cities are usable.",next:["backpacker-circuit","city-immersion"]},
+{id:"stopover",n:"The built-in stopover",aka:"free stopover, open-jaw routing",shape:"hop",fam:"air",med:"air",nodes:2,dwell:3,len:"+2–5 nights",
+ d:{pa:3,ef:2,pl:4,co:3,im:2,so:2,un:2,ct:2},rest:2,stim:3,
+ what:"Breaking a long-haul flight for several days in the airline's hub city, usually at little or no extra fare.",
+ good:"Two trips for one long-haul, and the jet lag is halved because you break the journey. Best used for a city you would not fly to on purpose. Three nights is the sweet spot: enough to see it properly, short enough that it stays a bonus.",
+ fail:"Twenty-four hours, which is a jet-lagged day of walking around and remembering nothing.",
+ teaches:"The routing is a design choice, not a fixed cost.",
+ when:"Whenever the long-haul is already happening.",next:["award-trip","bleisure"]},
+{id:"award-trip",n:"The points trip",aka:"award routing, miles redemption",shape:"hop",fam:"air",med:"air",nodes:3,dwell:4,len:"10–21 days",
+ d:{pa:3,ef:2,pl:5,co:4,im:2,so:2,un:2,ct:2},rest:2,stim:4,
+ what:"A trip whose route is shaped by what an airline alliance will actually let you book with the miles you hold.",
+ good:"The skill is in the routing rules rather than the destination: permitted stopovers, open jaws, and where award space actually exists eleven months out. Judge it by whether the itinerary is one you would have wanted at full price — otherwise you have been optimising the wrong thing.",
+ fail:"The route contorted to spend points, producing a trip that is an excellent deal and a mediocre holiday.",
+ teaches:"A constraint can generate a good trip, or quietly replace the goal.",
+ when:"Book the day the calendar opens for the seats that matter.",next:["stopover","deal-trip"]},
+{id:"festival-circuit",n:"The festival run",aka:"circuit of events",shape:"hop",fam:"attached",med:"mixed",nodes:3,dwell:3,len:"1–3 weeks",
+ d:{pa:4,ef:3,pl:4,co:1,im:3,so:5,un:3,ct:3},rest:0,stim:4,
+ what:"Two or three festivals in a season, with travel arranged around dates you cannot move.",
+ good:"Festivals are their own countries and you will see nothing else, so accept that. Build a genuine recovery day between them — not a travel day, a nothing day. The town outside the gates in the week before is often the best part.",
+ fail:"Back-to-back with no gap, which is how the third one is a blur and the flight home is grim.",
+ teaches:"Fixed dates should be surrounded by slack, not joined end to end.",
+ when:"Entirely set by the calendar, usually summer.",next:["fixture-trip","bleisure"]},
+{id:"bleisure",n:"The extended work trip",aka:"conference plus days, bleisure",shape:"hop",fam:"attached",med:"air",nodes:2,dwell:3,len:"+2–6 nights",
+ d:{pa:3,ef:2,pl:3,co:3,im:2,so:3,un:1,ct:1},rest:2,stim:3,
+ what:"Days added to the front or back of a trip somebody else is paying to get you there for.",
+ good:"Add the days at the end rather than the start, so the work does not sit ahead of you spoiling them. The city you are in for work is rarely the best use of the flight — the region an hour away often is. Change hotels; the conference hotel is not a place.",
+ fail:"A single tacked-on day spent recovering from the event, which is not a trip.",
+ teaches:"The expensive part is usually the flight; days are comparatively cheap.",
+ when:"Whenever the work happens.",next:["work-city","stopover"]},
+{id:"cooking-school",n:"The learning trip",aka:"cooking school, dive course, craft workshop",shape:"hop",fam:"attached",med:"none",nodes:2,dwell:5,len:"5–14 days",
+ d:{pa:2,ef:3,pl:4,co:3,im:4,so:4,un:1,ct:3},rest:2,stim:4,
+ what:"A trip built around a course, where you arrive as a beginner and leave with a skill and a certificate.",
+ good:"Learning gives a trip a spine: fixed hours, visible progress, and a ready-made group. Judge the school by class size and by how much you actually do rather than watch. Add two or three days at the end to use the skill somewhere before it fades.",
+ fail:"A demonstration sold as a course, where you watch a professional and eat lunch.",
+ teaches:"Structure and progress are their own kind of holiday.",
+ when:"Off-season, when class sizes are small and instructors have time.",next:["language-school","food-circuit"]},
+
+// ---------------- ORBIT ----------------
+{id:"second-home",n:"The place you keep going back to",aka:"second home, family cottage",shape:"orbit",fam:"seasonal",med:"none",nodes:1,dwell:14,len:"weeks a year, for years",
+ d:{pa:0,ef:1,pl:1,co:3,im:4,so:3,un:0,ct:4},rest:5,stim:2,
+ what:"One place returned to for weeks every year, owned, inherited or simply rented on repeat.",
+ good:"The reward compounds: no research, no decisions, and a version of the place that changes under you across years. You learn the neighbours, the weather, which years were bad. The cost is opportunity — every year here is a year not somewhere else — and that trade is worth naming out loud.",
+ fail:"Maintained out of obligation after the pleasure has gone, especially where property is involved.",
+ teaches:"Repetition produces a kind of knowledge that novelty cannot.",
+ when:"The same weeks each year, which is most of the point.",next:["snowbird","seasonal-ski"]},
+{id:"annual-week",n:"The same week, every year",aka:"the family week",shape:"orbit",fam:"kin",med:"none",nodes:1,dwell:7,len:"1 week a year",
+ d:{pa:0,ef:1,pl:2,co:3,im:2,so:5,un:1,ct:3},rest:3,stim:2,
+ what:"A fixed annual week in the same house with the same people, where the tradition is the product.",
+ good:"It works because nothing is decided — same house, same week, same roles — and the children measure their lives against it. Protect the rituals, however silly, since they are load-bearing. Add one new thing a year and no more.",
+ fail:"Reinvented each year by someone trying to improve it, which removes the only thing it was providing.",
+ teaches:"Traditions are infrastructure. Changing them costs more than it looks.",
+ when:"The same week. That is the whole mechanism.",next:["second-home","roots-trip"]},
+{id:"reunion",n:"The reunion",aka:"family gathering, big birthday",shape:"orbit",fam:"kin",med:"mixed",nodes:1,dwell:4,len:"3–5 nights",
+ d:{pa:1,ef:1,pl:4,co:3,im:1,so:5,un:2,ct:3},rest:1,stim:3,
+ what:"A gathering that exists because people are related or were once close, held somewhere neutral.",
+ good:"Treat it as an event with a producer rather than a holiday: one person on logistics, meals resolved in advance, and structured time balanced against genuinely free afternoons. The best ones have a single fixed centrepiece and otherwise leave people alone.",
+ fail:"Over-scheduled and under-catered, so the whole group is either performing togetherness or hungry.",
+ teaches:"Some trips are events wearing a holiday's clothes; plan them as events.",
+ when:"When the oldest and youngest can both travel.",next:["annual-week","villa-group"]},
+{id:"roots-trip",n:"The roots trip",aka:"ancestral return, heritage travel",shape:"orbit",fam:"kin",med:"mixed",nodes:3,dwell:3,len:"1–3 weeks",
+ d:{pa:2,ef:2,pl:4,co:2,im:5,so:3,un:3,ct:3},rest:1,stim:4,
+ what:"Travelling to where a family came from, often with archives, relatives or a language somewhere in the mix.",
+ good:"Do the research before rather than during — records, a local contact, a few words of the language — because the trip is short and the archives keep office hours. Expect the place itself to be ordinary; the meaning is not in the landscape.",
+ fail:"Arriving with an expectation of recognition and finding a normal town, which lands as disappointment rather than information.",
+ teaches:"Meaning travels with you; it is rarely waiting at the site.",
+ when:"Whenever the oldest people who remember are still available.",next:["staying-with-family","annual-week"]},
+{id:"seasonal-ski",n:"The season place",aka:"the same resort every winter",shape:"orbit",fam:"seasonal",med:"none",nodes:1,dwell:7,len:"1–2 weeks a year",
+ d:{pa:2,ef:4,pl:2,co:3,im:2,so:4,un:1,ct:4},rest:2,stim:3,
+ what:"Returning each winter to the same mountain, where the familiarity is what makes the week efficient.",
+ good:"You stop losing two days orienting: you know the lifts, the bad weather runs, the one restaurant. Skill accumulates because the terrain is a constant. The trade is that you never learn another mountain, which is fine if you have made it deliberately.",
+ fail:"Loyalty to a place that has changed — snow, prices or crowds — long after it stopped being the right one.",
+ teaches:"Familiarity converts holiday time into practice time.",
+ when:"The same weeks, chosen for snow rather than school holidays where possible.",next:["second-home","ritual-race"]},
+{id:"ritual-race",n:"The annual fixture",aka:"the same race, the same festival",shape:"orbit",fam:"ritual",med:"mixed",nodes:1,dwell:3,len:"a long weekend a year",
+ d:{pa:3,ef:3,pl:3,co:2,im:3,so:5,un:2,ct:2},rest:1,stim:3,
+ what:"One event attended every year — a marathon, a carnival, a match, a meeting — around which the year organises itself.",
+ good:"Repetition turns spectating into expertise: you know where to stand, who to see, which year was better. It also gives the calendar a fixed point, which does more for anticipation than any spontaneous trip.",
+ fail:"Attended out of habit after the friends who made it good stopped coming.",
+ teaches:"Anticipation is a large share of a trip's value, and fixed dates create it.",
+ when:"Fixed. Book accommodation the day the dates are announced.",next:["fixture-trip","seasonal-ski"]},
+
+// ---------------- CHASE ----------------
+{id:"eclipse",n:"The eclipse chase",aka:"totality trip",shape:"chase",fam:"sky",med:"mixed",nodes:2,dwell:3,len:"3–10 days",
+ d:{pa:3,ef:2,pl:5,co:2,im:1,so:4,un:5,ct:3},rest:0,stim:5,
+ what:"Travelling to a narrow strip of the earth's surface for two to four minutes of total solar eclipse.",
+ good:"Totality is categorically different from a partial eclipse — it is not a better version of the same thing — which is why people spend decades chasing it. Stay mobile: cloud is the only real risk, and the winning move is booking a refundable base within a few hours' drive of the centreline.",
+ fail:"Locked into one hotel on the centreline, under cloud, watching the sky get dim.",
+ teaches:"When the event is fixed and brief, the whole plan should optimise for mobility.",
+ when:"Published decades in advance, to the second.",next:["aurora","fixture-trip"]},
+{id:"aurora",n:"The aurora chase",aka:"northern lights trip",shape:"chase",fam:"sky",med:"road",nodes:2,dwell:4,len:"4–7 nights",
+ d:{pa:2,ef:2,pl:3,co:2,im:2,so:3,un:5,ct:3},rest:2,stim:3,
+ what:"Several nights at high latitude in winter, waiting for a geomagnetic display that may or may not appear.",
+ good:"Stack the odds: four clear-sky nights minimum, well inland away from coastal cloud, near the equinoxes when geomagnetic activity peaks. Plan a trip you would enjoy without the lights — dog sledding, a good cabin, hot food at midnight — and treat the aurora as a bonus.",
+ fail:"Two nights on a package tour, which is roughly a coin flip sold as an experience.",
+ teaches:"When the outcome is probabilistic, buy more attempts rather than a better single one.",
+ when:"September to March, best around the equinoxes.",next:["eclipse","migration-chase"]},
+{id:"migration-chase",n:"The wildlife season",aka:"migration, rut, whale season",shape:"chase",fam:"wild",med:"mixed",nodes:2,dwell:4,len:"5–14 days",
+ d:{pa:2,ef:2,pl:5,co:3,im:2,so:3,un:4,ct:4},rest:2,stim:4,
+ what:"Timing a trip to an annual animal event — a river crossing, a rut, a gathering — that happens approximately when it usually does.",
+ good:"Animals do not read the brochure. Give it a wide window, choose an operator who moves rather than one with a fixed camp, and value the guide's local knowledge above the lodge's thread count. Even a miss usually leaves you somewhere extraordinary.",
+ fail:"Three nights booked on the historical average date, which is how people pay a premium to see nothing.",
+ teaches:"Natural timetables have error bars, and the error bars are the plan.",
+ when:"A moving window, published in advance and wrong by weeks some years.",next:["birding","bloom-chase"]},
+{id:"birding",n:"The birding trip",aka:"twitching, migration watch",shape:"chase",fam:"wild",med:"road",nodes:3,dwell:2,len:"3–14 days",
+ d:{pa:3,ef:3,pl:4,co:1,im:2,so:2,un:4,ct:2},rest:2,stim:3,
+ what:"Travel organised around species: being in the right habitat, at the right season, at dawn.",
+ good:"A serious list requires early starts and a guide who knows calls, which is where the money should go. The pleasure is the attention it forces — after a week of looking properly you cannot walk anywhere without noticing. Coastal migration points in autumn are the richest.",
+ fail:"Midday walks in the wrong habitat, which is birdwatching without birds.",
+ teaches:"Expertise converts an ordinary landscape into a dense one.",
+ when:"Migration windows in spring and autumn; dawn, always.",next:["migration-chase","harvest-chase"]},
+{id:"bloom-chase",n:"The bloom or foliage chase",aka:"sakura front, autumn colour, superbloom",shape:"chase",fam:"wild",med:"rail",nodes:3,dwell:3,len:"5–14 days",
+ d:{pa:3,ef:2,pl:4,co:3,im:3,so:4,un:4,ct:4},rest:2,stim:3,
+ what:"Following a colour front — blossom moving north, autumn moving south or downhill — with dates that shift each year.",
+ good:"The front moves with altitude as well as latitude, so a missed peak in the city is often perfect an hour up the valley. Forecasts firm up about two weeks out; book flexible accommodation and decide late. The week after peak, with petals on the ground, is emptier and better.",
+ fail:"Booked eight months ahead for fixed dates, and arriving to bare branches or brown leaves.",
+ teaches:"Altitude is a time machine for seasons; use it when the calendar fails.",
+ when:"Peak dates shift by up to two weeks year to year.",next:["migration-chase","harvest-chase"]},
+{id:"harvest-chase",n:"The harvest trip",aka:"vendemmia, truffle season, matsutake",shape:"chase",fam:"fixture",med:"road",nodes:2,dwell:4,len:"4–10 days",
+ d:{pa:2,ef:2,pl:4,co:3,im:5,so:4,un:3,ct:3},rest:2,stim:3,
+ what:"Arriving where something is being gathered, at the few weeks in the year when the whole place is doing it.",
+ good:"The region is at maximum energy and minimum patience: everyone is working, tables are full, and the food is the best it will be all year. Go with an introduction if you can. Accept that the people you want to meet are busy — the price of seeing the real thing.",
+ fail:"Expecting hospitality during the hardest working weeks of the producers' year.",
+ teaches:"Being somewhere while it works is a different trip from being there while it hosts.",
+ when:"A few weeks, and the exact ones are announced late.",next:["food-circuit","farm-stay"]},
+{id:"fixture-trip",n:"The fixture",aka:"Grand Prix, final, Tour stage, big race",shape:"chase",fam:"fixture",med:"mixed",nodes:2,dwell:3,len:"3–7 days",
+ d:{pa:3,ef:2,pl:5,co:2,im:3,so:5,un:2,ct:4},rest:0,stim:4,
+ what:"A trip whose centre is one sporting or cultural event with a fixed date, a ticket, and a city that fills up around it.",
+ good:"The event is the smaller half. What you are actually buying is a city in an abnormal state — everyone there for the same reason, restaurants full at midnight, strangers talking. Book accommodation the day the date is confirmed and stay a day after so you are not leaving in the crush.",
+ fail:"Flights and rooms bought at four times the rate, arriving on the day and leaving the next morning.",
+ teaches:"An event turns an ordinary city into a temporary one, and that is the real attraction.",
+ when:"Fixed, and accommodation prices triple within hours of the announcement.",next:["festival-circuit","ritual-race"]},
+{id:"deal-trip",n:"The trip the fare chose",aka:"mistake fare, error fare, wherever is cheap",shape:"chase",fam:"deal",med:"air",nodes:2,dwell:4,len:"4–10 days",
+ d:{pa:3,ef:2,pl:2,co:2,im:3,so:2,un:4,ct:1},rest:2,stim:3,
+ what:"A destination selected because the flight was absurdly cheap, and everything else worked out afterwards.",
+ good:"Book first, research later — mistake fares last hours — but never book anything non-refundable until the ticket is confirmed by the airline rather than the agent. The gift is being sent somewhere you would never have chosen, which is a good reason to go.",
+ fail:"Chasing the deal into a place and season you have no interest in, then spending the savings twice over on the ground.",
+ teaches:"Randomness is a legitimate way to choose, as long as the constraint is honest.",
+ when:"Whenever it appears; that is the whole shape.",next:["stopover","award-trip"]}
+,
+{id:"coach-tour",n:"The escorted coach tour",aka:"packaged group tour",shape:"loop",fam:"circuit",med:"road",nodes:8,dwell:1,len:"7–21 days",
+ d:{pa:5,ef:1,pl:5,co:3,im:1,so:5,un:0,ct:3},rest:2,stim:3,
+ what:"A fixed itinerary of many stops with a driver, a guide and the same forty people, sold as a single price.",
+ good:"What it is genuinely excellent at is deleting every logistical decision for people who do not want them: luggage moved, tickets bought, someone counting heads at the back. Judge it by group size, by how many one-night stops it contains, and by whether any afternoon is left free.",
+ fail:"Eight one-night stops in ten days, which is this shape at its most punishing and the source of its reputation.",
+ teaches:"Convenience and pace are separate purchases; tours often sell one and deliver the other.",
+ when:"Shoulder season. The coach is full and the stops are crowded in July.",next:["ring-road","cruise"]},
+{id:"backpacker-circuit",n:"The backpacker circuit",aka:"the well-worn route, hostel trail",shape:"hop",fam:"cities",med:"mixed",nodes:7,dwell:3,len:"3 weeks – 12 months",
+ d:{pa:4,ef:3,pl:1,co:1,im:3,so:5,un:4,ct:1},rest:2,stim:4,
+ what:"A loosely followed route between cheap beds and long buses, shared with a rotating cast of people doing the same one.",
+ good:"The route is not the point — the moving cohort is. It works when you are willing to change plans for someone you met at breakfast, and it stops working the moment you treat the circuit as a list. Judge a stop by whether anyone local uses the same street.",
+ fail:"Following the exact circuit at pace, which produces the same six conversations in eight countries.",
+ teaches:"On some trips the other travellers, not the places, are the actual content.",
+ when:"Dry season, which is also when the route is busiest.",next:["city-hop","sleeper-hop"]},
+{id:"campervan",n:"The campervan trip",aka:"van life, motorhome tour",shape:"loop",fam:"circuit",med:"road",nodes:6,dwell:2,len:"5 days – 6 months",
+ d:{pa:3,ef:2,pl:1,co:1,im:2,so:2,un:3,ct:2},rest:3,stim:3,
+ what:"Driving and sleeping in the same vehicle, so the bed follows you and the plan can change at any hour.",
+ good:"The freedom is real and so is the admin — water, waste, overnight parking, three days of rain in a small box. Fewer and longer stops is the whole trick; the van tempts you to move every night, which is exactly when it stops being fun.",
+ fail:"Treated as free accommodation, in regions that now regulate or ban overnight parking precisely because of that.",
+ teaches:"Carrying your bed removes the booking problem and adds a parking one.",
+ when:"Shoulder. Sites are full in peak and services shut in winter.",next:["ring-road","microadventure"]},
+{id:"liveaboard",n:"The dive liveaboard",aka:"dive boat week",shape:"loop",fam:"seaLoop",med:"water",nodes:5,dwell:1,len:"5–10 days",
+ d:{pa:2,ef:4,pl:5,co:2,im:1,so:4,un:2,ct:4},rest:2,stim:5,
+ what:"A boat that moors over dive sites for a week, with four dives a day and no way to get off.",
+ good:"You reach sites day boats cannot, and the rhythm of dive, eat, sleep, dive empties your head more thoroughly than any beach. Judge the operator by guide-to-diver ratio and by whether surface intervals are enforced rather than suggested. Keep the last day dry before flying.",
+ fail:"Booked at the edge of your certification, so a week in beautiful water is spent quietly anxious.",
+ teaches:"Repetition inside one narrow activity is its own kind of rest.",
+ when:"Set precisely by visibility and local season.",next:["sail-charter","expedition-cruise"]},
+{id:"honeymoon",n:"The honeymoon",aka:"post-wedding trip",shape:"anchor",fam:"still",med:"none",nodes:1,dwell:7,len:"7–21 nights",
+ d:{pa:1,ef:1,pl:4,co:5,im:1,so:1,un:1,ct:5},rest:4,stim:2,
+ what:"A trip taken straight after a wedding, usually at the top of the budget and the bottom of the energy reserves.",
+ good:"Almost everyone plans it for the people they were six months earlier. The good version front-loads several days of nothing before anything ambitious, keeps to two bases at most, and spends the money on quiet rather than spectacle.",
+ fail:"An ambitious multi-country itinerary designed by people who had not yet run a wedding.",
+ teaches:"Plan for the state you will arrive in, not the state you booked in.",
+ when:"Delay it by a few weeks if you can. The trip is better and usually cheaper.",next:["resort","onsen-stay"]},
+{id:"snowbird",n:"The winter migration",aka:"snowbirding, wintering south",shape:"orbit",fam:"seasonal",med:"air",nodes:1,dwell:30,len:"1–5 months a year",
+ d:{pa:0,ef:1,pl:2,co:3,im:3,so:3,un:0,ct:3},rest:5,stim:2,
+ what:"Leaving a cold place for a warm one for months at a time, in the same town, every year.",
+ good:"It is not a holiday but a second season of ordinary life, and the people who do it well build a real one — a routine, a doctor, a bicycle, a group who expect them back. Length is what makes it cheap per day and what makes it work at all.",
+ fail:"Repeated out of momentum in a town whose social life you never actually entered, which is loneliness with better weather.",
+ teaches:"Long enough and often enough, a trip stops being travel and becomes a second life.",
+ when:"The same months each year, which is most of the mechanism.",next:["second-home","month-abroad"]},
+{id:"work-city",n:"The city work keeps sending you to",aka:"the accidental orbit",shape:"orbit",fam:"ritual",med:"air",nodes:1,dwell:3,len:"a few nights, several times a year",
+ d:{pa:2,ef:1,pl:2,co:3,im:3,so:3,un:1,ct:1},rest:1,stim:2,
+ what:"Somewhere you did not choose, returned to repeatedly for work, which becomes familiar purely by accumulation.",
+ good:"The most underrated shape here. After five visits you have a barber, a running route and opinions about the trams, none of which you set out to acquire. Stay in the same neighbourhood every time so the familiarity compounds, and treat the evenings as the trip.",
+ fail:"Five years of the same airport hotel and conference centre, which produces no knowledge of anywhere at all.",
+ teaches:"Familiarity accrues from repetition whether or not you chose the place.",
+ when:"Not yours to choose.",next:["bleisure","second-home"]}
+
+];
+
+const FAULTS = [
+{id:"tired",n:"Came back exhausted",fix:"Too many <b>moves</b>, not too many days",
+ why:"Every change of base costs most of a day — packing, transit, arrival, orientation — and the cost is invisible on an itinerary that lists only places. Four bases in ten days is three days of logistics. The fix is not a shorter trip but fewer nodes: cut the list in half and add nights, or switch shape entirely to an anchor with days out.",egs:["city-hop","basecamp"]},
+{id:"nothing",n:"Beautiful, but I felt nothing",fix:"No <b>friction</b> and no contact",
+ why:"Sealed transport, international hotels and guided sights produce a trip you watch rather than one you are in. Feeling requires some resistance: a language you fumble, a market where you do not know the prices, a walk that was harder than expected. Add one thing per trip that could go slightly wrong.",egs:["month-abroad","camino"]},
+{id:"deciding",n:"Spent the whole time deciding",fix:"Spend the <b>decision budget</b> before you leave",
+ why:"Choosing where to eat, twice a day, for ten days, with imperfect information, in a place where you do not know the norms, is genuinely tiring work — and it lands on whoever in the group is willing to do it. Lock one anchor per day in advance and leave the rest deliberately empty rather than open.",egs:["resort","hotel-weekend"]},
+{id:"never-arrived",n:"Never felt like I arrived",fix:"Fewer than <b>three nights</b> anywhere is a visit, not a stay",
+ why:"The first day is orientation and the last is departure, so two nights leaves you no middle. Three nights is where a place stops being a puzzle and starts being somewhere you can move through without thinking. It is the single highest-leverage rule in trip design.",egs:["city-immersion","island-hop"]},
+{id:"fought",n:"We fought",fix:"Different <b>dials</b>, never discussed",
+ why:"Most travel conflict is a mismatch on pace, planning or cost that nobody named before booking. One person's ideal day has four things in it and the other's has one. Compare the dials openly before choosing a shape, and build in solo afternoons — the cheapest fix in travel.",egs:["villa-group","sail-charter"]},
+{id:"photos",n:"Great photos, no memories",fix:"You collected <b>sights</b> instead of days",
+ why:"Memory attaches to duration, repetition and effort, not to the number of things seen. A place walked three times is remembered; four monuments in one afternoon are not. Bias toward returning to the same street, the same table, the same view at a different hour.",egs:["park-loop","second-home"]},
+{id:"expensive",n:"Expensive and forgettable",fix:"Money spent on <b>comfort</b> rather than access",
+ why:"Comfort is the least memorable thing you can buy. The same budget spent on a guide who knows the country, three nights instead of one, or a route with a permit produces a trip you can still describe in five years. Upgrade the parts that change what you see, not the parts that pad the seat.",egs:["safari","expedition-cruise"]},
+{id:"anticlimax",n:"It ended badly",fix:"The <b>last day</b> is what you will remember",
+ why:"People judge an experience by its peak and its end, disproportionately. A trip that finishes with an airport sprint after a 4am start rewrites the whole thing in memory. Put a quiet, good day at the end, at home if necessary, and never book the tightest connection on the last leg.",egs:["hotel-weekend","annual-week"]}
+];
+
+const CRAFT = [
+{h:"Count the moves, not the days",p:"The unit of cost in a trip is the change of base, not the night. Each move takes roughly half a day and drops your energy for the next one. Two weeks with three bases feels spacious; the same fortnight with seven feels like work. When an itinerary feels heavy, remove a node before you remove a day."},
+{h:"Three nights, minimum",p:"One night is transit. Two nights gives you one evening and one morning with a departure hanging over them. Three nights is where a place becomes navigable and you stop consulting a map for everything. Anywhere you are not willing to give three nights is probably somewhere you should skip on this trip."},
+{h:"The arrival day is not a day",p:"Plan nothing for it. After long-haul travel your judgement, appetite and temper are all impaired, and every decision made on that day is worse than it would have been. Book the first night before you land, know how you are getting from the airport, and let the day be a write-off in the plan rather than a disappointment in reality."},
+{h:"Book the scarce things, leave the rest open",p:"Two categories deserve advance commitment: things that genuinely sell out — huts, permits, the one restaurant, award seats — and the first night. Everything else booked in advance is a decision made by a worse-informed version of you, from home, without knowing the weather. Leave gaps deliberately; do not confuse an empty afternoon with an unplanned one."},
+{h:"Hero days and buffer days",p:"A good week has two or three hero days — the long hike, the big meal, the thing you came for — and the rest is connective tissue. Stacking heroes back to back does not double the pleasure; it flattens both. Put a deliberately empty day after each one, and protect it when the itinerary gets tight."},
+{h:"Budget the decisions, not just the money",p:"There is a finite number of good choices you can make in a day, and holidays quietly spend them all on lunch. Decide the recurring things once — where breakfast happens, who books dinner, what time you leave — and you free the attention for the things that actually differ."},
+{h:"Match the shape to the company",p:"Who you are travelling with constrains the shape more than the destination does. Groups larger than four cannot hop; they need an anchor with a kitchen. Mixed fitness cannot do a line, because a line has no bail-out. Solo travellers get more out of hops and lines than of anchors, because the shape supplies the company."},
+{h:"Plan the ending",p:"Peak and end dominate what you remember. Deliberately place something good near the finish, avoid the 5am departure on the last morning, and leave a day at home before returning to work. Re-entry is part of the trip and it is the part nobody designs."},
+{h:"Go back",p:"Returning is underrated because it produces no new stories and a great deal of knowledge. The second visit is where you stop performing a place and start using it — the walk you already know, the café where you do not have to decide. Every third trip, go somewhere you have already been."}
+];
+
+const WORDS = [
+{t:"Shoulder season",c:"timing",d:"The weeks either side of peak, when weather is still workable and prices and crowds have dropped sharply.",u:"Almost always the correct answer for anywhere famous.",x:"Not off-season, when things close, transport thins and half the point is gone."},
+{t:"Dwell time",c:"design",d:"How long you actually stay in one place, as opposed to how many places appear on the itinerary.",u:"The single most useful number when judging a plan.",x:"Not trip length. A long trip can have terrible dwell time."},
+{t:"Transfer day",c:"design",d:"A day consumed by moving between bases, which appears on no itinerary as a cost.",u:"When counting what a plan really contains.",x:"Not a travel day in the sense of a scenic journey, which is a day you get to keep."},
+{t:"Buffer day",c:"design",d:"An unplanned day deliberately left in the itinerary to absorb weather, delays, illness or exhaustion.",u:"On any trip with fixed commitments or hard routes.",x:"Not a spare day at the end. A buffer only works when it sits before the thing it protects."},
+{t:"Hero day",c:"design",d:"The day the trip is really for. Most trips support two or three.",u:"When deciding what the rest of the week should be arranged around.",x:"Not the busiest day. A hero day can be one long walk and nothing else."},
+{t:"Base",c:"design",d:"Where you sleep and leave your luggage; the fixed point everything else radiates from.",u:"Counting bases is the fastest way to judge how tiring a trip will be.",x:"Not the destination. You can have one base and see a whole region."},
+{t:"Gateway town",c:"place",d:"The settlement at the edge of a protected or wild area, which exists to service visitors to it.",u:"Where you sleep for a park trip, and usually where the food and fuel are.",x:"Not the park. Gateway towns are often unlovely and always useful."},
+{t:"Day-trip radius",c:"design",d:"How far you can go from a base and return the same day without ruining it — in practice about ninety minutes each way.",u:"When choosing where to stay for a region rather than a town.",x:"Not driving distance. Roads, transfers and parking eat the margin."},
+{t:"Honeypot",c:"place",d:"The one site everyone is sent to, which absorbs most visitors and leaves the surrounding area comparatively empty.",u:"Go at dawn, or go an hour away instead.",x:"Not a tourist trap. Honeypots are usually genuinely magnificent, and busy for that reason."},
+{t:"Overtourism",c:"place",d:"Visitor numbers past the point where a place can function normally, changing housing, prices and daily life for residents.",u:"When a city's centre has become a service district for visitors and nobody lives there.",x:"Not simply crowds. The defining feature is displacement of ordinary life."},
+{t:"Carrying capacity",c:"place",d:"The number of visitors a site can absorb before the experience and the site itself begin to degrade.",u:"Behind permits, timed entry, and ferry caps.",x:"Not a queue length. It is a physical and social limit, not a comfort one."},
+{t:"Leakage",c:"place",d:"The share of tourist spending that leaves the local economy — foreign-owned hotels, imported food, international operators.",u:"When deciding where a night's money actually goes.",x:"Not price. An expensive locally-owned lodge can leak far less than a cheap chain."},
+{t:"Staged authenticity",c:"place",d:"A performance of local life arranged for visitors, presented as the genuine back-stage version of a place.",u:"The village that exists for the tour, the dance at 6pm nightly.",x:"Not fakery exactly — it is a real economy, and the performers know precisely what it is."},
+{t:"The tourist gaze",c:"place",d:"The idea that visitors are taught in advance what to look for and mostly see what they came to confirm.",u:"When you notice you are photographing the postcard view you already had.",x:"Not a criticism of tourists specifically. Everyone arrives with a script."},
+{t:"Tourist versus traveller",c:"judgement",d:"A distinction people draw between themselves and everyone else doing the same thing.",u:"Almost never. It is a status claim wearing the clothes of a category.",x:"Not the same as the useful distinction between visiting and staying, which is about duration and contact rather than virtue."},
+{t:"Slow travel",c:"design",d:"Fewer places, longer stays, surface transport, and accepting that you will not see most of a country.",u:"When you want depth and are willing to pay for it in coverage.",x:"Not laziness or luxury. It usually costs less and demands more time, which is the scarcer resource."},
+{t:"Type 2 fun",c:"judgement",d:"Miserable while it happens, excellent in retrospect, and the source of most of the stories you will tell.",u:"Long walks, bad weather, altitude, breakdowns.",x:"Not type 3, which is miserable at the time and still miserable later. Knowing where the line is for you is the skill."},
+{t:"Re-entry",c:"design",d:"The return to ordinary life, and how much of the trip's benefit survives it.",u:"When deciding whether to fly back the night before work.",x:"Not jet lag, though jet lag makes it worse. Re-entry is a scheduling problem before it is a physiological one."},
+{t:"Open jaw",c:"logistics",d:"A ticket that flies into one city and out of another, so you never retrace your route.",u:"Any line-shaped trip. Often the same price as a return, sometimes cheaper.",x:"Not two one-way tickets, which usually cost more and break your protections if a leg is cancelled."},
+{t:"Stopover versus layover",c:"logistics",d:"A layover is a connection of a few hours. A stopover is a deliberate break of a day or more, and many airlines permit one free.",u:"Turning a long-haul into two destinations at no extra fare.",x:"Not the same thing at all, though the words are used interchangeably by everyone including airlines."},
+{t:"Positioning flight",c:"logistics",d:"A separate flight taken purely to reach the airport where the real itinerary starts.",u:"When a fare from another city is cheap enough to justify getting there.",x:"Not part of the main ticket, which means a delay on it is entirely your problem."},
+{t:"Mistake fare",c:"logistics",d:"A fare published in error — a currency slip, a missing fuel surcharge — that may or may not be honoured.",u:"Book immediately, wait for airline confirmation, book nothing else until it holds.",x:"Not a sale. Sales are intentional and safe; mistake fares can be cancelled."},
+{t:"Award space",c:"logistics",d:"The seats an airline actually releases for points, which is a different and much smaller thing from seats for sale.",u:"When planning any trip with miles: the route follows the space, not the other way round.",x:"Not availability. A full-fare seat existing tells you nothing about award space."},
+{t:"Single supplement",c:"logistics",d:"The surcharge for occupying a double room or cabin alone, sometimes approaching a second person's fare.",u:"The main reason solo travel on organised trips costs so much more.",x:"Not a solo discount, which is rare and usually a shared-room lottery."},
+{t:"Half board",c:"logistics",d:"Breakfast and dinner included, lunch not. Full board adds lunch; all-inclusive adds drinks and everything else.",u:"Standard in huts, mountain hotels and remote lodges where there is nowhere else to eat.",x:"Not a value judgement. Where there are no restaurants, half board is simply how eating works."},
+{t:"Hut system",c:"logistics",d:"A network of staffed mountain shelters with beds, meals and a reservation system, spaced at a day's walk.",u:"The Alps, Scandinavia, New Zealand and parts of Japan, and the reason those routes are accessible.",x:"Not a bothy or a shelter, which are unstaffed, free, and provide nothing but a roof."},
+{t:"Bothy",c:"logistics",d:"An unlocked, unstaffed shelter, free to use, with no booking, no facilities and no guarantee of space.",u:"Scotland especially. Bring everything, leave it better, expect company.",x:"Not a hut. Nobody is cooking you dinner."},
+{t:"Permit lottery",c:"logistics",d:"An allocation system for capped access — a river, a peak, a trail — usually drawn many months in advance.",u:"The Grand Canyon, Half Dome, the Inca Trail, popular thru-hikes.",x:"Not first come, first served. Applying late is not a strategy; there is a date."},
+{t:"Shoulder day",c:"timing",d:"Arriving a day before or leaving a day after an event, when prices collapse and the place is calm.",u:"Around festivals, races and holidays.",x:"Not shoulder season, which is about the calendar rather than a single event."},
+{t:"Golden week",c:"timing",d:"Any nationally synchronised holiday period when an entire country travels at once and everything doubles in price.",u:"Japan's Golden Week, China's Golden Week, Ferragosto, the French August.",x:"Not peak season generally. These are specific weeks, and they are worth planning around to the day."},
+{t:"The Sunday problem",c:"timing",d:"Places where much of what you came for closes on a particular day — Sundays in parts of Europe, Mondays for museums.",u:"When a two-night city stop lands on the wrong pair of days.",x:"Not a minor inconvenience. It can remove the entire reason you stopped there."},
+{t:"Siesta gap",c:"timing",d:"The mid-afternoon hours when shops and kitchens close in hot countries and nothing can be bought or eaten.",u:"Southern Europe, Latin America, much of the Middle East.",x:"Not laziness. It is a rational response to the hours when working outside is dangerous."},
+{t:"Blue hour",c:"timing",d:"The twenty to forty minutes after sunset when the sky is still lit and lights are on, and cities look their best.",u:"When to be somewhere with a view, and when to eat if you want a table with one.",x:"Not golden hour, which is the warm hour before sunset and a different effect entirely."},
+{t:"Acclimatisation day",c:"design",d:"A day spent gaining little or no altitude so your body can adjust, built into the route rather than added if needed.",u:"Anywhere above about 2,500 metres.",x:"Not a rest day. You typically walk high and sleep low; doing nothing is less effective."},
+{t:"Jet-lag debt",c:"design",d:"The accumulated deficit from crossing time zones, roughly a day of adjustment per time zone, worse travelling east.",u:"When deciding what the first two days of a long-haul trip can realistically contain.",x:"Not tiredness. It is a circadian misalignment; sleeping more does not fix it, light exposure does."},
+{t:"Ground truth",c:"judgement",d:"What a place is actually like, as opposed to what its photographs, rankings and reviews suggest.",u:"When the gap between the image and the visit is the thing worth noticing.",x:"Not disappointment. Ground truth is often better than the image, just different."},
+{t:"Itinerary debt",c:"design",d:"Commitments made early that constrain every later choice, including the ones you would now rather make.",u:"When the weather is perfect for the mountain and you have a non-refundable city hotel.",x:"Not planning. Planning creates options; itinerary debt removes them."},
+{t:"Decision budget",c:"design",d:"The finite supply of good choices available in a day, spent by trivia unless you decide the recurring things once.",u:"On group trips especially, where one person quietly spends everyone's.",x:"Not indecisiveness. It is a resource, and it runs out around dinner time."},
+{t:"Peak-end",c:"judgement",d:"The finding that we judge an experience mainly by its most intense moment and its ending, rather than by its average.",u:"When designing where the good day goes and how the trip finishes.",x:"Not a reason to make everything a peak. Contrast is what makes a peak legible."},
+{t:"Saturation point",c:"judgement",d:"The moment when another cathedral, museum or viewpoint stops registering at all.",u:"Usually day four of a city trip, or the third gallery in a day.",x:"Not boredom. It is perceptual, and the fix is a change of activity rather than a better sight."},
+{t:"Legibility",c:"place",d:"How quickly a place becomes navigable — whether you can hold its shape in your head after a day.",u:"Why some cities feel comfortable immediately and others take a week.",x:"Not size. Small tangled towns can be less legible than large gridded cities."},
+{t:"Third place",c:"place",d:"The place that is neither home nor work — a café, a bath house, a bar, a square — where a community is visible.",u:"Finding one and using it repeatedly is the fastest route into somewhere.",x:"Not a tourist venue. If everyone in it is a visitor, it is not doing the job."},
+{t:"Liminal",c:"judgement",d:"The in-between state of transit — airports, night trains, ferries — where ordinary rules and roles are suspended.",u:"Describing why journeys feel unlike either end of them.",x:"Not just waiting. The suspension is the point, and for some travellers it is the best part."},
+{t:"Micro-adventure",c:"design",d:"A short trip using the hours you already have — an overnight outdoors between two working days.",u:"When the barrier to travel is time rather than money.",x:"Not a compromise. It is a different shape with a much better effort-to-reward ratio."},
+{t:"Package versus independent",c:"logistics",d:"A package sells transport, accommodation and often activities as one contract with one point of liability.",u:"Worth it for remote logistics, permits and hard countries; usually not for anywhere with trains.",x:"Not a quality distinction. Packages are contracts, and the contract is the actual product."},
+{t:"Voluntourism",c:"judgement",d:"Short-term volunteering sold as travel, where unskilled visitors do work locals could be paid to do.",u:"Rarely. The most useful test is whether you would be hired to do this at home.",x:"Not the same as skilled long-term volunteering or work exchange, where the exchange is honest."},
+{t:"Seasonal closure",c:"timing",d:"The months when a resort town, hut network or island route simply stops operating.",u:"Check before booking anywhere whose economy is a single season long.",x:"Not quiet season. There is a difference between few people and nothing open."}
+];
+</script>
+<script>
+const $ = s => document.querySelector(s);
+const byId = Object.fromEntries(A.map(a => [a.id, a]));
+const SH = Object.fromEntries(SHAPES.map(s => [s.id, s]));
+const HEX = {anchor:"#0F6E74", line:"#C0402B", loop:"#8F6410", hop:"#57499B", orbit:"#2C6640", chase:"#9C2E66"};
+const PAPER = "#EFF2F4";
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const shapeName = id => SH[id] ? SH[id].n : id;
+const famName = id => FAMS[id] ? FAMS[id].n : id;
+const MEDIUM = {foot:"on foot", bike:"by bike", road:"by road", rail:"by rail", water:"on water", air:"by air", mixed:"mixed transport", none:"you stay put"};
+
+/* ================= signature: the route diagram ================= */
+function stroke(med, w){
+  const base = `stroke-linecap="round" fill="none"`;
+  switch(med){
+    case "foot":  return `${base} stroke-width="1.5" stroke-dasharray="0.1 3"`;
+    case "bike":  return `${base} stroke-width="1.1" stroke-dasharray="3 2.5"`;
+    case "road":  return `${base} stroke-width="1.5"`;
+    case "rail":  return `${base} stroke-width="1.8"`;
+    case "water": return `${base} stroke-width="1.2"`;
+    case "air":   return `${base} stroke-width="1.1" stroke-dasharray="5 3.5"`;
+    default:      return `${base} stroke-width="1.2" stroke-dasharray="5 2 1 2"`;
+  }
+}
+function wavy(x1,y1,x2,y2){
+  const n = 8, dx = (x2-x1)/n, dy = (y2-y1)/n;
+  let d = `M${x1.toFixed(1)} ${y1.toFixed(1)}`;
+  for(let i=0;i<n;i++){
+    const px = x1+dx*(i+0.5), py = y1+dy*(i+0.5) + (i%2?2.6:-2.6);
+    d += ` Q${px.toFixed(1)} ${py.toFixed(1)} ${(x1+dx*(i+1)).toFixed(1)} ${(y1+dy*(i+1)).toFixed(1)}`;
+  }
+  return d;
+}
+function link(a1,b1,med,trim){
+  let [x1,y1] = a1, [x2,y2] = b1;
+  if(trim){
+    const dx = x2-x1, dy = y2-y1, L = Math.hypot(dx,dy) || 1, t = Math.min(trim, L/2.4);
+    x1 += dx/L*t; y1 += dy/L*t; x2 -= dx/L*t; y2 -= dy/L*t;
+  }
+  if(med === "water") return `<path d="${wavy(x1,y1,x2,y2)}" stroke="CC" ${stroke(med)}/>`;
+  if(med === "air"){
+    const mx = (x1+x2)/2, my = Math.min(y1,y2) - Math.abs(x2-x1)*0.28 - 4;
+    return `<path d="M${x1} ${y1} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2} ${y2}" stroke="CC" ${stroke(med)}/>`;
+  }
+  let s = `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="CC" ${stroke(med)}/>`;
+  if(med === "rail"){ // sleepers, drawn in the paper colour over the rail
+    s += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${PAPER}" stroke-width="1.8" stroke-dasharray="0.9 3.2"/>`;
+  }
+  return s;
+}
+function node(x,y,r,fill){ return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${fill?"CC":PAPER}" stroke="CC" stroke-width="1.4"/>`; }
+function diagram(a, w){
+  const c = HEX[a.shape], W = 130, H = 64, cy = 32;
+  const r = Math.min(8.5, 2.2 + Math.min(a.dwell,14)*0.44);
+  const n = Math.max(2, Math.min(a.nodes, 8));
+  let g = "";
+  if(a.shape === "anchor"){
+    const R = Math.min(11, r + 2);
+    if(a.fam === "radiate"){
+      for(let i=0;i<5;i++){
+        const ang = -Math.PI/2 + i*2*Math.PI/5;
+        const x = 65 + Math.cos(ang)*26, y = cy + Math.sin(ang)*17;
+        g += link([65,cy],[x,y], a.med === "none" ? "road" : a.med);
+        g += node(x,y,2.2,true);
+      }
+    }
+    if(a.fam === "livethere") g += `<circle cx="65" cy="${cy}" r="24" fill="none" stroke="CC" stroke-width="0.9" stroke-dasharray="3 3.5"/>`;
+    if(a.fam === "hosted") g += `<path d="M45 ${cy-16} L65 ${cy-25} L85 ${cy-16} L85 ${cy+17} L45 ${cy+17} Z" fill="none" stroke="CC" stroke-width="1" stroke-dasharray="4 3"/>`;
+    g += node(65, cy, R, true);
+  }
+  else if(a.shape === "line" || a.shape === "hop"){
+    const gap = a.shape === "hop";
+    const pts = [];
+    for(let i=0;i<n;i++){
+      const t = n === 1 ? 0.5 : i/(n-1);
+      pts.push([14 + t*(W-28), cy + Math.sin(i*1.9)*(gap?9:7)]);
+    }
+    for(let i=0;i<n-1;i++) g += link(pts[i], pts[i+1], gap && a.med === "none" ? "air" : a.med, gap ? r+5 : 0);
+    pts.forEach((p,i)=> g += node(p[0],p[1], gap ? r : (i===0||i===n-1 ? r : Math.max(2.4, r*0.62)), true));
+    const [lx,ly] = pts[n-1], [px,py] = pts[n-2];
+    const ang = Math.atan2(ly-py, lx-px);
+    if(!gap) g += `<path d="M${(lx+Math.cos(ang)*(r+6)).toFixed(1)} ${(ly+Math.sin(ang)*(r+6)).toFixed(1)} l${(-Math.cos(ang-0.5)*5).toFixed(1)} ${(-Math.sin(ang-0.5)*5).toFixed(1)} M${(lx+Math.cos(ang)*(r+6)).toFixed(1)} ${(ly+Math.sin(ang)*(r+6)).toFixed(1)} l${(-Math.cos(ang+0.5)*5).toFixed(1)} ${(-Math.sin(ang+0.5)*5).toFixed(1)}" stroke="CC" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
+  }
+  else if(a.shape === "loop"){
+    const pts = [], ln = Math.max(4, n);
+    for(let i=0;i<ln;i++){
+      const ang = -Math.PI/2 + i*2*Math.PI/ln;
+      pts.push([65 + Math.cos(ang)*45, cy + Math.sin(ang)*21]);
+    }
+    for(let i=0;i<ln;i++) g += link(pts[i], pts[(i+1)%ln], a.med === "none" ? "road" : a.med);
+    pts.forEach((p,i)=> g += node(p[0],p[1], i===0 ? r : Math.max(2.4, r*0.7), true));
+  }
+  else if(a.shape === "orbit"){
+    [1,0.68,0.38].forEach((f,i)=>{
+      g += `<ellipse cx="65" cy="${cy}" rx="${(46*f).toFixed(1)}" ry="${(22*f).toFixed(1)}" fill="none" stroke="CC" stroke-width="0.9" stroke-dasharray="${i===0?"4 3":"3 3"}"/>`;
+      g += node(65 + 46*f*Math.cos(-0.6 - i*0.9), cy + 22*f*Math.sin(-0.6 - i*0.9), 2.6, true);
+    });
+    g += node(65, cy, Math.min(9, r), true);
+  }
+  else { // chase
+    g += node(20, cy+8, Math.max(3, r*0.6), true);
+    g += `<path d="M20 ${cy+8} Q60 ${cy+14} 95 ${cy}" stroke="CC" ${stroke("air")}/>`;
+    g += `<path d="M20 ${cy+8} Q56 ${cy-16} 95 ${cy}" stroke="CC" stroke-width="0.9" stroke-dasharray="2 3" fill="none" opacity="0.55"/>`;
+    [11,7].forEach(rr=> g += `<circle cx="95" cy="${cy}" r="${rr}" fill="none" stroke="CC" stroke-width="1.1"/>`);
+    g += `<circle cx="95" cy="${cy}" r="3" fill="CC"/>`;
+    g += `<line x1="95" y1="${cy-16}" x2="95" y2="${cy-13}" stroke="CC" stroke-width="1.1"/><line x1="95" y1="${cy+13}" x2="95" y2="${cy+16}" stroke="CC" stroke-width="1.1"/><line x1="79" y1="${cy}" x2="82" y2="${cy}" stroke="CC" stroke-width="1.1"/><line x1="108" y1="${cy}" x2="111" y2="${cy}" stroke="CC" stroke-width="1.1"/>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${w}" height="${Math.round(w*H/W)}" aria-hidden="true">${g.split("CC").join(c)}</svg>`;
+}
+
+/* ================= drawer ================= */
+function dialBars(a){
+  return DIALS.map(([k,n])=>{
+    let cells = ""; for(let i=1;i<=5;i++) cells += `<i class="${i<=a.d[k]?"on":""}"></i>`;
+    return `<div class="dbar"><span>${n}</span><span class="trk">${cells}</span><span class="v">${a.d[k]}</span></div>`;
+  }).join("");
+}
+let lastFocus = null;
+function openArch(id){
+  const a = byId[id]; if(!a) return;
+  const kv = [
+    ["Shape", `<span class="s-${a.shape}">${shapeName(a.shape)}</span>`],
+    ["Bases", a.nodes === 1 ? "one" : `about ${a.nodes}`],
+    ["Per base", a.dwell >= 14 ? "weeks" : `${a.dwell} night${a.dwell>1?"s":""}`],
+    ["Length", esc(a.len)],
+    ["Moving", MEDIUM[a.med] || a.med],
+    ["Timing", esc(a.when)]
+  ].map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("");
+  $("#din").innerHTML = `
+    <button class="dclose" id="dclose" aria-label="Close">&times;</button>
+    <p class="eyebrow s-${a.shape}">${shapeName(a.shape)} &middot; ${famName(a.fam)}</p>
+    <h2 class="dname">${esc(a.n)}</h2>
+    <p class="daka">${esc(a.aka)}</p>
+    <div class="ddiagram">${diagram(a, 260)}</div>
+    <div class="dsect"><h5>What it is</h5><p>${esc(a.what)}</p></div>
+    <div class="dsect"><h5>What a good one looks like</h5><p class="good">${esc(a.good)}</p></div>
+    <div class="dsect"><h5>How it goes wrong</h5><p class="bad">${esc(a.fail)}</p></div>
+    <div class="dsect"><h5>The principle</h5><p class="principle">${esc(a.teaches)}</p></div>
+    <dl class="kv">${kv}</dl>
+    <div class="dsect"><h5>Dials</h5>${dialBars(a)}</div>
+    <div class="dsect"><h5>What you get back</h5><p>Rest ${a.rest}/5 &middot; story ${a.stim}/5 &mdash; ${
+      a.rest >= a.stim + 2 ? "restorative, and you will not have much to tell anyone."
+      : a.stim >= a.rest + 2 ? "memorable, and you will need a few days afterwards."
+      : "an even split, which usually means a longer trip is doing the work."}</p></div>
+    <div class="dsect"><h5>Nearby shapes</h5><p>${a.next.filter(n=>byId[n]).map(n=>`<button class="chip" data-go="${n}">${diagram(byId[n],46)}${esc(byId[n].n)}</button>`).join("")}</p></div>`;
+  $("#drawer").classList.add("on"); $("#scrim").classList.add("on");
+  $("#drawer").scrollTop = 0; $("#dclose").focus();
+}
+function closeDrawer(){
+  $("#drawer").classList.remove("on"); $("#scrim").classList.remove("on");
+  if(lastFocus && document.contains(lastFocus)) lastFocus.focus();
+  lastFocus = null;
+}
+$("#scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e=>{ if(e.key === "Escape") closeDrawer(); });
+document.addEventListener("click", e=>{
+  const g = e.target.closest("[data-go]");
+  if(g){ if(!$("#drawer").classList.contains("on")) lastFocus = g; openArch(g.dataset.go); return; }
+  if(e.target.closest("#dclose")) closeDrawer();
+});
+$("#drawer").addEventListener("keydown", e=>{
+  if(e.key !== "Tab") return;
+  const f = [...$("#drawer").querySelectorAll("button")];
+  if(!f.length) return;
+  const first = f[0], last = f[f.length-1];
+  if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+});
+const archChip = id => `<button class="chip" data-go="${id}">${diagram(byId[id],52)}${esc(byId[id].n)}</button>`;
+
+/* ================= tabs ================= */
+function selectTab(t){
+  document.querySelectorAll(".tab").forEach(x=>{
+    const on = x === t;
+    x.setAttribute("aria-selected", String(on));
+    x.tabIndex = on ? 0 : -1;
+  });
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on", v.id === "v-"+t.dataset.v));
+  if(t.dataset.v === "plot") drawPlot();
+}
+$("#tabs").addEventListener("click", e=>{ const t = e.target.closest(".tab"); if(t) selectTab(t); });
+$("#tabs").addEventListener("keydown", e=>{
+  if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key)) return;
+  const tabs = [...document.querySelectorAll(".tab")];
+  const i = tabs.indexOf(document.activeElement); if(i < 0) return;
+  e.preventDefault();
+  const n = e.key === "Home" ? 0 : e.key === "End" ? tabs.length-1
+          : (i + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+  tabs[n].focus(); selectTab(tabs[n]);
+});
+
+/* ================= hero slider ================= */
+$("#counts").textContent = `${A.length} archetypes · ${SHAPES.length} shapes · ${DIALS.length} dials · ${WORDS.length} terms`;
+const BANDS = [
+  {big:"Come home rested, with nothing much to report.", sml:"You are buying stillness, and paying for it in stories. Shapes that repeat, remove decisions or refuse to move — and the ones that work best are the ones you do not have to think about at all."},
+  {big:"Mostly rest, with one good day in it.", sml:"A base you do not leave much, plus a single outing worth remembering. The trick is protecting the idleness from the one plan rather than the other way around."},
+  {big:"Comfortable, with something to look at.", sml:"You want to be somewhere pleasant and see a bit of it. This is the broad middle of travel, and it is well served — but it is also where trips quietly become itineraries."},
+  {big:"An even split, which usually means length.", sml:"Getting rest and story from the same trip almost always requires time: long enough to be tired, recover, and still be there. Two weeks in one place does this; ten days across four cities cannot."},
+  {big:"Story first, and you will need a day at home afterwards.", sml:"Effort, unfamiliarity and early starts are what make a trip memorable, and they are the same things that stop it being restful. Book the recovery day now."},
+  {big:"Changed, and thoroughly wrung out.", sml:"The far end is committed: long routes, hard countries, fixed dates you cannot miss. Nobody comes back rested and everybody has something to say. Do not schedule anything for the week after."}
+];
+function heroPos(a){ return (a.stim - a.rest + 5) / 10 * 10; }
+function drawHero(){
+  const v = +$("#hero").value;
+  const band = BANDS[Math.min(BANDS.length-1, Math.floor(v/10 * BANDS.length))];
+  const ranked = A.slice().sort((x,y)=>Math.abs(heroPos(x)-v) - Math.abs(heroPos(y)-v));
+  const perShape = {}, picks = [];
+  for(const a of ranked){
+    if(picks.length >= 4) break;
+    perShape[a.shape] = (perShape[a.shape]||0) + 1;
+    if(perShape[a.shape] <= 2) picks.push(a);
+  }
+  $("#hero").setAttribute("aria-valuetext", band.big);
+  $("#verdict").innerHTML = `<div><p class="big">${band.big}</p><p class="sml">${band.sml}</p>
+    <div class="picks">${picks.map(p=>archChip(p.id)).join("")}</div></div>`;
+}
+$("#hero").addEventListener("input", drawHero);
+drawHero();
+
+/* ================= six shapes ================= */
+$("#legend").innerHTML = SHAPES.map(s=>`<span><i class="dot b-${s.id}"></i>${s.n} &mdash; ${s.sub}</span>`).join("");
+$("#shapes").innerHTML = SHAPES.map(s=>{
+  const list = A.filter(a=>a.shape === s.id);
+  const fams = Object.keys(FAMS).filter(k=>FAMS[k].s === s.id && list.some(a=>a.fam === k));
+  return `<section class="shape">
+    <div class="shape-head"><h3 class="s-${s.id}">${s.n}</h3><span class="n">${s.sub} &middot; ${list.length} archetypes</span></div>
+    <p class="shape-def">${s.def}</p>
+    ${fams.map(k=>`<div class="fam" data-fam="${k}">
+      <h4 class="s-${s.id}">${FAMS[k].n}</h4><p>${FAMS[k].d}</p>
+      <div>${list.filter(a=>a.fam === k).map(a=>
+        `<button class="chip" data-go="${a.id}" data-name="${esc((a.n+" "+a.aka+" "+a.what).toLowerCase())}">${diagram(a,52)}${esc(a.n)}</button>`).join("")}</div>
+    </div>`).join("")}
+  </section>`;
+}).join("");
+$("#find").addEventListener("input", e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("#shapes .chip").forEach(c=>{ c.style.display = (!q || c.dataset.name.includes(q)) ? "" : "none"; });
+  document.querySelectorAll("#shapes .fam").forEach(f=>{
+    f.style.display = [...f.querySelectorAll(".chip")].some(c=>c.style.display !== "none") ? "" : "none";
+  });
+  document.querySelectorAll("#shapes .shape").forEach(s=>{
+    s.style.opacity = [...s.querySelectorAll(".fam")].some(f=>f.style.display !== "none") ? "1" : "0.3";
+  });
+});
+
+$("#diagkey").innerHTML = `<b>How to read one</b>`
+  + `<span><svg viewBox="0 0 40 14" width="40" height="14" aria-hidden="true"><circle cx="9" cy="7" r="3" fill="#545E6A"/><circle cx="30" cy="7" r="7" fill="#545E6A"/></svg>circle size = nights per base</span>`
+  + ["road","rail","foot","bike","water","air"].map(m=>
+      `<span><svg viewBox="0 0 42 14" width="42" height="14" aria-hidden="true">${link([2,7],[40,7],m).split("CC").join("#545E6A")}</svg>${MEDIUM[m]}</span>`).join("");
+
+/* ================= eight dials ================= */
+const DIALNOTE = {
+ pa:["How often you change what is in front of you. Pace is set by the number of bases, not by how busy each day is — you can be extremely busy in one place and it still reads as slow.",
+     "Everything blurs and you remember the transit. Above four, every day contains a decision about leaving.",
+     "Boredom, which is fine for a week and corrosive for three. Very slow trips need a project or a routine."],
+ ef:["Physical demand, and specifically whether the trip is still enjoyable on the fourth consecutive day of it. Most people plan at their best-day capacity rather than their fourth-day capacity.",
+     "You are a passenger throughout, which is restful and forgettable in equal measure.",
+     "The trip becomes about survival admin — feet, food, sleep — which some people love and should be chosen deliberately."],
+ pl:["How much has to be committed in advance. Some shapes cannot be improvised: huts, permits, award seats and famous restaurants are all booked months out or not at all.",
+     "You spend the trip searching for somewhere to sleep, which is fun at twenty-five and expensive later.",
+     "Itinerary debt: the weather turns, the place is better than expected, and you leave anyway because it is booked."],
+ co:["Not luxury — the absence of physical hardship. Comfort is worth buying where it protects sleep and food, and worth skipping where it seals you off from the place.",
+     "Fatigue accumulates and by day five your judgement and temper are gone.",
+     "You are insulated from everything you came for, and the trip becomes a hotel review."],
+ im:["How much contact you have with ordinary local life, as opposed to the parts arranged for visitors. Driven mostly by where you sleep, what language you attempt, and how you get around.",
+     "A sealed trip. You will remember the scenery and nothing anyone said.",
+     "Constant low-level effort, which is genuinely tiring and why immersive trips need more rest days than they get."],
+ so:["Whether you are alone, with one person, or in company all day. This is the dial most likely to be mismatched within a group and least likely to be discussed.",
+     "Solo travel is high-agency and lonely in the evenings; hops and lines supply company, anchors do not.",
+     "No solitude at all, which is why long group trips need a scheduled afternoon where everyone goes away."],
+ un:["How much of the trip is improvised or exposed to conditions — weather, delays, whether the thing you came for happens at all.",
+     "A predictable trip is restful and produces very few stories, because stories come from things not going to plan.",
+     "Above four, the trip needs slack and a bail-out. Uncertainty without a buffer is just stress."],
+ ct:["Cost per day rather than total, which is what actually varies by shape. The biggest single lever is not luxury but how many nights you sleep somewhere that is not moving.",
+     "Cheap trips buy time instead of comfort, which is the better trade when you have time.",
+     "Spend it on access — guides, permits, extra nights, being there at the right hour — rather than on padding."]
+};
+$("#dialcards").innerHTML = DIALS.map(([k,n,lo,hi])=>{
+  const top = A.slice().sort((x,y)=>y.d[k]-x.d[k]).slice(0,2);
+  const bottom = A.slice().sort((x,y)=>x.d[k]-y.d[k]).slice(0,1);
+  return `<article class="dialcard">
+    <h3>${n}</h3>
+    <div class="scale"><span>${lo}</span><span>${hi}</span></div>
+    <div class="hist">${(()=>{ const c=[0,1,2,3,4,5].map(i=>A.filter(x=>x.d[k]===i).length), mx=Math.max(...c);
+      return c.map((n,i)=>`<i style="height:${(n/mx*100).toFixed(0)}%" title="${n} archetype${n===1?"":"s"} at ${i}"></i>`).join(""); })()}</div>
+    <p>${DIALNOTE[k][0]}</p>
+    <dl><dt>Too low</dt><dd>${DIALNOTE[k][1]}</dd><dt>Too high</dt><dd>${DIALNOTE[k][2]}</dd></dl>
+    <div class="egs">${[...bottom, ...top].map(a=>archChip(a.id)).join("")}</div>
+  </article>`;
+}).join("");
+
+/* ================= rest & story plot ================= */
+const AXES = [["stim","Story"],["rest","Rest"]].concat(DIALS.map(([k,n])=>[k,n]));
+AXES.forEach(([k,n])=>{
+  $("#px").insertAdjacentHTML("beforeend", `<option value="${k}">${n}</option>`);
+  $("#py").insertAdjacentHTML("beforeend", `<option value="${k}">${n}</option>`);
+});
+SHAPES.forEach(s=>$("#pf").insertAdjacentHTML("beforeend", `<option value="${s.id}">${s.n}</option>`));
+$("#px").value = "stim"; $("#py").value = "rest";
+const val = (a,k) => (k in a.d) ? a.d[k] : a[k];
+const hash = s => { let h = 0; for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i))|0; return h; };
+function drawPlot(){
+  const kx = $("#px").value, ky = $("#py").value, filt = $("#pf").value;
+  const L = 44, R = 16, T = 18, Bt = 42, W = 400, H = 400;
+  const sx = t => L + t/5.4*(W-L-R), sy = t => (H-Bt) - t/5.4*(H-T-Bt);
+  let g = "";
+  const isDefault = kx === "stim" && ky === "rest";
+  if(isDefault){
+    [[0.95,3.55,"restorative"],[4.2,4.45,"the rare ones"],[4.15,0.32,"wrung out, and worth it"],[1.15,0.32,"low stakes, often obligation"]]
+      .forEach(([x,y,t])=>{ g += `<text class="zone" x="${sx(x)}" y="${sy(y)}" text-anchor="middle" opacity="0.75">${t}</text>`; });
+  }
+  for(let i=0;i<=5;i++){
+    g += `<line class="grid" x1="${sx(i)}" y1="${T}" x2="${sx(i)}" y2="${H-Bt}"/><line class="grid" x1="${L}" y1="${sy(i)}" x2="${W-R}" y2="${sy(i)}"/>`;
+    g += `<text class="alab" x="${sx(i)}" y="${H-Bt+14}" text-anchor="middle">${i}</text><text class="alab" x="${L-9}" y="${sy(i)+3}" text-anchor="end">${i}</text>`;
+  }
+  if(isDefault) g += `<line class="diag" x1="${sx(2)}" y1="${sy(5)}" x2="${sx(5)}" y2="${sy(2)}"/>`;
+  const nx = AXES.find(a=>a[0]===kx)[1], ny = AXES.find(a=>a[0]===ky)[1];
+  g += `<text class="alab" x="${W-R}" y="${H-8}" text-anchor="end">${nx} &rarr;</text>`;
+  g += `<text class="alab" transform="translate(13,${T}) rotate(-90)" text-anchor="end">${ny} &rarr;</text>`;
+  const shown = A.filter(a=>filt === "all" || a.shape === filt);
+  const pos = {};
+  shown.forEach(a=>{
+    const h = hash(a.id);
+    pos[a.id] = [sx(val(a,kx)) + ((h%13)/13-0.5)*15, sy(val(a,ky)) + (((h>>4)%11)/11-0.5)*15];
+  });
+  const dist = a => Math.hypot(val(a,kx)-2.5, val(a,ky)-2.5);
+  const overlaps = (p,q) => !(p[2] < q[0] || q[2] < p[0] || p[3] < q[1] || q[3] < p[1]);
+  const dots = shown.map(a=>{ const [x,y] = pos[a.id]; return [x-5,y-5,x+5,y+5]; });
+  const taken = [], labelled = new Set(), side = {};
+  shown.slice().sort((a,b)=>dist(b)-dist(a)).forEach(a=>{
+    if(labelled.size >= 15) return;
+    const [x,y] = pos[a.id];
+    if(y < T+8 || y > H-Bt-4) return;
+    const w = a.n.length*4.1 + 6;
+    for(const flip of (x > W*0.6 ? [true,false] : [false,true])){
+      const box = flip ? [x-8-w, y-5, x-8, y+5] : [x+8, y-5, x+8+w, y+5];
+      if(box[0] < L-2 || box[2] > W-2) continue;
+      if(taken.some(t=>overlaps(box,t))) continue;
+      if(dots.some((t,i)=>shown[i].id !== a.id && overlaps(box,t))) continue;
+      taken.push(box); labelled.add(a.id); side[a.id] = flip; break;
+    }
+  });
+  shown.forEach(a=>{
+    const [x,y] = pos[a.id], f = !!side[a.id];
+    g += `<g data-go="${a.id}"><title>${esc(a.n)}</title>
+      <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.2" fill="${HEX[a.shape]}" fill-opacity="0.6" stroke="${HEX[a.shape]}" stroke-width="1"/>
+      ${labelled.has(a.id)?`<text class="plab" x="${(f?x-8:x+8).toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="${f?"end":"start"}">${esc(a.n)}</text>`:""}</g>`;
+  });
+  $("#plot").innerHTML = g;
+  $("#plothint").textContent = isDefault
+    ? `${shown.length} archetypes; ${shown.filter(a=>a.rest+a.stim>=7).length} get past the dashed line and ${shown.filter(a=>a.rest+a.stim>=8).length} reach eight. The ones that manage it do so in one of two ways: length — a month somewhere, a season returned to, a walk that takes weeks — or delegation, where a ship, a lodge or a hut system carries the logistics and leaves you the intensity. Tap any dot for the card.`
+    : `${shown.length} archetypes on ${nx.toLowerCase()} against ${ny.toLowerCase()}. Only the extremes are labelled; tap any dot for the card.`;
+}
+function syncAxes(changed){
+  if(changed && $("#px").value === $("#py").value){
+    const other = changed === "#px" ? "#py" : "#px";
+    $(other).value = axPrev[changed];
+  }
+  axPrev = {"#px":$("#px").value, "#py":$("#py").value};
+  [...$("#px").options].forEach(o=>{ o.disabled = o.value === $("#py").value; });
+  [...$("#py").options].forEach(o=>{ o.disabled = o.value === $("#px").value; });
+}
+let axPrev = {"#px":"stim","#py":"rest"};
+["#px","#py"].forEach(s=>$(s).addEventListener("change", ()=>{ syncAxes(s); drawPlot(); }));
+$("#pf").addEventListener("change", drawPlot);
+syncAxes(null);
+drawPlot();
+
+/* ================= words ================= */
+const WCATS = ["design","logistics","timing","place","judgement"];
+$("#wcat").innerHTML = `<option value="all">Everything</option>` + WCATS.map(c=>`<option value="${c}">${c[0].toUpperCase()+c.slice(1)}</option>`).join("");
+function drawWords(){
+  const q = $("#wsearch").value.trim().toLowerCase(), c = $("#wcat").value;
+  const list = WORDS.filter(w=>(c === "all" || w.c === c) && (!q || (w.t+" "+w.d+" "+w.u).toLowerCase().includes(q)));
+  $("#words").innerHTML = list.length ? list.map(w=>`
+    <div class="word"><div><span class="term">${esc(w.t)}</span><span class="cat">${w.c}</span></div>
+      <div><p>${esc(w.d)}</p><p class="use"><b>Use it</b> ${esc(w.u)}</p><p class="vs"><b>Not</b> ${esc(w.x)}</p></div></div>`).join("")
+    : `<p class="hint">Nothing matches that. Try a shorter word, or set the filter back to everything.</p>`;
+}
+$("#wsearch").addEventListener("input", drawWords);
+$("#wcat").addEventListener("change", drawWords);
+drawWords();
+
+/* ================= craft + post-mortem ================= */
+$("#rulecount").textContent = ["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven"][CRAFT.length] || CRAFT.length;
+$("#craft").innerHTML = CRAFT.map(c=>`<div class="rule"><h4>${c.h}</h4><p>${c.p}</p></div>`).join("");
+$("#faults").innerHTML = FAULTS.map(f=>`<button class="fault" data-f="${f.id}" aria-pressed="false">${f.n}</button>`).join("");
+$("#faults").addEventListener("click", e=>{
+  const b = e.target.closest(".fault"); if(!b) return;
+  document.querySelectorAll(".fault").forEach(x=>x.setAttribute("aria-pressed", String(x === b)));
+  const f = FAULTS.find(x=>x.id === b.dataset.f);
+  $("#answer").innerHTML = `<div><p class="fix">${f.fix}</p><p class="why">${f.why}</p>
+    <div class="picks">${f.egs.filter(e2=>byId[e2]).map(archChip).join("")}</div></div>`;
+});
+
+/* ================= compare ================= */
+let picked = ["city-hop","city-immersion","second-home"];
+const CMPCOL = ["#141A22","#C0402B","#0F6E74"];
+const cin = $("#cin"), csugg = $("#csugg");
+cin.addEventListener("input", ()=>{
+  const q = cin.value.trim().toLowerCase();
+  if(!q){ csugg.classList.remove("on"); return; }
+  const hits = A.filter(a=>(a.n+" "+a.aka).toLowerCase().includes(q) && !picked.includes(a.id)).slice(0,8);
+  csugg.innerHTML = hits.map(a=>`<button data-add="${a.id}">${esc(a.n)} <span style="color:var(--ink3);font-size:12px">${esc(shapeName(a.shape))}</span></button>`).join("");
+  csugg.classList.toggle("on", hits.length > 0);
+});
+csugg.addEventListener("click", e=>{
+  const b = e.target.closest("[data-add]"); if(!b) return;
+  if(picked.length >= 3) picked.shift();
+  picked.push(b.dataset.add); cin.value = ""; csugg.classList.remove("on"); drawCompare();
+});
+$("#cpicked").addEventListener("click", e=>{
+  const b = e.target.closest("[data-rm]"); if(!b) return;
+  picked = picked.filter(p=>p !== b.dataset.rm); drawCompare();
+});
+function drawCompare(){
+  $("#cpicked").innerHTML = picked.map((id,i)=>`<span class="pc"><i class="dot" style="background:${CMPCOL[i]}"></i>${esc(byId[id].n)}<button data-rm="${id}" aria-label="Remove ${esc(byId[id].n)}">&times;</button></span>`).join("")
+    + (picked.length < 3 ? `<span class="pc" style="border-style:dashed;color:var(--ink3)">add ${3-picked.length} more</span>` : "");
+  $("#cdiagrams").innerHTML = picked.map(id=>`<figure>${diagram(byId[id],150)}<figcaption>${esc(byId[id].n)}</figcaption></figure>`).join("");
+  $("#ctracks").innerHTML = !picked.length ? `<p class="hint">Add an archetype above to start comparing.</p>` : DIALS.map(([k,n,lo,hi])=>`
+    <div class="track"><div class="tl"><span>${n} &mdash; ${lo}</span><span>${hi}</span></div>
+      <div class="tr">${picked.map((id,i)=>`<i style="left:${(byId[id].d[k]/5*100).toFixed(0)}%;background:${CMPCOL[i]}"></i>`).join("")}</div></div>`).join("");
+  if(!picked.length){ $("#ctable").innerHTML = ""; return; }
+  const rows = [
+    ["Shape", a=>`<span class="s-${a.shape}">${shapeName(a.shape)}</span>`],
+    ["Bases", a=>a.nodes === 1 ? "one" : `about ${a.nodes}`],
+    ["Length", a=>esc(a.len)],
+    ["Rest / story", a=>`${a.rest} / ${a.stim}`],
+    ["What it is", a=>esc(a.what)],
+    ["A good one", a=>esc(a.good)],
+    ["How it fails", a=>esc(a.fail)],
+    ["Timing", a=>esc(a.when)],
+    ["The principle", a=>`<i>${esc(a.teaches)}</i>`]
+  ];
+  $("#ctable").innerHTML = `<thead><tr><th></th>${picked.map((id,i)=>`<th style="color:${CMPCOL[i]}">${esc(byId[id].n)}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(([l,fn])=>`<tr><th>${l}</th>${picked.map(id=>`<td>${fn(byId[id])}</td>`).join("")}</tr>`).join("")}</tbody>`;
+}
+drawCompare();
+</script>
+</body>
+</html>
