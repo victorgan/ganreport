@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Load-Bearing Commitments — an atlas of what holds an adult life up</title>
+<style>
+:root{
+  --paper:#E5E4DC; --paper-2:#DCDBD2; --paper-3:#D2D1C7;
+  --ink:#171D22; --ink-soft:#4E5862; --ink-faint:#7B838B;
+  --rule:#B8B7AD; --rule-soft:#C9C8BE;
+  --verd:#2C6B5B; --amber:#A06B12; --oxblood:#792B24; --steel:#3B566B;
+  --display:"Arial Narrow","Helvetica Neue Condensed","Roboto Condensed",Arial,sans-serif;
+  --body:"Palatino Linotype",Palatino,"Iowan Old Style","Book Antiqua",Georgia,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);
+  background-image:linear-gradient(to right,rgba(23,29,34,.035) 1px,transparent 1px),
+                   linear-gradient(to bottom,rgba(23,29,34,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+  color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.62;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+.lab{font-family:var(--display);text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:700;color:var(--ink-faint)}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.005em;margin:0}
+h2{font-size:clamp(24px,3.6vw,34px);text-transform:uppercase;letter-spacing:.02em;line-height:1.04}
+h3{font-size:19px;letter-spacing:.03em;text-transform:uppercase}
+p{margin:0 0 1em}
+.lede{font-size:19px;color:var(--ink-soft);max-width:66ch}
+.narrow{max-width:68ch}
+
+header.mast{border-bottom:2px solid var(--ink);padding:56px 0 0;overflow:hidden}
+.mast h1{font-size:clamp(40px,9.4vw,104px);line-height:.86;text-transform:uppercase;letter-spacing:-.02em;margin:0 0 6px}
+.mast h1 .thin{font-weight:400;color:var(--ink-soft)}
+.mast .sub{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;border-top:1px solid var(--rule);margin-top:22px;padding:12px 0 0}
+.mast .deck{max-width:60ch;font-size:18px;color:var(--ink-soft);padding:20px 0 40px}
+.beam{height:26px;margin-top:26px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  background:repeating-linear-gradient(115deg,transparent 0 7px,rgba(23,29,34,.16) 7px 8px);position:relative}
+.beam::before,.beam::after{content:"";position:absolute;top:100%;width:0;height:0;
+  border-left:9px solid transparent;border-right:9px solid transparent;border-top:13px solid var(--ink)}
+.beam::before{left:14%}.beam::after{right:14%}
+
+section{padding:60px 0;border-bottom:1px solid var(--rule)}
+.shead{display:flex;align-items:baseline;gap:16px;margin-bottom:8px}
+.shead .tick{width:26px;height:1px;background:var(--ink);flex:none;transform:translateY(-6px)}
+.sdesc{margin:14px 0 32px}
+
+.stack{border:1px solid var(--ink);background:var(--paper-2)}
+.layer{display:grid;grid-template-columns:132px 1fr 210px;border-bottom:1px solid var(--rule)}
+.layer:last-child{border-bottom:0}
+.layer .n{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:700;
+  padding:15px 14px;border-right:1px solid var(--rule);background:var(--paper-3);display:flex;align-items:center}
+.layer .d{padding:15px 18px;font-size:16px}
+.layer .f{padding:15px 18px;border-left:1px solid var(--rule);font-family:var(--mono);font-size:12.5px;
+  color:var(--oxblood);display:flex;align-items:center;line-height:1.4}
+
+.bands{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.bands div{border-right:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:18px}
+.bands h3{font-size:16px;margin-bottom:4px}
+.bands .mk{font-family:var(--mono);font-size:11px;color:var(--ink-faint);display:block;margin-bottom:9px}
+.bands p{font-size:15px;color:var(--ink-soft);margin:0}
+.bands .c{background:var(--paper-2)}
+
+.diag{border:1px solid var(--ink);padding:22px;background:var(--paper-2)}
+.chipgrp{margin-top:14px}
+.chipgrp .gl{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-bottom:6px;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.chip{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:11.5px;font-weight:700;
+  border:1px solid var(--rule);background:transparent;color:var(--ink-soft);padding:7px 11px;cursor:pointer;border-radius:0;transition:.14s}
+.chip.hv{border-color:var(--ink-soft)}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--verd);outline-offset:2px}
+.readout{margin-top:6px;padding-top:14px;border-top:1px dashed var(--rule);font-family:var(--mono);font-size:13px;color:var(--ink-soft);min-height:20px}
+.readout b{color:var(--ink);font-weight:600}
+.clear{background:none;border:0;font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;
+  font-size:11px;font-weight:700;color:var(--oxblood);cursor:pointer;padding:0;margin-left:10px}
+
+.ctl{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;margin-bottom:22px;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:12px 0}
+.ctl label{font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:700;color:var(--ink-faint)}
+select{font-family:var(--mono);font-size:12.5px;background:var(--paper);color:var(--ink);border:1px solid var(--rule);padding:5px 8px;border-radius:0;margin-left:8px}
+
+.key{display:flex;flex-wrap:wrap;gap:5px 16px;font-family:var(--mono);font-size:11px;color:var(--ink-faint);
+  margin:-4px 0 20px;padding-bottom:14px;border-bottom:1px dashed var(--rule)}
+.key i{font-style:normal;color:var(--ink);font-weight:600;border-bottom:2px solid var(--ink);padding-bottom:1px}
+.key i.lt{border-bottom:1px solid var(--rule)}
+.key .sep{color:var(--ink-faint);opacity:.6}
+
+.ledger{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));border-left:1px solid var(--rule);border-top:1px solid var(--rule)}
+.card{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:18px 18px 16px;position:relative;background:var(--paper);transition:background .15s}
+.card:hover{background:var(--paper-2)}
+.card.dim{opacity:.3}
+.card.match{background:var(--paper-2);box-shadow:inset 3px 0 0 var(--verd)}
+.card.ep{background:rgba(59,86,107,.05)}
+.card.cp{background:rgba(121,43,36,.045)}
+.card .rank{position:absolute;top:16px;right:16px;font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+.card h3{font-size:17.5px;letter-spacing:.02em;padding-right:44px;margin-bottom:3px;line-height:1.15}
+.card .tags{font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:10px;font-weight:700;margin-bottom:11px;color:var(--verd)}
+.card .tags .bd{color:var(--steel)}
+.card.cp .tags .bd{color:var(--oxblood)}
+.gauge{display:flex;gap:2px;margin-bottom:11px}
+.gauge span{flex:1;min-width:0;height:19px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:8.5px;font-weight:600;border:1px solid var(--rule-soft);color:#AFAEA4;background:transparent;
+  transition:background .25s ease,border-color .25s,color .25s}
+.gauge span.hvy{border-width:1px;border-top-width:3px}
+.gauge span.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.gauge span.on.hvy{border-top-color:var(--ink)}
+.gauge span.hit{background:var(--verd);border-color:var(--verd);color:#F2F5F1}
+.gauge .gap{flex:0 0 7px;border:0;background:transparent;min-width:7px}
+.res{display:flex;flex-direction:column;gap:3px;margin-bottom:11px}
+.res .row{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:9.5px;color:var(--ink-faint)}
+.res .row .rn{width:56px;flex:none}
+.res .row .bars{display:flex;gap:2px;flex:1}
+.res .row .bars b{flex:1;height:6px;background:var(--paper-3);border:1px solid var(--rule-soft)}
+.res .row .bars b.f{background:var(--ink);border-color:var(--ink)}
+.res .row.r0 .bars b.f{background:var(--steel);border-color:var(--steel)}
+.res .row.r1 .bars b.f{background:var(--verd);border-color:var(--verd)}
+.res .row.r2 .bars b.f{background:var(--amber);border-color:var(--amber)}
+.card .note{font-size:14.5px;line-height:1.5;color:var(--ink-soft);margin:0 0 13px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px;border-top:1px dashed var(--rule);padding-top:9px}
+.specs div{font-family:var(--mono);font-size:11px;color:var(--ink-faint);display:flex;justify-content:space-between;gap:8px}
+.specs div span{color:var(--ink);text-align:right}
+.specs div span.warn{color:var(--oxblood)}
+.specs div span.good{color:var(--verd)}
+
+.plotwrap{border:1px solid var(--ink);background:var(--paper-2);overflow-x:auto}
+.mx{display:grid;grid-template-columns:104px repeat(5,1fr);min-width:800px}
+.mx>div{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:9px 10px}
+.mx>div:nth-child(6n){border-right:0}
+.mx .hd{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:10.5px;font-weight:700;
+  color:var(--ink);background:var(--paper-3);border-bottom:1.5px solid var(--ink);line-height:1.3}
+.mx .rw{font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:10.5px;font-weight:700;
+  color:var(--ink);background:var(--paper-3);border-right:1.5px solid var(--ink);line-height:1.3}
+.mx small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:0;color:var(--ink-faint);text-transform:none;font-weight:400;margin-top:2px}
+.mx .corner{background:var(--paper-3);border-bottom:1.5px solid var(--ink);border-right:1.5px solid var(--ink)}
+.cell{display:flex;flex-direction:column;gap:5px;align-content:flex-start}
+.cell.tl{background:rgba(121,43,36,.05)}
+.cell.tr{background:rgba(44,107,91,.07)}
+.pt{font-family:var(--mono);font-size:10.5px;line-height:1.3;color:var(--ink);display:flex;gap:6px;cursor:default}
+.pt::before{content:"";width:6px;height:6px;background:var(--ink);flex:none;margin-top:3px}
+.pt.b1::before{background:transparent;border:1px solid var(--steel)}
+.pt.b2::before{height:2px;margin-top:5px;background:var(--oxblood)}
+.pt.hi{color:var(--verd);font-weight:600}
+.pt.hi::before{background:var(--verd);border-color:var(--verd)}
+.pt.off{opacity:.3}
+.mxnote{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:12px;display:flex;flex-wrap:wrap;gap:6px 20px}
+.mxnote b{font-weight:600}.mxnote .a{color:var(--oxblood)}.mxnote .b{color:var(--verd)}
+
+.dials{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.dial{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:17px 18px}
+.dial .lab{color:var(--ink);margin-bottom:9px;display:block}
+.bar{height:3px;background:var(--ink);position:relative;margin:14px 0 8px}
+.bar::before,.bar::after{content:"";position:absolute;top:-4px;width:3px;height:11px;background:var(--ink)}
+.bar::before{left:0}.bar::after{right:0}
+.poles{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-soft);gap:12px}
+.poles span:last-child{text-align:right}
+.dial p{font-size:14.5px;color:var(--ink-soft);margin:11px 0 0;line-height:1.5}
+
+.anti{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));border-top:1px solid var(--oxblood);border-left:1px solid var(--oxblood)}
+.anti div{border-right:1px solid var(--oxblood);border-bottom:1px solid var(--oxblood);padding:15px 17px}
+.anti h3{font-size:15px;color:var(--oxblood);margin-bottom:5px}
+.anti p{font-size:14px;color:var(--ink-soft);margin:0}
+.anti .cnt{font-family:var(--mono);font-size:10.5px;color:var(--oxblood);display:block;margin-top:8px}
+
+.fmode{display:grid;grid-template-columns:230px 1fr;border-bottom:1px solid var(--rule)}
+.fail{border-top:1px solid var(--rule)}
+.fmode dt{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-weight:700;font-size:15px;padding:15px 18px 15px 0}
+.fmode dd{margin:0;padding:15px 0 15px 20px;border-left:1px solid var(--rule);font-size:15.5px;color:var(--ink-soft)}
+.sub .fmode dt{color:var(--steel)}
+
+.gloss{columns:2;column-gap:38px}
+.gloss div{break-inside:avoid;margin-bottom:15px}
+.gloss dt{font-family:var(--display);text-transform:uppercase;letter-spacing:.09em;font-size:12.5px;font-weight:700}
+.gloss dd{margin:2px 0 0;font-size:14.5px;color:var(--ink-soft);line-height:1.48}
+footer{padding:44px 0 70px;font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+
+@media (max-width:720px){
+  body{font-size:16px}
+  .layer{grid-template-columns:1fr}
+  .layer .n{border-right:0;border-bottom:1px solid var(--rule)}
+  .layer .f{border-left:0;border-top:1px dashed var(--rule)}
+  .fmode{grid-template-columns:1fr}
+  .fmode dt{padding-bottom:0}
+  .fmode dd{border-left:0;padding-left:0;padding-top:6px}
+  .gloss{columns:1}
+  .ledger{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <span class="lab">An atlas of what actually holds an adult life up</span>
+    <h1>Load<span class="thin">-</span>Bearing<br>Commitments</h1>
+    <div class="sub">
+      <span class="lab">Thirty-eight entries</span>
+      <span class="lab">Thirteen inputs, weighted</span>
+      <span class="lab">Three kinds of residue</span>
+      <span class="lab">Eight dials</span>
+    </div>
+    <p class="deck">Most life advice ranks activities by how good they feel. This ranks them by how much load a single
+      commitment carries, and by what is left standing when it ends. Those two measures explain most of why some
+      lives feel full and some feel merely busy.</p>
+    <div class="beam" aria-hidden="true"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>The category</h2></div>
+  <div class="narrow">
+    <p class="lede">There is no settled English word for this class of thing, which is part of why nobody manages it
+      deliberately. The nearest existing terms each catch one face.</p>
+    <p><strong>Practices</strong>, in Alasdair MacIntyre's sense: cooperative activities with internal goods and
+      standards you have to submit to. Right about craft and submission, silent on bundling.
+      <strong>Ground projects</strong>, from Bernard Williams: the commitments that supply your reason to keep going,
+      such that losing one is nearer to death than to disappointment. Right about load-bearing, silent on plurality.
+      <strong>Need-satisfying pursuits</strong>, from self-determination theory: right about the mechanism, far too
+      thin a list of needs.</p>
+    <p>All three miss the ratio. Something can be a practice, a ground project and need-satisfying and still be
+      narrow. The useful unit is the commitment that supplies <em>many unrelated goods from one decision</em> and
+      keeps supplying them after your enthusiasm runs out. The test is structural: remove it and see whether
+      anything sags.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Five layers</h2></div>
+  <p class="sdesc narrow">Ordered by what happens when each goes to zero. The failure modes differ in kind, and
+    people misdiagnose across layers constantly — treating a hollow life as though it were a dead one.</p>
+  <div class="stack" id="stack"></div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Three bands</h2></div>
+  <p class="sdesc narrow">An earlier version of this atlas scored everything on one scale, which quietly implied that
+    a sabbatical is a weak congregation. It isn't — it's a different kind of object. Three bands, scored separately.</p>
+  <div class="bands">
+    <div class="c"><h3>Commitments</h3><span class="mk">■ filled marker · 30 entries</span>
+      <p>Accrete. Judge by carry and residue. These are the load-bearing members — the things that hold weight after
+        you stop wanting them to.</p></div>
+    <div><h3>Episodes</h3><span class="mk">□ hollow marker · 5 entries</span>
+      <p>Punctuate. Low residue is their <em>function</em>, not their failure. Judge them by what changed afterwards,
+        and never by whether they compounded.</p></div>
+    <div><h3>Components</h3><span class="mk">— dash marker · 3 entries</span>
+      <p>Inputs, not commitments. Included as calibration, so you can see what low carry looks like. Counting these
+        as flourishing is the most common error on this page.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>What isn't being carried</h2></div>
+  <p class="sdesc narrow">Thirteen inputs, split into six heavy and seven light. The heavy six carry roughly twice
+    the weight in every serious model of wellbeing, so counting inputs equally overstates anything novelty-shaped.
+    Select what's running low; the ledger re-ranks by how much of your gap each entry closes.</p>
+  <div class="diag">
+    <div class="chipgrp">
+      <span class="gl">HEAVY — weighted ×2</span><div class="chips" id="chipsH" role="group" aria-label="Heavy inputs"></div>
+      <span class="gl">LIGHT — weighted ×1</span><div class="chips" id="chipsL" role="group" aria-label="Light inputs"></div>
+    </div>
+    <div class="readout" id="readout">Nothing selected — the ledger is ranked by total load.</div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Three kinds of residue</h2></div>
+  <div class="narrow">
+    <p class="lede">A single residue score hid the distinction people actually use to choose.</p>
+    <p>Friendship upkeep and a solo craft both leave a lot behind, but they aren't the same leaving.
+      <strong>Skill</strong> residue survives everything — it's portable, it's yours, and it's the only kind that
+      moves cities with you. <strong>Relational</strong> residue lives in other people and can be lost to their
+      deaths, their moves, or one bad year. <strong>Institutional</strong> residue outlives you: the thing exists
+      whether or not you do, which is the only form of residue that continues working after you stop.</p>
+    <p>They aren't fungible. Losing a craft and losing a friendship are unlike losses, and a commitment that
+      supplies only one kind is more fragile than its total suggests.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>The ledger</h2></div>
+  <p class="sdesc narrow">Thirty-eight entries. <em>Load</em> is the weighted sum of inputs carried, out of 19.
+    <em>Residue</em> is split three ways, each out of 5.</p>
+  <div class="ctl">
+    <div><label for="sort">Sort</label><select id="sort">
+      <option value="fit">Fit to selection</option>
+      <option value="load">Load carried</option>
+      <option value="res">Residue, total</option>
+      <option value="s">Residue — skill</option>
+      <option value="rl">Residue — relational</option>
+      <option value="in">Residue — institutional</option>
+      <option value="lag">Fastest return</option>
+      <option value="cost">Lowest entry cost</option>
+    </select></div>
+    <div><label for="bnd">Band</label><select id="bnd">
+      <option value="all">All</option><option value="C">Commitments</option>
+      <option value="E">Episodes</option><option value="X">Components</option>
+    </select></div>
+    <div><label for="flt">Layer</label><select id="flt">
+      <option value="all">All</option><option>Structure</option><option>Meaning</option>
+      <option>Vitality</option><option>Narrative</option><option>Substrate</option>
+    </select></div>
+    <div><label for="obl">Obligation</label><select id="obl">
+      <option value="all">All</option><option>Solo</option><option>Mutual</option><option>Conscripted</option>
+    </select></div>
+  </div>
+  <div class="key" id="key"></div>
+  <div class="ledger" id="ledger"></div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Load against residue</h2></div>
+  <p class="sdesc narrow">Everything in the upper left is genuinely valuable and starts from zero every time — which
+    is exactly why it can be bought. Everything in the upper right returns nothing for eighteen months. Most people
+    choose by that lag and then wonder why the years won't distinguish themselves.</p>
+  <div class="plotwrap"><div class="mx" id="mx"></div></div>
+  <div class="mxnote">
+    <span><b class="a">Upper left</b> — rich, rented, purchasable.</span>
+    <span><b class="b">Upper right</b> — nothing for a long time, then everything.</span>
+    <span>■ commitment · □ episode · — component</span>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Eight dials</h2></div>
+  <p class="sdesc narrow">Two commitments can carry the same inputs and behave nothing alike. These are the axes
+    that explain the difference — and the settings you can adjust when one isn't working.</p>
+  <div class="dials" id="dials"></div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>The engine</h2></div>
+  <div class="narrow">
+    <p class="lede">Everything in the top half of the ledger shares one feature: specific other people are counting
+      on you.</p>
+    <p>That is the whole mechanism. Load doesn't come from an activity being rich; it comes from obligation forcing
+      continuation past the point where motivation dies, which is precisely when compounding starts. The solo version
+      of nearly every item here carries half as much. Practising alone is craft. Playing in a band is craft plus four
+      relationships plus a deadline plus an outcome you don't control. Traveling alone supplies novelty and autonomy;
+      traveling with someone adds two of the heavy six.</p>
+    <p>The multiplier is always other people, and specifically people who will notice your absence. An audience won't
+      do it. A class you paid for won't do it. It has to be the kind of absence that costs someone something.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Subtraction</h2></div>
+  <p class="sdesc narrow">A page about load-bearing structures with no account of demolition is incomplete. Adding
+    is celebrated and removing is treated as failure, which is why most overloaded lives stay overloaded.</p>
+  <dl class="fail sub" id="sub"></dl>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Anti-bundlers</h2></div>
+  <p class="sdesc narrow">Where discretionary money and attention actually go. None of these is forbidden. They are
+    simply not doing the work people expect, and they scale badly — doubling the spend flattens the return rather
+    than doubling it.</p>
+  <div class="anti" id="anti"></div>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Ten ways this goes wrong</h2></div>
+  <p class="sdesc narrow">Not from choosing badly — from choosing well and then mishandling the thing.</p>
+  <dl class="fail" id="fail"></dl>
+</section>
+
+<section>
+  <div class="shead"><span class="tick"></span><h2>Glossary</h2></div>
+  <dl class="gloss" id="gloss"></dl>
+</section>
+
+<footer>
+  Load-Bearing Commitments · companion to The Shape of a Trip · single file, no dependencies, works offline<br>
+  Scores are banded judgments for a typical mid-career adult, not measurements. Your variance is high.
+</footer>
+</div>
+
+<script>
+/* ===== inputs: key, name, gloss, abbr, weight ===== */
+const INPUTS=[
+ ["autonomy","Autonomy","control over your own hours and direction","AU",2],
+ ["mastery","Mastery","skill that visibly accumulates","MA",2],
+ ["needed","Being needed","someone is measurably worse off without you","NE",2],
+ ["intimacy","Intimacy","depth with specific people, not breadth","IN",2],
+ ["belonging","Belonging","a group that notices your absence","BE",2],
+ ["contribution","Contribution","value flowing outward from you","CO",2],
+ ["novelty","Novelty","unfamiliar input, unfamiliar internal states","NO",1],
+ ["awe","Awe","contact with scale that dwarfs you","AW",1],
+ ["body","Body","physical demand, tiredness earned honestly","BO",1],
+ ["narrative","Narrative","a story with an arc you are inside of","NA",1],
+ ["stakes","Stakes","real possibility of failing at it","ST",1],
+ ["mortality","Mortality","unavoidable contact with time running","MO",1],
+ ["place","Place","somewhere physical that knows you","PL",1]
+];
+const W=Object.fromEntries(INPUTS.map(d=>[d[0],d[4]]));
+const MAXW=INPUTS.reduce((a,d)=>a+d[4],0);
+
+const LAYERS=[
+ ["Substrate","Sleep, health, safety, a material floor. Catastrophic below threshold, near-zero returns above it. Nothing on this page compensates for its absence.","Below floor: nothing else registers"],
+ ["Structure","The three to five people, work you don't dread, the place you actually live. Most of your hours, and the dominant term in almost every model of life satisfaction.","Absent: everything else is decoration"],
+ ["Meaning","Contribution, being needed, some account of why any of it matters.","Absent: the life feels hollow"],
+ ["Vitality","Novelty, autonomy, play, beauty, physical challenge, awe.","Absent: the life feels dead"],
+ ["Narrative","Where you experience your life as a life rather than a sequence of Tuesdays.","Absent: the years stop separating"]
+];
+
+/* b: band C/E/X · c: inputs · s/rl/in: residue 0-5 · lag · cost 1-3 */
+const D=[
+{n:"Children",b:"C",l:"Meaning",c:["mastery","needed","intimacy","belonging","contribution","novelty","body","narrative","stakes","mortality"],s:3,rl:5,in:2,lag:"slow",cost:3,exit:"Permanent",obl:"Conscripted",
+ note:"The highest-load object available, and it isn't close. It bundles by conscription — you don't get to skip the parts you're not in the mood for, which is the source of both its power and its cost. Strips autonomy and sleep to the floor for years, making it the highest-variance entry rather than simply the best one."},
+{n:"Work you'd do anyway",b:"C",l:"Structure",c:["autonomy","mastery","needed","belonging","contribution","narrative","stakes","place"],s:5,rl:4,in:3,lag:"slow",cost:3,exit:"Hard",obl:"Mutual",
+ note:"The largest allocation of adult hours and the item most often left off lists like this one, which quietly implies flourishing happens in your spare time. It doesn't. A vocation carries mastery, belonging, contribution, being needed and stakes at forty hours a week — no evening commitment competes on volume."},
+{n:"Starting something",b:"C",l:"Meaning",c:["autonomy","mastery","needed","intimacy","belonging","contribution","narrative","stakes"],s:5,rl:4,in:4,lag:"slow",cost:3,exit:"Hard",obl:"Mutual",
+ note:"A business, a band, a supper club, a neighbourhood association. The stakes do the work — a project that cannot fail carries far less. Most of the value sits in being responsible to people who joined because of you."},
+{n:"A congregation",b:"C",l:"Meaning",c:["needed","intimacy","belonging","contribution","awe","narrative","mortality","place"],s:1,rl:4,in:4,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"For anyone who can access it honestly, the highest load per dollar here: awe, community, contribution, ritual time-marking, intergenerational contact, and a structure that survives your motivation lapsing. Secular life has produced no real substitute, and pretending otherwise is an expensive modern self-deception."},
+{n:"A recovery fellowship",b:"C",l:"Meaning",c:["needed","intimacy","belonging","contribution","narrative","stakes","mortality"],s:2,rl:5,in:3,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Among the highest-load structures available to anyone, and conspicuously absent from most accounts of the good life because of who it's assumed to be for. Belonging, being needed, contribution, stakes, mortality, and a schedule that holds when your motivation collapses — which is the exact condition it was designed around."},
+{n:"A serious outdoor practice",b:"C",l:"Vitality",c:["mastery","intimacy","belonging","novelty","awe","body","stakes","mortality"],s:5,rl:3,in:1,lag:"slow",cost:2,exit:"Easy",obl:"Mutual",
+ note:"Climbing, sailing, backcountry travel, diving. Structurally this is travel-as-a-discipline: the same novelty, awe and shared adversity, but skill accumulates instead of resetting. Strictly dominates trips except that buying in takes years and can't be shortcut with money."},
+{n:"A long partnership",b:"C",l:"Structure",c:["needed","intimacy","belonging","contribution","narrative","stakes","mortality"],s:2,rl:5,in:2,lag:"slow",cost:2,exit:"Hard",obl:"Mutual",
+ note:"Load-bearing in the literal sense: most other commitments here get easier or harder depending on this one. Rarely counted as an achievement because it presents as a state rather than a practice, which is a misreading of what it takes."},
+{n:"Playing music with others",b:"C",l:"Vitality",c:["mastery","intimacy","belonging","awe","body","narrative","stakes"],s:5,rl:4,in:2,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Band, choir, orchestra, community theatre — the same structure whether there's a conductor or not. Weekly, cheap, compounds without limit. Most adults abandon it at nineteen because they won't be good, which is a category error: the bundle never required excellence, only showing up with three other people."},
+{n:"Coaching a youth team",b:"C",l:"Meaning",c:["mastery","needed","belonging","contribution","body","narrative","stakes","place"],s:3,rl:3,in:3,lag:"mid",cost:2,exit:"Easy",obl:"Mutual",
+ note:"A season is a ready-made narrative arc with you in a supporting role, which turns out to matter. Also one of the few remaining ways an adult gets embedded in a neighbourhood without moving house."},
+{n:"Caring for aging parents",b:"C",l:"Meaning",c:["needed","intimacy","belonging","contribution","narrative","stakes","mortality"],s:1,rl:4,in:0,lag:"fast",cost:3,exit:"Conscripted",obl:"Conscripted",
+ note:"Nobody lists this as a good. It carries more than most things people choose: obligation, relationship depth, mortality-awe, and contact with your own origins. Involuntary, frequently miserable in the moment, and still doing real work."},
+{n:"Community institution work",b:"C",l:"Meaning",c:["mastery","needed","belonging","contribution","narrative","stakes","place"],s:3,rl:3,in:5,lag:"mid",cost:2,exit:"Easy",obl:"Mutual",
+ note:"A board, a co-op, mutual aid, volunteer fire, the block association. Maintaining an existing body rather than trying to change one. The highest institutional residue on the page: the thing keeps working after you leave."},
+{n:"A standing table",b:"C",l:"Structure",c:["mastery","intimacy","belonging","contribution","narrative","place"],s:3,rl:5,in:3,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Hosting on a fixed schedule — first Thursday, every month, same table. Underrated to almost exactly the degree the big annual trip is overrated. The schedule is the trick: it removes the decision, and the decision was always the failure point."},
+{n:"A shared household",b:"C",l:"Structure",c:["needed","intimacy","belonging","contribution","narrative","place"],s:1,rl:5,in:2,lag:"mid",cost:2,exit:"Hard",obl:"Mutual",
+ note:"Chosen family, co-living, the friend group that bought a house together. Structurally distinct from partnership and increasingly how people actually live. Costs autonomy in exactly the way that makes the rest of it work."},
+{n:"Making work in public",b:"C",l:"Meaning",c:["autonomy","mastery","belonging","contribution","narrative","stakes"],s:5,rl:3,in:2,lag:"mid",cost:1,exit:"Easy",obl:"Solo",
+ note:"Writing, building, drawing, shipping — the shipping is load-bearing. Private craft carries four inputs; the same craft with a publish button carries six, because now it can fail in front of someone."},
+{n:"Staying put",b:"C",l:"Structure",c:["intimacy","belonging","contribution","narrative","place"],s:1,rl:4,in:3,lag:"slow",cost:3,exit:"Easy",obl:"Mutual",
+ note:"A decade in one neighbourhood, on purpose, turning down better offers. Invisible as a commitment because it looks like inaction, and it's the only place-lever besides leaving. Everything relational compounds against it — the entry cost is the offers you decline."},
+{n:"Apprenticing to a person",b:"C",l:"Vitality",c:["mastery","intimacy","belonging","narrative","stakes"],s:5,rl:4,in:1,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Attaching yourself to someone better than you and letting them correct you. Rare in adulthood because it requires voluntarily accepting lower status, which is exactly why it works."},
+{n:"Teaching one specific person",b:"C",l:"Meaning",c:["mastery","needed","intimacy","contribution","narrative"],s:2,rl:5,in:1,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"One named person, over years. Programmatic mentoring carries far less, because the obligation runs to a scheme rather than to someone who will be disappointed."},
+{n:"Deliberate friendship upkeep",b:"C",l:"Structure",c:["needed","intimacy","belonging","contribution","narrative"],s:0,rl:5,in:0,lag:"slow",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Scheduled, effortful, slightly embarrassing to admit to. Total residue looks middling and is entirely relational — the most concentrated form on the page, and correspondingly the most fragile. Lowest entry cost of anything here, which makes its neglect the largest unforced error in adult life."},
+{n:"Siblings and extended family",b:"C",l:"Structure",c:["needed","intimacy","belonging","narrative","mortality"],s:0,rl:5,in:1,lag:"slow",cost:1,exit:"Conscripted",obl:"Conscripted",
+ note:"Distinct from friendship: conscripted, lifelong, and the only relationships that will remember your childhood. Usually left to drift on the assumption that conscription means maintenance-free, which it does not."},
+{n:"Being a fixed adult to someone else's kid",b:"C",l:"Meaning",c:["needed","intimacy","contribution","narrative","mortality"],s:0,rl:5,in:1,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Godparent, uncle, the neighbour who reliably shows up. Distinct from mentoring and from having your own. Very high contribution and being-needed at a small fraction of the displacement, and one of the few high-load options for people without children."},
+{n:"Building something physical",b:"C",l:"Narrative",c:["autonomy","mastery","body","narrative","stakes","place"],s:4,rl:1,in:3,lag:"slow",cost:3,exit:"Hard",obl:"Solo",
+ note:"A house, a boat, a wall, a workshop. One multi-year object rather than a repeatable practice — slow craft plus place plus body plus a visible record that time passed and you were doing something with it."},
+{n:"Land or a garden",b:"C",l:"Narrative",c:["autonomy","mastery","body","narrative","mortality","place"],s:4,rl:1,in:3,lag:"slow",cost:2,exit:"Hard",obl:"Solo",
+ note:"The only commitment here with an annual feedback loop, which teaches a patience nothing else does. Also the cheapest reliable source of mortality-contact that isn't grief."},
+{n:"Cooking as a practice",b:"C",l:"Structure",c:["mastery","intimacy","contribution","body","place"],s:4,rl:3,in:1,lag:"mid",cost:1,exit:"Easy",obl:"Solo",
+ note:"Distinguish the practice from feeding yourself. The load comes from feeding other people repeatedly and getting better at it in a way they notice."},
+{n:"Taking someone in",b:"C",l:"Meaning",c:["needed","intimacy","belonging","contribution","narrative","stakes"],s:1,rl:5,in:1,lag:"fast",cost:3,exit:"Hard",obl:"Conscripted",
+ note:"Fostering, hosting a family, a friend who needs a year. Enormous immediate load, narrow residue, and it displaces almost everything else while it runs."},
+{n:"Civic or political organising",b:"C",l:"Meaning",c:["needed","belonging","contribution","narrative","stakes"],s:2,rl:3,in:3,lag:"mid",cost:2,exit:"Easy",obl:"Mutual",
+ note:"Trying to change a body rather than maintain one, which is where the stakes come from. Degrades into anti-bundling consumption the moment the doing is replaced by the following."},
+{n:"Training toward an event",b:"C",l:"Vitality",c:["mastery","belonging","body","narrative","stakes"],s:3,rl:2,in:1,lag:"mid",cost:1,exit:"Easy",obl:"Mutual",
+ note:"Categorically different from going to the gym: a date you can't negotiate with, people expecting you at 6am, and a result that can go badly. The event is doing more work than the training."},
+{n:"An animal",b:"C",l:"Structure",c:["needed","intimacy","body","narrative","mortality","place"],s:1,rl:3,in:1,lag:"fast",cost:2,exit:"Permanent",obl:"Conscripted",
+ note:"Being needed daily, forced outdoor exposure, unsentimental physical contact, enforced routine, and a compressed lifespan that teaches something you can't be told."},
+{n:"A contemplative practice",b:"C",l:"Vitality",c:["autonomy","mastery","awe","narrative","mortality"],s:4,rl:1,in:1,lag:"mid",cost:1,exit:"Easy",obl:"Solo",
+ note:"Sitting, silence, retreat. The only reliable non-religious source of awe on a weekly cadence. Thin on obligation, which caps it — the retreat version, with other people and a teacher, carries noticeably more than the app version."},
+{n:"A language to fluency",b:"C",l:"Vitality",c:["mastery","belonging","novelty","narrative"],s:5,rl:2,in:0,lag:"slow",cost:1,exit:"Easy",obl:"Solo",
+ note:"High skill residue, and belonging only arrives if you use it with people rather than software. Without that, this is a two-input commitment in a four-input costume."},
+{n:"A craft, alone",b:"C",l:"Vitality",c:["autonomy","mastery","body","narrative"],s:5,rl:0,in:1,lag:"slow",cost:2,exit:"Easy",obl:"Solo",
+ note:"Woodworking, pottery, machining — a repeatable practice rather than one object. Excellent skill residue, unusually narrow load: the same craft in a shared workshop would carry three more inputs."},
+
+{n:"Moving somewhere new",b:"E",l:"Narrative",c:["autonomy","belonging","novelty","narrative","stakes","place"],s:1,rl:2,in:2,lag:"slow",cost:3,exit:"Hard",obl:"Solo",
+ note:"An episode with unusually large downstream effects: it reconfigures the structure layer rather than decorating it. The commitment isn't the move, it's whatever you build afterwards — which is why so many moves change nothing."},
+{n:"Trips",b:"E",l:"Vitality",c:["autonomy","intimacy","novelty","awe","body","narrative"],s:0,rl:1,in:0,lag:"fast",cost:2,exit:"Easy",obl:"Solo",
+ note:"High load, near-zero residue — each one restarts at the same skill, the same relationships, the same self. That's precisely why they're purchasable. Their real contribution is time-marking: the most reliable available intervention against where did my thirties go."},
+{n:"Care for a friend in crisis",b:"E",l:"Meaning",c:["needed","intimacy","contribution","stakes","mortality"],s:0,rl:4,in:0,lag:"fast",cost:2,exit:"Conscripted",obl:"Conscripted",
+ note:"Arrives unannounced, ends, and leaves the friendship permanently different. No skill residue at all, and heavy residue in exactly one relationship."},
+{n:"A pilgrimage or long walk",b:"E",l:"Narrative",c:["novelty","awe","body","narrative","mortality"],s:1,rl:1,in:0,lag:"fast",cost:2,exit:"Easy",obl:"Solo",
+ note:"A trip with a shape and an ending, which is why it marks time better than a holiday of the same length. It still leaves behind nothing but having done it — and that is the correct expectation, not a shortfall."},
+{n:"A sabbatical",b:"E",l:"Narrative",c:["autonomy","novelty","awe","narrative","mortality"],s:1,rl:0,in:0,lag:"fast",cost:3,exit:"Easy",obl:"Solo",
+ note:"Its function is diagnostic rather than restorative: removing yourself from the local equilibrium is the only cheap way to observe your own defaults. Judge it by what changed afterwards, never by how it felt."},
+
+{n:"Deliberate self-work",b:"X",l:"Substrate",c:["mastery","intimacy","narrative"],s:3,rl:1,in:0,lag:"mid",cost:2,exit:"Easy",obl:"Mutual",
+ note:"Therapy, honest journals, structured reflection. Genuinely valuable and routinely miscategorised: this is repair work on the substrate. It clears the way for load-bearing things and does not substitute for them."},
+{n:"Serious reading",b:"X",l:"Vitality",c:["mastery","novelty","awe"],s:3,rl:0,in:0,lag:"mid",cost:1,exit:"Easy",obl:"Solo",
+ note:"Good skill residue, narrow load, no obligation. Add one other person and a fixed date and it gains belonging and stakes — which is the entire argument for reading groups."},
+{n:"Solo gym training",b:"X",l:"Substrate",c:["mastery","body"],s:3,rl:0,in:0,lag:"mid",cost:1,exit:"Easy",obl:"Solo",
+ note:"Necessary and low-load. Belongs to the substrate alongside sleep: maintenance, not flourishing. Counting it as flourishing is among the most common errors on this page."}
+];
+
+const DIALS=[
+ ["Residue","Resets to zero","Compounds","Does anything survive the ending — skill, a relationship, an institution? The single most useful sort in the ledger, and worth checking which of the three kinds you're actually getting."],
+ ["Obligation","Solo","Conscripted","Solo means you can skip it. Mutual means someone notices. Conscripted means you can't stop. Load rises along this axis and so does cost."],
+ ["Reversibility","Walk away","Permanent","Irreversibility is not a bug. The things you can't exit keep supplying value after you stop wanting them to, which is when the value is largest."],
+ ["Return lag","Days","Years","The trip returns something in a week. The band returns something in eighteen months. Most people choose by lag and then complain about residue."],
+ ["Purchasability","Buy it","Earn it only","Anything you can buy, everyone can buy, and it starts from zero each time. The unbuyable things are unbuyable because time is the input."],
+ ["Legibility","Private","Socially legible","How easy it is to describe at a dinner. Legibility correlates weakly with load and strongly with what people actually choose."],
+ ["Load type","Adds","Displaces","Some commitments slot into gaps; others evict whatever was there. Two displacing commitments at once is the classic overload, and the symptom is resenting both."],
+ ["Stakes","Cannot fail","Can fail badly","The possibility of real failure converts an activity into a practice. Remove the gig, the deadline, the publish button, and load drops by a third."]
+];
+
+const SUB=[
+ ["The identity keep","A commitment kept because leaving would revise who you think you are. The band you haven't played with in two years, the board you attend but don't affect. It occupies the slot and carries nothing, and its cost is invisible because it's already paid."],
+ ["Triage under overload","Two conscripted, displacing commitments at once is not a motivation problem and no amount of effort fixes it. The move is to shed something, and the only question is which — usually the one with the most portable residue, because that's what survives being paused."],
+ ["Replace the carry, not the slot","Leaving a congregation, a marriage or a team removes six inputs simultaneously, not one. People plan the exit and not the replacement, then experience the flatness afterwards as evidence they were wrong to leave. Name what was being carried before you cut."],
+ ["Sunk cost as structure","Years invested is a reason the residue is large, not a reason to continue. Skill residue is exactly the thing you keep when you stop, which makes long-held craft commitments cheaper to leave than they feel."],
+ ["Pruning is a form of choosing","A life with five real commitments and nothing else is denser than one with fifteen partial ones. The fifteen version feels richer to describe and is thinner to live, because nothing in it is load-bearing enough to hold weight when a bad year arrives."],
+ ["What can't be subtracted","Conscripted commitments — a child, a failing parent, a sibling — don't respond to this section. The lever there is support, not removal, and treating them as optimisable is its own failure mode."]
+];
+
+const ANTI=[
+ ["Possessions","One input, and it decays. The pleasure has a documented half-life measured in weeks, after which the object is furniture.",1],
+ ["Media consumption","One input, and the narrative is borrowed. You get the shape of a story with none of the residue of having been in one.",1],
+ ["Status pursuit","One input, and it's positional — supply adjusts to whatever you achieve, so the deficit is permanent by construction.",1],
+ ["Wealth past slack","Financial slack is load-bearing. Accumulation past the point of slack converts into a scoreboard, which is status wearing a spreadsheet.",1],
+ ["News and discourse","Presents as contribution and civic belonging. Delivers neither, because nothing you do inside it changes anything outside it.",0],
+ ["Self-care, as sold","Substrate maintenance rebranded as flourishing. Necessary, and it will never make a year distinguishable from the one before.",1],
+ ["Collecting","Mastery-adjacent without the mastery. Skill accumulates in the acquiring rather than in any making.",1],
+ ["Solo hobbies with no audience","One or two inputs, no deadline, no collaborator, no compounding. Fine — just not doing what you think it's doing.",2]
+];
+
+const FAIL=[
+ ["The substitution","Patching a structure-layer hole with a vitality-layer thing. Two weeks of relief per year against fifty weeks of what you're fleeing, presented as self-care. The trip is methadone for a life that needs surgery."],
+ ["The solo trap","Taking the solitary version of a bundling activity and concluding the activity is thin. Practising instead of playing, reading instead of a reading group, the gym instead of a team. Same activity, half the load."],
+ ["The excellence gate","Refusing to start because you won't be good. This kills more music, language and sport in adults than lack of time does, and rests on a mistake: the bundle never required excellence."],
+ ["Lag intolerance","Abandoning at month four of an eighteen-month curve, then concluding it doesn't work. Everything with real residue is unrewarding at month four. That's what residue costs."],
+ ["The optionality trap","Refusing irreversible commitments to keep doors open, and arriving at fifty with every door open and nothing behind any of them. Optionality has a carrying cost that stays invisible until it's enormous."],
+ ["Consumption drift","A commitment quietly degrading into a purchase. Organising becomes following, playing becomes listening, cooking becomes ordering. The vocabulary stays the same, which is what makes it hard to notice."],
+ ["The legibility bias","Choosing what's easy to describe at a dinner party. Legible commitments are systematically over-chosen and systematically lower-load than the illegible ones sitting next to them."],
+ ["Monoculture residue","Everything you've built leaves the same kind of residue. All skill and no relationships survives a divorce and not a decade; all relational and no skill collapses when one group dissolves. Check the three bars, not the total."],
+ ["The maintenance masquerade","Counting substrate work as flourishing. Sleep, gym, therapy and diet are the floor. A life built entirely of floor is well maintained and empty."],
+ ["Hoarding","Deferring every load-bearing thing to a future block of time — after the promotion, after the kids, after retirement. The block arrives smaller than expected and the eighteen-month curve still has to run."]
+];
+
+const GLOSS=[
+ ["Load","The weighted sum of inputs a commitment carries, out of 19. Six heavy inputs count double."],
+ ["Residue","What remains five years after stopping, split into skill, relational and institutional."],
+ ["Skill residue","Portable and yours. The only kind that moves cities with you."],
+ ["Relational residue","Lives in other people. Lost to their deaths, their moves, or one bad year."],
+ ["Institutional residue","Outlives you. The thing exists whether or not you do."],
+ ["Commitment","Accretes. Judged by load and residue together."],
+ ["Episode","Punctuates. Low residue is its function, not its failure."],
+ ["Component","An input rather than a commitment. Listed for calibration."],
+ ["Load-bearing","Structural rather than decorative. Remove it and something visibly sags."],
+ ["Conscripted","You can't stop without a moral cost. Highest load, highest price."],
+ ["Displacing","A commitment that evicts others rather than slotting between them."],
+ ["Time-marking","The property that makes a year retrievable. Routine encodes almost nothing."],
+ ["The engine","Obligation to specific people. The mechanism behind nearly every high-load entry."],
+ ["Practice","MacIntyre's term: a cooperative activity with internal goods and standards you submit to."],
+ ["Ground project","Williams' term: a commitment that supplies your reason to keep going."],
+ ["Excellence gate","The false belief that a practice is only worth entering if you'll be good at it."]
+];
+
+/* ===== render ===== */
+const $=s=>document.querySelector(s);
+const LAGN={fast:1,mid:2,slow:3};
+const BAND={C:["Commitment",""],E:["Episode","ep"],X:["Component","cp"]};
+let sel=new Set();
+const load=d=>d.c.reduce((a,k)=>a+W[k],0);
+const resT=d=>d.s+d.rl+d.in;
+const fit=d=>{if(!sel.size)return 0;let h=0;sel.forEach(k=>{if(d.c.includes(k))h++});return h};
+
+$("#stack").innerHTML=LAYERS.map(([n,d,f])=>
+ `<div class="layer"><div class="n">${n}</div><div class="d">${d}</div><div class="f">${f}</div></div>`).join("");
+
+const chip=([k,n,g,ab,w])=>`<button class="chip${w===2?" hv":""}" data-k="${k}" aria-pressed="false" title="${g}">${n}</button>`;
+$("#chipsH").innerHTML=INPUTS.filter(d=>d[4]===2).map(chip).join("");
+$("#chipsL").innerHTML=INPUTS.filter(d=>d[4]===1).map(chip).join("");
+
+$("#key").innerHTML=INPUTS.map(([k,n,g,ab,w],i)=>
+ (i===6?`<span class="sep">|</span>`:"")+`<span title="${g}"><i class="${w===2?"":"lt"}">${ab}</i> ${n.toLowerCase()}</span>`).join("");
+
+$("#dials").innerHTML=DIALS.map(([n,a,b,p])=>
+ `<div class="dial"><span class="lab">${n}</span><div class="bar"></div>
+  <div class="poles"><span>${a}</span><span>${b}</span></div><p>${p}</p></div>`).join("");
+$("#anti").innerHTML=ANTI.map(([n,d,c])=>
+ `<div><h3>${n}</h3><p>${d}</p><span class="cnt">carries ${c} · residue 0</span></div>`).join("");
+$("#fail").innerHTML=FAIL.map(([n,d])=>`<div class="fmode"><dt>${n}</dt><dd>${d}</dd></div>`).join("");
+$("#sub").innerHTML=SUB.map(([n,d])=>`<div class="fmode"><dt>${n}</dt><dd>${d}</dd></div>`).join("");
+$("#gloss").innerHTML=GLOSS.map(([t,d])=>`<div><dt>${t}</dt><dd>${d}</dd></div>`).join("");
+
+function bars(v,cls){return `<div class="row ${cls}"><span class="rn">${v[2]}</span><span class="bars">`+
+  [0,1,2,3,4].map(i=>`<b class="${i<v[0]?"f":""}"></b>`).join("")+`</span></div>`}
+
+function render(){
+  const so=$("#sort").value,lf=$("#flt").value,of=$("#obl").value,bf=$("#bnd").value;
+  let rows=D.filter(d=>(lf==="all"||d.l===lf)&&(of==="all"||d.obl===of)&&(bf==="all"||d.b===bf));
+  const key={
+    fit:d=>[-fit(d),-load(d)], load:d=>[-load(d),-resT(d)], res:d=>[-resT(d),-load(d)],
+    s:d=>[-d.s,-load(d)], rl:d=>[-d.rl,-load(d)], in:d=>[-d.in,-load(d)],
+    lag:d=>[LAGN[d.lag],-load(d)], cost:d=>[d.cost,-load(d)]
+  }[so];
+  rows.sort((a,b)=>{const A=key(a),B=key(b);return A[0]-B[0]||A[1]-B[1]});
+
+  $("#ledger").innerHTML=rows.map((d,i)=>{
+    const h=fit(d);
+    const bcls=BAND[d.b][1];
+    const cls="card "+bcls+(sel.size?(h===sel.size?" match":h>0?"":" dim"):"");
+    const gauge=INPUTS.map(([k,n,g,ab,w],ix)=>{
+      const on=d.c.includes(k),hit=on&&sel.has(k);
+      return (ix===6?`<span class="gap"></span>`:"")+
+        `<span class="${hit?"on hit":on?"on":""}${w===2?" hvy":""}" title="${n} ×${w}${on?"":" — not carried"}">${ab}</span>`}).join("");
+    const lagT={fast:"days",mid:"months",slow:"years"}[d.lag];
+    const costT=["","low","medium","high"][d.cost];
+    const L=load(d);
+    return `<article class="${cls.trim()}">
+      <span class="rank">${String(i+1).padStart(2,"0")}</span>
+      <h3>${d.n}</h3>
+      <div class="tags"><span class="bd">${BAND[d.b][0]}</span> · ${d.l}${sel.size?` · closes ${h}/${sel.size}`:""}</div>
+      <div class="gauge">${gauge}</div>
+      <div class="res">${bars([d.s,5,"skill"],"r0")}${bars([d.rl,5,"relational"],"r1")}${bars([d.in,5,"institut."],"r2")}</div>
+      <p class="note">${d.note}</p>
+      <div class="specs">
+        <div>load<span class="${L>=12?"good":L<=5?"warn":""}">${L}/19</span></div>
+        <div>residue<span>${resT(d)}/15</span></div>
+        <div>returns in<span>${lagT}</span></div>
+        <div>entry cost<span>${costT}</span></div>
+        <div>obligation<span>${d.obl.toLowerCase()}</span></div>
+        <div>exit<span class="${d.exit==="Permanent"?"warn":""}">${d.exit.toLowerCase()}</span></div>
+      </div></article>`}).join("");
+
+  const ro=$("#readout");
+  if(!sel.size){ro.innerHTML="Nothing selected — the ledger is ranked by total load.";}
+  else{
+    const wt=[...sel].reduce((a,k)=>a+W[k],0);
+    const best=[...D].sort((a,b)=>fit(b)-fit(a)||load(b)-load(a)).slice(0,3);
+    const full=D.filter(d=>fit(d)===sel.size).length;
+    ro.innerHTML=`<b>${sel.size}</b> input${sel.size>1?"s":""} short · weight <b>${wt}</b> · `+
+      `<b>${full}</b> entr${full===1?"y":"ies"} close the whole gap · best fit: <b>${best.map(d=>d.n).join(" · ")}</b>`+
+      `<button class="clear" id="clr">clear</button>`;
+    $("#clr").onclick=()=>{sel.clear();document.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed","false"));render();plot()};
+  }
+}
+
+const COLS=[["Resets","residue 0–2"],["Faint","3–5"],["Moderate","6–8"],["Strong","9–11"],["Compounds","12–15"]];
+const ROWS=[["Broad","load 12–19"],["Wide","9–11"],["Narrow","6–8"],["Thin","0–5"]];
+const colOf=r=>r<=2?0:r<=5?1:r<=8?2:r<=11?3:4;
+const rowOf=l=>l>=12?0:l>=9?1:l>=6?2:3;
+
+function plot(){
+  let h=`<div class="corner"></div>`+COLS.map(([a,b])=>`<div class="hd">${a}<small>${b}</small></div>`).join("");
+  ROWS.forEach(([ra,rb],ri)=>{
+    h+=`<div class="rw">${ra}<small>${rb}</small></div>`;
+    COLS.forEach((_,ci)=>{
+      const items=D.filter(d=>rowOf(load(d))===ri&&colOf(resT(d))===ci)
+                   .sort((a,b)=>load(b)-load(a)||resT(b)-resT(a));
+      const tint=ri===0?(ci===0?" tl":ci===4?" tr":""):"";
+      h+=`<div class="cell${tint}">`+items.map(d=>{
+        const f=fit(d);
+        const bc=d.b==="E"?" b1":d.b==="X"?" b2":"";
+        const st=sel.size?(f===sel.size?" hi":f===0?" off":""):"";
+        return `<span class="pt${bc}${st}" title="${d.n} — load ${load(d)}/19, residue ${d.s}/${d.rl}/${d.in}">${d.n}</span>`;
+      }).join("")+`</div>`;
+    });
+  });
+  $("#mx").innerHTML=h;
+}
+
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
+  const k=c.dataset.k;
+  if(sel.has(k)){sel.delete(k);c.setAttribute("aria-pressed","false")}
+  else{sel.add(k);c.setAttribute("aria-pressed","true")}
+  if(sel.size&&$("#sort").value!=="fit")$("#sort").value="fit";
+  render();plot();
+});
+["#sort","#flt","#obl","#bnd"].forEach(s=>$(s).onchange=render);
+render();plot();
+</script>
+</body>
+</html>
